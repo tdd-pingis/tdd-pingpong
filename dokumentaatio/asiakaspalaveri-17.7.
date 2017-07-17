@@ -1,0 +1,25 @@
+Projektin kuvaus:
+Ohjelmoinnin opetukseen käytettävä ohjelmisto. Pääpisteenä ohjelmoinnin opettelu tekemisen kautta; testauksen harjoittelu vaatimusten kirjoittamisen ja lukemisen sekä näiden pohjalta testien kirjoittamisen myötä.
+Ohjelmisto toimii crowdsourcing periaatteella, missä käyttäjät kirjoittavat testejä ja koodia pooleissa oleviin keskeneräisiin ohjelmiin ja aloittamattomiin vaatimuksiin. Käyttäjä kirjoittaa saamaansa tehtävään tehtävästä riippuen joko testejä tai koodia. Läpäistyt tehtävät lisätään pooliin, josta muut käyttäjät voivat saada tämän ratkaisun jatkettavaksi. Myöhemmin käyttäjät voivat myös kirjoittaa omia vaatimuksiaan, jotka lisätään pooleihin.
+
+Featureja:
+Tehtäviin liittyy vaikeustasot, jotka riippuvat käyttäjien antamista rateuksista sekä käyttäjiltä kerätystä datasta, kuten esimerkiksi tehtävään kuluneesta ajasta, snapshoteista sekä tehtävän läpäisysuhteeseen.
+Alkutasojen tehtävissä tarkoituksena on kirjoittaa koodia valmiisiin testeihin. Levelien edetessä käyttäjät kirjoittavat koodin lisäksi testejä jotka täyttävät sanalliset vaatimukset. Myöhemillä leveleillä mukaan tulee käyttäjien kirjoitettaviksi lisäksi uudet testiluokat sekä vaatimukset.
+Korkeammille leveleille siirtymiseen tarvitaan jokin progression mekanismi, joka voi riippua esim. tehtyjen tehvävien määrästä.
+Leveleihin voi liittyä myös rankkeja, kuten tomaatti, veteraani jne. Rankit voivat olla absoluuttisia, kun taas levelit suhteellisia muihin pelaajiin. Käyttäjät voivat tarkastella leaderboardeja, jotka voidaan jakaa rankkien mukaan.
+Käyttjien luomia vaatimuksia sekä testejä ei voi ohjelmallisesti validoida, joten validointi tapahtuu käyttäjien antaman palautteen perusteella, esim. käyttäjä voi ilmoittaa rikkinäisestä tehtävästä.
+Käyttäjille on tarkoitus tarjota heiden tasolleen sopivia tehtäviä. Yksinkertaisten tehtävien tekeminen voi kuitenkin olla pitkäveteistä, minkä takia alkuun käyttäjille voidaan tarjota muutama erittäin nopeasti vaikeneva sijoitus tehtävä, joista käyttäjä voi valmistua jollekin korkeammalle levelille.
+Ohjelmistoa voi pelillistää vielä lisää esimerkiksi achievementeillä.
+Tehtäviä on mahdollista teemata ns. "realmeihin." Esimerkiksi tehtävä voi kuulua kisaohjelmointi realmiin.
+Tehtäviin täytyy tallettaa jonkinnäköinen tieto omistajuudesta, ts. samaa tehtävää ei saa antaa uudestaan henkilölle, joka on äskettäin osallistunut siihen. Lisäksi kaikki käyttäjät eivät välttämättä halua luovuttaa koodiaan muille käyttäjille, joten käyttäjiltä tulee kysyä, suostuvatko he luovuttamaan ratkaisunsa eteenpäin.
+
+MVP:
+Käyttäjälle arvotaan jokin testi, johon käyttäjän on syötettävä koodia. Testit ajetaan ja käyttäjälle ilmoitetaan siitä, että menivätkö testit läpi.
+
+Resursseja:
+Testit voi ajaa tmc-sandboxissa, dockeria voi hyödyntää deployaamisessa
+Item response theory
+Koulun valmiit testit hyödynnettävissä
+
+Sprint 1:
+Tekstikenttä käyttäjille, ohjelmisto setupattuna, walking skeleton, CI, teknologiat
