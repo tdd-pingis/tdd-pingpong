@@ -8,7 +8,10 @@ public class HelloController {
 
     @RequestMapping("/")
     public String index() {
-        return "Greetings from Spring Boot!";
+        String out = "<link rel='stylesheet' href='/webjars/bootstrap/3.3.0/css/bootstrap.min.css'></link>\n" +
+"    <link rel='stylesheet' href='/css/site.css'></link>";
+        out+="<p class=\"lead\">Hello bootstrap</p>";
+        return out;
     }
 
 }
