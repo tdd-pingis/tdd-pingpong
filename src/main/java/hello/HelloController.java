@@ -1,9 +1,10 @@
 package hello;
 
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@RestController
+@Controller
 public class HelloController {
 
     @RequestMapping("/")
@@ -12,6 +13,11 @@ public class HelloController {
 "    <link rel='stylesheet' href='/css/site.css'></link>";
         out+="<p class=\"lead\">Hello bootstrap</p>";
         return out;
+    }
+    
+    @RequestMapping("/hello")
+    public String hello() {
+        return "hello";
     }
 
 }
