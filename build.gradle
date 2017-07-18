@@ -7,6 +7,10 @@ buildscript {
     }
 }
 
+plugins {
+    id 'com.github.kt3k.coveralls' version '2.8.1'
+}
+
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
@@ -16,6 +20,13 @@ apply plugin: 'jacoco'
 jar {
     baseName = 'tdd-pingpong'
     version =  '0.1.0'
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled = true // coveralls plugin depends on xml format report
+        html.enabled = true
+    }
 }
 
 repositories {
