@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:include="base :: header"></head>
+
 <body>
+
+    <div class="container">
     <nav th:include="navbar :: navigation"></nav>
     <p class="lead">Assignment 1</p>
     <div class="row">
@@ -18,6 +21,26 @@
         </div>
     </div>
 
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Editor</h3>
+            </div>
+            <div class="panel-body">
+                <div id="editor" style="height: 300px">function foo(items) {
+                    var x = "All this is syntax highlighted";
+                    return x;
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.8/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var editor = ace.edit("editor");
+        editor.setTheme("ace/theme/monokai");
+        editor.getSession().setMode("ace/mode/javascript");
+    </script>
+
 </body>
 </html>
-
