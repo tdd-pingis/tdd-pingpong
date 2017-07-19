@@ -1,9 +1,11 @@
 package main.java.domain;
 
-import org.springframework.data.annotation.Entity;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.GeneratedValue;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 public class Challenge {

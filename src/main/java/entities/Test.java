@@ -1,8 +1,9 @@
 package main.java.domain;
 
-import org.springframework.data.annotation.Entity;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.GeneratedValue;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 @Entity
 public class Test {
@@ -17,5 +18,5 @@ public class Test {
 	public Test(String code) {
 		this.code = code;
 		this.rating = 0;
-	}v
+	}
 }

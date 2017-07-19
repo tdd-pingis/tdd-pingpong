@@ -1,8 +1,9 @@
 package main.java.domain;
 
-import org.springframework.data.annotation.Entity;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.annotation.GeneratedValue;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 
 @Entity
 public class Implementation {
