@@ -1,4 +1,4 @@
-package main.java.domain;
+package main.java.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
