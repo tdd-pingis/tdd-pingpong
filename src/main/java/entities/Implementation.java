@@ -9,14 +9,14 @@ import javax.persistence.GenerationType;
 public class Implementation {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-	private long implementationId;
-	private String code;
-	private float rating;
+    private long implementationId;
+    private String code;
+    private float rating;
 
-	protected Implementation() {}
+    protected Implementation() {}
 
-	public Implementation(String code) {
-		this.code = code;
-		this.rating = 0;
-	}
+    public Implementation(String code) {
+        this.code = code;
+        this.rating = 0;
+    }
 }

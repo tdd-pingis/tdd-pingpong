@@ -9,10 +9,10 @@ import javax.persistence.GenerationType;
 public class State {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-	private long stateId;
-	private String status;
+    private long stateId;
+    private String status;
 
-	protected State(String status) {
-		this.status = status;
-	}
+    protected State(String status) {
+        this.status = status;
+    }
 }
