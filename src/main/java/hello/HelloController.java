@@ -19,5 +19,10 @@ public class HelloController {
     public String hello() {
         return "hello";
     }
+    
+    @RequestMapping("/assignment")
+    public String assignment() {
+        return "assignment";
+    }
 
 }
