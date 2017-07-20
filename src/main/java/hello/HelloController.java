@@ -1,6 +1,7 @@
 package hello;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -22,7 +23,10 @@ public class HelloController {
     }
     
     @RequestMapping("/assignment")
-    public String assignment() {
+    public String assignment(Model model) {
+        model.addAttribute("name", "Eka tehtava");
+        model.addAttribute("desc", "Tehtavana on kirjoittaa metodi, joka ratkaisee pysahtymisongelman.");
+        model.addAttribute("difficulty", "1");
         return "assignment";
     }
 
