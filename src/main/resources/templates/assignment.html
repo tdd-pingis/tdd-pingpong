@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="base :: header"></head>
+
+<body>
+
+<div class="container">
+    <nav th:include="navbar :: navigation"></nav>
+    <p class="lead">Assignment 1</p>
+    <div class="row">
+        <div class="col-md-4">
+            Assignment 1:<br/>
+            tehtävän nimi<br/>
+            vaikeustaso<br/>
+            blabla<br/>
+        </div>
+        <div class="col-md-6">
+            Kirjoita metodi, joka ratkaisee pysähtymisongelman. Ohjelman
+            aikavaativuus saa olla korkeintaan O(1).<br/><br/>
+            Koodiako tähän pitäisi?
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Editor</h3>
+        </div>
+        <div class="panel-body">
+            <form method="post" action="assignment">
+                <div id="editor" style="height: 300px"></div>
+                <textarea name="code" id="shadow-editor" style="display: none;"/>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.8/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.getSession().setMode("ace/mode/javascript");
+
+    var textarea = document.getElementById("shadow-editor");
+    editor.getSession().on("change", function () {
+        textarea.value = editor.getSession().getValue();
+    });
+</script>
+
+</body>
+</html>
