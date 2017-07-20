@@ -1,4 +1,4 @@
-package hello;
+package pingis;
 
 import java.util.Arrays;
 

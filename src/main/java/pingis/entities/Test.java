@@ -1,21 +1,25 @@
-package main.java.entities;
+package pingis.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.ManyToOne;
 
 @Entity
-public class Implementation {
+public class Test {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private long implementationId;
+    private long testId;
     private String code;
     private float rating;
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Task task;
 
-    protected Implementation() {}
+    protected Test() {}
 
-    public Implementation(String code) {
+    public Test(String code) {
         this.code = code;
         this.rating = 0;
     }
