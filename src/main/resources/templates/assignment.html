@@ -6,17 +6,15 @@
 
 <div class="container">
     <nav th:include="navbar :: navigation"></nav>
-    <p class="lead">Assignment 1</p>
+    <p class="lead" th:inline="text">Challenge: [[${challengename}]]</p>
+    <p th:text="${challengedesc}"></p>
     <div class="row">
         <div class="col-md-4">
-            Assignment 1:<br/>
-            <p th:text="${name}"></p><br/>
-            vaikeustaso: <p th:text="${difficulty}"></p><br/>
-            blabla<br/>
+            <p th:inline="text">Task: [[${taskname}]]</p><br/>
+            <p th:inline="text">Level: [[${difficulty}]]</p><br/>
         </div>
         <div class="col-md-6">
-            <p th:text="${desc}"></p><br/><br/>
-            Koodiako tähän pitäisi?
+            <p th:text="${taskdesc}"></p><br/><br/>
         </div>
     </div>
 
