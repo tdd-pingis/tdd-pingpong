@@ -37,7 +37,8 @@ gradle-app.setting
 hs_err_pid*
 
 # NetBeans
-nbproject/private/
+build.xml
+nbproject/
 nbbuild/
 dist/
 nbdist/
