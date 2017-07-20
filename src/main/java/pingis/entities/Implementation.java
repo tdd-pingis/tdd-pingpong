@@ -14,7 +14,7 @@ public class Implementation {
     private long implementationId;
     private String code;
     private float rating;
-    
+
     @ManyToOne(fetch=FetchType.LAZY)
     private Task task;
 
@@ -23,5 +23,9 @@ public class Implementation {
     public Implementation(String code) {
         this.code = code;
         this.rating = 0;
+    }
+
+    public String getCode() {
+        return code;
     }
 }

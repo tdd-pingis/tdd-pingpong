@@ -22,7 +22,8 @@ public class Challenge {
     @OneToMany(fetch=FetchType.LAZY, mappedBy="challenge")
     private List<Task> tasks;
 
-    protected Challenge() {}
+    protected Challenge() {
+    }
 
     public Challenge(String name, String description) {
         this.description = description;

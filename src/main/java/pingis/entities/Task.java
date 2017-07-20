@@ -24,7 +24,7 @@ public class Task {
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy="task")
     private List<Implementation> implementations;
-    
+
     @OneToMany(fetch=FetchType.LAZY, mappedBy="task")
     private List<Test> tests;
 
@@ -96,4 +96,5 @@ public class Task {
     public String getName() {
         return this.name;
     }
+
 }

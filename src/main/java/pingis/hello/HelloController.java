@@ -49,14 +49,10 @@ public class HelloController {
         System.out.println(code);
         return "assignment";
     }
-    
+
     @RequestMapping("/sandbox")
     public String sandbox(Model model) {
-        System.out.println("moooooooi");
-        System.out.println(cr.count());
-        Challenge c = cr.findOne(1l);
-        System.out.println(c);
-        
+
         return "sandbox";
     }
 

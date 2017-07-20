@@ -24,7 +24,8 @@ public class DataLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         Challenge c = new Challenge("Pysähtymisongelma", "Ratkaise pysahtymisongelma.");
-        Task t = new Task("metodi 1", "Kirjoita metodi, joka ratkaisee pysähtymisongelman. Aikavaativuus korkeintaan O(1).");
+        Task t = new Task("metodi 1", "Kirjoita metodi, joka ratkaisee pysähtymisongelman."
+                + "' Aikavaativuus korkeintaan O(1).");
         c.addTask(t);
         t.setChallenge(c);
         cr.save(c);
