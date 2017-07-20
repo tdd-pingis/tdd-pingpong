@@ -1,13 +1,18 @@
-package hello;
+package pingis.hello;
 
+import pingis.entities.Challenge;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import pingis.repositories.ChallengeRepository;
 
 @Controller
 public class HelloController {
+    @Autowired
+    private ChallengeRepository cr;
 
     @RequestMapping("/")
     public String index() {
@@ -34,6 +39,15 @@ public class HelloController {
     public String submit(String code) {
         System.out.println(code);
         return "assignment";
+    }
+
+    @RequestMapping("/sandbox")
+    public String sandbox(Model model) {
+        System.out.println("moooooooi");
+        Challenge c = new Challenge("name", "description");
+        cr.save(c);
+
+        return "sandbox";
     }
 
 
