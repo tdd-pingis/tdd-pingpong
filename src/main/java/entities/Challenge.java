@@ -11,18 +11,18 @@ import java.util.ArrayList;
 public class Challenge {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-	private long challengeId;
-	private String description;
-	private int level;
-	private float rating;
+    private long challengeId;
+    private String description;
+    private int level;
+    private float rating;
 
-	private List<Task> tasks;
+    private List<Task> tasks;
 
-	protected Challenge() {}
+    protected Challenge() {}
 
-	public Challenge(String description) {
-		this.description = description;
-		this.tasks = new ArrayList<>();
-		this.rating = 0;
-	}
+    public Challenge(String description) {
+        this.description = description;
+        this.tasks = new ArrayList<>();
+        this.rating = 0;
+    }
 }

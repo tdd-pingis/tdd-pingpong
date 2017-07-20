@@ -11,18 +11,18 @@ import java.util.ArrayList;
 public class Task {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-	private long taskId;
-	private String code;
-	private float rating;
+    private long taskId;
+    private String code;
+    private float rating;
 
-	private List<Implementation> implementations;
-	private List<Test> tests;
+    private List<Implementation> implementations;
+    private List<Test> tests;
 
-	protected Task() {}
+    protected Task() {}
 
-	public Task(String code) {
-		this.code = code;
-		implementations = new ArrayList<>();
-		this.rating = 0;
-	}
+    public Task(String code) {
+        this.code = code;
+        implementations = new ArrayList<>();
+        this.rating = 0;
+    }
 }

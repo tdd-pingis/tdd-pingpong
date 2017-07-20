@@ -11,17 +11,17 @@ import java.util.ArrayList;
 public class User {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-	private long userId;
-	private String name;
-	private int level;
+    private long userId;
+    private String name;
+    private int level;
 
-	private List<State> states;
+    private List<State> states;
 
-	protected User() {}
+    protected User() {}
 
-	public User(String name, int level) {
-		this.name = name;
-		this.level = level;
-		this.states = new ArrayList<>();
-	}
+    public User(String name, int level) {
+        this.name = name;
+        this.level = level;
+        this.states = new ArrayList<>();
+    }
 }
