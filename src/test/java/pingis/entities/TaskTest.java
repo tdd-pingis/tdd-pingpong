@@ -11,13 +11,13 @@ public class TaskTest {
 
     @Before
     public void setUp() {
-        normalTask = new Task("generate toString()");
+        normalTask = new Task("tostring", "generate toString()");
         protectedTask = new Task();
     }
 
     @Test
     public void testTaskCode() {
-        assertEquals("generate toString()", normalTask.getCode());
+        assertEquals("generate toString()", normalTask.getDesc());
     }
 
     @Test

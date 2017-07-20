@@ -1,5 +1,8 @@
 package pingis.hello;
 
+import java.util.ArrayList;
+import java.util.List;
+import pingis.entities.Task;
 import pingis.entities.Challenge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,9 +32,15 @@ public class HelloController {
     
     @RequestMapping("/assignment")
     public String assignment(Model model) {
-        model.addAttribute("name", "Eka tehtava");
-        model.addAttribute("desc", "Tehtavana on kirjoittaa metodi, joka ratkaisee pysahtymisongelman.");
-        model.addAttribute("difficulty", "1");
+        Challenge c = cr.findOne(1l);
+        model.addAttribute("challengename", c.getName());
+        model.addAttribute("challengedesc", c.getDesc());
+        model.addAttribute("difficulty", c.getLevel());
+        List<Task> tasks = c.getTasks();
+        System.out.println("size of task list: "+tasks.size());
+        Task t = c.getTasks().get(0);
+        model.addAttribute("taskname", t.getName());
+        model.addAttribute("taskdesc", t.getDesc());
         return "assignment";
     }
 
@@ -43,9 +52,6 @@ public class HelloController {
 
     @RequestMapping("/sandbox")
     public String sandbox(Model model) {
-        System.out.println("moooooooi");
-        Challenge c = new Challenge("name", "description");
-        cr.save(c);
 
         return "sandbox";
     }

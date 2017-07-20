@@ -17,7 +17,7 @@ public class ChallengeTest {
 
     @Test
     public void testChallengeToString() {
-        assertEquals("Calculator description.", calculatorChallenge.toString());
+        assertEquals("Calculator: Calculator description.", calculatorChallenge.toString());
     }
 
 }
