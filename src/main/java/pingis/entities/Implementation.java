@@ -1,9 +1,11 @@
-package main.java.entities;
+package pingis.entities;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class Implementation {
@@ -13,10 +15,17 @@ public class Implementation {
     private String code;
     private float rating;
 
+    @ManyToOne(fetch=FetchType.LAZY)
+    private Task task;
+
     protected Implementation() {}
 
     public Implementation(String code) {
         this.code = code;
         this.rating = 0;
+    }
+
+    public String getCode() {
+        return code;
     }
 }

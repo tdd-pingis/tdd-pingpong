@@ -1,4 +1,4 @@
-package main.java.entities;
+package pingis.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -6,6 +6,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.util.List;
 import java.util.ArrayList;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 
 @Entity
 public class User {
@@ -15,6 +17,7 @@ public class User {
     private String name;
     private int level;
 
+    @OneToMany(targetEntity=State.class, mappedBy="user", fetch=FetchType.LAZY)
     private List<State> states;
 
     protected User() {}
@@ -23,5 +26,17 @@ public class User {
         this.name = name;
         this.level = level;
         this.states = new ArrayList<>();
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public List<State> getStates() {
+        return states;
     }
 }
