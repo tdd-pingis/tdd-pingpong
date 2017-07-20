@@ -1,4 +1,4 @@
-package main.java.entities;
+package entities;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
