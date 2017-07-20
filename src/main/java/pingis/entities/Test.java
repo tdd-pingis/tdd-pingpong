@@ -23,4 +23,12 @@ public class Test {
         this.code = code;
         this.rating = 0;
     }
+
+    public String getCode() {
+        return code;
+    }
+
+    public float getRating() {
+        return rating;
+    }
 }

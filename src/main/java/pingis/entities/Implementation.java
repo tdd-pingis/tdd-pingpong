@@ -24,4 +24,8 @@ public class Implementation {
         this.code = code;
         this.rating = 0;
     }
+
+    public String getCode() {
+        return code;
+    }
 }

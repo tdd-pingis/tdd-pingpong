@@ -27,4 +27,16 @@ public class User {
         this.level = level;
         this.states = new ArrayList<>();
     }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public List<State> getStates() {
+        return states;
+    }
 }

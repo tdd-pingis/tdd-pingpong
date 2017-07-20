@@ -33,4 +33,16 @@ public class Task {
         implementations = new ArrayList<>();
         this.rating = 0;
     }
+
+    public String getCode() {
+        return code;
+    }
+
+    public float getRating() {
+        return rating;
+    }
+
+    public List<Implementation> getImplementations() {
+        return implementations;
+    }
 }

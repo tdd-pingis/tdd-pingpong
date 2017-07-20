@@ -22,12 +22,18 @@ public class Challenge {
     @OneToMany(fetch=FetchType.LAZY, mappedBy="challenge")
     private List<Task> tasks;
 
-    protected Challenge() {}
+    protected Challenge() {
+    }
 
     public Challenge(String name, String description) {
         this.description = description;
         this.name = name;
         this.tasks = new ArrayList<>();
         this.rating = 0;
+    }
+
+    @Override
+    public String toString() {
+        return description;
     }
 }

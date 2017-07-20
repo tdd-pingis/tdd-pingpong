@@ -4,7 +4,7 @@ jdk:
 after_success:
 - export SSHPASS=$DEPLOY_PASS
 - if [ $TRAVIS_BRANCH == "master" ]; then
-    sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST -p $DEPLOY_PORT 'deploy.sh'
+    sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST -p $DEPLOY_PORT 'deploy.sh';
   fi
 env:
   global:
