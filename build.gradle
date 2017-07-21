@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
+		classpath("se.transmode.gradle:gradle-docker:1.2")
     }
 }
 
@@ -17,6 +18,8 @@ apply plugin: 'idea'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'jacoco'
 apply plugin: 'checkstyle'
+apply plugin: 'application'
+apply plugin: 'docker'
 
 jar {
     baseName = 'tdd-pingpong'
@@ -37,6 +40,10 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+test {
+    testLogging.showStandardStreams = true
+}
+
 dependencies {
     // tag::jetty[]
     compile("org.springframework.boot:spring-boot-starter-web") {
@@ -52,5 +59,22 @@ dependencies {
     compile "org.springframework.boot:spring-boot-devtools"
     compile "com.h2database:h2"
     compile 'org.webjars:bootstrap:3.3.0'    
+
     testCompile("junit:junit")
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+    testCompile "info.cukes:cucumber-core:1.2.5"
+    testCompile "info.cukes:cucumber-java:1.2.5"
+    testCompile "info.cukes:cucumber-junit:1.2.5"
+    testCompile "info.cukes:cucumber-spring:1.2.5"
+}
+
+task buildDocker(type: Docker, dependsOn: build) {
+  applicationName = jar.baseName
+  dockerfile = file('Dockerfile')
+  doFirst {
+    copy {
+      from jar
+      into "build/docker/target"
+    }
+  }
 }
