@@ -56,7 +56,8 @@ public class DataLoader implements ApplicationRunner {
         tr.save(task2);
         
         // Save Challenge
-        
+    
+    //CHECKSTYLE:ON
         
     }
 }
