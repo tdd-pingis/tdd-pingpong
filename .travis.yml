@@ -3,9 +3,7 @@ jdk:
 - oraclejdk8
 after_success:
 - export SSHPASS=$DEPLOY_PASS
-- if [ $TRAVIS_BRANCH == "master" ]; then
-    sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST -p $DEPLOY_PORT 'deploy.sh';
-  fi
+- sshpass -e ssh $DEPLOY_USER@$DEPLOY_HOST -p $DEPLOY_PORT 'deploy.sh';
 env:
   global:
   - secure: Wn06PyhvQo5mybLlH8l9eyif4bckLX+TPpCrnfYAbyxv7ekyXLU8+wc9qGpra6BL7itJbyaBZgVKooGwHdXtQUn1Tewj3swSUNprGJV6DbVUupDdfV6jTdKOuMq/NiM2WmEaVy2UJu65Qda5i6Y9ItkRScY1044h98BF9AssURfk3kXxR7xHD5oBXqWopZGq9ZfsVOiSdIOdmyIrl9ZY4PpU/E0ba+CMbcUFW9HtjAKExU+C3HCqScPNNgAVqnjpiDPQ/tWZE6Fh6/MG1L2QII83c7eyb0OF7FzqLKWwF2SrHLP4QZmjBHdrdd77YXbUUcjF7+zy+4Ibdg1+HM42DScvziwIW206vrx8srFhZXecOH+KQVHobXku5cwsICso8ZCf5EjbwsQ6wYgv81NUBlEEaW3nuukgx3Q+AraKwnAq6CLICeAxKzfgqj4kYt/fdRxgly/A26H8y5CWBkvJmNHKKaHB6xyFJ4JJmsHlyzAThbcr53RCNPqBXBafUxK+xUBJGhlRY0Kg4YDbYnVC6UVcY26Cc+nAyFRTKttVQUaWuK+PZzfc3AqxgMWwqczwyott+z+PUnBsY6ez+b6WevLcFHHyoSDYAVySiR7L6hf8huRrUnS5TXoP+i22XSJ97IDP0GHYdrxl6JU7TxR6J383aVMQsBi/ptPC5YZDtpA=
