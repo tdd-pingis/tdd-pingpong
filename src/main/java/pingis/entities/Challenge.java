@@ -73,6 +73,18 @@ public class Challenge {
         this.description = description;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setRating(float rating) {
+        this.rating = rating;
+    }
+    
     public List<Task> getTasks() {
         return tasks;
     }

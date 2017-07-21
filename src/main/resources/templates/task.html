@@ -23,8 +23,8 @@
             <h3 class="panel-title">Editor</h3>
         </div>
         <div class="panel-body">
-            <form method="post" action="assignment">
-                <div id="editor" style="height: 300px"></div>
+            <form method="post" action="task">
+                <div id="editor" style="height: 300px" th:text="${basecode}"></div>
                 <textarea name="code" id="shadow-editor" style="display: none;"/>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
@@ -36,7 +36,7 @@
 <script>
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/javascript");
+    editor.getSession().setMode("ace/mode/java");
 
     var textarea = document.getElementById("shadow-editor");
     editor.getSession().on("change", function () {

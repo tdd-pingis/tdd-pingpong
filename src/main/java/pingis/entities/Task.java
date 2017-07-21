@@ -17,6 +17,7 @@ public class Task {
     private long taskId;
     private String code;
     private float rating;
+    private int level;
     private String desc;
     private String name;
     @ManyToOne(fetch=FetchType.LAZY)
@@ -88,6 +89,10 @@ public class Task {
     public String getDesc() {
         return this.desc;
     } 
+
+    public void setName(String name) {
+        this.name = name;
+    }
     
     public void setDesc(String desc) {
         this.desc = desc;
@@ -95,6 +100,14 @@ public class Task {
 
     public String getName() {
         return this.name;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
     }
 
 }
