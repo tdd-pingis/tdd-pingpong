@@ -48,3 +48,6 @@ nbdist/
 .idea/
 out/
 *.iml
+
+# Random binary files
+*.swp
