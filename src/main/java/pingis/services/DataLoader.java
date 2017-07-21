@@ -11,7 +11,7 @@ import pingis.repositories.ChallengeRepository;
 
 @Component
 public class DataLoader implements ApplicationRunner {
-
+//CHECKSTYLE:OFF
     private ChallengeRepository cr;
     private TaskRepository tr;
 
@@ -24,7 +24,7 @@ public class DataLoader implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) throws Exception {
         
-    //CHECKSTYLE:OFF
+    
         
         // Challenge 1 Description        
         Challenge challenge1 = new Challenge(
@@ -57,7 +57,8 @@ public class DataLoader implements ApplicationRunner {
         
         // Save Challenge
     
-    //CHECKSTYLE:ON
+    
         
     }
+//CHECKSTYLE:ON
 }
