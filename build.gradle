@@ -37,6 +37,10 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+test {
+    testLogging.showStandardStreams = true
+}
+
 dependencies {
     // tag::jetty[]
     compile("org.springframework.boot:spring-boot-starter-web") {
@@ -52,5 +56,11 @@ dependencies {
     compile "org.springframework.boot:spring-boot-devtools"
     compile "com.h2database:h2"
     compile 'org.webjars:bootstrap:3.3.0'    
+
     testCompile("junit:junit")
+    testCompile "org.springframework.boot:spring-boot-starter-test"
+    testCompile "info.cukes:cucumber-core:1.2.5"
+    testCompile "info.cukes:cucumber-java:1.2.5"
+    testCompile "info.cukes:cucumber-junit:1.2.5"
+    testCompile "info.cukes:cucumber-spring:1.2.5"
 }
