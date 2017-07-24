@@ -15,11 +15,12 @@ public class Task {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long taskId;
-    private String code;
-    private float rating;
-    private int level;
-    private String desc;
     private String name;
+    private String desc;
+    private String code;
+    private int level;
+    private float rating;
+    
     @ManyToOne(fetch=FetchType.LAZY)
     private Challenge challenge;
 
@@ -30,6 +31,15 @@ public class Task {
     private List<Test> tests;
 
     protected Task() {}
+    
+    public Task(String name, String desc, String code, int level, int rating) {
+        this.name = name;
+        this.desc = desc;
+        this.code = code;
+        this.level = level;
+        this.rating = rating;
+        this.implementations = new ArrayList<>();
+    }
 
     public long getTaskId() {
         return taskId;
@@ -77,13 +87,6 @@ public class Task {
 
     public void setTests(List<Test> tests) {
         this.tests = tests;
-    }
-
-    public Task(String name, String desc) {
-        this.name = name;
-        this.desc = desc;
-        implementations = new ArrayList<>();
-        this.rating = 0;
     }
     
     public String getDesc() {
