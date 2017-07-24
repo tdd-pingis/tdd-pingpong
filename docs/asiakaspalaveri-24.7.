@@ -1,0 +1,30 @@
+24.7. Tdd-pingis -palaveri
+
+Asiakkaan kommentit/toiveet:
+User inputin (testien) testaaminen paremmaksi. TMC Sandbox. Editorissa mahdollisuus useamman tiedoston käsittelyyn.
+Toiseen välilehteen "meidän kirjottama koodi". Kirjautumiseen kanattaa hyödyntää TMC:n OAuth tukea.
+Olisi hyvä, jos adminina pystyisi trackkaamaan tehtävän historiaa; kuka käyttäjä on tehnyt minkäkin lisäyksen.
+
+Me: Testien validointi. Miten toteutetaan?
+A: Ongelmallinen tilanne, koska softan pitäisi luoda uniikkeja uusia tehtäviä.
+  Jonkilainen "tämä on roskaa" -nappi helpottaa tilannetta.
+
+Me: Annetaanko käyttäjän tehdä vertaisarviointeja?
+A: Vertaisarviointien tekeminen on hyvä idea. Pieni sarja kysymyksiä. Esim. "Onks tää mielekästä?"
+  Myös sanallinen palaute olisi järkevää, mutta vaikea parsia.
+
+Me: Miten speksataan metodien toteutus?
+A: Riippuu tehtävästä. Alkupään tehtävissä kannattaa speksata tosi tarkasti metodit. Haastavammissa tehtävissä
+  voi speksata höllemmin.
+
+A: Palvelimelta avataan portti 3000.
+
+A: Miten toteutatte TMC:n antaman vastauksen? Suosittelen websockettia.
+
+A: Googlella on hyvä checkstyle conffi.
+
+A: Ngrok tekee elämästä helpompaa.
+
+A: Tarvitsette OAuth-applikaation TMC:n OAuthia varten.
+
+Ensitapaaminen 13:00 maanantaina 31.7. @ TBA
