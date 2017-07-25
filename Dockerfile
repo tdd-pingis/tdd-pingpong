@@ -1,8 +1,10 @@
 # Base image from Spring Docker tutorial
 FROM frolvlad/alpine-oraclejdk8:slim
 
+VOLUME /tmp
+
 # Add the jar to the working directory of the container
-ADD target/tdd-pingpong-0.1.0.jar app.jar
+ADD build/libs/tdd-pingpong-0.1.0.jar app.jar
 
 # Static files, such as index.html, supposedly need a modification time, which can be set by touching
 RUN sh -c 'touch /app.jar'

@@ -18,13 +18,24 @@
         </div>
     </div>
 
+    <div th:if="${errors}" class="row">
+        <p>The following errors were encountered:</p>
+        <ul>
+            <li th:each="error : ${errors}">
+                <span th:text="${error}"></span>
+            </li>
+        </ul>
+    </div>
+
     <div class="panel panel-default">
         <div class="panel-heading">
             <h3 class="panel-title">Editor</h3>
         </div>
         <div class="panel-body">
-            <form method="post" action="task">
-                <div id="editor" style="height: 300px" th:text="${basecode}"></div>
+            <form method="post" action="/task">
+                <input type="hidden" name="challenge" th:value="${challengeId}" />
+                <input type="hidden" name="task" th:value="${taskId}" />
+                <div id="editor" style="height: 300px" th:text="${code}"></div>
                 <textarea name="code" id="shadow-editor" style="display: none;"/>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
