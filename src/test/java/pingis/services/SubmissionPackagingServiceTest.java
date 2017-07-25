@@ -49,8 +49,8 @@ public class SubmissionPackagingServiceTest {
     private static final byte[] TEST_FILE_CONTENT = "test".getBytes();
 
     private static final Map<String, byte[]> additionalFiles = new HashMap<String, byte[]>() {{
-        put(TEST_FILE_NAME, TEST_FILE_CONTENT);
-    }};
+            put(TEST_FILE_NAME, TEST_FILE_CONTENT);
+        }};
 
     private byte[] packaged;
     private ArchiveInputStream inputArchive;
