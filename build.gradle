@@ -3,8 +3,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
-		classpath("se.transmode.gradle:gradle-docker:1.2")
+        classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE'
+		classpath 'se.transmode.gradle:gradle-docker:1.2'
     }
 }
 
@@ -47,29 +47,32 @@ test {
 
 dependencies {
     // tag::jetty[]
-    compile("org.springframework.boot:spring-boot-starter-web") {
-        exclude module: "spring-boot-starter-tomcat"
+    compile 'org.springframework.boot:spring-boot-starter-web' {
+        exclude module: 'spring-boot-starter-tomcat'
     }
-    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile 'org.springframework.boot:spring-boot-starter-jetty'
     // end::jetty[]
     // tag::actuator[]
-    compile("org.springframework.boot:spring-boot-starter-actuator")
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
     // end::actuator[]
-    compile "org.springframework.boot:spring-boot-starter-thymeleaf"
-    compile "org.springframework.boot:spring-boot-starter-data-jpa"
-    compile "org.springframework.boot:spring-boot-devtools"
-    compile "org.springframework.security:spring-security-web:5.0.0.M3"
-    compile "org.springframework.security:spring-security-config:5.0.0.M3"
-    compile "org.springframework.security:spring-security-oauth2-client:5.0.0.M3"
-    compile "com.h2database:h2"
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
+    compile 'org.springframework.boot:spring-boot-devtools'
+
+    //Spring Security
+    compile 'org.springframework.security:spring-security-web:5.0.0.M3'
+    compile 'org.springframework.security:spring-security-config:5.0.0.M3'
+    compile 'org.springframework.security:spring-security-oauth2-client:5.0.0.M3'
+
+    compile 'com.h2database:h2'
     compile 'org.webjars:bootstrap:3.3.0'    
 
-    testCompile("junit:junit")
-    testCompile "org.springframework.boot:spring-boot-starter-test"
-    testCompile "info.cukes:cucumber-core:1.2.5"
-    testCompile "info.cukes:cucumber-java:1.2.5"
-    testCompile "info.cukes:cucumber-junit:1.2.5"
-    testCompile "info.cukes:cucumber-spring:1.2.5"
+    testCompile 'junit:junit'
+    testCompile 'org.springframework.boot:spring-boot-starter-test'
+    testCompile 'info.cukes:cucumber-core:1.2.5'
+    testCompile 'info.cukes:cucumber-java:1.2.5'
+    testCompile 'info.cukes:cucumber-junit:1.2.5'
+    testCompile 'info.cukes:cucumber-spring:1.2.5'
 }
 
 task buildDocker(type: Docker, dependsOn: build) {
@@ -78,7 +81,7 @@ task buildDocker(type: Docker, dependsOn: build) {
   doFirst {
     copy {
       from jar
-      into "build/docker/target"
+      into 'build/docker/target'
     }
   }
 }
