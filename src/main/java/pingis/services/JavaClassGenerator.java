@@ -5,9 +5,9 @@ import java.util.List;
 import pingis.entities.Challenge;
 import pingis.entities.Task;
 
-public class JavaClassParser {
+public class JavaClassGenerator {
 
-    public JavaClassParser() {
+    public JavaClassGenerator() {
     }   
     
     public String parseChallenge(Challenge challenge, List<Task> tasks) {

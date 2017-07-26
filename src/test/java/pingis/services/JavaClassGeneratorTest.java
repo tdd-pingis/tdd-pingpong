@@ -12,18 +12,18 @@ import static org.junit.Assert.*;
 import pingis.entities.Challenge;
 import pingis.entities.Task;
 
-public class JavaClassParserTest {
+public class JavaClassGeneratorTest {
     
     private Challenge challenge1;
     private Task task1;
     private Task task2;
     private Task task3;
-    private JavaClassParser jparser;
+    private JavaClassGenerator jparser;
     private final int Challenge1Level = 3;
     
-    public JavaClassParserTest() {
+    public JavaClassGeneratorTest() {
         challenge1 = new Challenge("Immutable Calculator", "Amazing immutable calculator.");
-        jparser = new JavaClassParser();
+        jparser = new JavaClassGenerator();
         
         task1 = new Task("testAddition",
                 "test addition of two integers, return single value", 

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pingis.repositories.ChallengeRepository;
-import pingis.services.JavaClassParser;
+import pingis.services.JavaClassGenerator;
 import pingis.utils.JavaSyntaxChecker;
 
 @Controller
@@ -38,7 +38,7 @@ public class ChallengeController {
     @RequestMapping(value = "/task/{challengeId}/{taskId}", method = RequestMethod.GET)
     public String task(Model model, @PathVariable Long challengeId, @PathVariable int taskId) {
         Challenge c = cr.findOne(challengeId);
-        JavaClassParser jparser = new JavaClassParser();
+        JavaClassGenerator jparser = new JavaClassGenerator();
         
         model.addAttribute("challengename", c.getName());
         model.addAttribute("challengedesc", c.getDesc());
