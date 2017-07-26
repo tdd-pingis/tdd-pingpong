@@ -1,4 +1,4 @@
-Feature: Cucumber works
+Feature: Simple authentication for two sample users
 
 Scenario Outline: <user> can log in with valid username and password
     Given <user> navigates to the login form
