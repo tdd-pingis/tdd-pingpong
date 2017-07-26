@@ -8,6 +8,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Task;
 import pingis.entities.Challenge;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pingis.repositories.ChallengeRepository;
 import pingis.utils.JavaSyntaxChecker;
 
+@EnableOAuth2Sso
 @Controller
 public class ChallengeController {
     @Autowired
@@ -54,6 +56,8 @@ public class ChallengeController {
 
         model.addAttribute("challengeId", challenge);
         model.addAttribute("taskId", task);
+        
+        model.addAttribute("dummycode", "public void doSomething() {\n   System.out.println(\"Hello, tabs!\");\n}");
 
         return "task";
     }

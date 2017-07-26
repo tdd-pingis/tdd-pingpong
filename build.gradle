@@ -57,11 +57,13 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-devtools'
 
     //Spring Security
+    compile 'org.springframework.security.oauth:spring-security-oauth2'
     compile 'org.springframework.security:spring-security-web:5.0.0.M3'
     compile 'org.springframework.security:spring-security-config:5.0.0.M3'
     compile 'org.springframework.security:spring-security-oauth2-client:5.0.0.M3'
 
     compile 'com.h2database:h2'
+    compile 'org.webjars:jquery:3.2.1'
     compile 'org.webjars:bootstrap:3.3.0'
     compile 'com.github.javaparser:javaparser-core:3.2.12'
 

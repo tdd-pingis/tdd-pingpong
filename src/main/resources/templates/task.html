@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="base :: header"></head>
+    <head th:include="base :: header"></head>
+    
 
 <body>
 
+    
 <div class="container">
     <nav th:include="navbar :: navigation"></nav>
     <p class="lead" th:inline="text">Challenge: [[${challengename}]]</p>
@@ -26,33 +28,62 @@
             </li>
         </ul>
     </div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Editor</h3>
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#editor1">Editor 1</a></li>
+        <li><a data-toggle="tab" href="#editor2">Editor 2</a></li>
+    </ul>
+    <div class="tab-content">
+         <div id="editor1" class="panel panel-default tab-pane fade in active">
+            <div class="panel-heading">
+                <h3 class="panel-title">Editor1</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" action="/task">
+                    <input type="hidden" name="challenge" th:value="${challengeId}" />
+                    <input type="hidden" name="task" th:value="${taskId}" />
+                    <div id="editor-1" style="height: 300px" th:text="${code}"></div>
+                    <textarea name="code" id="shadow-editor1" style="display: none;"/>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
         </div>
-        <div class="panel-body">
-            <form method="post" action="/task">
-                <input type="hidden" name="challenge" th:value="${challengeId}" />
-                <input type="hidden" name="task" th:value="${taskId}" />
-                <div id="editor" style="height: 300px" th:text="${code}"></div>
-                <textarea name="code" id="shadow-editor" style="display: none;"/>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
+        <div id="editor2" class="panel panel-default tab-pane fade">
+            <div class="panel-heading">
+                <h3 class="panel-title">Editor2</h3>
+            </div>
+            <div class="panel-body">
+                <form method="post" action="/task">
+                    <input type="hidden" name="challenge" th:value="${challengeId}" />
+                    <input type="hidden" name="task" th:value="${taskId}" />
+                    <div id="editor-2" style="height: 300px" th:text="${dummycode}"></div>
+                    <textarea name="code" id="shadow-editor2" style="display: none;"/>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
         </div>
     </div>
 </div>
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.8/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/java");
+    var editor_1 = ace.edit("editor-1");
+    editor_1.setTheme("ace/theme/monokai");
+    editor_1.getSession().setMode("ace/mode/java");
 
-    var textarea = document.getElementById("shadow-editor");
-    editor.getSession().on("change", function () {
-        textarea.value = editor.getSession().getValue();
+    var textarea1 = document.getElementById("shadow-editor1");
+    editor_1.getSession().on("change", function () {
+        textarea1.value = editor_1.getSession().getValue();
     });
+    
+    var editor_2 = ace.edit("editor-2");
+    editor_2.setTheme("ace/theme/monokai");
+    editor_2.getSession().setMode("ace/mode/java");
+
+    var textarea2 = document.getElementById("shadow-editor2");
+    editor_2.getSession().on("change", function () {
+        textarea2.value = editor_2.getSession().getValue();
+    });
+        
+
 </script>
 
 </body>
