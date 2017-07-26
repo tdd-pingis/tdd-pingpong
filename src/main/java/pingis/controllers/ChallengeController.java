@@ -36,7 +36,7 @@ public class ChallengeController {
     
     @RequestMapping(value = "/task/{challenge}/{task}", method = RequestMethod.GET)
     public String task(Model model, @PathVariable Long challenge, @PathVariable int task) {
-        Challenge c = cr.findOne(challenge);
+        Challenge c = cr.findById(challenge).get();
         model.addAttribute("challengename", c.getName());
         model.addAttribute("challengedesc", c.getDesc());
         model.addAttribute("difficulty", c.getLevel());        
