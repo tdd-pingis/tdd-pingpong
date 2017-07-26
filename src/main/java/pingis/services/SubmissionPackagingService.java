@@ -81,6 +81,12 @@ public class SubmissionPackagingService {
         }
     }
 
+    /**
+     * @param additionalFiles A map of filename -> content pairs to include in the package.
+     * @return The packaged submission as a TAR archive.
+     * @throws IOException
+     * @throws ArchiveException
+     */
     public byte[] packageSubmission(Map<String, byte[]> additionalFiles) throws IOException, ArchiveException {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
