@@ -12,4 +12,14 @@ class ServerRule extends ExternalResource{
     public ServerRule(int port) {
         this.port = port;
     }
+
+    @Override
+    protected void before() throws Throwable {
+        this.app = SpringApplication.run(Application.class);
+    }
+
+    @Override
+    protected void after() {
+        app.close();
+    }
 }
