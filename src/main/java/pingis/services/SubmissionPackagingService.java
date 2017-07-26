@@ -39,6 +39,23 @@ public class SubmissionPackagingService {
         return entries;
     }
 
+    private void addFile(ArchiveOutputStream archive, String tarFileName, Path filePath) throws IOException {
+        ArchiveEntry archiveEntry = archive.createArchiveEntry(filePath.toFile(), tarFileName);
+
+        archive.putArchiveEntry(archiveEntry);
+        Files.copy(filePath, archive);
+        archive.closeArchiveEntry();
+    }
+
+    private void addFile(ArchiveOutputStream archive, String tarFileName, byte[] fileContent) throws IOException {
+        TarArchiveEntry tarEntry = new TarArchiveEntry(tarFileName);
+        tarEntry.setSize(fileContent.length);
+
+        archive.putArchiveEntry(tarEntry);
+        archive.write(fileContent);
+        archive.closeArchiveEntry();
+    }
+
     private void addTemplateFiles(ArchiveOutputStream archive) throws IOException {
         // TODO: maybe get the template path from config?
         Path templateDirectory = FileSystems.getDefault().getPath("tmc-assets", "submission-template");
@@ -51,11 +68,7 @@ public class SubmissionPackagingService {
             String tarEntryName = templateDirectory.relativize(entry).toString();
 
             // TODO: special case for build.xml for renaming the project.
-            ArchiveEntry archiveEntry = archive.createArchiveEntry(entry.toFile(), tarEntryName);
-
-            archive.putArchiveEntry(archiveEntry);
-            Files.copy(entry, archive);
-            archive.closeArchiveEntry();
+            addFile(archive, tarEntryName, entry);
         }
     }
 
@@ -64,12 +77,7 @@ public class SubmissionPackagingService {
         for (String entryName : additionalFiles.keySet()) {
             byte[] content = additionalFiles.get(entryName);
 
-            TarArchiveEntry tarEntry = new TarArchiveEntry(entryName);
-            tarEntry.setSize(content.length);
-
-            archive.putArchiveEntry(tarEntry);
-            archive.write(content);
-            archive.closeArchiveEntry();
+            addFile(archive, entryName, content);
         }
     }
 
