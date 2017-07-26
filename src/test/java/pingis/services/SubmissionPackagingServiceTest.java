@@ -10,16 +10,16 @@ import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.Assert.*;
 
 public class SubmissionPackagingServiceTest {
+    private static final int NUM_RANDOM_FILES = 5;
+    private static final int RANDOM_FILE_MAX_SIZE = 2 * 1024; // 2KB
+
     // NOTE: This list should be updated when changing the exercise template!
     private static final Set<String> templateEntries = Stream.of(
             "tmc-langs.jar",
@@ -45,40 +45,77 @@ public class SubmissionPackagingServiceTest {
             "lib/testrunner/tmc-junit-runner.jar"
     ).collect(Collectors.toSet());
 
-    private static final String TEST_FILE_NAME = "testfile1";
-    private static final byte[] TEST_FILE_CONTENT = "test".getBytes();
-
-    private static final Map<String, byte[]> additionalFiles = new HashMap<String, byte[]>() {{
-            put(TEST_FILE_NAME, TEST_FILE_CONTENT);
-        }};
-
-    private byte[] packaged;
+    private SubmissionPackagingService packagingService;
     private ArchiveInputStream inputArchive;
     private ByteArrayInputStream inputStream;
 
-    @Before
-    public void createPackage() throws IOException, ArchiveException {
-        SubmissionPackagingService service = new SubmissionPackagingService();
-        packaged = service.packageSubmission(additionalFiles);
-
+    private void createStreams(byte[] packaged) throws ArchiveException {
         inputStream = new ByteArrayInputStream(packaged);
+
         inputArchive = new ArchiveStreamFactory()
                 .createArchiveInputStream(ArchiveStreamFactory.TAR, inputStream);
     }
 
+    private String generateRandomName() {
+        Random random = new Random();
+
+        return String.format("testfile%08X", random.nextInt());
+    }
+
+    private byte[] generateRandomData(int maxSize) {
+        Random random = new Random();
+
+        int size = random.nextInt(maxSize);
+
+        byte[] result = new byte[size];
+        random.nextBytes(result);
+
+        return result;
+    }
+
+    private Map<String, byte[]> generateRandomFiles(int count) {
+        Map<String, byte[]> files = new HashMap<>();
+
+        for (int i = 0; i < count; i++) {
+            String name = generateRandomName();
+            byte[] data = generateRandomData(RANDOM_FILE_MAX_SIZE);
+
+            files.put(name, data);
+        }
+
+        return files;
+    }
+
+    @Before
+    public void setUpService() {
+        packagingService = new SubmissionPackagingService();
+    }
+
     @After
     public void cleanup() throws IOException {
-        inputArchive.close();
-        inputStream.close();
+        if (inputArchive != null) {
+            inputArchive.close();
+            inputArchive = null;
+        }
+
+        if (inputStream != null) {
+            inputStream.close();
+            inputStream = null;
+        }
     }
 
     @Test
-    public void packageSizeIsNotZero() {
+    public void packageSizeIsNotZero() throws IOException, ArchiveException {
+        byte[] packaged = packagingService.packageSubmission(new HashMap<>());
         assertNotEquals(0, packaged.length);
     }
 
     @Test
     public void packageContainsAllTemplateFiles() throws ArchiveException, IOException {
+        // Create a package with only template files
+        byte[] packaged = packagingService.packageSubmission(new HashMap<>());
+        createStreams(packaged);
+
         ArchiveEntry entry = inputArchive.getNextEntry();
 
         Set<String> foundEntries = new HashSet<>();
@@ -88,30 +125,32 @@ public class SubmissionPackagingServiceTest {
             foundEntries.add(entry.getName());
         }
 
-        // Can't compare foundEntries and templateEntries for equality here, as it'd fail
-        // when new non-template files are added into the package.
-        assertTrue("foundEntries should contain all of templateEntries",
-                foundEntries.containsAll(templateEntries));
+        assertEquals(templateEntries, foundEntries);
     }
 
     @Test
-    public void testAdditionalFiles() throws IOException {
-        ArchiveEntry testFile = null;
+    public void testAdditionalFiles() throws IOException, ArchiveException {
+        Map<String, byte[]> randomFiles = generateRandomFiles(NUM_RANDOM_FILES);
+        byte[] packaged = packagingService.packageSubmission(randomFiles);
+
+        createStreams(packaged);
+
         ArchiveEntry entry = inputArchive.getNextEntry();
 
         for (; entry != null; entry = inputArchive.getNextEntry()) {
-            if (entry.getName().equals(TEST_FILE_NAME)) {
-                testFile = entry;
-                break;
+            // Skip template files
+            if (templateEntries.contains(entry.getName())) {
+                continue;
             }
+
+            assertTrue(randomFiles.containsKey(entry.getName()));
+
+            byte[] expectedContent = randomFiles.get(entry.getName());
+            byte[] actualContent = new byte[(int)entry.getSize()];
+            inputArchive.read(actualContent);
+
+            assertArrayEquals(expectedContent, actualContent);
         }
 
-        assertNotNull("Package should contain testfile1", testFile);
-        assertEquals(TEST_FILE_CONTENT.length, testFile.getSize());
-
-        byte[] content = new byte[(int)testFile.getSize()];
-        inputStream.read(content);
-
-        assertArrayEquals(TEST_FILE_CONTENT, content);
     }
 }
