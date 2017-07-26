@@ -22,7 +22,7 @@ public class JavaClassParser {
     } 
     
     private String generateTestClassHeader(Challenge c) {
-        return "public class " + c.getName() + "Test {";
+        return "public class " + c.getName().replaceAll("\\s+","") + "Test {";
     }
     
     private String generateImplementationClassHeader(Challenge c) {
