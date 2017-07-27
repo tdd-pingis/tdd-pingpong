@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pingis.repositories.ChallengeRepository;
+import pingis.services.JavaClassGenerator;
 import pingis.utils.JavaSyntaxChecker;
 
 @Controller
@@ -33,37 +34,39 @@ public class ChallengeController {
     public String hello() {
         return "hello";
     }
-    
-    @RequestMapping(value = "/task/{challenge}/{task}", method = RequestMethod.GET)
-    public String task(Model model, @PathVariable Long challenge, @PathVariable int task) {
-        Challenge c = cr.findOne(challenge);
+
+    @RequestMapping(value = "/task/{challengeId}/{taskId}", method = RequestMethod.GET)
+    public String task(Model model, @PathVariable Long challengeId, @PathVariable int taskId) {
+        Challenge c = cr.findById(challengeId).get();
+        JavaClassGenerator jparser = new JavaClassGenerator();
+
         model.addAttribute("challengename", c.getName());
         model.addAttribute("challengedesc", c.getDesc());
         model.addAttribute("difficulty", c.getLevel());        
 
-        Task t = c.getTasks().get(task);
-
+        Task t = c.getTasks().get(taskId);
+        List<Task> viewTasks = new ArrayList<Task>();
+        viewTasks.add(t); // add all tasks that are needed in the page
+        
         // The 'code' attribute may already be present in case of a redirect, so add
         // it only if it doesn't exist.
         if (!model.containsAttribute("code")) {
-            model.addAttribute("code", t.getCode());
+            model.addAttribute("code", jparser.parseChallenge(c, viewTasks));
         }
-
+        
         model.addAttribute("taskname", t.getName());
         model.addAttribute("taskdesc", t.getDesc());
-
-        model.addAttribute("challengeId", challenge);
-        model.addAttribute("taskId", task);
-        
+        model.addAttribute("challengeId", challengeId);
+        model.addAttribute("taskId", taskId);
         model.addAttribute("dummycode", "public void doSomething() {\n   System.out.println(\"Hello, tabs!\");\n}");
 
         return "task";
     }
 
-    @RequestMapping(value = "/task", method = RequestMethod.POST)
-    public RedirectView task(String code, long challenge, int task, RedirectAttributes redirectAttributes) {
-        redirectAttributes.addAttribute("challenge", challenge);
-        redirectAttributes.addAttribute("task", task);
+    @RequestMapping(value = "/taskId", method = RequestMethod.POST)
+    public RedirectView task(String code, long challengeId, int taskId, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addAttribute("challengeId", challengeId);
+        redirectAttributes.addAttribute("task", taskId);
 
         String[] syntaxErrors = JavaSyntaxChecker.parseCode(code);
 
@@ -74,7 +77,7 @@ public class ChallengeController {
         redirectAttributes.addFlashAttribute("errors", syntaxErrors);
         redirectAttributes.addFlashAttribute("code", code);
 
-        return new RedirectView("/task/{challenge}/{task}");
+        return new RedirectView("/task/{challengeId}/{taskId}");
     }
 
     @RequestMapping("/sandbox")
