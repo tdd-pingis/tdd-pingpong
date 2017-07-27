@@ -34,12 +34,12 @@ public class ChallengeController {
     public String hello() {
         return "hello";
     }
-    
+
     @RequestMapping(value = "/task/{challengeId}/{taskId}", method = RequestMethod.GET)
     public String task(Model model, @PathVariable Long challengeId, @PathVariable int taskId) {
-        Challenge c = cr.findOne(challengeId);
+        Challenge c = cr.findById(challengeId).get();
         JavaClassGenerator jparser = new JavaClassGenerator();
-        
+
         model.addAttribute("challengename", c.getName());
         model.addAttribute("challengedesc", c.getDesc());
         model.addAttribute("difficulty", c.getLevel());        
