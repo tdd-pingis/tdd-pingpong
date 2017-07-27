@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
         classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE'
@@ -14,9 +15,10 @@ plugins {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'idea'
-apply plugin: 'org.springframework.boot'
 apply plugin: 'jacoco'
 apply plugin: 'checkstyle'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
 
 jar {
     baseName = 'tdd-pingpong'
@@ -57,26 +59,31 @@ dependencies {
     compile 'org.springframework.boot:spring-boot-devtools'
 
     //Spring Security
-    compile 'org.springframework.security.oauth:spring-security-oauth2'
+    compile 'io.projectreactor:reactor-core:3.0.7.RELEASE'
+    compile 'org.springframework.security:spring-security-core:5.0.0.M3'
     compile 'org.springframework.security:spring-security-web:5.0.0.M3'
     compile 'org.springframework.security:spring-security-config:5.0.0.M3'
+    compile 'org.springframework.security:spring-security-oauth2-core:5.0.0.M3'
     compile 'org.springframework.security:spring-security-oauth2-client:5.0.0.M3'
+    compile 'org.springframework.boot:spring-boot-starter-webflux:2.0.0.M2'
 
     compile 'com.h2database:h2'
     compile 'org.webjars:jquery:3.2.1'
     compile 'org.webjars:bootstrap:3.3.0'
     compile 'com.github.javaparser:javaparser-core:3.2.12'
+    compile 'org.apache.commons:commons-compress:1.14'
 
     testCompile 'junit:junit'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
 
+    //Cucumber & Selenium
     testCompile 'info.cukes:cucumber-core:1.2.5'
     testCompile 'info.cukes:cucumber-java:1.2.5'
     testCompile 'info.cukes:cucumber-junit:1.2.5'
     testCompile 'info.cukes:cucumber-spring:1.2.5'
     testCompile 'org.seleniumhq.selenium:htmlunit-driver:2.27'
-    testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'
     testCompile 'org.seleniumhq.selenium:selenium-api:3.4.0'
     testCompile 'org.seleniumhq.selenium:selenium-server:3.4.0'
     testCompile 'org.seleniumhq.selenium:selenium-java:3.4.0'
+    testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'
 }

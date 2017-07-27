@@ -24,7 +24,7 @@
                 </ul>
             </div>
             <ul class="nav nav-tabs">        
-                <li th:each="editor, iter: ${editorContents}" th:class="${iter.index == 0}?'$active'"><a data-toggle="tab" th:text="${editor.value[0]}" th:href="'#'+${editor.key}+'_item'">Placeholder editors</a></li>        
+                <li th:each="editor, iter: ${editorContents}" th:class="${iter.index == 0}?'active'"><a data-toggle="tab" th:text="${editor.value[0]}" th:href="'#'+${editor.key}+'_item'">Placeholder editors</a></li>        
             </ul>
             <div class="tab-content" th:inline="text">        
                 <div th:each="editor, iter: ${editorContents}" th:id="${editor.key}+'_item'" th:class="${iter.index == 0}?'panel panel-default tab-pane fade in active':'panel panel-default tab-pane fade'">
