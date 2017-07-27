@@ -1,6 +1,7 @@
 package pingis.controllers;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -8,7 +9,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Task;
 import pingis.entities.Challenge;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import pingis.repositories.ChallengeRepository;
 import pingis.utils.JavaSyntaxChecker;
 
-@EnableOAuth2Sso
 @Controller
 public class ChallengeController {
     @Autowired
@@ -47,17 +46,21 @@ public class ChallengeController {
 
         // The 'code' attribute may already be present in case of a redirect, so add
         // it only if it doesn't exist.
-        if (!model.containsAttribute("code")) {
-            model.addAttribute("code", t.getCode());
+        LinkedHashMap<String, String[]> editorContents = new LinkedHashMap();
+
+        if (!model.containsAttribute("editorContents")) {
+            model.addAttribute("editorContents", editorContents);
         }
+        editorContents.put("editor1", new String[]{"Editor 1", t.getCode()});
+        editorContents.put("editor2", new String[]{"Editor 2", "public void doSomething() {\n   System.out.println(\"Hello, tabs!\");\n}"});
+        editorContents.put("editor3", new String[]{"Editor 3", "public void testing tabs"});
+        model.addAttribute("ntabs", editorContents.size());
 
         model.addAttribute("taskname", t.getName());
         model.addAttribute("taskdesc", t.getDesc());
 
         model.addAttribute("challengeId", challenge);
         model.addAttribute("taskId", task);
-        
-        model.addAttribute("dummycode", "public void doSomething() {\n   System.out.println(\"Hello, tabs!\");\n}");
 
         return "task";
     }
