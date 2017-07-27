@@ -11,7 +11,11 @@ public class TaskTest {
 
     @Before
     public void setUp() {
-        normalTask = new Task("tostring", "generate toString()");
+        normalTask = new Task(
+                "tostring", 
+                "generate toString()",
+                "Some amazing testCode here",
+                1, 0);
         protectedTask = new Task();
     }
 
@@ -19,7 +23,7 @@ public class TaskTest {
     public void testTaskCode() {
         assertEquals("generate toString()", normalTask.getDesc());
     }
-
+    
     @Test
     public void testTaskImplementations() {
         assertEquals(0, normalTask.getImplementations().size());
