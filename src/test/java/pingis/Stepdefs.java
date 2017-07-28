@@ -22,6 +22,7 @@ public class Stepdefs {
     
     WebDriver driver;
     String baseUrl;
+    String password = System.getenv("TMC_TEST_USER_PASSWORD");
 
     @Test
     public void setupTest() {
@@ -30,6 +31,7 @@ public class Stepdefs {
     @Before
     public void setUp() throws Exception {
         if(driver == null) driver = new HtmlUnitDriver();
+        driver.manage().deleteAllCookies();
         baseUrl = "http://localhost:8080/";
     }
 
@@ -46,25 +48,30 @@ public class Stepdefs {
         get("login");
     }
 
-    @When("^.* inputs their username (.*) and password (.*)$")
-    public void inputs_username_and_password(String username, String password) throws Throwable {
-        driver.findElement(By.id("username")).sendKeys(username);
-        driver.findElement(By.id("password")).sendKeys(password);
+    @And("chooses to authenticate with TMC$")
+    public void chooses_to_authenticate_with_tmc() throws Throwable {
+        driver.findElement(By.linkText("TMC")).click();
     }
 
-    @And("submits the .*")
-    public void submits() throws Throwable {
-        driver.findElement(By.id("submit")).click();
+    @When("^.* inputs their credentials for the username (.*)$")
+    public void inputs_username_and_password(String username) throws Throwable {
+        driver.findElement(By.id("session_login")).sendKeys(username);
+        driver.findElement(By.id("session_password")).sendKeys(password);
+    }
+
+    @And("submits the TMC login form$")
+    public void submits_tmc() throws Throwable {
+        driver.findElement(By.name("commit")).click();
+    }
+
+    @And("gives their authorization$")
+    public void gives_their_authorization() throws Throwable {
+        driver.findElement(By.name("commit")).click();
     }
 
     @Then("^.* is successfully authenticated$")
     public void successfully_authenticated() throws Throwable {
-        assertFalse(contains("error"));
-    }
-
-    @Then("^.* is not authenticated$")
-    public void not_authenticated() throws Throwable {
-        assertTrue(contains("error"));
+        assertTrue(contains("Authorization code"));
     }
 
     @After

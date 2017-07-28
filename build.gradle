@@ -87,3 +87,9 @@ dependencies {
     testCompile 'org.seleniumhq.selenium:selenium-java:3.4.0'
     testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'
 }
+
+bootRun { 
+    if (project.hasProperty('TMC_TEST_USER_PASSWORD')) {
+        environment 'TMC_TEST_USER_PASSWORD', TMC_TEST_USER_PASSWORD
+    }
+}
