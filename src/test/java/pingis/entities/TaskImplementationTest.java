@@ -11,7 +11,7 @@ public class TaskImplementationTest {
 
     @Before
     public void setUp() {
-        userImplementation = new TaskImplementation("return true;");
+        userImplementation = new TaskImplementation("return true;", ImplementationType.IMPLEMENTATION);
         protectedImplementation = new TaskImplementation();
     }
 

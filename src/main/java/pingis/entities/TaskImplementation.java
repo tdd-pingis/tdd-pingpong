@@ -27,8 +27,8 @@ public class TaskImplementation {
 
     protected TaskImplementation() {}
 
-    public TaskImplementation(String code) {
-        this.type = ImplementationType.IMPLEMENTATION;
+    public TaskImplementation(String code, ImplementationType type) {
+        this.type = type;
         this.code = code;
         this.isExample = false; // default value
         this.isPublic = false;
@@ -61,6 +61,14 @@ public class TaskImplementation {
     
     public void setType(ImplementationType type) {
         this.type = type;
+    }
+    
+    public void setTypeTest() {
+        this.type = ImplementationType.TEST;
+    }
+    
+    public void setTypeImplementation() {
+        this.type = ImplementationType.IMPLEMENTATION;
     }
     
     public boolean isExample() {
