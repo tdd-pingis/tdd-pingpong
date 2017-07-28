@@ -24,34 +24,45 @@
                 </ul>
             </div>
             <ul class="nav nav-tabs">        
-                <li th:each="editor, iter: ${editorContents}" th:class="${iter.index == 0}?'active'"><a data-toggle="tab" th:text="${editor.value[0]}" th:href="'#'+${editor.key}+'_item'">Placeholder editors</a></li>        
+                <li th:each="editor, iter: ${editorContents}" th:class="${iter.index == 0}?'active'"><a data-toggle="tab" th:text="${editor.value.title}" th:href="'#'+${editor.key}+'_item'">Placeholder editors</a></li>        
             </ul>
-            <div class="tab-content" th:inline="text">        
-                <div th:each="editor, iter: ${editorContents}" th:id="${editor.key}+'_item'" th:class="${iter.index == 0}?'panel panel-default tab-pane fade in active':'panel panel-default tab-pane fade'">
-                    <div class="panel-heading">
-                        <h3 class="panel-title" th:inline="text">[[${editor.value[0]}]]</h3>
+            <form method="post" action="/task">
+
+                <div class="tab-content" th:inline="text">        
+                    <input type="hidden" name="challenge" th:value="${challengeId}" />
+                    <input type="hidden" name="task" th:value="${taskId}" />
+                    <div th:each="editor, iter: ${editorContents}" th:id="${editor.key}+'_item'" th:class="${iter.index == 0}?'panel panel-default tab-pane fade in active':'panel panel-default tab-pane fade'">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" th:inline="text">[[${editor.value.title}]]</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div th:id="${editor.key}" style="height: 300px" class="editortab" th:inline="text">[[${editor.value.content}]]</div>
+                            <textarea name="${editor.key}+'code'" th:id="'shadow-'+${editor.key}" style="display: none;"/>
+
+                        </div>
                     </div>
-                    <div class="panel-body">
-                        <form method="post" action="/task">
-                            <input type="hidden" name="challenge" th:value="${challengeId}" />
-                            <input type="hidden" name="task" th:value="${taskId}" />
-                            <div th:id="${editor.key}" style="height: 300px" th:inline="text">[[${editor.value[1]}]]</div>
-                            <textarea name="code" th:id="'shadow-'+${editor.key}" style="display: none;"/>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
-                    </div>
+                    <button type="submit" class="btn btn-primary" onclick="clicked(event)">Submit</button>
                 </div>
-            </div>
+            </form>
+
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.8/ace.js" type="text/javascript" charset="utf-8"></script>
-        <script th:inline="text" th:each="editor: ${editorContents}">
-            var [[${editor.key}]] = ace.edit("[[${editor.key}]]");
-            [[${editor.key}]].setTheme("ace/theme/monokai");
-            [[${editor.key}]].getSession().setMode("ace/mode/java");
-            var textarea_[[${editor.key}]] = document.getElementById("shadow-[[${editor.key}]]");
-            [[${editor.key}]].getSession().on("change", function () {
-            textarea_[[${editor.key}]].value = [[${editor.key}]].getSession().getValue();
-            });
+        <script th:inline="text">
+            var tabs = document.getElementsByClassName("editortab");
+            for (t in tabs) {
+               var editor = ace.edit(tabs[t].id);
+               editor.setTheme("ace/theme/monokai");
+               editor.getSession().setMode("ace/mode/java");
+               var textarea = document.getElementById("shadow-"+tabs[t].id);
+               editor.getSession().on("change", function () {
+                   textarea.value = editor.getSession().getValue();
+               });
+            }
+            function clicked(e) {
+                if (!confirm("Are you ready to submit?")) {
+                    e.preventDefault();
+                }
+            }
         </script>
     </body>
 </html>
