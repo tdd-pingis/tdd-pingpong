@@ -7,8 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
+import pingis.config.SubmissionProperties;
 
 import java.io.IOException;
 
@@ -18,6 +21,8 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 @RunWith(SpringRunner.class)
 @RestClientTest(SubmissionSenderService.class)
+@TestPropertySource(properties = {"tmc.sandboxUrl=http://localhost:3001", "tmc.notifyUrl=http://localhost:1337"})
+@ContextConfiguration(classes = {SubmissionProperties.class, SubmissionSenderService.class})
 public class SubmissionSenderServiceTest {
     @Autowired
     private SubmissionSenderService sender;
