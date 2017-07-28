@@ -43,9 +43,14 @@ public class Stepdefs {
         return driver.getPageSource().contains(s);
     }
 
-    @Given("^.* navigates to the login form$")
-    public void navigates_to_the_login_form() throws Throwable {
-        get("login");
+    @Given("^.* navigates to the (.*)$")
+    public void navigates_to_the_address(String address) throws Throwable {
+        get(address);
+    }
+
+    @When("^.* clicks the (.*)$")
+    public void clicks_the_element(String element) {
+        driver.findElement(By.linkText(element)).click();
     }
 
     @And("chooses to authenticate with TMC$")
@@ -72,6 +77,11 @@ public class Stepdefs {
     @Then("^.* is successfully authenticated$")
     public void successfully_authenticated() throws Throwable {
         assertTrue(contains("Authorization code"));
+    }
+
+    @Then("The page contains (.*)")
+    public void page_has_the_right_content(String content) {
+        assertTrue(contains(content));
     }
 
     @After

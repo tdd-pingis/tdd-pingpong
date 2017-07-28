@@ -10,24 +10,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import pingis.config.SubmissionProperties;
 
 @Service
 public class SubmissionSenderService {
     private static final String SUBMISSION_FILENAME = "submission.tar";
 
-    // TODO: These need to be read from configuration
-    // When running in Docker, the sandbox root URI can't be localhost as the
-    // sandbox doesn't run in a container.
-    private static final String SANDBOX_ROOT_URI = "http://localhost:3001";
-    private static final String NOTIFICATION_URI = "http://localhost:8080";
-
     private RestTemplate restTemplate;
 
+    private final SubmissionProperties submissionProperties;
+
     @Autowired
-    public SubmissionSenderService(RestTemplateBuilder restTemplateBuilder) {
+    public SubmissionSenderService(RestTemplateBuilder restTemplateBuilder, SubmissionProperties submissionProperties) {
+        this.submissionProperties = submissionProperties;
+
         restTemplate = restTemplateBuilder
-                // TODO: read this from configuration
-                .rootUri("http://localhost:3001")
+                .rootUri(submissionProperties.getSandboxUrl())
                 .build();
     }
 
@@ -53,7 +51,7 @@ public class SubmissionSenderService {
         String token = "123456";
 
         // TODO: This needs to be configured
-        String notifyUrl = NOTIFICATION_URI;
+        String notifyUrl = submissionProperties.getNotifyUrl();
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = buildRequestEntity(packaged, token,
                 notifyUrl);

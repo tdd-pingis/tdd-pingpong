@@ -1,59 +1,68 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="base :: header"></head>
-
-<body>
-
-<div class="container">
-    <nav th:include="navbar :: navigation"></nav>
-    <p class="lead" th:inline="text">Challenge: [[${challengename}]]</p>
-    <p th:text="${challengedesc}"></p>
-    <div class="row">
-        <div class="col-md-4">
-            <p th:inline="text">Task: [[${taskname}]]</p><br/>
-            <p th:inline="text">Level: [[${difficulty}]]</p><br/>
-        </div>
-        <div class="col-md-6">
-            <p th:text="${taskdesc}"></p><br/><br/>
-        </div>
-    </div>
-
-    <div th:if="${errors}" class="row">
-        <p>The following errors were encountered:</p>
-        <ul>
-            <li th:each="error : ${errors}">
-                <span th:text="${error}"></span>
-            </li>
-        </ul>
-    </div>
-
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <h3 class="panel-title">Editor</h3>
-        </div>
-        <div class="panel-body">
+    <head th:include="base :: header"></head>
+    <body> 
+        <div class="container">
+            <nav th:include="navbar :: navigation"></nav>
+            <p class="lead" th:inline="text">Challenge: [[${challengename}]]</p>
+            <p th:text="${challengedesc}"></p>
+            <div class="row">
+                <div class="col-md-4">
+                    <p th:inline="text">Task: [[${taskname}]]</p><br/>
+                    <p th:inline="text">Level: [[${difficulty}]]</p><br/>
+                </div>
+                <div class="col-md-6">
+                    <p th:text="${taskdesc}"></p><br/><br/>
+                </div>
+            </div>
+            <div th:if="${errors}" class="row">
+                <p>The following errors were encountered:</p>
+                <ul>
+                    <li th:each="error : ${errors}">
+                        <span th:text="${error}"></span>
+                    </li>
+                </ul>
+            </div>
+            <ul class="nav nav-tabs">        
+                <li th:each="editor, iter: ${editorContents}" th:class="${iter.index == 0}?'active'"><a data-toggle="tab" th:text="${editor.value.title}" th:href="'#'+${editor.key}+'_item'">Placeholder editors</a></li>        
+            </ul>
             <form method="post" action="/task">
-                <input type="hidden" name="challenge" th:value="${challengeId}" />
-                <input type="hidden" name="task" th:value="${taskId}" />
-                <div id="editor" style="height: 300px" th:text="${code}"></div>
-                <textarea name="code" id="shadow-editor" style="display: none;"/>
-                <button type="submit" class="btn btn-primary">Submit</button>
+
+                <div class="tab-content" th:inline="text">        
+                    <input type="hidden" name="challenge" th:value="${challengeId}" />
+                    <input type="hidden" name="task" th:value="${taskId}" />
+                    <div th:each="editor, iter: ${editorContents}" th:id="${editor.key}+'_item'" th:class="${iter.index == 0}?'panel panel-default tab-pane fade in active':'panel panel-default tab-pane fade'">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" th:inline="text">[[${editor.value.title}]]</h3>
+                        </div>
+                        <div class="panel-body">
+                            <div th:id="${editor.key}" style="height: 300px" class="editortab" th:inline="text">[[${editor.value.content}]]</div>
+                            <textarea name="${editor.key}+'code'" th:id="'shadow-'+${editor.key}" style="display: none;"/>
+
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary" onclick="clicked(event)">Submit</button>
+                </div>
             </form>
+
         </div>
-    </div>
-</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.8/ace.js" type="text/javascript" charset="utf-8"></script>
-<script>
-    var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.getSession().setMode("ace/mode/java");
-
-    var textarea = document.getElementById("shadow-editor");
-    editor.getSession().on("change", function () {
-        textarea.value = editor.getSession().getValue();
-    });
-</script>
-
-</body>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.8/ace.js" type="text/javascript" charset="utf-8"></script>
+        <script th:inline="text">
+            var tabs = document.getElementsByClassName("editortab");
+            for (t in tabs) {
+               var editor = ace.edit(tabs[t].id);
+               editor.setTheme("ace/theme/monokai");
+               editor.getSession().setMode("ace/mode/java");
+               var textarea = document.getElementById("shadow-"+tabs[t].id);
+               editor.getSession().on("change", function () {
+                   textarea.value = editor.getSession().getValue();
+               });
+            }
+            function clicked(e) {
+                if (!confirm("Are you ready to submit?")) {
+                    e.preventDefault();
+                }
+            }
+        </script>
+    </body>
 </html>
