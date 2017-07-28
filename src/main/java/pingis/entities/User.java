@@ -19,8 +19,20 @@ public class User {
     // private Set<Role> roles <-- TODO: think through the security roles and 
                                 // how to differentiate between users and admins 
     
-    @OneToMany(fetch=FetchType.LAZY)
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "user")
     private List<TaskImplementation> taskImplementations;
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "testUser")
+    private List<ChallengeImplementation> testedChallenges;
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "implementationUser")
+    private List<ChallengeImplementation> implementedChallenges;
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "author")
+    private List<Challenge> authoredChallenges;
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "author")
+    private List<Task> authoredTasks;
 
     protected User() {}
 
@@ -28,6 +40,10 @@ public class User {
         this.name = name;
         this.level = level;
         this.taskImplementations = new ArrayList<>();
+        this.implementedChallenges = new ArrayList<>();
+        this.testedChallenges = new ArrayList<>();
+        this.authoredChallenges = new ArrayList<>();
+        this.authoredTasks = new ArrayList<>();
     }
 
     public String getName() {
@@ -56,6 +72,38 @@ public class User {
     
     public List<TaskImplementation> getTaskImplementations() {
         return this.taskImplementations;
+    }
+
+    public List<ChallengeImplementation> getTestedChallenges() {
+        return testedChallenges;
+    }
+
+    public void setTestedChallenges(List<ChallengeImplementation> testedChallenges) {
+        this.testedChallenges = testedChallenges;
+    }
+
+    public List<ChallengeImplementation> getImplementedChallenges() {
+        return implementedChallenges;
+    }
+
+    public void setImplementedChallenges(List<ChallengeImplementation> implementedChallenges) {
+        this.implementedChallenges = implementedChallenges;
+    }
+
+    public List<Challenge> getAuthoredChallenges() {
+        return authoredChallenges;
+    }
+
+    public void setAuthoredChallenges(List<Challenge> authoredChallenges) {
+        this.authoredChallenges = authoredChallenges;
+    }
+
+    public List<Task> getAuthoredTasks() {
+        return authoredTasks;
+    }
+
+    public void setAuthoredTasks(List<Task> authoredTasks) {
+        this.authoredTasks = authoredTasks;
     }
     
 }

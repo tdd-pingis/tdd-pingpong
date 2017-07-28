@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import java.util.List;
 import java.util.ArrayList;
 import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -21,17 +22,31 @@ public class Challenge {
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy="challenge")
     private List<Task> tasks;
+    
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "challenge")
+    private List<ChallengeImplementation> implementations;
+    
+    @ManyToOne(fetch=FetchType.EAGER)
+    private User author;
 
-    protected Challenge() {
-    }
+    protected Challenge() {}
 
     public Challenge(String name, String description) {
         this.description = description;
         this.name = name;
-        this.tasks = new ArrayList<Task>();
+        this.tasks = new ArrayList<>();
+        this.implementations = new ArrayList<>();
         this.rating = 0;
     }
     
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public User getAuthor() {
+        return this.author;
+    }
+
     public void addTask(Task t) {
         this.tasks.add(t);
     }
@@ -92,5 +107,14 @@ public class Challenge {
     public void setTasks(List<Task> tasks) {
         this.tasks = tasks;
     }
+
+    public List<ChallengeImplementation> getImplementations() {
+        return implementations;
+    }
+
+    public void setImplementations(List<ChallengeImplementation> implementations) {
+        this.implementations = implementations;
+    }
+    
 
 }

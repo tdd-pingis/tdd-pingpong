@@ -24,9 +24,12 @@ public class Task {
     
     @ManyToOne(fetch=FetchType.LAZY)
     private Challenge challenge;
+    
+    @ManyToOne(fetch=FetchType.EAGER)
+    private User author;
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy="task")
-    private List<TaskImplementation> taskImplementations;
+    private List<TaskImplementation> implementations;
 
     protected Task() {}
 
@@ -37,9 +40,17 @@ public class Task {
         this.code = code;
         this.level = level;
         this.rating = rating;
-        this.taskImplementations = new ArrayList<>();
+        this.implementations = new ArrayList<>();
     }
 
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+    
+    public User getAuthor() {
+        return this.author;
+    }
+    
     public long getId() {
         return taskId;
     }
@@ -101,11 +112,18 @@ public class Task {
     }
     
     public List<TaskImplementation> getImplementations() {
-        return taskImplementations;
+        return implementations;
     }
 
     public void setImplementations(List<TaskImplementation> implementations) {
-        this.taskImplementations = implementations;
+        this.implementations = implementations;
     }
 
+    public int getTaskId() {
+        return taskId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
 }
