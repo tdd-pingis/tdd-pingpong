@@ -1,7 +1,7 @@
 Feature: Simple authentication for two sample users
 
 Scenario Outline: <user> can log in with valid username and password
-    Given <user> navigates to the login form
+    Given <user> navigates to the login
     When <user> inputs their username <username> and password <password>
     And submits the form
     Then <user> is successfully authenticated
@@ -12,7 +12,7 @@ Scenario Outline: <user> can log in with valid username and password
         |Admin  |admin      |password   |
 
 Scenario Outline: <user> cannot login with an invalid username or password
-    Given <user> navigates to the login form
+    Given <user> navigates to the login
     When <user> inputs their username <username> and password <password>
     And submits the form
     Then <user> is not authenticated
