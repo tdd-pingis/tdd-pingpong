@@ -90,13 +90,17 @@ dependencies {
 }
 
 test { 
-    environment 'TMC_TEST_USER_LOGIN', TMC_TEST_USER_LOGIN
-    environment 'TMC_TEST_USER_PASSWORD', TMC_TEST_USER_PASSWORD
-    environment 'TMC_APP_ID', TMC_APP_ID
-    environment 'TMC_SECRET', TMC_SECRET
+    if(project.hasProperty('TMC_SECRET')) {
+        environment 'TMC_TEST_USER_LOGIN', TMC_TEST_USER_LOGIN
+        environment 'TMC_TEST_USER_PASSWORD', TMC_TEST_USER_PASSWORD
+        environment 'TMC_APP_ID', TMC_APP_ID
+        environment 'TMC_SECRET', TMC_SECRET
+    }
 }
 
 bootRun { 
-    environment 'TMC_APP_ID', TMC_APP_ID
-    environment 'TMC_SECRET', TMC_SECRET
+    if(project.hasProperty('TMC_SECRET')) {
+        environment 'TMC_APP_ID', TMC_APP_ID
+        environment 'TMC_SECRET', TMC_SECRET
+    }
 }
