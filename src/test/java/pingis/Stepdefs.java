@@ -22,6 +22,8 @@ public class Stepdefs {
     
     WebDriver driver;
     String baseUrl;
+    String username = System.getenv("TMC_TEST_USER_LOGIN");
+    String password = System.getenv("TMC_TEST_USER_PASSWORD");
 
     @Test
     public void setupTest() {
@@ -30,6 +32,7 @@ public class Stepdefs {
     @Before
     public void setUp() throws Exception {
         if(driver == null) driver = new HtmlUnitDriver();
+        driver.manage().deleteAllCookies();
         baseUrl = "http://localhost:8080/";
     }
 
@@ -41,8 +44,13 @@ public class Stepdefs {
         return driver.getPageSource().contains(s);
     }
 
-    @Given("^.* navigates to the (.*)$")
-    public void navigates_to_the_address(String address) throws Throwable {
+    @Given("^.* navigates to the login form$")
+    public void navigates_to_the_login_form() throws Throwable {
+        get("/login");
+    }
+
+    @Given("^.* navigates to the task page at (.*)$")
+    public void navigates_to_the_task_page(String address) throws Throwable {
         get(address);
     }
 
@@ -51,28 +59,33 @@ public class Stepdefs {
         driver.findElement(By.linkText(element)).click();
     }
 
-    @When("^.* inputs their username (.*) and password (.*)$")
-    public void inputs_username_and_password(String username, String password) throws Throwable {
-        driver.findElement(By.id("username")).sendKeys(username);
-        driver.findElement(By.id("password")).sendKeys(password);
+    @And("^chooses to authenticate with TMC$")
+    public void chooses_to_authenticate_with_tmc() throws Throwable {
+        driver.findElement(By.linkText("TMC")).click();
     }
 
-    @And("submits the .*")
-    public void submits() throws Throwable {
-        driver.findElement(By.id("submit")).click();
+    @When("^.* inputs their credentials for TMC$")
+    public void inputs_credentials_for_tmc() throws Throwable {
+        driver.findElement(By.id("session_login")).sendKeys(username);
+        driver.findElement(By.id("session_password")).sendKeys(password);
+    }
+
+    @And("^submits the TMC login form$")
+    public void submits_tmc() throws Throwable {
+        driver.findElement(By.name("commit")).click();
+    }
+
+    @And("^gives their authorization$")
+    public void gives_their_authorization() throws Throwable {
+        driver.findElement(By.name("commit")).click();
     }
 
     @Then("^.* is successfully authenticated$")
     public void successfully_authenticated() throws Throwable {
-        assertFalse(contains("error"));
+        assertTrue(contains("Authorization code"));
     }
 
-    @Then("^.* is not authenticated$")
-    public void not_authenticated() throws Throwable {
-        assertTrue(contains("error"));
-    }
-
-    @Then("The page contains (.*)")
+    @Then("^the page contains (.*)$")
     public void page_has_the_right_content(String content) {
         assertTrue(contains(content));
     }
