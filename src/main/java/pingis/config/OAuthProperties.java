@@ -5,7 +5,6 @@
  */
 package pingis.config;
 
-import org.springframework.beans.factory.annotation.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
