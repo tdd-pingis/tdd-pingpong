@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import pingis.config.OAuthProperties;
 import pingis.repositories.ChallengeRepository;
 import pingis.services.JavaClassGenerator;
 import pingis.utils.EditorTabData;
@@ -26,9 +25,6 @@ import pingis.utils.JavaSyntaxChecker;
 public class ChallengeController {
     @Autowired
     private ChallengeRepository cr;
-    @Autowired
-    private OAuthProperties oap;
-    
 
     @RequestMapping("/")
     public String index() {
