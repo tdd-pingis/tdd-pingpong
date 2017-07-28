@@ -14,7 +14,8 @@ import javax.persistence.OneToMany;
 public class Task {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private long taskId;
+    private long id; // unique primary ID 
+    private int taskId; // ID in relation to parent Challenge
     private String name;
     private String desc;
     private String code;
@@ -25,28 +26,22 @@ public class Task {
     private Challenge challenge;
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy="task")
-    private List<Implementation> implementations;
-
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="task")
-    private List<Test> tests;
+    private List<TaskImplementation> taskImplementations;
 
     protected Task() {}
-    
-    public Task(String name, String desc, String code, int level, int rating) {
+
+    public Task(int taskId, String name, String desc, String code, int level, int rating) {
+        this.taskId = taskId;
         this.name = name;
         this.desc = desc;
         this.code = code;
         this.level = level;
         this.rating = rating;
-        this.implementations = new ArrayList<>();
+        this.taskImplementations = new ArrayList<>();
     }
 
-    public long getTaskId() {
+    public long getId() {
         return taskId;
-    }
-
-    public void setTaskId(long taskId) {
-        this.taskId = taskId;
     }
 
     public String getCode() {
@@ -73,22 +68,6 @@ public class Task {
         this.challenge = challenge;
     }
 
-    public List<Implementation> getImplementations() {
-        return implementations;
-    }
-
-    public void setImplementations(List<Implementation> implementations) {
-        this.implementations = implementations;
-    }
-
-    public List<Test> getTests() {
-        return tests;
-    }
-
-    public void setTests(List<Test> tests) {
-        this.tests = tests;
-    }
-    
     public String getDesc() {
         return this.desc;
     } 
@@ -111,6 +90,22 @@ public class Task {
 
     public void setLevel(int level) {
         this.level = level;
+    }
+
+    public int getSequenceId() {
+        return taskId;
+    }
+
+    public void setSequenceId(int sequenceId) {
+        this.taskId = sequenceId;
+    }
+    
+    public List<TaskImplementation> getImplementations() {
+        return taskImplementations;
+    }
+
+    public void setImplementations(List<TaskImplementation> implementations) {
+        this.taskImplementations = implementations;
     }
 
 }

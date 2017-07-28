@@ -12,7 +12,7 @@ public class UserTest {
 
     @Before
     public void setUp() {
-        normalUser = new User("Matti", 1);
+        normalUser = new User(1, "Matti", 1);
         protectedUser = new User();
     }
 
@@ -26,10 +26,4 @@ public class UserTest {
         final double LEVEL = 0.001;
         assertEquals(1, normalUser.getLevel(), LEVEL);
     }
-
-    @Test
-    public void getTestStates() {
-        assertEquals(0, normalUser.getStates().size());
-    }
-
 }

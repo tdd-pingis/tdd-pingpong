@@ -25,17 +25,17 @@ public class JavaClassGeneratorTest {
         challenge1 = new Challenge("Immutable Calculator", "Amazing immutable calculator.");
         jparser = new JavaClassGenerator();
         
-        task1 = new Task("testAddition",
+        task1 = new Task(0, "testAddition",
                 "test addition of two integers, return single value", 
                 "@Test\npublic void testAddition() {\n\t//TODO: implement this\n\n}", 
                 Challenge1Level, 0);
         
-        task2 = new Task("testSubstraction",
+        task2 = new Task(1, "testSubstraction",
                 "test substraction of two integers, return single value", 
                 "@Test\npublic void testSubstraction() {\n\t//TODO: implement this\n\n}", 
                 Challenge1Level, 0);
         
-        task3 = new Task("testMultiplication",
+        task3 = new Task(2, "testMultiplication",
                 "test multiplication of two integers, return single value", 
                 "@Test\npublic void testMultiplication() {\n\t//TODO: implement this\n\n}", 
                 Challenge1Level, 0);

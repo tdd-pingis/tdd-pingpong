@@ -7,12 +7,12 @@ import static org.junit.Assert.*;
 
 public class ImplementationTest {
 
-    Implementation userImplementation, protectedImplementation;
+    TaskImplementation userImplementation, protectedImplementation;
 
     @Before
     public void setUp() {
-        userImplementation = new Implementation("return true;");
-        protectedImplementation = new Implementation();
+        userImplementation = new TaskImplementation("return true;");
+        protectedImplementation = new TaskImplementation();
     }
 
     @Test

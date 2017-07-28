@@ -11,7 +11,7 @@ public class TaskTest {
 
     @Before
     public void setUp() {
-        normalTask = new Task(
+        normalTask = new Task(1,
                 "tostring", 
                 "generate toString()",
                 "Some amazing testCode here",
@@ -34,5 +34,5 @@ public class TaskTest {
         final double RATING = 0.001;
         assertEquals(0, normalTask.getRating(), RATING);
     }
-
+    
 }
