@@ -28,7 +28,6 @@ public class ChallengeController {
 
     @RequestMapping("/")
     public String index() {
-    
         return "index";
     }
     
