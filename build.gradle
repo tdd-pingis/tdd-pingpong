@@ -40,10 +40,6 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-test {
-    testLogging.showStandardStreams = true
-}
-
 dependencies {
     // tag::jetty[]
     compile('org.springframework.boot:spring-boot-starter-web') {
@@ -88,3 +84,5 @@ dependencies {
     testCompile 'org.seleniumhq.selenium:selenium-java:3.4.0'
     testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'
 }
+
+apply from: 'gradle/helper.gradle'

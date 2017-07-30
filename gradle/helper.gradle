@@ -1,0 +1,45 @@
+// Functions for test printing
+test { testLogging { afterSuite { desc, result -> printTestResults(desc,result) } } }
+
+// = [SUCCESS, FAILURE, SKIPPED]
+def unitResults = [0,0,0]
+def cucumberResults = [0,0,0]
+
+ext.printTestResults = { desc, result -> 
+  if(!desc.parent) {
+    println formatResults(unitResults, cucumberResults)
+  } else if(desc.getName().contains("cucumber")) {
+    cucumberResults = resolveTestResult(cucumberResults, result)
+  } else if(desc.getName().contains("pingis")) {
+    unitResults = resolveTestResult(unitResults, result)
+  }
+}
+
+//Updates the totals for the test counts
+def resolveTestResult(results, newResult) { 
+  def succ = newResult.getSuccessfulTestCount()
+  def fail = newResult.getFailedTestCount()
+  def skip = newResult.getSkippedTestCount()
+  return [results[0]+succ,results[1]+fail,results[2]+skip]
+}
+
+//Formats and colors the final results for printing
+def formatResults(unitRes, cukeRes) {
+  def unitColor = resultColor(unitRes)
+  def cukeColor = resultColor(cukeRes)
+  def stopColor = '[0m' //CLEAR FORMATTING
+  return '\n' +
+    '========================================================================================================================\n' +
+    (char)27 + unitColor +
+    'UNIT SUCCESSFUL:'+ unitRes[0] +', FAILED:'+ unitRes[1] +', SKIPPED:'+ unitRes[2] +'. file://' +file('.')+ '/build/reports/tests/test/index.html\n'+
+    (char)27 + cukeColor +
+    'CUKE SUCCESSFUL:'+ cukeRes[0] +', FAILED:'+ cukeRes[1] +', SKIPPED:'+ cukeRes[2] +'. file://' +file('.')+ '/build/reports/tests/cucumber/index.html\n' +
+    (char)27 + stopColor +
+    '========================================================================================================================\n'
+}
+
+def resultColor(res) {
+  if(res[1] > 0) return '[31m' //RED
+  if(res[2] > 0) return '[33m' //YELLOW
+  return '[32m' //GREEN
+}
