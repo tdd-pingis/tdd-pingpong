@@ -40,7 +40,6 @@ public class ChallengeController {
     public String task(Model model, @PathVariable String taskType,
             @PathVariable Long challengeId, @PathVariable int taskId) {
         Challenge c = cr.findOne(challengeId);
-        JavaClassGenerator jparser = new JavaClassGenerator();
         model.addAttribute("challengename", c.getName());
         model.addAttribute("challengedesc", c.getDesc());
         model.addAttribute("difficulty", c.getLevel());
@@ -49,12 +48,13 @@ public class ChallengeController {
         List<Task> viewTasks = new ArrayList<Task>();
         viewTasks.add(t); // add all tasks that are needed in the page
 
-        // The 'code' attribute may already be present in case of a redirect, so add
+        // The 'editorContents' attribute may already be present in case of a redirect, so add
         // it only if it doesn't exist.
         LinkedHashMap<String, EditorTabData> editorContents = new LinkedHashMap();
         if (!model.containsAttribute("editorContents")) {
             model.addAttribute("editorContents", editorContents);
-
+        }
+        
         editorContents.put("editor1", new EditorTabData("Editor 1", t.getCode()));
         editorContents.put("editor2", new EditorTabData("Editor 2",
             "public void doSomething() {\n   System.out.println(\"Hello, tabs!\");\n}"));
