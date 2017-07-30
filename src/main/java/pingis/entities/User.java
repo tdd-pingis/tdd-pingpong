@@ -8,12 +8,24 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import static pingis.entities.Task.LEVEL_MAX_VALUE;
+import static pingis.entities.Task.LEVEL_MIN_VALUE;
 
 @Entity
 public class User {
     @Id
+    @NotNull
     private long id;
+    
+    @NotNull
     private String name;
+    
+    @NotNull
+    @Min(LEVEL_MIN_VALUE)
+    @Max(LEVEL_MAX_VALUE)
     private int level;
     
     // private Set<Role> roles <-- TODO: think through the security roles and 
@@ -37,6 +49,7 @@ public class User {
     protected User() {}
 
     public User(long id, String name, int level) {
+        this.id = id;
         this.name = name;
         this.level = level;
         this.taskImplementations = new ArrayList<>();
@@ -105,5 +118,27 @@ public class User {
     public void setAuthoredTasks(List<Task> authoredTasks) {
         this.authoredTasks = authoredTasks;
     }
-    
+
+    @Override
+    public int hashCode() {
+        final int[] hashMultipliers = { 3,79 };
+        final int hashBits = 32;
+        final int hash =  hashMultipliers[0] * hashMultipliers[1] + (int) (this.id ^ (this.id >>> hashBits));
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final User other = (User) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        return true;
+    }
 }

@@ -1,6 +1,8 @@
 package pingis.entities;
 
+import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -8,24 +10,32 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotEmpty;
+
 
 @Entity
 public class ChallengeImplementation {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
-    private CodeStatus status;
     
-    @ManyToOne(fetch=FetchType.EAGER)
+    @NotNull
+    private CodeStatus status;  
+    
+    @NotNull
+    @ManyToOne(fetch=FetchType  .EAGER)
     private Challenge challenge;
     
+    @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
     private User testUser;
-    
+
+    @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
     private User implementationUser;
     
-    @OneToMany(fetch=FetchType.LAZY)
+    @OneToMany(fetch=FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy = "challengeImplementation")
     private List<TaskImplementation> taskImplementations;
 
     protected ChallengeImplementation() {}
@@ -34,21 +44,26 @@ public class ChallengeImplementation {
         this.challenge = challenge;
         this.testUser = testUser;
         this.implementationUser = implementationUser;
-        this.status = CodeStatus.IN_PROGRESS;
+        this.status = CodeStatus.IN_PROGRESS; 
+        this.taskImplementations = new ArrayList<>();
     }
-
+    
     public long getId() {
         return id;
     }
     
+    public void addTaskImplementation(TaskImplementation taskImplementation) {
+        this.taskImplementations.add(taskImplementation);
+    }
+
     public void setStatus(CodeStatus status) {
         this.status = status;
     }
-    
+
     public CodeStatus getStatus() {
         return this.status;
     }
-    
+
     public void setCompleted() {
         this.status = CodeStatus.DONE;
     }
@@ -66,7 +81,9 @@ public class ChallengeImplementation {
     }
 
     public void setTestUser(User testUser) {
-        this.testUser = testUser;
+        if (!testUser.equals(this.implementationUser)) {
+            this.testUser = testUser;
+        }
     }
 
     public User getImplementationUser() {
@@ -74,7 +91,9 @@ public class ChallengeImplementation {
     }
 
     public void setImplementationUser(User implementationUser) {
-        this.implementationUser = implementationUser;
+        if (!this.testUser.equals(implementationUser)) {
+            this.implementationUser = implementationUser;
+        }
     }
 
     public List<TaskImplementation> getTaskImplementations() {

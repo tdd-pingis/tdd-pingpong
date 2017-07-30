@@ -6,33 +6,50 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 
 @Entity
 public class TaskImplementation {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
-    private String code;
-    private float rating;
-    private ImplementationType type;
-    private CodeStatus status;
-    private boolean isExample; // true if model solution
-    private boolean isPublic; // turns public (true) when challenge is completed
     
+    @NotNull
+    private String code;
+
+    // TODO: Decide scaling of rating, then set @DecimalMin and @DecimalMax constraints here
+    private float rating;
+
+    @NotNull
+    private ImplementationType type;
+
+    @NotNull
+    private CodeStatus status;
+
+    @NotNull
+    private boolean isExample; // true if accepted as model solution
+
     @ManyToOne(fetch=FetchType.LAZY)
     private Task task;
-    
+
+    @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
     private User user;
+    
+    @NotNull
+    @ManyToOne(fetch=FetchType.EAGER)
+    private ChallengeImplementation challengeImplementation;
 
     protected TaskImplementation() {}
 
-    public TaskImplementation(String code, ImplementationType type) {
+    public TaskImplementation(User user, String code, ImplementationType type, Task task) {
+        this.user = user;
         this.type = type;
         this.code = code;
-        this.isExample = false; // default value
-        this.isPublic = false;
-        this.rating = 0;
+        this.task = task;
+        this.status = CodeStatus.IN_PROGRESS;
+        this.isExample = false; // by default
+        this.rating = 0;    
     }
 
     public long getId() {
@@ -42,73 +59,72 @@ public class TaskImplementation {
     public String getCode() {
         return code;
     }
-    
+
     public void setCode(String code) {
         this.code = code;
     }
-    
+
     public float getRating() {
         return rating;
     }
-    
+
     public void setRating(float rating) {
         this.rating = rating;
     }
-    
+
     public ImplementationType getType() {
         return type;
     }
-    
+
     public void setType(ImplementationType type) {
         this.type = type;
     }
-    
+
     public void setTypeTest() {
         this.type = ImplementationType.TEST;
     }
-    
+
     public void setTypeImplementation() {
         this.type = ImplementationType.IMPLEMENTATION;
     }
-    
+
     public boolean isExample() {
         return isExample;
     }
-    
+
     public void setIsExample(boolean isExample) {
         this.isExample = isExample;
     }
-    
+
     public CodeStatus getStatus() {
         return status;
     }
-    
+
     public void setStatus(CodeStatus status) {
         this.status = status;
     }
-    
-    public boolean isPublic() {
-        return isPublic;
-    }
-    
-    public void setIsPublic(boolean isPublic) {
-        this.isPublic = isPublic;
-    }
-    
+
     public Task getTask() {
         return task;
     }
-    
+
     public void setTask(Task task) {
         this.task = task;
     }
-    
+
     public User getUser() {
         return user;
     }
-    
+
     public void setUser(User user) {
         this.user = user;
     }
 
+    public void setChallengeImplementation(ChallengeImplementation challengeImplementation) {
+        this.challengeImplementation = challengeImplementation;
+    }
+
+    public ChallengeImplementation getChallengeImplementation() {
+        return challengeImplementation;
+    }
 }

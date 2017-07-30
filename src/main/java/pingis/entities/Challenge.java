@@ -6,39 +6,59 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.util.List;
 import java.util.ArrayList;
+import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.*;
+import org.hibernate.validator.constraints.NotEmpty;
+import static pingis.entities.Task.LEVEL_MIN_VALUE;
+import static pingis.entities.Task.LEVEL_MAX_VALUE;
+import static pingis.entities.Task.NAME_MIN_LENGTH;
+import static pingis.entities.Task.NAME_MAX_LENGTH;
 
 @Entity
 public class Challenge {
+
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private long challengeId;
+    private long id;
+
+    @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH)
+    @NotNull
     private String name;
+
+    @NotNull
     private String description;
+
+    @NotNull
+    @Min(LEVEL_MIN_VALUE)
+    @Max(LEVEL_MAX_VALUE)
     private int level;
     private float rating;
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="challenge")
+    @NotEmpty
+    @OneToMany(fetch=FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy="challenge")
     private List<Task> tasks;
-    
-    @OneToMany(fetch=FetchType.LAZY, mappedBy = "challenge")
+
+    @OneToMany(fetch=FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy = "challenge")
     private List<ChallengeImplementation> implementations;
-    
+
+    @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
     private User author;
 
     protected Challenge() {}
 
-    public Challenge(String name, String description) {
-        this.description = description;
+    public Challenge(String name, User author, String description) {
         this.name = name;
+        this.author = author;
+        this.description = description;
+        this.rating = 0;
         this.tasks = new ArrayList<>();
         this.implementations = new ArrayList<>();
-        this.rating = 0;
     }
-    
+
     public void setAuthor(User author) {
         this.author = author;
     }
@@ -47,37 +67,42 @@ public class Challenge {
         return this.author;
     }
 
-    public void addTask(Task t) {
-        this.tasks.add(t);
+    public void addTask(Task task) {
+        this.tasks.add(task);
+        int newTaskLevel = task.getLevel();
+        
+        if(this.level == 0) {
+            this.level = newTaskLevel;
+        } else {
+            if(newTaskLevel < this.level) {
+                this.level = newTaskLevel;
+            }
+        }
     }
-    
+
     public String toString() {
         String out = this.name+": "+this.description;
         return out;
     }
-    
+
     public String getName() {
         return this.name;
     }
-    
+
     public String getDesc() {
         return this.description;
     }
-    
+
     public int getLevel() {
         return this.level;
     }
-    
+
     public float getRating() {
         return this.rating;
     }
 
-    public long getChallengeId() {
-        return challengeId;
-    }
-
-    public void setChallengeId(long challengeId) {
-        this.challengeId = challengeId;
+    public long getId() {
+        return id;
     }
 
     public String getDescription() {
@@ -99,7 +124,7 @@ public class Challenge {
     public void setRating(float rating) {
         this.rating = rating;
     }
-    
+
     public List<Task> getTasks() {
         return tasks;
     }
@@ -115,6 +140,5 @@ public class Challenge {
     public void setImplementations(List<ChallengeImplementation> implementations) {
         this.implementations = implementations;
     }
-    
 
 }
