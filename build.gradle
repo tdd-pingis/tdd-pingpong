@@ -66,6 +66,7 @@ dependencies {
     compile 'org.springframework.security:spring-security-oauth2-core:5.0.0.M3'
     compile 'org.springframework.security:spring-security-oauth2-client:5.0.0.M3'
     compile 'org.springframework.boot:spring-boot-starter-webflux:2.0.0.M2'
+    compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity4:2.1.2.RELEASE'
 
     compile 'com.h2database:h2'
     compile 'org.webjars:jquery:3.2.1'
