@@ -6,6 +6,7 @@
 package pingis.config;
 
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -19,6 +20,10 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 @Configuration
 @ConfigurationProperties(prefix = "security.oauth2.client.tmc")
 public class OAuthProperties {
+    @Value("${TMC_APP_ID}")
+    private String clientId;
+    @Value("${TMC_SECRET}")
+    private String clientSecret;
     
     private ClientAuthenticationMethod clientAuthenticationMethod;
     private AuthorizationGrantType authorizedGrantType;
@@ -29,8 +34,6 @@ public class OAuthProperties {
     private Set<String> scopes;
     private String clientName;
     private String clientAlias;
-    private String clientId = System.getenv("TMC_APP_ID");
-    private String clientSecret = System.getenv("TMC_SECRET");
     
     public ClientAuthenticationMethod getClientAuthenticationMethod() {
         return clientAuthenticationMethod;
