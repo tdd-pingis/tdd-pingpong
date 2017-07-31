@@ -40,10 +40,6 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-test {
-    testLogging.showStandardStreams = true
-}
-
 dependencies {
     // tag::jetty[]
     compile('org.springframework.boot:spring-boot-starter-web') {
@@ -104,4 +100,11 @@ bootRun {
         environment 'TMC_APP_ID', TMC_APP_ID
         environment 'TMC_SECRET', TMC_SECRET
     }
+}
+
+//Full debug prints for Travis, custom report prints for local
+if(System.env.travis == 'true') {
+  test.testLogging.showStandardStreams = true
+} else {
+  apply from: 'gradle/helpers/test-printing.gradle'
 }
