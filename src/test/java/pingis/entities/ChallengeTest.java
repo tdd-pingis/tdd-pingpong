@@ -8,10 +8,13 @@ import static org.junit.Assert.*;
 public class ChallengeTest {
 
     Challenge calculatorChallenge, protectedChallenge;
+    private User authorUser;
+    private static final int TMC_USER_LEVEL = 100;
 
     @Before
     public void setUp() {
-        calculatorChallenge = new Challenge("Calculator", "Calculator description.");
+        authorUser = new User(1, "ModelUser", TMC_USER_LEVEL);
+        calculatorChallenge = new Challenge("Calculator", authorUser, "Calculator description.");
         protectedChallenge = new Challenge();
     }
 
@@ -19,5 +22,5 @@ public class ChallengeTest {
     public void testChallengeToString() {
         assertEquals("Calculator: Calculator description.", calculatorChallenge.toString());
     }
-
+    
 }

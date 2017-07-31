@@ -2,11 +2,10 @@
  */
 package pingis.repositories;
 
-import java.util.List;
-import pingis.entities.Test;
 import org.springframework.data.repository.CrudRepository;
+import pingis.entities.ChallengeImplementation;
 
-public interface TestRepository extends CrudRepository<Test, Long> {
+public interface ChallengeImplementationRepository extends CrudRepository<ChallengeImplementation, Long> {
     
 //    @Query("delete From Reference r Where r.name = ?1")
 //    void deleteReferenceByName(String name);
