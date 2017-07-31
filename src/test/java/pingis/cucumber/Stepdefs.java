@@ -11,7 +11,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -30,6 +33,7 @@ public class Stepdefs {
     @Before
     public void setUp() throws Exception {
         if(driver == null) driver = new HtmlUnitDriver();
+        driver.manage().deleteAllCookies();
         baseUrl = "http://localhost:8080/";
     }
 
@@ -38,12 +42,18 @@ public class Stepdefs {
     }
 
     private boolean contains(String s){
+        
         return driver.getPageSource().contains(s);
     }
 
-    @Given("^.* navigates to the (.*)$")
-    public void navigates_to_the_address(String address) throws Throwable {
+    @Given("^.* navigates to the task page at (.*)$")
+    public void navigates_to_the_task_page_at(String address) throws Throwable {
         get(address);
+    }
+
+    @Given("^.* navigates to the login page$")
+    public void navigates_to_the_address() throws Throwable {
+        get("/login");
     }
 
     @When("^.* clicks the (.*)$")
@@ -64,15 +74,15 @@ public class Stepdefs {
 
     @Then("^.* is successfully authenticated$")
     public void successfully_authenticated() throws Throwable {
-        assertFalse(contains("error"));
+        assertFalse(contains("Login page"));
     }
 
     @Then("^.* is not authenticated$")
     public void not_authenticated() throws Throwable {
-        assertTrue(contains("error"));
+        assertTrue(contains("Login page"));
     }
 
-    @Then("The page contains (.*)")
+    @Then("the page contains (.*)")
     public void page_has_the_right_content(String content) {
         assertTrue(contains(content));
     }

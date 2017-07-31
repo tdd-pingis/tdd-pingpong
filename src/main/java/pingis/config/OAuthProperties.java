@@ -5,8 +5,12 @@
  */
 package pingis.config;
 
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
+import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 
 /**
  *
@@ -16,71 +20,78 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConfigurationProperties(prefix = "security.oauth2.client.tmc")
 public class OAuthProperties {
+    @Value("${TMC_APP_ID}")
+    private String clientId;
+    @Value("${TMC_SECRET}")
+    private String clientSecret;
     
-    private String clientAuthorizationMethod;
-    private String authorizedGrantType;
-    private String redirectURI;
-    private String authorizationURI;
-    private String tokenURI;
-    private String userInfoURI;
-    private String scopes;
+    private ClientAuthenticationMethod clientAuthenticationMethod;
+    private AuthorizationGrantType authorizedGrantType;
+    private String redirectUri;
+    private String authorizationUri;
+    private String tokenUri;
+    private String userInfoUri;
+    private Set<String> scopes;
     private String clientName;
     private String clientAlias;
-    private String clientSecret = System.getenv("TMC_SECRET");
     
-    public String getClientAuthorizationMethod() {
-        return clientAuthorizationMethod;
+    public ClientAuthenticationMethod getClientAuthenticationMethod() {
+        return clientAuthenticationMethod;
     }
 
-    public void setClientAuthorizationMethod(String clientAuthorizationMethod) {
-        this.clientAuthorizationMethod = clientAuthorizationMethod;
+    public void setClientAuthenticationMethod(String clientAuthorizationMethod) {
+        if(clientAuthorizationMethod.equals("basic")) {
+            this.clientAuthenticationMethod = ClientAuthenticationMethod.BASIC;
+        }
     }
 
-    public String getAuthorizedGrantType() {
+    public AuthorizationGrantType getAuthorizedGrantType() {
         return authorizedGrantType;
     }
 
     public void setAuthorizedGrantType(String authorizedGrantType) {
-        this.authorizedGrantType = authorizedGrantType;
+        if(authorizedGrantType.equals("authorization_code")) {
+            this.authorizedGrantType = AuthorizationGrantType.AUTHORIZATION_CODE;
+        }
     }
 
-    public String getRedirectURI() {
-        return redirectURI;
+    public String getRedirectUri() {
+        return redirectUri;
     }
 
-    public void setRedirectURI(String redirectURI) {
-        this.redirectURI = redirectURI;
+    public void setRedirectUri(String redirectUri) {
+        this.redirectUri = redirectUri;
     }
 
-    public String getAuthorizationURI() {
-        return authorizationURI;
+    public String getAuthorizationUri() {
+        return authorizationUri;
     }
 
-    public void setAuthorizationURI(String authorizationURI) {
-        this.authorizationURI = authorizationURI;
+    public void setAuthorizationUri(String authorizationUri) {
+        this.authorizationUri = authorizationUri;
     }
 
-    public String getTokenURI() {
-        return tokenURI;
+    public String getTokenUri() {
+        return tokenUri;
     }
 
-    public void setTokenURI(String tokenURI) {
-        this.tokenURI = tokenURI;
+    public void setTokenUri(String tokenUri) {
+        this.tokenUri = tokenUri;
     }
 
-    public String getUserInfoURI() {
-        return userInfoURI;
+    public String getUserInfoUri() {
+        return userInfoUri;
     }
 
-    public void setUserInfoURI(String userInfoURI) {
-        this.userInfoURI = userInfoURI;
+    public void setUserInfoUri(String userInfoUri) {
+        this.userInfoUri = userInfoUri;
     }
 
-    public String getScopes() {
+    public Set<String> getScopes() {
         return scopes;
     }
 
-    public void setScopes(String scopes) {
+    public void setScopes(Set<String> scopes) {
         this.scopes = scopes;
     }
 
@@ -98,6 +109,14 @@ public class OAuthProperties {
 
     public void setClientAlias(String clientAlias) {
         this.clientAlias = clientAlias;
+    }
+    
+    public String getClientId() {
+        return clientId;
+    }
+    
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
     }
     
     public String getClientSecret() {
