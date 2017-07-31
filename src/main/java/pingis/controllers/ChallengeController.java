@@ -35,7 +35,7 @@ public class ChallengeController {
     public String hello() {
         return "hello";
     }
-
+    //CHECKSTYLE:OFF
     @RequestMapping(value = "/task/{challengeId}/{taskId}/{taskType}", method = RequestMethod.GET)
     public String task(Model model, @PathVariable String taskType,
             @PathVariable Long challengeId, @PathVariable int taskId) {
@@ -78,6 +78,7 @@ public class ChallengeController {
         model.addAttribute("taskId", taskId);
         return "task";
     }
+    //CHECKSTYLE:ON
 
     @RequestMapping(value = "/taskId", method = RequestMethod.POST)
     public RedirectView task(String code, long challengeId, int taskId, RedirectAttributes redirectAttributes) {
