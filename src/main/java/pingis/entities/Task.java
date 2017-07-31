@@ -6,33 +6,59 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.util.List;
 import java.util.ArrayList;
+import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.*;
 
 @Entity
 public class Task {
+    // Constraint values
+    public static final int NAME_MIN_LENGTH = 3;
+    public static final int NAME_MAX_LENGTH = 50;
+    public static final int LEVEL_MIN_VALUE = 1;
+    public static final int LEVEL_MAX_VALUE = 200;
+    
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
-    private long taskId;
+    private long id; // unique primary ID
+
+    @NotNull
+    private int taskId; // ID in relation to parent Challenge
+
+    @NotNull
+    @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH)
     private String name;
+
+    @NotNull
     private String desc;
+
+    @NotNull
     private String code;
+
+    @NotNull
+    @Min(LEVEL_MIN_VALUE)
+    @Max(LEVEL_MAX_VALUE)
     private int level;
     private float rating;
-    
+
+    @NotNull
     @ManyToOne(fetch=FetchType.LAZY)
     private Challenge challenge;
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="task")
-    private List<Implementation> implementations;
+    @NotNull
+    @ManyToOne(fetch=FetchType.EAGER)
+    private User author;
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="task")
-    private List<Test> tests;
+    @OneToMany(fetch=FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy="task")
+    private List<TaskImplementation> implementations;
 
     protected Task() {}
-    
-    public Task(String name, String desc, String code, int level, int rating) {
+
+    public Task(int taskId, User author, String name, String desc, String code, int level, int rating) {
+        this.taskId = taskId;
+        this.author = author;
         this.name = name;
         this.desc = desc;
         this.code = code;
@@ -41,16 +67,24 @@ public class Task {
         this.implementations = new ArrayList<>();
     }
 
-    public long getTaskId() {
-        return taskId;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
-    public void setTaskId(long taskId) {
-        this.taskId = taskId;
+    public void addImplementation(TaskImplementation taskImplementation) {
+        this.implementations.add(taskImplementation);
+    }
+
+    public User getAuthor() {
+        return this.author;
+    }
+
+    public long getId() {
+        return this.taskId;
     }
 
     public String getCode() {
-        return code;
+        return this.code;
     }
 
     public void setCode(String code) {
@@ -58,7 +92,7 @@ public class Task {
     }
 
     public float getRating() {
-        return rating;
+        return this.rating;
     }
 
     public void setRating(float rating) {
@@ -66,37 +100,21 @@ public class Task {
     }
 
     public Challenge getChallenge() {
-        return challenge;
+        return this.challenge;
     }
 
     public void setChallenge(Challenge challenge) {
         this.challenge = challenge;
     }
 
-    public List<Implementation> getImplementations() {
-        return implementations;
-    }
-
-    public void setImplementations(List<Implementation> implementations) {
-        this.implementations = implementations;
-    }
-
-    public List<Test> getTests() {
-        return tests;
-    }
-
-    public void setTests(List<Test> tests) {
-        this.tests = tests;
-    }
-    
     public String getDesc() {
         return this.desc;
-    } 
+    }
 
     public void setName(String name) {
         this.name = name;
     }
-    
+
     public void setDesc(String desc) {
         this.desc = desc;
     }
@@ -106,11 +124,34 @@ public class Task {
     }
 
     public int getLevel() {
-        return level;
+        return this.level;
     }
 
     public void setLevel(int level) {
         this.level = level;
     }
 
+    public int getSequenceId() {
+        return this.taskId;
+    }
+
+    public void setSequenceId(int sequenceId) {
+        this.taskId = sequenceId;
+    }
+
+    public List<TaskImplementation> getImplementations() {
+        return this.implementations;
+    }
+
+    public void setImplementations(List<TaskImplementation> implementations) {
+        this.implementations = implementations;
+    }
+
+    public int getTaskId() {
+        return this.taskId;
+    }
+
+    public void setTaskId(int taskId) {
+        this.taskId = taskId;
+    }
 }

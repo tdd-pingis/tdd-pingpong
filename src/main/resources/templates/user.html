@@ -3,7 +3,101 @@
 <head th:include="base :: header"></head>
 <body>
     <nav th:include="navbar :: navigation"></nav>
-<h1>Moi, user.</h1>
+
+    <div class="container">
+
+        <div class="row">
+            <h4>Dashboard</h4>
+        </div>
+        <div class="row dashboardtopbar"> <!-- top bar -->
+            <div class="col-md-2">
+                <img src="img/tomato.png"/>
+            </div>
+            <div class="col-md-8">
+                Name: jaakko<br/>
+                Level: 1<br/>
+                Points: 12<br/>
+                Rank: Tomato<br/>
+            </div>
+            <div class="col-md-2">
+                <canvas id="progresscircle" width="110" height="110"></canvas>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                <p class="lead">My challenges:</p>
+            </div>
+            <div class="col-md-8">
+                <p class="lead">Available challenges</p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="row dashboardsidebar">
+                    <h5>Current challenges</h5>
+                    <a href="/task/1/0/test">Calculator</a><br/>
+                    Tic-tac-toe<br/>
+                </div>
+                <div class="row dashboardsidebar">
+                    <h5>History</h5>
+                    ...<br/>
+                    ...<br/>
+                </div>
+
+            </div>
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-4 dashboardchallengeitem">
+                        Challenge 1<br/>
+                        ...<br/>
+                    </div>
+                    <div class="col-md-4 dashboardchallengeitem">
+                        Challenge 2<br/>
+                        ...<br/>
+                    </div>
+                    <div class="col-md-4 dashboardchallengeitem">
+                        Challenge 3<br/>
+                        ...<br/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4 dashboardchallengeitem">
+                        Challenge 4<br/>
+                        ...<br/>
+                    </div>
+                    <div class="col-md-4 dashboardchallengeitem">
+                        Challenge 5<br/>
+                        ...<br/>
+                    </div>
+                    <div class="col-md-4 dashboardchallengeitem">
+                        Challenge 6<br/>
+                        ...<br/>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/ProgressCircle.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        var myCanvas = document.getElementById('progresscircle');
+
+        var circle = new ProgressCircle({
+            canvas: myCanvas,
+            minRadius: 30,
+            arcWidth: 15,
+        });
+
+        circle.addEntry({
+            fillColor: 'rgba(255, 0, 0, 0.5)',
+            progressListener: function() {
+                return 0.88; // between 0 and 1
+            },
+            infoListener: function() {return "Points to next level: 88"},
+        });
+        circle.start(33);
+    </script>
 </body>
 </html>
 
