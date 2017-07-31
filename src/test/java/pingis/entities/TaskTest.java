@@ -1,6 +1,7 @@
 package pingis.entities;
 
 
+import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -11,7 +12,8 @@ public class TaskTest {
 
     @Before
     public void setUp() {
-        normalTask = new Task(
+        normalTask = new Task(1, 
+                new User(new Random().nextLong(), "Test_user", 1),
                 "tostring", 
                 "generate toString()",
                 "Some amazing testCode here",
@@ -34,5 +36,5 @@ public class TaskTest {
         final double RATING = 0.001;
         assertEquals(0, normalTask.getRating(), RATING);
     }
-
+    
 }

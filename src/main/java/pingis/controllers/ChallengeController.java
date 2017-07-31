@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pingis.repositories.ChallengeRepository;
-import pingis.services.JavaClassGenerator;
 import pingis.utils.EditorTabData;
+import pingis.utils.JavaClassGenerator;
 import pingis.utils.JavaSyntaxChecker;
 
 @Controller
@@ -30,7 +30,7 @@ public class ChallengeController {
     public String index() {
         return "index";
     }
-    
+
     @RequestMapping("/hello")
     public String hello() {
         return "hello";
@@ -40,24 +40,26 @@ public class ChallengeController {
     public String task(Model model, @PathVariable String taskType,
             @PathVariable Long challengeId, @PathVariable int taskId) {
         Challenge c = cr.findOne(challengeId);
-        JavaClassGenerator jparser = new JavaClassGenerator();
         model.addAttribute("challengename", c.getName());
         model.addAttribute("challengedesc", c.getDesc());
-        model.addAttribute("difficulty", c.getLevel());        
+        model.addAttribute("difficulty", c.getLevel());
 
         Task t = c.getTasks().get(taskId);
         List<Task> viewTasks = new ArrayList<Task>();
-        viewTasks.add(t); // add all tasks that are needed in the page        
-        // The 'code' attribute may already be present in case of a redirect, so add
+        viewTasks.add(t); // add all tasks that are needed in the page
+
+        // The 'editorContents' attribute may already be present in case of a redirect, so add
         // it only if it doesn't exist.
         LinkedHashMap<String, EditorTabData> editorContents = new LinkedHashMap();
         if (!model.containsAttribute("editorContents")) {
             model.addAttribute("editorContents", editorContents);
         }
+        
         editorContents.put("editor1", new EditorTabData("Editor 1", t.getCode()));
         editorContents.put("editor2", new EditorTabData("Editor 2",
             "public void doSomething() {\n   System.out.println(\"Hello, tabs!\");\n}"));
         editorContents.put("editor3", new EditorTabData("Editor 3", "public void testing tabs"));
+
         model.addAttribute("ntabs", editorContents.size());
         model.addAttribute("taskname", t.getName());
         model.addAttribute("taskdesc", t.getDesc());
@@ -89,7 +91,7 @@ public class ChallengeController {
 
         return "sandbox";
     }
-    
+
     @RequestMapping("/feedback")
     public String feedback(Model model) {
         model.addAttribute("feedback", "Good work!");

@@ -1,19 +1,17 @@
 
-package pingis.services;
+package pingis.utils;
 
 import java.util.List;
 import pingis.entities.Challenge;
 import pingis.entities.Task;
 
 public class JavaClassGenerator {
+    private static final String classEnd = "\n}";
 
-    public JavaClassGenerator() {
-    }   
-    
-    public String parseChallenge(Challenge challenge, List<Task> tasks) {
+    public static String generateChallenge(Challenge challenge, List<Task> tasks) {
         String classCode = "\n" + generateTestClassHeader(challenge);
         classCode += "\n\n" + indentateTaskAsMethod(tasks);
-        classCode += generateClassEnd();
+        classCode += classEnd;
         
         // before return replace all \n with system-independent line-separators
         classCode.replace("\n", System.getProperty("line.separator"));
@@ -21,19 +19,15 @@ public class JavaClassGenerator {
         return classCode;
     } 
     
-    private String generateTestClassHeader(Challenge c) {
+    private static String generateTestClassHeader(Challenge c) {
         return "public class " + c.getName().replaceAll("\\s+","") + "Test {";
     }
     
-    private String generateImplementationClassHeader(Challenge c) {
+    private static String generateImplementationClassHeader(Challenge c) {
         return "public class " + c.getName() + " {";
     }
-    
-    private String generateClassEnd() {
-        return "\n}";
-    }
-    
-    private String indentateTaskAsMethod(List<Task> tasks) {
+
+    private static String indentateTaskAsMethod(List<Task> tasks) {
         String codeSegment = "";
         
         for (Task task : tasks) {
