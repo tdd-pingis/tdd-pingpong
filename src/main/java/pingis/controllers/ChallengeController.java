@@ -1,9 +1,10 @@
 package pingis.controllers;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.io.IOException;
+import java.util.*;
 
+import org.apache.commons.compress.archivers.ArchiveException;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Task;
@@ -11,12 +12,9 @@ import pingis.entities.Challenge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 import pingis.repositories.ChallengeRepository;
+import pingis.services.SubmissionPackagingService;
+import pingis.services.SubmissionSenderService;
 import pingis.utils.EditorTabData;
 import pingis.utils.JavaClassGenerator;
 import pingis.utils.JavaSyntaxChecker;
@@ -25,6 +23,12 @@ import pingis.utils.JavaSyntaxChecker;
 public class ChallengeController {
     @Autowired
     private ChallengeRepository cr;
+
+    @Autowired
+    private SubmissionPackagingService packagingService;
+
+    @Autowired
+    private SubmissionSenderService senderService;
 
     @RequestMapping("/")
     public String index() {
@@ -69,19 +73,25 @@ public class ChallengeController {
         return "task";
     }
 
-    @RequestMapping(value = "/taskId", method = RequestMethod.POST)
-    public RedirectView task(String code, long challengeId, int taskId, RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = "/task", method = RequestMethod.POST)
+    public RedirectView task(Long challengeId, Integer taskId, RedirectAttributes redirectAttributes,
+                             @RequestParam Map<String, String> params)
+            throws IOException, ArchiveException {
         redirectAttributes.addAttribute("challengeId", challengeId);
         redirectAttributes.addAttribute("task", taskId);
 
-        String[] syntaxErrors = JavaSyntaxChecker.parseCode(code);
+        String[] syntaxErrors = JavaSyntaxChecker.parseCode("");
 
         if (syntaxErrors == null) {
+            // TODO: Add the code from the editor tabs here.
+            byte[] pack = packagingService.packageSubmission(new HashMap<>());
+            senderService.sendSubmission(pack);
+
             return new RedirectView("/feedback");
         }
 
         redirectAttributes.addFlashAttribute("errors", syntaxErrors);
-        redirectAttributes.addFlashAttribute("code", code);
+        redirectAttributes.addFlashAttribute("code", "");
 
         return new RedirectView("/task/{challengeId}/{taskId}");
     }

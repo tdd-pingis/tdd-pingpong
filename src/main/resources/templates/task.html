@@ -26,7 +26,7 @@
             <ul class="nav nav-tabs">        
                 <li th:each="editor, iter: ${editorContents}" th:class="${iter.index == 0}?'active'"><a data-toggle="tab" th:text="${editor.value.title}" th:href="'#'+${editor.key}+'_item'">Placeholder editors</a></li>        
             </ul>
-            <form method="post" action="/task">
+            <form method="post" th:action="@{/task}">
 
                 <div class="tab-content" th:inline="text">        
                     <input type="hidden" name="challenge" th:value="${challengeId}" />
@@ -37,7 +37,7 @@
                         </div>
                         <div class="panel-body">
                             <div th:id="${editor.key}" style="height: 300px" class="editortab" th:inline="text">[[${editor.value.content}]]</div>
-                            <textarea name="${editor.key}+'code'" th:id="'shadow-'+${editor.key}" style="display: none;"/>
+                            <textarea th:name="${editor.key}+'code'" th:id="'shadow-'+${editor.key}" style="display: none;"/>
 
                         </div>
                     </div>
@@ -49,14 +49,16 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.8/ace.js" type="text/javascript" charset="utf-8"></script>
         <script th:inline="text">
             var tabs = document.getElementsByClassName("editortab");
-            for (t in tabs) {
-               var editor = ace.edit(tabs[t].id);
-               editor.setTheme("ace/theme/monokai");
-               editor.getSession().setMode("ace/mode/java");
-               var textarea = document.getElementById("shadow-"+tabs[t].id);
-               editor.getSession().on("change", function () {
-                   textarea.value = editor.getSession().getValue();
-               });
+            for (var t in tabs) {
+                (function() {
+                    var editor = ace.edit(tabs[t].id);
+                    editor.setTheme("ace/theme/monokai");
+                    editor.getSession().setMode("ace/mode/java");
+                    var textarea = document.getElementById("shadow-"+tabs[t].id);
+                    editor.getSession().on("change", function () {
+                        textarea.value = editor.getSession().getValue();
+                    });
+                })();
             }
             function clicked(e) {
                 if (!confirm("Are you ready to submit?")) {
