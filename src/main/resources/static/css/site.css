@@ -1,0 +1,27 @@
+.editortab {
+    
+}
+
+.dashboardtopbar {
+}
+
+.dashboardsidebar {
+    border-style: groove;
+    border-radius: 8px;
+    padding: 4px;
+}
+
+.dashboardchallengeitem {
+ border-style: groove;
+ border-radius: 8px;
+ padding: 4px;
+ 
+}
+
+.contentcontainer {
+    padding: 30px;
+}
+
+.navbarpadding {
+    padding: 30px;
+}

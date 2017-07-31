@@ -2,8 +2,9 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head th:include="base :: header"></head>
     <body> 
+        <nav th:include="navbar :: navigation"></nav>
+
         <div class="container">
-            <nav th:include="navbar :: navigation"></nav>
             <p class="lead" th:inline="text">Challenge: [[${challengename}]]</p>
             <p th:text="${challengedesc}"></p>
             <div class="row">

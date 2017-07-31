@@ -35,7 +35,7 @@ public class ChallengeController {
     public String hello() {
         return "hello";
     }
-
+    //CHECKSTYLE:OFF
     @RequestMapping(value = "/task/{challengeId}/{taskId}/{taskType}", method = RequestMethod.GET)
     public String task(Model model, @PathVariable String taskType,
             @PathVariable Long challengeId, @PathVariable int taskId) {
@@ -54,11 +54,21 @@ public class ChallengeController {
         if (!model.containsAttribute("editorContents")) {
             model.addAttribute("editorContents", editorContents);
         }
-        
-        editorContents.put("editor1", new EditorTabData("Editor 1", t.getCode()));
-        editorContents.put("editor2", new EditorTabData("Editor 2",
-            "public void doSomething() {\n   System.out.println(\"Hello, tabs!\");\n}"));
-        editorContents.put("editor3", new EditorTabData("Editor 3", "public void testing tabs"));
+
+        editorContents.put("editor1", new EditorTabData("CalculatorTest.java", t.getCode()));
+        editorContents.put("editor2", new EditorTabData("Calculator.java",
+                "public class Calculator {\n"
+                + "    \n"
+                + "    public Calculator() {}\n"
+                + "\n"
+                + "    public int multiply(int a, int b) {\n"
+                + "        return a*b;\n"
+                + "    }\n"
+                + "}"));
+        editorContents.put("editor3", new EditorTabData("Model solution", "public void testAddition() {\n"
+                + "    Calculator c = new Calculator();\n"
+                + "    assertEquals(8, c.multiply(2, 4));\n"
+                + "}"));
 
         model.addAttribute("ntabs", editorContents.size());
         model.addAttribute("taskname", t.getName());
@@ -68,6 +78,7 @@ public class ChallengeController {
         model.addAttribute("taskId", taskId);
         return "task";
     }
+    //CHECKSTYLE:ON
 
     @RequestMapping(value = "/taskId", method = RequestMethod.POST)
     public RedirectView task(String code, long challengeId, int taskId, RedirectAttributes redirectAttributes) {
