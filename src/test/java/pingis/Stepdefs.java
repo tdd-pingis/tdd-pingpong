@@ -11,7 +11,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -29,7 +32,7 @@ public class Stepdefs {
 
     @Before
     public void setUp() throws Exception {
-        if(driver == null) driver = new HtmlUnitDriver(true);
+        if(driver == null) driver = new HtmlUnitDriver();
         driver.manage().deleteAllCookies();
         baseUrl = "http://localhost:8080/";
     }
@@ -39,6 +42,7 @@ public class Stepdefs {
     }
 
     private boolean contains(String s){
+        
         return driver.getPageSource().contains(s);
     }
 
@@ -55,8 +59,6 @@ public class Stepdefs {
     @When("^.* clicks the (.*)$")
     public void clicks_the_element(String element) {
         driver.findElement(By.linkText(element)).click();
-        System.out.println("clicked "+element);
-        System.out.println(driver.getPageSource());
     }
 
     @When("^.* inputs their username (.*) and password (.*)$")
