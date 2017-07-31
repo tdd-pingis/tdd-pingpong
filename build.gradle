@@ -90,5 +90,5 @@ dependencies {
 if(System.env.travis == 'true') {
   test.testLogging.showStandardStreams = true
 } else {
-  apply from: 'gradle/helper.gradle'
+  apply from: 'gradle/helpers/test-printing.gradle'
 }
