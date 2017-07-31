@@ -11,6 +11,11 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import pingis.config.SubmissionProperties;
+import pingis.entities.TmcSubmission;
+import pingis.entities.TmcSubmissionStatus;
+import pingis.repositories.TmcSubmissionRepository;
+
+import java.util.UUID;
 
 @Service
 public class SubmissionSenderService {
@@ -20,9 +25,13 @@ public class SubmissionSenderService {
 
     private final SubmissionProperties submissionProperties;
 
+    private final TmcSubmissionRepository submissionRepository;
+
     @Autowired
-    public SubmissionSenderService(RestTemplateBuilder restTemplateBuilder, SubmissionProperties submissionProperties) {
+    public SubmissionSenderService(RestTemplateBuilder restTemplateBuilder, SubmissionProperties submissionProperties,
+                                   TmcSubmissionRepository submissionRepository) {
         this.submissionProperties = submissionProperties;
+        this.submissionRepository = submissionRepository;
 
         restTemplate = restTemplateBuilder
                 .rootUri(submissionProperties.getSandboxUrl())
@@ -46,17 +55,25 @@ public class SubmissionSenderService {
         return new HttpEntity<>(map);
     }
 
-    public TmcSubmissionResponse sendSubmission(byte[] packaged) {
-        // TODO: Token generation
-        String token = "123456";
+    public TmcSubmission sendSubmission(byte[] packaged) {
+        TmcSubmission submission = new TmcSubmission();
+        submission.setId(UUID.randomUUID());
+        submission.setStatus(TmcSubmissionStatus.PENDING);
 
-        // TODO: This needs to be configured
         String notifyUrl = submissionProperties.getNotifyUrl();
 
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = buildRequestEntity(packaged, token,
-                notifyUrl);
+        HttpEntity<MultiValueMap<String, Object>> requestEntity = buildRequestEntity(packaged,
+                submission.getId().toString(), notifyUrl);
 
-        return restTemplate.postForObject("/tasks.json", requestEntity,
+        TmcSubmissionResponse response = restTemplate.postForObject("/tasks.json", requestEntity,
                 TmcSubmissionResponse.class);
+
+        if (!response.getStatus().equals(TmcSubmissionResponse.OK)) {
+            return null;
+        }
+
+        submissionRepository.save(submission);
+
+        return submission;
     }
 }
