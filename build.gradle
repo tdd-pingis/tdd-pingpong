@@ -40,10 +40,6 @@ repositories {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-test {
-    testLogging.showStandardStreams = true
-}
-
 dependencies {
     // tag::jetty[]
     compile('org.springframework.boot:spring-boot-starter-web') {
@@ -88,4 +84,11 @@ dependencies {
     testCompile 'org.seleniumhq.selenium:selenium-server:3.4.0'
     testCompile 'org.seleniumhq.selenium:selenium-java:3.4.0'
     testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'
+}
+
+//Full debug prints for Travis, custom report prints for local
+if(System.env.travis == 'true') {
+  test.testLogging.showStandardStreams = true
+} else {
+  apply from: 'gradle/helpers/test-printing.gradle'
 }
