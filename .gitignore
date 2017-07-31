@@ -13,6 +13,9 @@ gradle-app.setting
 # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
 gradle/wrapper/gradle-wrapper.properties
 
+# Contains secrets
+gradle.properties
+
 # Compiled class file
 *.class
 
@@ -43,6 +46,7 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+.nb-gradle-properties
 
 # IntelliJ
 .idea/

@@ -24,12 +24,13 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import pingis.config.OAuthProperties;
 
 /**
  * Created by dwarfcrank on 7/28/17.
  */
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {TmcSubmissionController.class, SecurityConfig.class})
+@ContextConfiguration(classes = {TmcSubmissionController.class, SecurityConfig.class, OAuthProperties.class})
 @WebAppConfiguration
 @WebMvcTest(TmcSubmissionController.class)
 public class TmcSubmissionControllerTest {
