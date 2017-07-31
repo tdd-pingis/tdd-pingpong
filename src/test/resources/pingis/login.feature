@@ -1,9 +1,25 @@
-Feature: User authenticates through TMC with OAuth2
+Feature: Simple authentication for two sample users
 
-Scenario: User can authenticate with valid username and password
-    Given user navigates to the login form
-    And chooses to authenticate with TMC
-    When user inputs their credentials for TMC
-    And submits the TMC login form
-    And gives their authorization
-    Then user is successfully authenticated
+Scenario Outline: <user> can log in with valid username and password
+    Given <user> navigates to the login page
+    When <user> inputs their username <username> and password <password>
+    And submits the form
+    Then <user> is successfully authenticated
+
+    Examples:
+        |user   |username   |password   |
+        |User   |user       |password   |
+        |Admin  |admin      |password   |
+
+Scenario Outline: <user> cannot login with an invalid username or password
+    Given <user> navigates to the login page
+    When <user> inputs their username <username> and password <password>
+    And submits the form
+    Then <user> is not authenticated
+
+    Examples:
+        |user   |username   |password   |
+        |User   |user       |passord    |
+        |Admin  |admin      |passord    |
+        |User   |uer        |password   |
+        |Admin  |amin       |password   |
