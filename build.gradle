@@ -85,4 +85,9 @@ dependencies {
     testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'
 }
 
-apply from: 'gradle/helper.gradle'
+//Full debug prints for Travis, custom report prints for local
+if(System.env.travis == 'true') {
+  test.testLogging.showStandardStreams = true
+} else {
+  apply from: 'gradle/helper.gradle'
+}
