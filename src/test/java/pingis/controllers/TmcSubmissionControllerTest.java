@@ -12,25 +12,23 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
-import pingis.config.SecurityConfig;
 import pingis.entities.TmcSubmission;
 import pingis.entities.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
+import pingis.Application;
+import pingis.config.SecurityDevConfig;
 
-import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import pingis.config.OAuthProperties;
-
 /**
  * Created by dwarfcrank on 7/28/17.
  */
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {TmcSubmissionController.class, SecurityConfig.class, OAuthProperties.class})
+@ContextConfiguration(classes = {Application.class, TmcSubmissionController.class, SecurityDevConfig.class})
 @WebAppConfiguration
 @WebMvcTest(TmcSubmissionController.class)
 public class TmcSubmissionControllerTest {

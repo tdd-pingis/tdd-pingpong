@@ -3,8 +3,9 @@ package pingis.config;
 import java.net.URI;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -14,6 +15,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import pingis.entities.User;
 
+@Profile(value = {"prod", "oauth"})
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -34,9 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests().anyRequest().permitAll()
             .and()
             .exceptionHandling()
-            .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-            .and()
-            .formLogin().loginPage("/login");
+            .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
 
         oauthLoginConfiguration(http);
     }
@@ -56,13 +56,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         tmcClientRegistration = new ClientRegistration.Builder(clientRegistrationProperties).build();
         return new ClientRegistration[]{tmcClientRegistration};
-    }
-
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-            .withUser("user").password("password").roles("USER")
-            .and()
-            .withUser("admin").password("password").roles("ADMIN");
     }
 }
