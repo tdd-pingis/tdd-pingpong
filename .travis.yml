@@ -5,10 +5,7 @@ language: java
 jdk:
 - oraclejdk8
 after_success:
-- export SSHPASS=$DEPLOY_PASS
-- if [ "$TRAVIS_BRANCH" == "master" ]; then docker login -u="$DOCKER_USER" -p="$DOCKER_PASS";
-  docker build -t $DOCKER_USER/$DOCKER_REPO -pingpong . docker push $DOCKER_USER/$DOCKER_REPO
-  sshpass -e ssh -p $DEPLOY_PORT $DEPLOY_USER@$DEPLOY_HOST './deploy.sh'; fi
+- ./scripts/deploy.sh
 env:
   global:
   - secure: UDUdlTgaXkmFDGCm98l1KqTBPKfNlCliItZbecETJHfZz779+L6SS37GU19L30ejyEL1tgocgQkepWsjW5+SNWYLaTUlkOFbIakuo5uLbzDlC+WytT/wSC5/270gMi063+uvJhsJcGBNB/QwT7jL7w5iihy1Fho0BlbSKZsbHIs3X/o1EKWDn8Isn3cJeCo4Ea7RC6tPA7XLM0K45dvn3v3SXyHz5MgTTXYZ7ZRFEBZd+8eE6/NjzCdcL4HeiJNDRaF+ZnStrn5lYJq6ODNNjNtQ04cVZLshy4TE3cgYk9+h5basWmelzb9jhpKu6M8G3G6MXzi3dtO8PRk3luiNiXumbp/TWS5yLbRYWWvlgfwg5Zp4OESo+Sbyczg0BhnpVtpc7hB0kxqpRqBwDmpMlXclOz8CLL0nSC0+2MHUsCwx8qme2eXz1SZeiKwjg9f1cAlx6Vq6fQaXfdh/4QKnxr+uNzDx7xS+tSGlT0yfv54GB7Jb7eHKe30Frm9RSNCDvpotmT7Md/k/Y/tTmxX4mY0iLfKVcyKD3QYdiIRqGE6YotX22YG+r+3CnXb9pC4ZBKSWWlEkiH8NAe17hq1vT67jQbMaArCXd/M1tIwLt5H/EjnofDdW7OXvDyu2Nv++thZ8XJqtVvuq7/74WHjHsx56YyDCW8qhG7JWx8FhQjA=
