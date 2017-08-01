@@ -48,12 +48,17 @@ public class Challenge {
     @ManyToOne(fetch=FetchType.EAGER)
     private User author;
 
+    private String classFileName;
+    private String testFileName;
+
     protected Challenge() {}
 
-    public Challenge(String name, User author, String description) {
+    public Challenge(String name, User author, String description, String classFileName, String testFileName) {
         this.name = name;
         this.author = author;
         this.description = description;
+        this.classFileName = classFileName;
+        this.testFileName = testFileName;
         this.rating = 0;
         this.tasks = new ArrayList<>();
         this.implementations = new ArrayList<>();
@@ -141,4 +146,19 @@ public class Challenge {
         this.implementations = implementations;
     }
 
+    public String getClassFileName() {
+        return classFileName;
+    }
+
+    public void setClassFileName(String classFileName) {
+        this.classFileName = classFileName;
+    }
+
+    public String getTestFileName() {
+        return testFileName;
+    }
+
+    public void setTestFileName(String testFileName) {
+        this.testFileName = testFileName;
+    }
 }
