@@ -7,7 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@Profile({"prod", "oauth"})
+@Profile(value = {"prod", "oauth"})
 @Controller
 public class UserController {
     

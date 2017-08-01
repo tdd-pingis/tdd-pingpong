@@ -13,7 +13,7 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.oauth2.client.registration.ClientRegistrationProperties;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 
-@Profile({"prod", "oauth"})
+@Profile(value = {"prod", "oauth"})
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
@@ -36,7 +36,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
             .and()
             .oauth2Login()
-                .clients(tmcClientRegistration());
+                .clients(tmcClientRegistration())
+            .and()
+            .formLogin().loginPage("/login");
     }
 
     //Registers TMC's information for the application

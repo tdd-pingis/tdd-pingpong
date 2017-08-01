@@ -93,6 +93,8 @@ test {
         environment 'TMC_APP_ID', TMC_APP_ID
         environment 'TMC_SECRET', TMC_SECRET
     }
+	systemProperty "spring.profiles.active", "dev"
+	
 }
 
 bootRun { 
