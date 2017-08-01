@@ -1,7 +1,7 @@
 #!/bin/bash
 export SSHPASS=$DEPLOY_PASS
 set -ev
-if [ "${TRAVIS_BRANCH}" = "master" && "${TRAVIS_PULL_REQUEST}" = "false" ]; then
+if [[ "${TRAVIS_BRANCH}" = "master" && "${TRAVIS_PULL_REQUEST}" = "false" ]]; then
 	docker login -u=$DOCKER_USER -p=$DOCKER_PASS
 	docker build -t $DOCKER_USER/$DOCKER_REPO .
 	docker push $DOCKER_USER/$DOCKER_REPO
