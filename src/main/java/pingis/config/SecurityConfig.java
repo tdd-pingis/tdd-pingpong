@@ -1,5 +1,6 @@
 package pingis.config;
 
+import java.net.URI;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
@@ -12,10 +13,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationProperties;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import pingis.entities.User;
 
 @Profile(value = {"prod", "oauth"})
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         // The TMC sandbox POSTs its results here and doesn't support authentication, so
@@ -33,12 +36,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests().anyRequest().permitAll()
             .and()
             .exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-            .and()
-            .oauth2Login()
-                .clients(tmcClientRegistration())
-            .and()
-            .formLogin().loginPage("/login");
+            .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
+
+        oauthLoginConfiguration(http);
+    }
+
+    private void oauthLoginConfiguration(HttpSecurity http) throws Exception {
+        http.oauth2Login()
+            .clients(tmcClientRegistration())
+            .userInfoEndpoint().customUserType(User.class, URI.create(oauthProperties.getUserInfoUri()));
     }
 
     //Registers TMC's information for the application
