@@ -16,15 +16,15 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
  *
  * @author juicyp
  */
-
 @Configuration
 @ConfigurationProperties(prefix = "security.oauth2.client.tmc")
 public class OAuthProperties {
+
     @Value("${TMC_APP_ID}")
     private String clientId;
     @Value("${TMC_SECRET}")
     private String clientSecret;
-    
+
     private ClientAuthenticationMethod clientAuthenticationMethod;
     private AuthorizationGrantType authorizedGrantType;
     private String redirectUri;
@@ -34,13 +34,14 @@ public class OAuthProperties {
     private Set<String> scopes;
     private String clientName;
     private String clientAlias;
-    
+    private String userNameAttributeName;
+
     public ClientAuthenticationMethod getClientAuthenticationMethod() {
         return clientAuthenticationMethod;
     }
 
     public void setClientAuthenticationMethod(String clientAuthorizationMethod) {
-        if(clientAuthorizationMethod.equals("basic")) {
+        if (clientAuthorizationMethod.equals("basic")) {
             this.clientAuthenticationMethod = ClientAuthenticationMethod.BASIC;
         }
     }
@@ -50,7 +51,7 @@ public class OAuthProperties {
     }
 
     public void setAuthorizedGrantType(String authorizedGrantType) {
-        if(authorizedGrantType.equals("authorization_code")) {
+        if (authorizedGrantType.equals("authorization_code")) {
             this.authorizedGrantType = AuthorizationGrantType.AUTHORIZATION_CODE;
         }
     }
@@ -110,21 +111,29 @@ public class OAuthProperties {
     public void setClientAlias(String clientAlias) {
         this.clientAlias = clientAlias;
     }
-    
+
+    public String getUserNameAttributeName() {
+        return userNameAttributeName;
+    }
+
+    public void setUserNameAttributeName(String userNameAttributeName) {
+        this.userNameAttributeName = userNameAttributeName;
+    }
+
     public String getClientId() {
         return clientId;
     }
-    
+
     public void setClientId(String clientId) {
         this.clientId = clientId;
     }
-    
+
     public String getClientSecret() {
         return clientSecret;
     }
-    
+
     public void setClientSecret(String clientSecret) {
         this.clientSecret = clientSecret;
     }
-    
+
 }

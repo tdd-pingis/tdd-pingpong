@@ -1,5 +1,6 @@
 package pingis.config;
 
+import java.net.URI;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -11,9 +12,11 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationProperties;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import pingis.entities.User;
 
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Override
     public void configure(WebSecurity web) throws Exception {
         // The TMC sandbox POSTs its results here and doesn't support authentication, so
@@ -31,12 +34,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .authorizeRequests().anyRequest().permitAll()
             .and()
             .exceptionHandling()
-                .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
-            .and()
-            .oauth2Login()
-                .clients(tmcClientRegistration())
+            .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
             .and()
             .formLogin().loginPage("/login");
+
+        oauthLoginConfiguration(http);
+    }
+
+    private void oauthLoginConfiguration(HttpSecurity http) throws Exception {
+        http.oauth2Login()
+            .clients(tmcClientRegistration())
+            .userInfoEndpoint().customUserType(User.class, URI.create(oauthProperties.getUserInfoUri()));
     }
 
     //Registers TMC's information for the application
@@ -49,13 +57,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         tmcClientRegistration = new ClientRegistration.Builder(clientRegistrationProperties).build();
         return new ClientRegistration[]{tmcClientRegistration};
     }
-    
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .inMemoryAuthentication()
-                .withUser("user").password("password").roles("USER")
-                .and()
-                .withUser("admin").password("password").roles("ADMIN");
+        auth.inMemoryAuthentication()
+            .withUser("user").password("password").roles("USER")
+            .and()
+            .withUser("admin").password("password").roles("ADMIN");
     }
 }

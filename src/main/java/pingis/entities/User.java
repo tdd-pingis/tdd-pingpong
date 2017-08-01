@@ -1,52 +1,56 @@
 package pingis.entities;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import static pingis.entities.Task.LEVEL_MAX_VALUE;
 import static pingis.entities.Task.LEVEL_MIN_VALUE;
 
 @Entity
-public class User {
+public class User implements OAuth2User {
+
     @Id
     @NotNull
     private long id;
-    
+
     @NotNull
-    private String name;
-    
+    public String name;
+    public String email;
+    public boolean administrator;
+
     @NotNull
     @Min(LEVEL_MIN_VALUE)
     @Max(LEVEL_MAX_VALUE)
     private int level;
-    
-    // private Set<Role> roles <-- TODO: think through the security roles and 
-                                // how to differentiate between users and admins 
-    
-    @OneToMany(fetch=FetchType.LAZY, mappedBy = "user")
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<TaskImplementation> taskImplementations;
-    
-    @OneToMany(fetch=FetchType.LAZY, mappedBy = "testUser")
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "testUser")
     private List<ChallengeImplementation> testedChallenges;
-    
-    @OneToMany(fetch=FetchType.LAZY, mappedBy = "implementationUser")
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "implementationUser")
     private List<ChallengeImplementation> implementedChallenges;
-    
-    @OneToMany(fetch=FetchType.LAZY, mappedBy = "author")
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private List<Challenge> authoredChallenges;
-    
-    @OneToMany(fetch=FetchType.LAZY, mappedBy = "author")
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private List<Task> authoredTasks;
 
-    protected User() {}
+    public User() {}
 
     public User(long id, String name, int level) {
         this.id = id;
@@ -59,12 +63,17 @@ public class User {
         this.authoredTasks = new ArrayList<>();
     }
 
+    @Override
     public String getName() {
         return name;
     }
-    
+
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getLevel() {
@@ -75,6 +84,18 @@ public class User {
         this.name = name;
     }
 
+    public void setUsername(String name) {
+        this.name = name;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setAdministrator(boolean administrator) {
+        this.administrator = administrator;
+    }
+
     public void setLevel(int level) {
         this.level = level;
     }
@@ -82,7 +103,7 @@ public class User {
     public void setTaskImplementations(List<TaskImplementation> taskImplementations) {
         this.taskImplementations = taskImplementations;
     }
-    
+
     public List<TaskImplementation> getTaskImplementations() {
         return this.taskImplementations;
     }
@@ -120,10 +141,29 @@ public class User {
     }
 
     @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        String roles = "USER";
+        if (administrator) {
+            roles += ",ADMIN";
+        }
+        return AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
+    }
+
+    @Override
+    public Map<String, Object> getAttributes() {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("id", id);
+        attributes.put("username", name);
+        attributes.put("email", email);
+        attributes.put("administrator", administrator);
+        return attributes;
+    }
+
+    @Override
     public int hashCode() {
-        final int[] hashMultipliers = { 3,79 };
+        final int[] hashMultipliers = {3, 79};
         final int hashBits = 32;
-        final int hash =  hashMultipliers[0] * hashMultipliers[1] + (int) (this.id ^ (this.id >>> hashBits));
+        final int hash = hashMultipliers[0] * hashMultipliers[1] + (int) (this.id ^ (this.id >>> hashBits));
         return hash;
     }
 
