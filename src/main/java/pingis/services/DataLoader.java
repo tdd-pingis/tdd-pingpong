@@ -83,8 +83,8 @@ public class DataLoader implements ApplicationRunner {
         ArrayList<Task> tasks = new ArrayList<>();
                 
         // Challenge 1        
-        this.calculatorChallenge = new Challenge(
-                "Calculator", users.get((int) UserType.TMC_MODEL_USER.getId()), "Test and implement a simple text-based calculator.");
+        this.calculatorChallenge = new Challenge("Calculator", users.get((int) UserType.TMC_MODEL_USER.getId()), 
+                                                 "Test and implement a simple text-based calculator.");
         
         // Challenge 1 Tasks, authored by TMC_MODEL_USER
         this.calculatorChallenge.addTask(new Task(tasks.size()-1,

@@ -29,7 +29,9 @@ public class JavaClassGeneratorTest {
     private final int Challenge1Level = 3;
     
     public JavaClassGeneratorTest() {
-        challenge1 = new Challenge("Immutable Calculator", authorUser, "Amazing immutable calculator.");
+        challenge1 = new Challenge("Immutable Calculator", authorUser, "Amazing immutable calculator.",
+                "src/ImmutableCalculator.java",
+                "test/ImmutableCalculatorTest.java");
         JCGenerator = new JavaClassGenerator();
         User testUser = new User(new Random().nextLong(), "Test_userfirst", Challenge1Level);
         
