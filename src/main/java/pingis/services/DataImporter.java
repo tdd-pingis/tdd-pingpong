@@ -90,8 +90,18 @@ public class DataImporter implements ApplicationRunner{
                 c.addTask(t);
                 t.setChallenge(c);
                 //taskobjects.add(t);
-                TaskImplementation i1 = new TaskImplementation(user, task.getString("modeltest"), ImplementationType.TEST, t);
-                TaskImplementation i2 = new TaskImplementation(user, task.getString("modelimplementation"), ImplementationType.IMPLEMENTATION, t);
+                String modelTest = "";
+                JSONArray mtest = task.getJSONArray("modeltest");
+                for (int k = 0; k < mtest.length(); k++) {
+                    modelTest += mtest.getString(k);
+                }
+                String modelImp = "";
+                JSONArray mImp = task.getJSONArray("modelimplementation");
+                for (int k = 0; k < mImp.length(); k++) {
+                    modelImp += mImp.getString(k);
+                }
+                TaskImplementation i1 = new TaskImplementation(user, modelTest, ImplementationType.TEST, t);
+                TaskImplementation i2 = new TaskImplementation(user, modelImp, ImplementationType.IMPLEMENTATION, t);
                 t.addImplementation(i1);
                 t.addImplementation(i2);
                 i1.setTask(t);
