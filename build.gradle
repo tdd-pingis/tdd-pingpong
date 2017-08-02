@@ -99,7 +99,8 @@ test {
         environment 'TMC_TEST_USER_PASSWORD', "dummy"
         environment 'TMC_APP_ID', "dummy"
         environment 'TMC_SECRET', "dummy"
-	}
+    }
+    systemProperty "spring.profiles.active", "dev"
 }
 
 bootRun { 
