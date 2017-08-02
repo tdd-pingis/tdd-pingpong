@@ -113,6 +113,30 @@ bootRun {
     }
 }
 
+
+// Separates the Unit and Cucumber tests to separate tasks
+test {
+    exclude '**'
+}
+
+task unitTest (type: Test) {
+    systemProperty "spring.profiles.active", "dev"
+
+    useJUnit()
+    exclude '**/cucumber/**'
+}
+
+task cucumberTest (type: Test) {
+    systemProperty "spring.profiles.active", "dev"
+
+    useJUnit()
+    include '**/cucumber/**'
+}
+
+test.dependsOn cucumberTest, unitTest
+cucumberTest.mustRunAfter unitTest
+
+
 //Full debug prints for Travis, custom report prints for local
 if(System.env.travis == 'true') {
   test.testLogging.showStandardStreams = true
