@@ -33,6 +33,9 @@ public class Task {
 
     @NotNull
     private String desc;
+    
+    @NotNull
+    private ImplementationType type;
 
     @NotNull
     private String code;
@@ -55,9 +58,10 @@ public class Task {
     private List<TaskImplementation> implementations;
 
     protected Task() {}
-
-    public Task(int taskId, User author, String name, String desc, String code, int level, int rating) {
+    
+    public Task(int taskId,  ImplementationType type, User author, String name, String desc, String code, int level, int rating) {
         this.taskId = taskId;
+        this.type = type;
         this.author = author;
         this.name = name;
         this.desc = desc;
@@ -80,7 +84,7 @@ public class Task {
     }
 
     public long getId() {
-        return this.taskId;
+        return this.id;
     }
 
     public String getCode() {
@@ -131,14 +135,6 @@ public class Task {
         this.level = level;
     }
 
-    public int getSequenceId() {
-        return this.taskId;
-    }
-
-    public void setSequenceId(int sequenceId) {
-        this.taskId = sequenceId;
-    }
-
     public List<TaskImplementation> getImplementations() {
         return this.implementations;
     }
@@ -154,4 +150,21 @@ public class Task {
     public void setTaskId(int taskId) {
         this.taskId = taskId;
     }
+
+    public ImplementationType getType() {
+        return type;
+    }
+
+    public void setType(ImplementationType type) {
+        this.type = type;
+    }
+
+    public void setTypeTest() {
+        this.type = ImplementationType.TEST;
+    }
+
+    public void setTypeImplementation() {
+        this.type = ImplementationType.IMPLEMENTATION;
+    }
+
 }

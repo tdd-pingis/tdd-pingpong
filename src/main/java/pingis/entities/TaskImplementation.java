@@ -20,8 +20,7 @@ public class TaskImplementation {
     // TODO: Decide scaling of rating, then set @DecimalMin and @DecimalMax constraints here
     private float rating;
 
-    @NotNull
-    private ImplementationType type;
+    
 
     @NotNull
     private CodeStatus status;
@@ -42,9 +41,8 @@ public class TaskImplementation {
 
     protected TaskImplementation() {}
 
-    public TaskImplementation(User user, String code, ImplementationType type, Task task) {
+    public TaskImplementation(User user, String code, Task task) {
         this.user = user;
-        this.type = type;
         this.code = code;
         this.task = task;
         this.status = CodeStatus.IN_PROGRESS;
@@ -61,7 +59,7 @@ public class TaskImplementation {
     }
 
     public void setCode(String code) {
-        this.code = code;
+        this.code = code;   
     }
 
     public float getRating() {
@@ -70,22 +68,6 @@ public class TaskImplementation {
 
     public void setRating(float rating) {
         this.rating = rating;
-    }
-
-    public ImplementationType getType() {
-        return type;
-    }
-
-    public void setType(ImplementationType type) {
-        this.type = type;
-    }
-
-    public void setTypeTest() {
-        this.type = ImplementationType.TEST;
-    }
-
-    public void setTypeImplementation() {
-        this.type = ImplementationType.IMPLEMENTATION;
     }
 
     public boolean isExample() {
