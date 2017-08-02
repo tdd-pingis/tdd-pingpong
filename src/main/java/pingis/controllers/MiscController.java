@@ -10,9 +10,4 @@ public class MiscController {
     public String index() {
         return "index";
     }
-
-    @RequestMapping("/sandbox")
-    public String sandbox() {
-        return "sandbox";
-    }
 }
