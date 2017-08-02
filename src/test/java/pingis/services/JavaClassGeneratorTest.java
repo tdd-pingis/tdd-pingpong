@@ -1,6 +1,7 @@
 
 package pingis.services;
 
+import antlr.JavaCodeGenerator;
 import pingis.utils.JavaClassGenerator;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.*;
 import pingis.entities.Challenge;
 import pingis.entities.ImplementationType;
 import pingis.entities.Task;
@@ -24,15 +26,10 @@ public class JavaClassGeneratorTest {
     private Task task3;
     private User authorUser;
     private static final int TMC_USER_LEVEL = 100;
-    
-    private JavaClassGenerator JCGenerator;
     private final int Challenge1Level = 3;
     
     public JavaClassGeneratorTest() {
-        challenge1 = new Challenge("Immutable Calculator", authorUser, "Amazing immutable calculator.",
-                "src/ImmutableCalculator.java",
-                "test/ImmutableCalculatorTest.java");
-        JCGenerator = new JavaClassGenerator();
+        challenge1 = new Challenge("Immutable Calculator", authorUser, "Amazing immutable calculator.");
         User testUser = new User(new Random().nextLong(), "Test_userfirst", Challenge1Level);
         
         task1 = new Task(0, ImplementationType.TEST, testUser, "testAddition",
@@ -84,7 +81,7 @@ public class JavaClassGeneratorTest {
         List<Task> tasks = new ArrayList<Task>();
         tasks.add(task1);
         
-        assertEquals(parsedChallenge1Task1, JCGenerator.generateChallenge(challenge1, tasks));
+        assertEquals(parsedChallenge1Task1, JavaClassGenerator.generateChallenge(challenge1, tasks));
     }
     
     @Test
@@ -110,7 +107,7 @@ public class JavaClassGeneratorTest {
         tasks.add(task1);
         tasks.add(task2);
  
-        assertEquals(parsedChallenge1TwoTasks, JCGenerator.generateChallenge(challenge1, tasks));
+        assertEquals(parsedChallenge1TwoTasks, JavaClassGenerator.generateChallenge(challenge1, tasks));
     }
     
     @Test
@@ -142,7 +139,31 @@ public class JavaClassGeneratorTest {
         tasks.add(task1);
         tasks.add(task2);
         tasks.add(task3);
-        assertEquals(parsedChallenge1TwoTasks, JCGenerator.generateChallenge(challenge1, tasks));
+        assertEquals(parsedChallenge1TwoTasks, JavaClassGenerator.generateChallenge(challenge1, tasks));
+    }
+    
+    @Test
+    public void testGenerateImplClassName() {
+        final String expectedName = "src/ImmutableCalculator.java";
+        assertThat(JavaClassGenerator.generateImplClassName(challenge1)).isEqualTo(expectedName);
+    }
+    
+    @Test
+    public void testGenerateImplClassNameWithoutPath() {
+        final String unexpectedName = "ImmutableCalculator.java";
+        assertThat(JavaClassGenerator.generateImplClassName(challenge1)).isNotEqualTo(unexpectedName);
+    }
+    
+    @Test
+    public void testGenerateTestClassName() {
+        final String expectedName = "test/ImmutableCalculatorTest.java";
+        assertThat(JavaClassGenerator.generateTestClassName(challenge1)).isEqualTo(expectedName);
+    }
+    
+    @Test
+    public void testGenerateTestClassNameWithoutPath() {
+        final String unexpectedName = "ImmutableCalculatorTest.java";
+        assertThat(JavaClassGenerator.generateTestClassName(challenge1)).isNotEqualTo(unexpectedName);
     }
     
 }

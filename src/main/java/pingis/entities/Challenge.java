@@ -48,23 +48,20 @@ public class Challenge {
     @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
     private User author;
-
     protected Challenge() {}
 
-    public Challenge(String name, User author, String description, int level, float rating, ChallengeType type) {
+    public Challenge(String name, User author, String description, ChallengeType type) {
         this.name = name;
         this.author = author;
-        this.description = description;
-        this.level = level;
-        this.rating = rating;
         this.type = type;
+        this.description = description;
         this.tasks = new ArrayList<>();
         this.implementations = new ArrayList<>();
     }
 
     
     public Challenge(String name, User author, String description) {
-        this(name, author, description, 1, 0, ChallengeType.MIXED);
+        this(name, author, description, ChallengeType.MIXED);
     }
 
     public void setAuthor(User author) {
@@ -156,5 +153,4 @@ public class Challenge {
     public void setImplementations(List<ChallengeImplementation> implementations) {
         this.implementations = implementations;
     }
-
 }

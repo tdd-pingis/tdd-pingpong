@@ -23,6 +23,14 @@ public class JavaClassGenerator {
         return "public class " + c.getName().replaceAll("\\s+","") + "Test {";
     }
     
+    public static String generateImplClassName(Challenge challenge) {
+        return "src/" + challenge.getName().replaceAll("\\s+","") + ".java";
+    }
+    
+    public static String generateTestClassName(Challenge challenge) {
+        return "test/" + challenge.getName().replaceAll("\\s+","") + "Test.java";
+    }
+    
     private static String generateImplementationClassHeader(Challenge c) {
         return "public class " + c.getName() + " {";
     }
