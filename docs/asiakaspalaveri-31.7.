@@ -1,0 +1,32 @@
+TDD-pingis Asiakaspalaveri 31.7.
+
+Brief:
+Testien "vuorottelu" voisi olla seuraava lisäys. Sandboxin resultit kuitenkin tärkein tälle sprintille (käyttäkää Websockettia kun näytätte tulokset käyttäjälle).
+
+Muu käyty keskustelu:
+
+Me: Minkälainen admin-paneeli? Data export vai submission history? Molemmat?
+A:  Olisi kiva, jos pystyisi seuraamaan jonkun tietyn tehtävän kehitystä. Export nappi: "ei välttämättä kovin tarpeellinen, mutta jsonit oisi ihan kivoja"
+    Halutaan ehkä hakea dataa koneellisesti myöhemmin. API olisi kiva.
+
+A:  Uuden tehtävän lisääminen olisi myös kiva. Vaatii ensiksi vuorottelun toteuttamisen. Vertaisarvioinnit yksittäisiin contribuutioihin.
+
+A:  Käyttäkää TMC:n admin statusta kun implementoitte admin-käyttäjän.
+
+Me: Kun käyttäjä ensiksi kirjautuu sivulle, minkälainen näkymä?
+A:  Aluksi Lähtötesti. Esittely tehtävästä "miten tätä käytetään?". Tämän jälkeen mahdollisesti annetaan käyttäjälle tilaisuus valita miten etenee.
+
+A:  Kun joskus toteutatte Skip-tehtävä -napin, niin se voisi vaihtaa tehtävä-realmia
+
+Me: Tietokannasta kysymys. Miten tehtävän tila kannattaisi tallettaa tietokantaan, ettei tule paljon duplikaatteja?
+A:  Optimoinnin voi tehdä myöhemmin. Aluksi vain sellainen versio joka toimii.
+
+Me: Mitä attribuutteja userille?
+A:  Käyttäjänimi, onko admin. Käyttäjänimen perusteella pystytään hakemaan tiedot käyttäjästä.
+
+Me: Pitääkö vuorottelun olla oikeaa vuorottelua, vai riittääkö näennäinen vuorottelu?
+A:  Näennäinen on aluksi riittävän hyvä.
+
+A:  Kannattaa suunitella, mikä olisi mielekäs testi kuhunkin tilanteeseen.
+
+Seuraava tapaaminen @ Software Lab, Maanantaina 7.8. klo 11. Tuomo ei tuu, Tuomo on Ruotsissa.
