@@ -5,15 +5,15 @@
         <nav th:include="navbar :: navigation"></nav>
 
         <div class="container">
-            <p class="lead" th:inline="text">Challenge: [[${challengename}]]</p>
-            <p th:text="${challengedesc}"></p>
+            <p class="lead" th:inline="text">Challenge: [[${challenge.name}]]</p>
+            <p th:text="${challenge.desc}"></p>
             <div class="row">
                 <div class="col-md-4">
-                    <p th:inline="text">Task: [[${taskname}]]</p><br/>
-                    <p th:inline="text">Level: [[${difficulty}]]</p><br/>
+                    <p th:inline="text">Task: [[${task.name}]]</p><br/>
+                    <p th:inline="text">Level: [[${task.level}]]</p><br/>
                 </div>
                 <div class="col-md-6">
-                    <p th:text="${taskdesc}"></p><br/><br/>
+                    <p th:text="${task.desc}"></p><br/><br/>
                 </div>
             </div>
             <div th:if="${errors}" class="row">
@@ -30,14 +30,14 @@
             <form method="post" action="/task">
 
                 <div class="tab-content" th:inline="text">        
-                    <input type="hidden" name="challenge" th:value="${challengeId}" />
-                    <input type="hidden" name="task" th:value="${taskId}" />
+                    <input type="hidden" name="challenge" th:value="${challenge.id}" />
+                    <input type="hidden" name="task" th:value="${task.id}" />
                     <div th:each="editor, iter: ${editorContents}" th:id="${editor.key}+'_item'" th:class="${iter.index == 0}?'panel panel-default tab-pane fade in active':'panel panel-default tab-pane fade'">
                         <div class="panel-heading">
                             <h3 class="panel-title" th:inline="text">[[${editor.value.title}]]</h3>
                         </div>
                         <div class="panel-body">
-                            <div th:id="${editor.key}" style="height: 300px" class="editortab" th:inline="text">[[${editor.value.content}]]</div>
+                            <div th:id="${editor.key}" style="height: 300px" class="editortab" th:inline="text">[[${editor.value.code}]]</div>
                             <textarea name="${editor.key}+'code'" th:id="'shadow-'+${editor.key}" style="display: none;"/>
 
                         </div>
