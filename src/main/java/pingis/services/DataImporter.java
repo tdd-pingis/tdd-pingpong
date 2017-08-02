@@ -46,7 +46,7 @@ public class DataImporter implements ApplicationRunner{
     private ArrayList<TaskImplementation> taskImplementations = new ArrayList();
     private ArrayList<ChallengeImplementation> challengeImplementations = new ArrayList();
     private int taskid = 0;
-
+//CHECKSTYLE:OFF
     public void run(ApplicationArguments args) throws Exception {
         readData("exampledata/dummychallenges.json");
         generateUsers();
@@ -67,7 +67,7 @@ public class DataImporter implements ApplicationRunner{
         long userId = new Random().nextInt(Integer.MAX_VALUE);
 
         
-        users.put("tmcuser", new User(DataLoader.UserType.TMC_MODEL_USER.getId(), DataLoader.UserType.TMC_MODEL_USER.name(), 100)); 
+        users.put("modeluser", new User(DataLoader.UserType.TMC_MODEL_USER.getId(), DataLoader.UserType.TMC_MODEL_USER.name(), 100)); 
         users.put("testuser", new User(DataLoader.UserType.TEST_USER.getId(), DataLoader.UserType.TEST_USER.name(), 5));
         users.put("impluser", new User(DataLoader.UserType.IMPLEMENTATION_USER.getId(), DataLoader.UserType.IMPLEMENTATION_USER.name(), 1));
 
@@ -81,33 +81,46 @@ public class DataImporter implements ApplicationRunner{
             JSONArray tasks = o.getJSONArray("tasks");
             Challenge c = new Challenge(o.getString("name"), users.get(o.getString("user")), o.getString("desc"));            
             this.challenges.add(c);
-            //ArrayList<Task> taskobjects = new ArrayList();
             for (int j = 0; j < tasks.length(); j++) {
                 JSONObject task = tasks.getJSONObject(j);
+
                 User user = users.get(task.getString("user"));
-                Task t = new Task(this.taskid++, user, task.getString("name"), task.getString("desc"), task.getString("code"), 1, 1);
-                this.tasks.add(t);
-                c.addTask(t);
-                t.setChallenge(c);
-                //taskobjects.add(t);
-                String modelTest = "";
-                JSONArray mtest = task.getJSONArray("modeltest");
-                for (int k = 0; k < mtest.length(); k++) {
-                    modelTest += mtest.getString(k);
+                ChallengeImplementation chImp = new ChallengeImplementation(c, user, user);
+                
+                
+                String codeStub = "";
+                JSONArray codearray = task.getJSONArray("codeStub");
+                for (int k = 0; k < codearray.length(); k++) {
+                    codeStub += codearray.getString(k);
                 }
+                
+                String typeString = task.getString("type");
+                
+                ImplementationType type;
+                
+                if (typeString.equals("test")) {
+                    type = ImplementationType.TEST;
+                } else {
+                    type = ImplementationType.IMPLEMENTATION;
+                }
+
+                Task t = new Task(this.taskid++, type, user, task.getString("name"), task.getString("desc"), codeStub, 1, 1);
+                this.tasks.add(t);
+                t.setChallenge(c);
+                c.addTask(t);
+
                 String modelImp = "";
                 JSONArray mImp = task.getJSONArray("modelimplementation");
                 for (int k = 0; k < mImp.length(); k++) {
                     modelImp += mImp.getString(k);
                 }
-                TaskImplementation i1 = new TaskImplementation(user, modelTest, ImplementationType.TEST, t);
-                TaskImplementation i2 = new TaskImplementation(user, modelImp, ImplementationType.IMPLEMENTATION, t);
-                t.addImplementation(i1);
-                t.addImplementation(i2);
-                i1.setTask(t);
-                i2.setTask(t);
-                this.taskImplementations.add(i1);
-                this.taskImplementations.add(i2);
+
+                TaskImplementation imp = new TaskImplementation(user, modelImp, t);
+                t.addImplementation(imp);
+                chImp.addTaskImplementation(imp);
+                imp.setChallengeImplementation(chImp);
+                imp.setTask(t);
+                this.taskImplementations.add(imp);
             }
         }
     }
@@ -145,4 +158,5 @@ public class DataImporter implements ApplicationRunner{
             System.out.println("ti: "+i.toString()+"\n");
         }
     }
+    //CHECKSTYLE:ON
 }

@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import pingis.entities.Challenge;
+import pingis.entities.ImplementationType;
 import pingis.entities.Task;
 import pingis.entities.User;
 
@@ -32,17 +33,17 @@ public class JavaClassGeneratorTest {
         JCGenerator = new JavaClassGenerator();
         User testUser = new User(new Random().nextLong(), "Test_userfirst", Challenge1Level);
         
-        task1 = new Task(0, testUser, "testAddition",
+        task1 = new Task(0, ImplementationType.TEST, testUser, "testAddition",
                 "test addition of two integers, return single value", 
                 "@Test\npublic void testAddition() {\n\t//TODO: implement this\n\n}", 
                 Challenge1Level, 0);
         
-        task2 = new Task(1, testUser, "testSubstraction",
+        task2 = new Task(1, ImplementationType.TEST, testUser, "testSubstraction",
                 "test substraction of two integers, return single value", 
                 "@Test\npublic void testSubstraction() {\n\t//TODO: implement this\n\n}", 
                 Challenge1Level, 0);
         
-        task3 = new Task(2, testUser, "testMultiplication",
+        task3 = new Task(2, ImplementationType.TEST, testUser, "testMultiplication",
                 "test multiplication of two integers, return single value", 
                 "@Test\npublic void testMultiplication() {\n\t//TODO: implement this\n\n}", 
                 Challenge1Level, 0);

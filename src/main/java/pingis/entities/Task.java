@@ -38,7 +38,7 @@ public class Task {
     private ImplementationType type;
 
     @NotNull
-    private String code;
+    private String codeStub;
 
     @NotNull
     @Min(LEVEL_MIN_VALUE)
@@ -59,13 +59,14 @@ public class Task {
 
     protected Task() {}
     
-    public Task(int taskId,  ImplementationType type, User author, String name, String desc, String code, int level, int rating) {
+    public Task(int taskId,  ImplementationType type, User author,
+            String name, String desc, String codeStub, int level, int rating) {
         this.taskId = taskId;
         this.type = type;
         this.author = author;
         this.name = name;
         this.desc = desc;
-        this.code = code;
+        this.codeStub = codeStub;
         this.level = level;
         this.rating = rating;
         this.implementations = new ArrayList<>();
@@ -87,12 +88,12 @@ public class Task {
         return this.id;
     }
 
-    public String getCode() {
-        return this.code;
+    public String getCodeStub() {
+        return this.codeStub;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setCodeStub(String codeStub) {
+        this.codeStub = codeStub;
     }
 
     public float getRating() {

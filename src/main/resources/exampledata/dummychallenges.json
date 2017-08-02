@@ -2,27 +2,31 @@
     "challenges": [
         {
             "name": "calculator",
-            "user": "testuser",
+            "user": "model",
             "desc": "Test and implement a simple command line based calculator.",
             "tasks": [
+
                 {
-                    "user" : "testuser",
+                    "user": "modeluser",
                     "name": "Test multiplication",
                     "type": "test",
                     "desc": "Write a JUnit test case that tests the multiplication method for two integers. \nMethod should take two integers as arguments and return the product of those as an integer.",
-                    "code":  ["@Test\npublic void testMultiplication() {\n\t//TODO: implement this\n\n}"],
-                    "modeltest": ["public class CalculatorTest {\n    @Test\n    public void testAddition() {\n        Calculator calc = new Calculator();\n        assertEquals(23, calc.multiply(18, 5));\n    }\n}"],
-                    "modelimplementation": ["public class Calculator {\n\n    public Calculator() {}\n\n    public int multiply(int a, int b) {\n        return a*b;\n    }\n}"]
+                    "codeStub": ["@Test\npublic void testMultiplication() {\n\t//TODO: implement this\n\n}"],
+                    "modelimplementation": ["public class CalculatorTest {\n",
+                        "@Test\n    public void testAddition() {\n",
+                        "Calculator calc = new Calculator();\n",
+                        "assertEquals(23, calc.multiply(18, 5));\n",
+                        "}\n}"]
                 },
                 {
-                    "user": "tmcuser",
-                    "name": "Test addition",
-                    "type": "test",
+                    "user": "modeluser",
+                    "name": "Make multiplication test pass",
+                    "type": "implementation",
                     "desc": "Write a JUnit test case that test the addition method for two integers.\nMethod should take two integers as arguments and return the sum of those as an integer.",
-                    "code": ["Test\npublic void testAddition() {\n\tTODO: implement this\n\n}"],
-                    "modeltest": ["public class CalculatorTest {\n    @Test\n    public void testAddition() {\n        Calculator calc = new Calculator();\n        assertEquals(23, calc.add(18, 5));\n    }\n}"],
+                    "codeStub": ["Test\npublic void testAddition() {\n\tTODO: implement this\n\n}"],
                     "modelimplementation": ["public class Calculator {\n\n    public Calculator() {}\n\n    public int add(int a, int b) {\n        return a+b;\n    }\n}"]
                 }
+
             ]
         }
     ]

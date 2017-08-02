@@ -31,7 +31,7 @@ public class JavaClassGenerator {
         String codeSegment = "";
         
         for (Task task : tasks) {
-            String[] lines = task.getCode().split(System.getProperty("line.separator"));
+            String[] lines = task.getCodeStub().split(System.getProperty("line.separator"));
             for (String line : lines) {
                 codeSegment += "\t" + line + "\n";
             }
