@@ -36,7 +36,11 @@
               <li><a href="#">Help</a></li>
               <li><a href="#">Settings</a></li>
               <li role="separator" class="divider"></li>
-              <li><a href="#">Logout</a></li>
+              <li>
+                <form action="#" th:action="@{/logout}" method="post">
+                  <input value="Logout" type="submit" class="btn btn-primary" />
+		</form>
+              </li>
             </ul>
           </li>
           <li sec:authorize="isAnonymous()" class="Account">

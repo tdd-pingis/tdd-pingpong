@@ -13,7 +13,7 @@ public class UserController {
     
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model) {
-        return "redirect:/oauth2/authorize/code/tmc";
+        return "redirect:/oauth2/authorization/code/tmc";
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
