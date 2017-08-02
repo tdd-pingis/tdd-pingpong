@@ -122,14 +122,12 @@ test {
 task unitTest (type: Test) {
     systemProperty "spring.profiles.active", "dev"
 
-    useJUnit()
     exclude '**/cucumber/**'
 }
 
 task cucumberTest (type: Test) {
     systemProperty "spring.profiles.active", "dev"
 
-    useJUnit()
     include '**/cucumber/**'
 }
 
