@@ -54,7 +54,7 @@ public class Task {
     @ManyToOne(fetch=FetchType.EAGER)
     private User author;
 
-    @OneToMany(fetch=FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy="task")
+    @OneToMany(fetch=FetchType.LAZY, /*cascade = {CascadeType.ALL},*/ mappedBy="task")
     private List<TaskImplementation> implementations;
 
     protected Task() {}

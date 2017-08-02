@@ -58,7 +58,7 @@ public class ChallengeController {
             model.addAttribute("editorContents", editorContents);
         }
 
-        editorContents.put("editor1", new EditorTabData("CalculatorTest.java", t.getCode()));
+        editorContents.put("editor1", new EditorTabData("CalculatorTest.java", t.getCodeStub()));
         editorContents.put("editor2", new EditorTabData("Calculator.java",
                 "public class Calculator {\n"
                 + "    \n"

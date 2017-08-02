@@ -2,12 +2,12 @@
     "challenges": [
         {
             "name": "calculator",
-            "user": "model",
+            "author": "modeluser",
             "desc": "Test and implement a simple command line based calculator.",
             "tasks": [
 
                 {
-                    "user": "modeluser",
+                    "author": "modeluser",
                     "name": "Test multiplication",
                     "type": "test",
                     "desc": "Write a JUnit test case that tests the multiplication method for two integers. \nMethod should take two integers as arguments and return the product of those as an integer.",
@@ -19,7 +19,7 @@
                         "}\n}"]
                 },
                 {
-                    "user": "modeluser",
+                    "author": "modeluser",
                     "name": "Make multiplication test pass",
                     "type": "implementation",
                     "desc": "Write a JUnit test case that test the addition method for two integers.\nMethod should take two integers as arguments and return the sum of those as an integer.",

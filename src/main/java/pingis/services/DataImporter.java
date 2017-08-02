@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.Random;
 import java.util.Scanner;
 import org.json.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
@@ -47,15 +48,26 @@ public class DataImporter implements ApplicationRunner{
     private ArrayList<ChallengeImplementation> challengeImplementations = new ArrayList();
     private int taskid = 0;
 //CHECKSTYLE:OFF
+
+    @Autowired
+    public DataImporter(ChallengeRepository cr, TaskRepository tr, UserRepository ur,
+            ChallengeImplementationRepository cir, TaskImplementationRepository tir) {
+        this.cr = cr;
+        this.tr = tr;
+        this.ur = ur;
+        this.cir = cir;
+        this.tir = tir;
+    }
     public void run(ApplicationArguments args) throws Exception {
-        readData("exampledata/dummychallenges.json");
+        Scanner s = new Scanner(getClass().getClassLoader().getResourceAsStream("exampledata/dummychallenges.json"));
+        readData(s);
         generateUsers();
         generateEntities();
         printResults();
+        populateDatabase();
     }
     
-    public void readData(String filename) {
-        Scanner s = new Scanner(getClass().getClassLoader().getResourceAsStream(filename));
+    public void readData(Scanner s) {
         String out = "";
         while(s.hasNext()) {
             out += s.nextLine();
@@ -79,14 +91,17 @@ public class DataImporter implements ApplicationRunner{
         for (int i = 0; i < challenges.length(); i++) {
             JSONObject o = challenges.getJSONObject(i);
             JSONArray tasks = o.getJSONArray("tasks");
-            Challenge c = new Challenge(o.getString("name"), users.get(o.getString("user")), o.getString("desc"));            
+            Challenge c = new Challenge(o.getString("name"), users.get(o.getString("author")), o.getString("desc"));
             this.challenges.add(c);
+            ChallengeImplementation chImp = new ChallengeImplementation(c, users.get(o.getString("author")), users.get(o.getString("author")));
+            this.challengeImplementations.add(chImp);
+            
+
             for (int j = 0; j < tasks.length(); j++) {
                 JSONObject task = tasks.getJSONObject(j);
 
-                User user = users.get(task.getString("user"));
-                ChallengeImplementation chImp = new ChallengeImplementation(c, user, user);
-                
+                User author = users.get(o.getString("author"));
+                author.addAuthoredChallenge(c);
                 
                 String codeStub = "";
                 JSONArray codearray = task.getJSONArray("codeStub");
@@ -104,10 +119,11 @@ public class DataImporter implements ApplicationRunner{
                     type = ImplementationType.IMPLEMENTATION;
                 }
 
-                Task t = new Task(this.taskid++, type, user, task.getString("name"), task.getString("desc"), codeStub, 1, 1);
+                Task t = new Task(this.taskid++, type, author, task.getString("name"), task.getString("desc"), codeStub, 1, 1);
                 this.tasks.add(t);
-                t.setChallenge(c);
                 c.addTask(t);
+
+                t.setChallenge(c);
 
                 String modelImp = "";
                 JSONArray mImp = task.getJSONArray("modelimplementation");
@@ -115,10 +131,13 @@ public class DataImporter implements ApplicationRunner{
                     modelImp += mImp.getString(k);
                 }
 
-                TaskImplementation imp = new TaskImplementation(user, modelImp, t);
+                TaskImplementation imp = new TaskImplementation(author, modelImp, t);
                 t.addImplementation(imp);
+
                 chImp.addTaskImplementation(imp);
+
                 imp.setChallengeImplementation(chImp);
+
                 imp.setTask(t);
                 this.taskImplementations.add(imp);
             }
@@ -129,10 +148,21 @@ public class DataImporter implements ApplicationRunner{
         for (String key : this.users.keySet()) {
             ur.save(this.users.get(key));
         }
-        
         for (Challenge c : this.challenges) {
-            cr.save(c);            
+            cr.save(c);
         }
+        
+        for (Task t : this.tasks) {
+            tr.save(t);
+        }       
+
+        
+        for (ChallengeImplementation c : this.challengeImplementations) {
+            cir.save(c);
+        }       
+
+        
+
         
         for (TaskImplementation i : this.taskImplementations) {
             tir.save(i);
@@ -156,6 +186,11 @@ public class DataImporter implements ApplicationRunner{
         System.out.println("taskimplementations:");
         for (TaskImplementation i : this.taskImplementations) {
             System.out.println("ti: "+i.toString()+"\n");
+        }
+        System.out.println("---");
+        System.out.println("challenge implementations:");
+        for (ChallengeImplementation imp : this.challengeImplementations) {
+            System.out.println(imp);
         }
     }
     //CHECKSTYLE:ON
