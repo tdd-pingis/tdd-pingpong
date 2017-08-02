@@ -30,11 +30,6 @@ public class MiscControllerTest {
         performSimpleGetReguest("/", "<h1><strong>TDD-pingpong</strong> frontpage.</h1>");
     }
 
-    @Test
-    public void simpleSandBoxTest() throws Exception {
-        performSimpleGetReguest("/sandbox", "Sandbox template");
-    }
-
     private void performSimpleGetReguest(String uri, String content) throws Exception {
         mvc.perform(get(uri))
                 .andExpect(status().isOk())
