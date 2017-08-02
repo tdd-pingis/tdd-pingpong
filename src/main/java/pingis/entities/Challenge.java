@@ -36,6 +36,7 @@ public class Challenge {
     @Max(LEVEL_MAX_VALUE)
     private int level;
     private float rating;
+    private ChallengeType type;
 
     @NotEmpty
     @OneToMany(fetch=FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy="challenge")
@@ -50,13 +51,20 @@ public class Challenge {
 
     protected Challenge() {}
 
-    public Challenge(String name, User author, String description) {
+    public Challenge(String name, User author, String description, int level, float rating, ChallengeType type) {
         this.name = name;
         this.author = author;
         this.description = description;
-        this.rating = 0;
+        this.level = level;
+        this.rating = rating;
+        this.type = type;
         this.tasks = new ArrayList<>();
         this.implementations = new ArrayList<>();
+    }
+
+    
+    public Challenge(String name, User author, String description) {
+        this(name, author, description, 1, 0, ChallengeType.MIXED);
     }
 
     public void setAuthor(User author) {
@@ -117,6 +125,14 @@ public class Challenge {
         this.level = level;
     }
 
+    public ChallengeType getType() {
+        return type;
+    }
+
+    public void setType(ChallengeType type) {
+        this.type = type;
+    }
+    
     public void setName(String name) {
         this.name = name;
     }
