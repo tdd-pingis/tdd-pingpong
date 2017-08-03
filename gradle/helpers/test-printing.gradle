@@ -19,7 +19,7 @@ def formatResults(res, type) {
 
   def report
   if(type == 'UNIT') report = '/build/reports/tests/test/index.html'
-  if(type == 'CUKE') report = '/build/reports/tests/cucumber/index.html'
+  if(type == 'CUKE') report = '/build/reports/tests/cucumberTest/index.html'
 
   return '\n' +
     '========================================================================================================================\n' +
