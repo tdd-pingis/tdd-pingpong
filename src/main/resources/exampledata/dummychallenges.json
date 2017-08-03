@@ -1,7 +1,7 @@
 {
     "challenges": [
         {
-            "name": "calculator",
+            "name": "Calculator",
             "author": "modeluser",
             "desc": "Test and implement a simple command line based calculator.",
             "tasks": [
@@ -10,9 +10,13 @@
                     "name": "Test multiplication",
                     "type": "test",
                     "desc": "Write a JUnit test case that tests the multiplication method for two integers. \nMethod should take two integers as arguments and return the product of those as an integer.",
-                    "codeStub": ["@Test\n",
-                        "public void testMultiplication() {\n",
-                        "    //TODO: implement this\n\n",
+                    "codeStub": [
+                        "import static org.junit.Assert.*;\n\n",
+                        "public class CalculatorTest {\n",
+                        "    @Test\n",
+                        "    public void testMultiplication() {\n",
+                        "        //TODO: implement this\n\n",
+                        "    }\n",
                         "}"],
                     "modelimplementation": ["public class CalculatorTest {\n",
                         "@Test\n    public void testAddition() {\n",
