@@ -17,10 +17,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {Application.class, MiscController.class, SecurityDevConfig.class})
+@ContextConfiguration(classes = {Application.class, IndexController.class, SecurityDevConfig.class})
 @WebAppConfiguration
-@WebMvcTest(MiscController.class)
-public class MiscControllerTest {
+@WebMvcTest(IndexController.class)
+public class IndexControllerTest {
 
     @Autowired
     private MockMvc mvc;
