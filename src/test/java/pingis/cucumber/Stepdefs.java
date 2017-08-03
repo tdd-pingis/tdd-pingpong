@@ -31,8 +31,8 @@ public class Stepdefs {
     @Value("${TMC_TEST_USER_PASSWORD:dummy}")
     private String tmcPassword;
     
-    private final int DRIVER_WAIT_TIME = 1;
-    private final int LOAD_WAIT_TIME = 400;
+    private final int DRIVER_WAIT_TIME = 4;
+    private final int LOAD_WAIT_TIME = 1000;
     
     WebDriver driver;
     String baseUrl;
