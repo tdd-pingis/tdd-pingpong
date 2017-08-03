@@ -109,7 +109,7 @@ cucumberProdTest {
 }
 
 //Full debug prints for Travis, custom report prints for local
-if(System.env.travis == 'true') {
+if(System.env.TRAVIS == 'true') {
   unitTest.testLogging.showStandardStreams = true
   cucumberTest.testLogging.showStandardStreams = true
   cucumberProdTest.testLogging.showStandardStreams = true
