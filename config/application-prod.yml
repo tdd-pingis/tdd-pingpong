@@ -6,4 +6,4 @@ security:
   oauth2:
     client:
       tmc:
-        redirectUri: http://pingis.testmycode.io/oauth2/authorize/code/tmc
+        redirectUri: https://pingis.testmycode.io/oauth2/authorize/code/tmc
