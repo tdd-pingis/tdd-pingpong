@@ -5,13 +5,15 @@
             "author": "modeluser",
             "desc": "Test and implement a simple command line based calculator.",
             "tasks": [
-
                 {
                     "author": "modeluser",
                     "name": "Test multiplication",
                     "type": "test",
                     "desc": "Write a JUnit test case that tests the multiplication method for two integers. \nMethod should take two integers as arguments and return the product of those as an integer.",
-                    "codeStub": ["@Test\npublic void testMultiplication() {\n\t//TODO: implement this\n\n}"],
+                    "codeStub": ["@Test\n",
+                        "public void testMultiplication() {\n",
+                        "    //TODO: implement this\n\n",
+                        "}"],
                     "modelimplementation": ["public class CalculatorTest {\n",
                         "@Test\n    public void testAddition() {\n",
                         "Calculator calc = new Calculator();\n",
@@ -23,7 +25,10 @@
                     "name": "Make multiplication test pass",
                     "type": "implementation",
                     "desc": "Write a JUnit test case that test the addition method for two integers.\nMethod should take two integers as arguments and return the sum of those as an integer.",
-                    "codeStub": ["Test\npublic void testAddition() {\n\tTODO: implement this\n\n}"],
+                    "codeStub": ["@Test\n",
+                        "public void testAddition() {\n",
+                        "    TODO: implement this\n\n",
+                        "}"],
                     "modelimplementation": ["public class Calculator {\n\n    public Calculator() {}\n\n    public int add(int a, int b) {\n        return a+b;\n    }\n}"]
                 }
 
@@ -40,14 +45,14 @@
                     "type": "test",
                     "desc": "Write a JUnit test case for classic Hello World -method",
                     "codeStub": ["@Test\n",
-                                 "public void helloTest() {\n",
-                                 "   //TODO: implement this\n",
-                                 "}\n"
+                        "public void helloTest() {\n",
+                        "   //TODO: implement this\n",
+                        "}\n"
                     ],
                     "modelimplementation": ["@Test\n",
-                                            "public void helloTest() {\n",
-                                            "    assertTrue(hello().equals(\"Hello, world!\"));\n",
-                                            "}\n"]
+                        "public void helloTest() {\n",
+                        "    assertTrue(hello().equals(\"Hello, world!\"));\n",
+                        "}\n"]
                 },
                 {
                     "author": "modeluser",
@@ -55,12 +60,12 @@
                     "type": "implementation",
                     "desc": "Write a method that makes the given test pass",
                     "codeStub": ["public void hello() {\n",
-                                 "   //TODO: implement this\n",
-                                 "}",
-                                 "\n"],
+                        "   //TODO: implement this\n",
+                        "}",
+                        "\n"],
                     "modelimplementation": ["public void hello() {",
-                                            "   System.out.println(\"Hello, world!\");",
-                                            "}"]
+                        "   System.out.println(\"Hello, world!\");",
+                        "}"]
                 }
             ]
         }

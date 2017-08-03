@@ -2,6 +2,7 @@
 package pingis.utils;
 
 import java.util.List;
+import org.apache.tomcat.util.http.fileupload.InvalidFileNameException;
 import pingis.entities.Challenge;
 import pingis.entities.Task;
 
@@ -29,18 +30,20 @@ public class JavaClassGenerator {
         return "public class " + c.getName().replaceAll("\\s+","") + "Test {";
     }
     
-    public static String generateImplClassName(Challenge challenge) {
-        String classFilename = returnCorrectLength(challenge.getName());
-        return "src/" + classFilename.replaceAll("[\\d\\s+]","") + ".java";
+    public static String generateImplClassFilename(Challenge challenge) throws InvalidFileNameException {
+        checkNameLength(challenge.getName());
+        return "src/" + challenge.getName().replaceAll("[\\s+]","") + ".java";
     }
     
-    public static String generateTestClassName(Challenge challenge) {
-        String classFilename = returnCorrectLength(challenge.getName());
-        return "test/" + classFilename.replaceAll("[\\d\\s+]","") + "Test.java";
+    public static String generateTestClassFilename(Challenge challenge) throws InvalidFileNameException {
+        checkNameLength(challenge.getName());
+        return "test/" + challenge.getName().replaceAll("[\\s+]","") + "Test.java";
     }
     
-    private static String returnCorrectLength(String string) {
-        return (string.length() > MAX_LINE_LENGTH) ? string.substring(0, MAX_LINE_LENGTH-1) : string;
+    private static void checkNameLength(String string) throws InvalidFileNameException {
+        if (string.length() > MAX_LINE_LENGTH) {
+            throw new InvalidFileNameException(string, "Given string is too long. max length is " + MAX_LINE_LENGTH);
+        }
     }
     
     private static String generateImplementationClassHeader(Challenge c) {

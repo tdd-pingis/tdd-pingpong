@@ -148,74 +148,61 @@ public class JavaClassGeneratorTest {
     @Test
     public void testGenerateImplClassName() {
         final String expectedName = "src/ImmutableCalculator.java";
-        assertThat(JavaClassGenerator.generateImplClassName(challenge1)).isEqualTo(expectedName);
+        assertThat(JavaClassGenerator.generateImplClassFilename(challenge1)).isEqualTo(expectedName);
     }
     
     @Test
     public void testGenerateImplClassNameWithOneNumber() {
         final String expectedName = "src/ImmutableCalculator.java";
         challenge1.setName("Immutable Calculator" + "9");
-        assertThat(JavaClassGenerator.generateImplClassName(challenge1)).isEqualTo(expectedName);
-    }
-    
-    @Test
-    public void testGenerateImplClassNameWithNumbers() {
-        final String expectedName = "src/ImmutableCalculator.java";
-        challenge1.setName("Immutable Calculator" + "91223");
-        assertThat(JavaClassGenerator.generateImplClassName(challenge1)).isEqualTo(expectedName);
-    }
-    
-    @Test
-    public void testGenerateImplClassNameWithNumbersAtTheBeginningAndInEnd() {
-        final String expectedName = "src/ImmutableCalculator.java";
-        challenge1.setName("02" + "Immutable Calculator" + "91223");
-        assertThat(JavaClassGenerator.generateImplClassName(challenge1)).isEqualTo(expectedName);
+        assertThat(JavaClassGenerator.generateImplClassFilename(challenge1)).isNotEqualTo(expectedName);
     }
     
     @Test
     public void testGenerateImplClassNameTooLong() {
-        final String expectedName = "src/ImmutableCalculatorImmutableCalculat.java";
         challenge1.setName("Immutable Calculator Immutable Calculator Immutable Calculator");
-        assertThat(JavaClassGenerator.generateImplClassName(challenge1)).isEqualTo(expectedName);
+        try {
+            JavaClassGenerator.generateImplClassFilename(challenge1);
+            assertFalse("This method should report about too long filenames by throwing an error.", true);
+        } catch (Exception se) {
+            assertTrue(se.getMessage(), true);
+        }
     }
     
     @Test
     public void testGenerateImplClassNamePath() {
         final String unexpectedName = "ImmutableCalculator.java";
-        assertThat(JavaClassGenerator.generateImplClassName(challenge1)).isNotEqualTo(unexpectedName);
+        assertThat(JavaClassGenerator.generateImplClassFilename(challenge1)).isNotEqualTo(unexpectedName);
     }
     
     @Test
     public void testGenerateTestClassNameWithOneNumber() {
         final String expectedName = "test/ImmutableCalculatorTest.java";
         challenge1.setName("Immutable Calculator" + "9");
-        assertThat(JavaClassGenerator.generateTestClassName(challenge1)).isEqualTo(expectedName);
-    }
-
-    @Test
-    public void testGenerateTestClassNameWithNumbers() {
-        final String expectedName = "test/ImmutableCalculatorTest.java";
-        challenge1.setName("Immutable Calculator" + "91223");
-        assertThat(JavaClassGenerator.generateTestClassName(challenge1)).isEqualTo(expectedName);
+        assertThat(JavaClassGenerator.generateTestClassFilename(challenge1)).isNotEqualTo(expectedName);
     }
 
     @Test
     public void testGenerateTestClassNameTooLong() {
-        final String expectedName = "test/ImmutableCalculatorImmutableCalculatTest.java";
         challenge1.setName("Immutable Calculator Immutable Calculator Immutable Calculator");
-        assertThat(JavaClassGenerator.generateTestClassName(challenge1)).isEqualTo(expectedName);
+        try {
+            JavaClassGenerator.generateTestClassFilename(challenge1);
+            assertFalse("This method should report about too long filenames by throwing an error.", true);
+        } catch (Exception se) {
+            assertTrue(se.getMessage(), true);
+        }
     }
     
     @Test
     public void testGenerateTestClassName() {
         final String expectedName = "test/ImmutableCalculatorTest.java";
-        assertThat(JavaClassGenerator.generateTestClassName(challenge1)).isEqualTo(expectedName);
+        assertThat(JavaClassGenerator.generateTestClassFilename(challenge1)).isEqualTo(expectedName);
     }
     
     @Test
     public void testGenerateTestClassNamePath() {
         final String unexpectedName = "ImmutableCalculatorTest.java";
-        assertThat(JavaClassGenerator.generateTestClassName(challenge1)).isNotEqualTo(unexpectedName);
+        assertThat(JavaClassGenerator.generateTestClassFilename(challenge1)).isNotEqualTo(unexpectedName);
     }
     
 }

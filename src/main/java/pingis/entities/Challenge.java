@@ -39,10 +39,10 @@ public class Challenge {
     private ChallengeType type;
 
     @NotEmpty
-    @OneToMany(fetch=FetchType.EAGER, /*cascade = {CascadeType.ALL},*/ mappedBy="challenge")
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="challenge")
     private List<Task> tasks;
 
-    @OneToMany(fetch=FetchType.LAZY, /*cascade = {CascadeType.ALL},*/ mappedBy = "challenge")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "challenge")
     private List<ChallengeImplementation> implementations;
 
     @NotNull
