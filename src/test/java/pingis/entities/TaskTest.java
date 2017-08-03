@@ -12,7 +12,7 @@ public class TaskTest {
 
     @Before
     public void setUp() {
-        normalTask = new Task(1, 
+        normalTask = new Task(1, ImplementationType.TEST,
                 new User(new Random().nextLong(), "Test_user", 1),
                 "tostring", 
                 "generate toString()",

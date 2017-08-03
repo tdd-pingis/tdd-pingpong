@@ -17,7 +17,7 @@ public class EditorService {
 
     public LinkedHashMap<String, EditorTabData> generateContent(Task t) {
         // Implement DB solution here
-        content.put("editor1", new EditorTabData("CalculatorTest.java", t.getCode()));
+        content.put("editor1", new EditorTabData("CalculatorTest.java", t.getCodeStub()));
         content.put("editor2", new EditorTabData("Calculator.java",
                 "public class Calculator {\n"
                         + "    \n"

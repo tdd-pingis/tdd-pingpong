@@ -23,7 +23,7 @@ public class ChallengeImplementation {
     @NotNull
     private CodeStatus status;  
     
-    @NotNull
+    
     @ManyToOne(fetch=FetchType  .EAGER)
     private Challenge challenge;
     
@@ -35,7 +35,7 @@ public class ChallengeImplementation {
     @ManyToOne(fetch=FetchType.EAGER)
     private User implementationUser;
     
-    @OneToMany(fetch=FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy = "challengeImplementation")
+    @OneToMany(fetch=FetchType.LAZY, /* cascade = {CascadeType.ALL} ,*/ mappedBy = "challengeImplementation")
     private List<TaskImplementation> taskImplementations;
 
     protected ChallengeImplementation() {}

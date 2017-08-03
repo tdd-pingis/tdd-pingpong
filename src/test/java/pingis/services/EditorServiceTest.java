@@ -6,6 +6,7 @@ import pingis.entities.Task;
 import pingis.entities.User;
 
 import static org.junit.Assert.assertEquals;
+import pingis.entities.ImplementationType;
 
 public class EditorServiceTest {
 
@@ -17,13 +18,13 @@ public class EditorServiceTest {
     public void setUp() {
         editorService = new EditorService();
         testUser = new User(1, "Matti", 1);
-        testTask = new Task(1, testUser, "FirstTask", "SimpleCalcluator", "return 0;", 1, 1);
+        testTask = new Task(1, ImplementationType.TEST, testUser, "FirstTask", "SimpleCalcluator", "return 0;", 1, 1);
     }
 
     @Test
     public void simpleGenerateContentTest() {
         editorService.generateContent(testTask);
         String codeInTask = editorService.getContent().get("editor1").getCode();
-        assertEquals(codeInTask, testTask.getCode());
+        assertEquals(codeInTask, testTask.getCodeStub());
     }
 }

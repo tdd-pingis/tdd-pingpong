@@ -63,11 +63,11 @@ public class DataLoader implements ApplicationRunner {
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
-        generateUsers();
+        /*generateUsers();
         generateChallenges();
         generateChallengeImplementations();
         generateTaskImplementations();
-        populateDB();
+        populateDB();*/
     }
     //CHECKSTYLE:OFF  
     
@@ -81,15 +81,34 @@ public class DataLoader implements ApplicationRunner {
 
     private void generateChallenges() {        
         ArrayList<Task> tasks = new ArrayList<>();
-        
+                
         // Challenge 1        
         this.calculatorChallenge = new Challenge(
-                "Calculator", users.get((int) UserType.TMC_MODEL_USER.getId()), "Test and implement a simple text-based calculator.",
-                "src/Calculator.java", "test/CalculatorTest.java");
-               
-        // Challenge 1 Tasks, authored by Test_user1
+                "Calculator", users.get((int) UserType.TMC_MODEL_USER.getId()), "Test and implement a simple text-based calculator.");
         
+        // Challenge 1 Tasks, authored by TMC_MODEL_USER
+        this.calculatorChallenge.addTask(new Task(tasks.size()-1,
+                        ImplementationType.TEST,
+                        users.get((int) UserType.TMC_MODEL_USER.getId()),
+                        "Test addition", "Write a JUnit test case that tests the addition method for two integers. \n"
+                        + "Method 'public int add()' should take two integers as arguments and return the addition of those as an integer." 
+                        , "@Test\npublic void testAddition() {\n\t//TODO: implement this\n\n}"
+                        , 1
+                        , 0
+                ));
+        
+        this.calculatorChallenge.addTask(new Task(tasks.size()-1,
+                        ImplementationType.IMPLEMENTATION,
+                        users.get((int) UserType.TMC_MODEL_USER.getId()),
+                        "Test addition", "Write a JUnit test case that tests the addition method for two integers. \n"
+                        + "Method 'public int add()' should take two integers as arguments and return the addition of those as an integer." 
+                        , "@Test\npublic void testAddition() {\n\t//TODO: implement this\n\n}"
+                        , 1
+                        , 0
+                ));
+
         tasks.add(new Task(tasks.size()-1,
+                        ImplementationType.TEST,
                         users.get((int) UserType.TMC_MODEL_USER.getId()),
                         "Test multiplication", "Write a JUnit test case that tests the multiplication method for two integers. \n"
                         + "Method should take two integers as arguments and return the product of those as an integer." 
@@ -98,18 +117,28 @@ public class DataLoader implements ApplicationRunner {
                         , 0
                 ));
         
-        // id = 1
-        tasks.add(new Task(tasks.size()-1,
+        this.calculatorChallenge.addTask(new Task(tasks.size()-1,
+                        ImplementationType.IMPLEMENTATION,
                         users.get((int) UserType.TMC_MODEL_USER.getId()),
-                        "Test addition", "Write a JUnit test case that tests the addition method for two integers. \n"
-                        + "Method should take two integers as arguments and return the addition of those as an integer." 
-                        , "@Test\npublic void testAddition() {\n\t//TODO: implement this\n\n}"
+                        "Test multiplication", "Write a JUnit test case that tests the multiplication method for two integers. \n"
+                        + "Method should take two integers as arguments and return the product of those as an integer." 
+                        , "@Test\npublic void testMultiplication() {\n\t//TODO: implement this\n\n}"
                         , 1
                         , 0
                 ));
         
-        // id = 2
         tasks.add(new Task(tasks.size()-1,
+                        ImplementationType.TEST,
+                        users.get((int) UserType.TMC_MODEL_USER.getId()),
+                        "Test substraction", "Write a JUnit test case that tests the substraction method for two integers. \n"
+                        + "Method should take two integers as arguments and return the substraction of the latter from the former as integer."
+                        , "@Test\npublic void testSubstraction() {\n\t//TODO: implement this\n\n}"
+                        , 1
+                        , 0
+                ));
+        
+        this.calculatorChallenge.addTask(new Task(tasks.size()-1,
+                        ImplementationType.IMPLEMENTATION,
                         users.get((int) UserType.TMC_MODEL_USER.getId()),
                         "Test substraction", "Write a JUnit test case that tests the substraction method for two integers. \n"
                         + "Method should take two integers as arguments and return the substraction of the latter from the former as integer."
@@ -120,6 +149,17 @@ public class DataLoader implements ApplicationRunner {
         
         // id = 3
         tasks.add(new Task(tasks.size()-1,
+                        ImplementationType.TEST,
+                        users.get((int) UserType.TMC_MODEL_USER.getId()),
+                        "Test integer division", "Write a JUnit test case that tests division method for two integers. \n"
+                        + "Method should take two integers (former as dividend and latter as divisor) as arguments and return the quotient as integer."
+                        , "@Test\npublic void testIntegerDivision() {\n\t//TODO: implement this\n\n}"
+                        , 2
+                        , 0
+                ));
+        
+        this.calculatorChallenge.addTask(new Task(tasks.size()-1,
+                        ImplementationType.IMPLEMENTATION,
                         users.get((int) UserType.TMC_MODEL_USER.getId()),
                         "Test integer division", "Write a JUnit test case that tests division method for two integers. \n"
                         + "Method should take two integers (former as dividend and latter as divisor) as arguments and return the quotient as integer."
@@ -130,6 +170,17 @@ public class DataLoader implements ApplicationRunner {
         
         // id = 4
         tasks.add(new Task(tasks.size()-1,
+                        ImplementationType.TEST,
+                        users.get((int) UserType.TMC_MODEL_USER.getId()),
+                        "Test integer modulo", "Write a JUnit test case that tests the modulo method for two integers. \n"
+                        + "Method should take two integers (former as dividend and latter as divisor) as arguments and return the remainder of the division as integer."
+                        , "@Test\npublic void testIntegerModulo() {\n\t//TODO: implement this\n\n}"
+                        , 2
+                        , 0
+                ));
+        
+        this.calculatorChallenge.addTask(new Task(tasks.size()-1,
+                        ImplementationType.IMPLEMENTATION,
                         users.get((int) UserType.TMC_MODEL_USER.getId()),
                         "Test integer modulo", "Write a JUnit test case that tests the modulo method for two integers. \n"
                         + "Method should take two integers (former as dividend and latter as divisor) as arguments and return the remainder of the division as integer."
@@ -140,6 +191,17 @@ public class DataLoader implements ApplicationRunner {
         
         // id = 5
         tasks.add(new Task(tasks.size()-1,
+                        ImplementationType.TEST,
+                        users.get((int) UserType.TMC_MODEL_USER.getId()),
+                        "Test integer exponentiation", "Write a JUnit test case that tests the exponentiation of two integers. \n"
+                        + "Method should take two integers (former as base and latter as exponent) as arguments and return the product of the exponentiation as integer."
+                        , "@Test\npublic void testIntegerModulo() {\n\t//TODO: implement this\n\n}"
+                        , 2
+                        , 0
+                ));
+        
+        this.calculatorChallenge.addTask(new Task(tasks.size()-1,
+                        ImplementationType.IMPLEMENTATION,
                         users.get((int) UserType.TMC_MODEL_USER.getId()),
                         "Test integer exponentiation", "Write a JUnit test case that tests the exponentiation of two integers. \n"
                         + "Method should take two integers (former as base and latter as exponent) as arguments and return the product of the exponentiation as integer."
@@ -150,6 +212,17 @@ public class DataLoader implements ApplicationRunner {
         
         // id = 6
         tasks.add(new Task(tasks.size()-1,
+                        ImplementationType.TEST,
+                        users.get((int) UserType.TMC_MODEL_USER.getId()),
+                        "Test euclidean algorithm", "Write a JUnit test case that tests euclidean algorithm. \n"
+                        + "Method should take two integers as arguments and return their greatest common divisor."
+                        , "@Test\npublic void testIntegerModulo() {\n\t//TODO: implement this\n\n}"
+                        , 10
+                        , 0
+                ));
+        
+        this.calculatorChallenge.addTask(new Task(tasks.size()-1,
+                        ImplementationType.IMPLEMENTATION,
                         users.get((int) UserType.TMC_MODEL_USER.getId()),
                         "Test euclidean algorithm", "Write a JUnit test case that tests euclidean algorithm. \n"
                         + "Method should take two integers as arguments and return their greatest common divisor."
@@ -170,24 +243,114 @@ public class DataLoader implements ApplicationRunner {
     }
     
     private void generateTaskImplementations() {
-        // Generate first TaskImplementation for Challenge: Calculator
-        String testCode = "public class CalculatorTest {\n"
+        
+        int taskId_Addition = 0;
+        int taskId_Multiplication = 1;
+        
+        /* ------------------THESE ARE MODEL SOLUTIONS AUTHORED by TMC_MODEL_USER----------------
+        /* --------------------------------------------------------------------------------------
+        */ 
+        
+        // Generate first TaskImplementation for Challenge: Calculator and Task 1: Addition
+        this.taskImplementations.add(new TaskImplementation(
+                        users.get((int) UserType.TMC_MODEL_USER.getId()),
+                
+                        "public class CalculatorTest {\n"
                         + "    @Test\n"
                         + "    public void testAddition() {\n"
                         + "        Calculator calc = new Calculator();\n"
-                        + "        assertEquals(23, calc.Addition(18, 5));\n"
+                        + "        assertEquals(23, calc.add(18, 5));\n"
                         + "    }\n"
-                        + "}";
+                        + "}",
+                
+                        challenges.get(calculatorChallenge).get(taskId_Addition)));
+        
+       
+        // Generate matching TaskImplementation        
+        this.taskImplementations.add(new TaskImplementation(
+                        users.get((int) UserType.TMC_MODEL_USER.getId()),
+                
+                        "public class Calculator {\n"
+                        + "    @Test\n"
+                        + "    public void add(int x, int y) {\n"
+                        + "        return x + y;\n"
+                        + "    }\n"
+                        + "}",
+                    
+                        challenges.get(calculatorChallenge).get(taskId_Addition)));
+        
+        /* --------------------------------------------------------------------------------------
+        /* --------------------------------------------------------------------------------------
+        */
 
-        TaskImplementation taskImplementation = new TaskImplementation(
-                        users.get((int) UserType.TEST_USER.getId()),
-                        testCode,
-                        ImplementationType.TEST,
-                        challenges.get(calculatorChallenge).get(0));
-
-        this.taskImplementations.add(taskImplementation);
-    }
-          
+                              
+        // Generate Third TaskImplementation for Challenge: Calculator and Task 2: Multiplication        
+        this.taskImplementations.add(new TaskImplementation(
+                        users.get((int) UserType.TMC_MODEL_USER.getId()),
+                
+                        "public class CalculatorTest {\n"
+                        + "    @Test\n"
+                        + "    public void testMultiplication() {\n"
+                        + "        Calculator calc = new Calculator();\n"
+                        + "        assertEquals(15, calc.multiply(3, 5));\n"
+                        + "    }\n"
+                        + "}",
+                
+                        challenges.get(calculatorChallenge).get(taskId_Multiplication)));
+        
+       
+        // Generate matching TaskImplementation        
+        this.taskImplementations.add(new TaskImplementation(
+                        users.get((int) UserType.TMC_MODEL_USER.getId()),
+                
+                        "public class Calculator {\n"
+                        + "    @Test\n"
+                        + "    public void multiply(int x, int y) {\n"
+                        + "        return x * y;\n"
+                        + "    }\n"
+                        + "}",
+                    
+                        challenges.get(calculatorChallenge).get(taskId_Multiplication)));
+        
+        /* --------------------------------------------------------------------------------------
+        /* --------------------------------------------------------------------------------------
+        */
+        
+        
+        // Generate  TaskImplementation for Challenge: Calculator and Task 3: Substraction        
+        this.taskImplementations.add(new TaskImplementation(
+                        users.get((int) UserType.TMC_MODEL_USER.getId()),
+                
+                        "public class CalculatorTest {\n"
+                        + "    @Test\n"
+                        + "    public void testSubstraction() {\n"
+                        + "        Calculator calc = new Calculator();\n"
+                        + "        assertEquals(6, calc.substract(11, 5));\n"
+                        + "    }\n"
+                        + "}",
+                
+                        challenges.get(calculatorChallenge).get(taskId_Addition)));
+        
+       
+        // Generate matching TaskImplementation        
+        this.taskImplementations.add(new TaskImplementation(
+                        users.get((int) UserType.TMC_MODEL_USER.getId()),
+                
+                        "public class Calculator {\n"
+                        + "    @Test\n"
+                        + "    public void substract(int x, int y) {\n"
+                        + "        return x - y;\n"
+                        + "    }\n"
+                        + "}",
+                    
+                        challenges.get(calculatorChallenge).get(taskId_Addition)));
+        
+        /* --------------------------------------------------------------------------------------
+        /* --------------------------------------------------------------------------------------
+        */
+        
+    }    
+    
     private void populateDB() {
         // Save all users
         for (User user : this.users) {
