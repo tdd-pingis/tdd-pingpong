@@ -1,0 +1,27 @@
+// Separates the test task into unit and cucumber test tasks
+
+test {
+    exclude '**'
+}
+
+task unitTest (type: Test) {
+    systemProperty "spring.profiles.active", "dev"
+
+    exclude '**/cucumber/**'
+}
+
+task cucumberTest (type: Test) {
+    systemProperty "spring.profiles.active", "dev"
+    systemProperty "cucumber.options", "--tags @dev"
+
+    include '**/cucumber/**'
+}
+
+task cucumberProdTest (type: Test) {
+    systemProperty "spring.profiles.active", "prod"
+    systemProperty "cucumber.options", "--tags @prod"
+
+    include '**/cucumber/**'
+}
+
+test.dependsOn unitTest

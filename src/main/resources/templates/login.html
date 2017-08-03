@@ -3,6 +3,14 @@
 <head th:include="base :: header"></head>
 <body>
     <nav th:include="navbar :: navigation"></nav>
-    <a href="/oauth2/authorization/code/tmc" class="btn btn-primary">TMC</a>
+    <h1>Login page</h1>
+    <!--/* The form uses Thymeleaf to automatically handle CSRF tokens which Spring Security requires. */-->
+    <form th:action="login" method="post">
+      <label for="username">Username</label>:
+      <input id="session_login" type="text" name="username" autofocus="autofocus" /> <br />
+      <label for="password">Password</label>:
+      <input id="session_password" type="password" name="password" /> <br />
+      <input id="log-in-button" type="submit" value="Log in" />
+    </form>
 </body>
 </html>

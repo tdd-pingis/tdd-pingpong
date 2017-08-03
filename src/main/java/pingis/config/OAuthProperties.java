@@ -23,9 +23,9 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 @ConfigurationProperties(prefix = "security.oauth2.client.tmc")
 public class OAuthProperties {
 
-    @Value("${TMC_APP_ID}")
+    @Value("${TMC_APP_ID:dummy}")
     private String clientId;
-    @Value("${TMC_SECRET}")
+    @Value("${TMC_SECRET:dummy}")
     private String clientSecret;
 
     private ClientAuthenticationMethod clientAuthenticationMethod;

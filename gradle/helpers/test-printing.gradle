@@ -1,6 +1,4 @@
 // Functions for test printing
-unitTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'UNIT') } } }
-cucumberTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'CUKE') } } }
 
 ext.printTestResults = { desc, result, type -> 
   if(!desc.parent) {

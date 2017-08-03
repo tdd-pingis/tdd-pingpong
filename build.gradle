@@ -79,65 +79,45 @@ dependencies {
     testCompile 'info.cukes:cucumber-java:1.2.5'
     testCompile 'info.cukes:cucumber-junit:1.2.5'
     testCompile 'info.cukes:cucumber-spring:1.2.5'
-    testCompile 'org.seleniumhq.selenium:htmlunit-driver:2.27'
     testCompile 'org.seleniumhq.selenium:selenium-api:3.4.0'
     testCompile 'org.seleniumhq.selenium:selenium-server:3.4.0'
     testCompile 'org.seleniumhq.selenium:selenium-java:3.4.0'
-    testCompile 'net.sourceforge.htmlunit:htmlunit:2.27'
-}
-
-test { 
-    if(project.hasProperty('TMC_SECRET')) {
-        environment 'TMC_TEST_USER_LOGIN', TMC_TEST_USER_LOGIN
-        environment 'TMC_TEST_USER_PASSWORD', TMC_TEST_USER_PASSWORD
-        environment 'TMC_APP_ID', TMC_APP_ID
-        environment 'TMC_SECRET', TMC_SECRET
-    } else {
-        environment 'TMC_TEST_USER_LOGIN', "dummy"
-        environment 'TMC_TEST_USER_PASSWORD', "dummy"
-        environment 'TMC_APP_ID', "dummy"
-        environment 'TMC_SECRET', "dummy"
-    }
-    systemProperty "spring.profiles.active", "dev"
+    testCompile 'org.seleniumhq.selenium:selenium-remote-driver:3.4.0'
+    testCompile 'org.seleniumhq.selenium:selenium-firefox-driver:3.4.0'
+    testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.4.0'
 }
 
 bootRun { 
     if(project.hasProperty('TMC_SECRET')) {
         environment 'TMC_APP_ID', TMC_APP_ID
         environment 'TMC_SECRET', TMC_SECRET
-    } else {
-        environment 'TMC_TEST_USER_LOGIN', "dummy"
-        environment 'TMC_TEST_USER_PASSWORD', "dummy"
-        environment 'TMC_APP_ID', "dummy"
-        environment 'TMC_SECRET', "dummy"
     }
 }
 
 
 // Separates the Unit and Cucumber tests to separate tasks
-test {
-    exclude '**'
+// Defines tasks unitTest, cucumberTest and cucumberProdTest and clears out the task test
+apply from: 'gradle/helpers/test-tasks.gradle'
+
+cucumberProdTest {
+    if(project.hasProperty('TMC_SECRET')) {
+        environment 'TMC_TEST_USER_LOGIN', TMC_TEST_USER_LOGIN
+        environment 'TMC_TEST_USER_PASSWORD', TMC_TEST_USER_PASSWORD
+        environment 'TMC_APP_ID', TMC_APP_ID
+        environment 'TMC_SECRET', TMC_SECRET
+    }
 }
-
-task unitTest (type: Test) {
-    systemProperty "spring.profiles.active", "dev"
-
-    exclude '**/cucumber/**'
-}
-
-task cucumberTest (type: Test) {
-    systemProperty "spring.profiles.active", "dev"
-
-    include '**/cucumber/**'
-}
-
-test.dependsOn cucumberTest, unitTest
-cucumberTest.mustRunAfter unitTest
-
 
 //Full debug prints for Travis, custom report prints for local
 if(System.env.travis == 'true') {
-  test.testLogging.showStandardStreams = true
+  unitTest.testLogging.showStandardStreams = true
+  cucumberTest.testLogging.showStandardStreams = true
+  cucumberProdTest.testLogging.showStandardStreams = true
 } else {
   apply from: 'gradle/helpers/test-printing.gradle'
+  
+  // Set the print function to be called after tests
+  unitTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'UNIT') } } }
+  cucumberTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'CUKE') } } }
+  cucumberProdTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'CUKE') } } }
 }

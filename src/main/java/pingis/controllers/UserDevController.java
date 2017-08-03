@@ -12,7 +12,7 @@ public class UserDevController {
     
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Model model) {
-        return "formLogin";
+        return "login";
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
