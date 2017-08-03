@@ -113,6 +113,7 @@ bootRun {
         environment 'TMC_APP_ID', "dummy"
         environment 'TMC_SECRET', "dummy"
     }
+	systemProperties System.properties
 }
 
 
