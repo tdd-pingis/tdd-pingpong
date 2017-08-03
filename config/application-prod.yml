@@ -1,0 +1,9 @@
+tmc:
+  sandboxUrl: http://172.17.0.1:3001
+  notifyUrl: http://pingis.testmycode.io/submission-result
+
+security:
+  oauth2:
+    client:
+      tmc:
+        redirectUri: https://pingis.testmycode.io/oauth2/authorize/code/tmc
