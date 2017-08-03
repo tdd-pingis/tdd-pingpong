@@ -9,7 +9,7 @@ VOLUME /tmp
 
 # Add the jar and the properties to the working directory of the container
 ADD build/libs/tdd-pingpong-0.1.0.jar app.jar
-ADD application.properties .
+ADD config/ .
 
 
 # Static files, such as index.html, supposedly need a modification time, which are set when created by touch
