@@ -31,6 +31,9 @@ public class Stepdefs {
     @Value("${TMC_TEST_USER_PASSWORD:dummy}")
     private String tmcPassword;
     
+    private final int DRIVER_WAIT_TIME = 1;
+    private final int LOAD_WAIT_TIME = 400;
+    
     WebDriver driver;
     String baseUrl;
     //Maps the names for the elements used in the feature files to
@@ -47,7 +50,7 @@ public class Stepdefs {
             driver = new FirefoxDriver();
             driver.manage().deleteAllCookies();
             //Waits the specified amount of time if it cannot immediately find a desired element
-            driver.manage().timeouts().implicitlyWait(1, TimeUnit.SECONDS);
+            driver.manage().timeouts().implicitlyWait(DRIVER_WAIT_TIME, TimeUnit.SECONDS);
         }
         baseUrl = "http://localhost:8080/";
         driver.get(baseUrl);
@@ -78,7 +81,7 @@ public class Stepdefs {
         //Wait for the tab contents to load.
         //The implicit wait doesn't work as the tab content checking is
         //currently done by using the page source instead of an actual element
-        Thread.sleep(400);
+        Thread.sleep(LOAD_WAIT_TIME);
     }
 
     @When(".*inputs their username (.+) and password (.+)")

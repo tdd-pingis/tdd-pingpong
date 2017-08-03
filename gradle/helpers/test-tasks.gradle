@@ -24,4 +24,6 @@ task cucumberProdTest (type: Test) {
     include '**/cucumber/**'
 }
 
-test.dependsOn unitTest
+test.dependsOn unitTest, cucumberTest, cucumberProdTest
+cucumberProdTest.mustRunAfter cucumberTest
+cucumberTest.mustRunAfter unitTest
