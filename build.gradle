@@ -70,6 +70,8 @@ dependencies {
     compile 'com.github.javaparser:javaparser-core:3.2.12'
     compile 'org.apache.commons:commons-compress:1.14'
     compile 'com.fasterxml.jackson.core:jackson-databind'
+    compile 'org.json:json:20160212'
+
 
     testCompile 'junit:junit'
     testCompile 'org.springframework.boot:spring-boot-starter-test'

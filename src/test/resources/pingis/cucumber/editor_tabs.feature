@@ -9,6 +9,5 @@ Feature: Content check for multiple editor tabs
     Examples:
       |user   |tab_name                |content             |page       |
       |User   |CalculatorTest.java     |testMultiplication  |task/1/0/  |
-      |User   |Calculator.java         |Calculator          |task/1/3/  |
+      |User   |Calculator.java         |Calculator          |task/1/1/  |
       |Admin  |Model solution          |assertEquals        |task/1/1/  |
-      |Admin  |CalculatorTest.java     |testIntegerDivision |task/1/3/  |
