@@ -24,6 +24,15 @@ task cucumberProdTest (type: Test) {
     include '**/cucumber/**'
 }
 
-test.dependsOn unitTest, cucumberTest, cucumberProdTest
+test.dependsOn unitTest
+
+// If running in Travis, we want build to run the dev Cucumber tests as well
+if(System.env.TRAVIS == 'true') {
+  test.dependsOn cucumberTest
+}
+// If running in Travis and it is not a pull request, we want to run the prod Cucumber tests as well
+if(System.env.TRAVIS_PULL_REQUEST == 'false') {
+  test.dependsOn cucumberProdTest
+}
 cucumberProdTest.mustRunAfter cucumberTest
 cucumberTest.mustRunAfter unitTest
