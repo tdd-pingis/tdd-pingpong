@@ -48,6 +48,7 @@ public class Challenge {
     @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
     private User author;
+    
     protected Challenge() {}
 
     public Challenge(String name, User author, String description, ChallengeType type) {

@@ -5,11 +5,6 @@
  */
 package pingis.services;
 
-/**
- *
- * @author lauri
- */
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
@@ -40,7 +35,6 @@ public class DataImporter implements ApplicationRunner{
     private TaskRepository tr;
     private UserRepository ur;
     private TaskImplementationRepository tir;
-    //private ArrayList<User> users = new ArrayList();
     private HashMap<String, User> users = new HashMap();
     private ArrayList<Challenge> challenges = new ArrayList();
     private ArrayList<Task> tasks = new ArrayList();
@@ -58,24 +52,36 @@ public class DataImporter implements ApplicationRunner{
         this.cir = cir;
         this.tir = tir;
     }
+    
+    public DataImporter() {
+    }
+    
     public void run(ApplicationArguments args) throws Exception {
-        Scanner s = new Scanner(getClass().getClassLoader().getResourceAsStream("exampledata/dummychallenges.json"));
-        readData(s);
+        DataLoaderIO io = new DataLoaderIO();
+        readData(io);
         generateUsers();
         generateEntities();
         printResults();
         populateDatabase();
     }
-    
-    public void readData(Scanner s) {
+
+    public void readData(IO io) {
         String out = "";
-        while(s.hasNext()) {
-            out += s.nextLine();
+        while(io.hasNext()) {
+            out += io.nextLine();
         }
         this.jsonString = out;
     }
+
+    public String getJsonString() {
+        return jsonString;
+    }
     
-    private void generateUsers() {
+    public void setJsonString(String jsonString) {
+        this.jsonString = jsonString;
+    }
+    
+    public void generateUsers() {
         long userId = new Random().nextInt(Integer.MAX_VALUE);
 
         
@@ -83,6 +89,26 @@ public class DataImporter implements ApplicationRunner{
         users.put("testuser", new User(DataLoader.UserType.TEST_USER.getId(), DataLoader.UserType.TEST_USER.name(), 5));
         users.put("impluser", new User(DataLoader.UserType.IMPLEMENTATION_USER.getId(), DataLoader.UserType.IMPLEMENTATION_USER.name(), 1));
 
+    }
+
+    public HashMap<String, User> getUsers() {
+        return users;
+    }
+
+    public ArrayList<Challenge> getChallenges() {
+        return challenges;
+    }
+
+    public ArrayList<Task> getTasks() {
+        return tasks;
+    }
+
+    public ArrayList<TaskImplementation> getTaskImplementations() {
+        return taskImplementations;
+    }
+
+    public ArrayList<ChallengeImplementation> getChallengeImplementations() {
+        return challengeImplementations;
     }
     
     public void generateEntities() {

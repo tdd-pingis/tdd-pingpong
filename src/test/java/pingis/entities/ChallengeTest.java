@@ -14,14 +14,13 @@ public class ChallengeTest {
     @Before
     public void setUp() {
         authorUser = new User(1, "ModelUser", TMC_USER_LEVEL);
-        calculatorChallenge = new Challenge("Calculator", authorUser, "Calculator description.",
-                "src/Calculator.java", "test/CalculatorTest.java");
+        calculatorChallenge = new Challenge("Calculator", authorUser, "Calculator description");
         protectedChallenge = new Challenge();
     }
 
     @Test
     public void testChallengeToString() {
-        assertEquals("Calculator: Calculator description.", calculatorChallenge.toString());
+        assertEquals("Calculator: Calculator description", calculatorChallenge.toString());
     }
     
 }

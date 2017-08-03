@@ -5,8 +5,14 @@ import java.util.List;
 import pingis.entities.Challenge;
 import pingis.entities.Task;
 
+/**
+ * Generates complete Java class-templates with proper headings out of
+ * individual tasks. Also includes methods for generation of proper
+ * Java-classnames (both for test-classes and for normal Java classes).
+ */
 public class JavaClassGenerator {
     private static final String classEnd = "\n}";
+    private final static int MAX_LINE_LENGTH = 40;
 
     public static String generateChallenge(Challenge challenge, List<Task> tasks) {
         String classCode = "\n" + generateTestClassHeader(challenge);
@@ -24,11 +30,17 @@ public class JavaClassGenerator {
     }
     
     public static String generateImplClassName(Challenge challenge) {
-        return "src/" + challenge.getName().replaceAll("\\s+","") + ".java";
+        String classFilename = returnCorrectLength(challenge.getName());
+        return "src/" + classFilename.replaceAll("[\\d\\s+]","") + ".java";
     }
     
     public static String generateTestClassName(Challenge challenge) {
-        return "test/" + challenge.getName().replaceAll("\\s+","") + "Test.java";
+        String classFilename = returnCorrectLength(challenge.getName());
+        return "test/" + classFilename.replaceAll("[\\d\\s+]","") + "Test.java";
+    }
+    
+    private static String returnCorrectLength(String string) {
+        return (string.length() > MAX_LINE_LENGTH) ? string.substring(0, MAX_LINE_LENGTH-1) : string;
     }
     
     private static String generateImplementationClassHeader(Challenge c) {

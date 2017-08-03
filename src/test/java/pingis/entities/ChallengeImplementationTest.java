@@ -33,7 +33,7 @@ public class ChallengeImplementationTest {
         author          = new User(incrUserId++, "ModelUser",     TMC_USER_LEVEL);
         implementator   = new User(incrUserId++, "Implementator", USER_1_LEVEL  );
         tester          = new User(incrUserId++, "Tester",        USER_2_LEVEL  );
-        Challenge chal1 = new Challenge("Calculator", author, "Calculator description.");
+        Challenge chal1 = new Challenge("Calculator", author, "Calculator description.", ChallengeType.PROJECT);
         chImp1          = new ChallengeImplementation(chal1, tester, implementator);
         
         Task task = new Task(1, ImplementationType.TEST, author, "TestAddition", "Test addition for two integers",
