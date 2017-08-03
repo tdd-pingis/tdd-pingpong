@@ -9,7 +9,7 @@ spring:
     password: ""
     driverClassName: org.h2.Driver
   profiles:
-    active: prod
+    default: dev
 
 tmc:
   sandboxUrl: http://localhost:3001
