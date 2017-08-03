@@ -11,17 +11,12 @@ spring:
   profiles:
     default: dev
 
-tmc:
-  sandboxUrl: http://localhost:3001
-  notifyUrl: http://localhost:1337/submission-result
-
 security:
   oauth2:
     client:
       tmc:
         clientAuthenticationMethod: basic
         authorizedGrantType: authorization_code
-        redirectUri: http://localhost:8080/oauth2/authorize/code/tmc
         authorizationUri: https://tmc.mooc.fi/oauth/authorize
         tokenUri: https://tmc.mooc.fi/oauth/token
         userInfoUri: https://tmc.mooc.fi/api/v8/users/current
