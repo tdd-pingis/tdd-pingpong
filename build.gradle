@@ -92,14 +92,15 @@ bootRun {
         environment 'TMC_APP_ID', TMC_APP_ID
         environment 'TMC_SECRET', TMC_SECRET
     }
+	systemProperties System.properties
 }
 
 
 // Separates the Unit and Cucumber tests to separate tasks
-// Defines tasks unitTest, cucumberTest and cucumberProdTest and clears out the task test
+// Defines tasks unitTest, cucumberTest and cucumberOAuthTest and clears out the task test
 apply from: 'gradle/helpers/test-tasks.gradle'
 
-cucumberProdTest {
+cucumberOAuthTest {
     if(project.hasProperty('TMC_SECRET')) {
         environment 'TMC_TEST_USER_LOGIN', TMC_TEST_USER_LOGIN
         environment 'TMC_TEST_USER_PASSWORD', TMC_TEST_USER_PASSWORD
@@ -112,12 +113,12 @@ cucumberProdTest {
 if(System.env.TRAVIS == 'true') {
   unitTest.testLogging.showStandardStreams = true
   cucumberTest.testLogging.showStandardStreams = true
-  cucumberProdTest.testLogging.showStandardStreams = true
+  cucumberOAuthTest.testLogging.showStandardStreams = true
 } else {
   apply from: 'gradle/helpers/test-printing.gradle'
   
   // Set the print function to be called after tests
   unitTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'UNIT') } } }
   cucumberTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'CUKE') } } }
-  cucumberProdTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'CUKE') } } }
+  cucumberOAuthTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'CUKE') } } }
 }

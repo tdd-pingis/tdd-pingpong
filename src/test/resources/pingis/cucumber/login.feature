@@ -36,7 +36,7 @@ Scenario: User can log out
     Then user is successfully signed out
 
 
-@prod
+@oauth
 Scenario: User can authenticate through TMC
     When user clicks the Login button
     And inputs their TMC username and password
