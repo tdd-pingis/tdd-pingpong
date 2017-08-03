@@ -28,6 +28,41 @@
                 }
 
             ]
+        },
+        {
+            "name": "beginner 1",
+            "author": "modeluser",
+            "desc": "Easy programming tasks for beginners.",
+            "tasks": [
+                {
+                    "author": "modeluser",
+                    "name": "Test Hello World",
+                    "type": "test",
+                    "desc": "Write a JUnit test case for classic Hello World -method",
+                    "codeStub": ["@Test\n",
+                                 "public void helloTest() {\n",
+                                 "   //TODO: implement this\n",
+                                 "}\n"
+                    ],
+                    "modelimplementation": ["@Test\n",
+                                            "public void helloTest() {\n",
+                                            "    assertTrue(hello().equals(\"Hello, world!\"));\n",
+                                            "}\n"]
+                },
+                {
+                    "author": "modeluser",
+                    "name": "Implement Hello World",
+                    "type": "implementation",
+                    "desc": "Write a method that makes the given test pass",
+                    "codeStub": ["public void hello() {\n",
+                                 "   //TODO: implement this\n",
+                                 "}",
+                                 "\n"],
+                    "modelimplementation": ["public void hello() {",
+                                            "   System.out.println(\"Hello, world!\");",
+                                            "}"]
+                }
+            ]
         }
     ]
 }

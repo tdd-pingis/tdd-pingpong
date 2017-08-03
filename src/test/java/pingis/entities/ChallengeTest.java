@@ -14,7 +14,8 @@ public class ChallengeTest {
     @Before
     public void setUp() {
         authorUser = new User(1, "ModelUser", TMC_USER_LEVEL);
-        calculatorChallenge = new Challenge("Calculator", authorUser, "Calculator description.");
+        calculatorChallenge = new Challenge("Calculator", authorUser, "Calculator description.",
+                1, 1.5f, ChallengeType.PROJECT);
         protectedChallenge = new Challenge();
     }
 

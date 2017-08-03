@@ -12,6 +12,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import pingis.entities.Challenge;
+import pingis.entities.ChallengeType;
 import pingis.entities.ImplementationType;
 import pingis.entities.Task;
 import pingis.entities.User;
@@ -29,7 +30,8 @@ public class JavaClassGeneratorTest {
     private final int Challenge1Level = 3;
     
     public JavaClassGeneratorTest() {
-        challenge1 = new Challenge("Immutable Calculator", authorUser, "Amazing immutable calculator.");
+        challenge1 = new Challenge("Immutable Calculator", authorUser, "Amazing immutable calculator.",
+                1, 1.5f, ChallengeType.PROJECT);
         JCGenerator = new JavaClassGenerator();
         User testUser = new User(new Random().nextLong(), "Test_userfirst", Challenge1Level);
         

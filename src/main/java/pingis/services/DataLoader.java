@@ -84,6 +84,7 @@ public class DataLoader implements ApplicationRunner {
                 
         // Challenge 1        
         this.calculatorChallenge = new Challenge(
+
                 "Calculator", users.get((int) UserType.TMC_MODEL_USER.getId()), "Test and implement a simple text-based calculator.");
         
         // Challenge 1 Tasks, authored by TMC_MODEL_USER
@@ -106,6 +107,7 @@ public class DataLoader implements ApplicationRunner {
                         , 1
                         , 0
                 ));
+
         
         tasks.add(new Task(tasks.size()-1,
                         ImplementationType.TEST,

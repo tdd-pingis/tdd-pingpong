@@ -49,6 +49,9 @@ public class Challenge {
     @ManyToOne(fetch=FetchType.EAGER)
     private User author;
 
+    private String classFileName;
+    private String testFileName;
+
     protected Challenge() {}
 
     public Challenge(String name, User author, String description, int level, float rating, ChallengeType type) {
@@ -157,4 +160,19 @@ public class Challenge {
         this.implementations = implementations;
     }
 
+    public String getClassFileName() {
+        return classFileName;
+    }
+
+    public void setClassFileName(String classFileName) {
+        this.classFileName = classFileName;
+    }
+
+    public String getTestFileName() {
+        return testFileName;
+    }
+
+    public void setTestFileName(String testFileName) {
+        this.testFileName = testFileName;
+    }
 }

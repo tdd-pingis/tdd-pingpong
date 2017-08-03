@@ -5,12 +5,7 @@
  */
 package pingis.entities;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.*;
@@ -38,7 +33,8 @@ public class ChallengeImplementationTest {
         author          = new User(incrUserId++, "ModelUser",     TMC_USER_LEVEL);
         implementator   = new User(incrUserId++, "Implementator", USER_1_LEVEL  );
         tester          = new User(incrUserId++, "Tester",        USER_2_LEVEL  );
-        Challenge chal1 = new Challenge("Calculator", author, "Calculator description.");
+        Challenge chal1 = new Challenge("Calculator", author, "Calculator description.",
+            1, 1.5f, ChallengeType.PROJECT);
         chImp1          = new ChallengeImplementation(chal1, tester, implementator);
         
         Task task = new Task(1, ImplementationType.TEST, author, "TestAddition", "Test addition for two integers",
