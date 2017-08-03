@@ -136,6 +136,10 @@ public class DataImporter implements ApplicationRunner{
             for (int j = 0; j < tasks.length(); j++) {
                 generateChallengeContent(tasks, j, challengeObject, challenge, challengeImp);
             }
+
+            // Taskid needs to be reset after each challenge to make sure task ID's within
+            // a challenge start from zero.
+            this.taskid = 0;
         }
     }
 
