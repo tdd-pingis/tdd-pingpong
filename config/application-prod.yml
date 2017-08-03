@@ -1,6 +1,6 @@
 tmc:
   sandboxUrl: http://172.17.0.1:3001
-  notifyUrl: http://pingis.testmycode.io/submission-result
+  notifyUrl: https://pingis.testmycode.io/submission-result
 
 security:
   oauth2:
