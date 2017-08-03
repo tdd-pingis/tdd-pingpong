@@ -25,40 +25,58 @@
                 </ul>
             </div>
             <ul class="nav nav-tabs">        
-                <li th:each="editor, iter: ${editorContents}" th:class="${iter.index == 0}?'active'"><a data-toggle="tab" th:text="${editor.value.title}" th:href="'#'+${editor.key}+'_item'">Placeholder editors</a></li>        
+                <li class="active">
+                    <a data-toggle="tab" th:text="${implementationFileName}" href="#implementation">Placeholder editors</a>
+                </li>
+                <li>
+                    <a data-toggle="tab" th:text="${testFileName}" href="#test">Placeholder editors</a>
+                </li>
             </ul>
-            <form method="post" action="/task">
-
-                <div class="tab-content" th:inline="text">        
-                    <input type="hidden" name="challenge" th:value="${challenge.id}" />
-                    <input type="hidden" name="task" th:value="${task.id}" />
-                    <div th:each="editor, iter: ${editorContents}" th:id="${editor.key}+'_item'" th:class="${iter.index == 0}?'panel panel-default tab-pane fade in active':'panel panel-default tab-pane fade'">
+            <form method="post" th:action="@{/task}">
+                <div class="tab-content" th:inline="text">
+                    <input type="hidden" name="challengeId" th:value="${challenge.id}" />
+                    <input type="hidden" name="taskId" th:value="${task.id}" />
+                    <div id="implementation" class="panel panel-default tab-pane fade in active">
                         <div class="panel-heading">
-                            <h3 class="panel-title" th:inline="text">[[${editor.value.title}]]</h3>
+                            <h3 class="panel-title" th:text="${implementationFileName}"></h3>
                         </div>
                         <div class="panel-body">
-                            <div th:id="${editor.key}" style="height: 300px" class="editortab" th:inline="text">[[${editor.value.code}]]</div>
-                            <textarea name="${editor.key}+'code'" th:id="'shadow-'+${editor.key}" style="display: none;"/>
-
+                            <div id="implementation-editor" style="height: 300px" class="editortab" th:text="${implementationCode}"></div>
+                            <textarea name="implementationCode" id="implementation-code" style="display: none;"
+                                      th:text="${implementationCode}"/>
+                        </div>
+                    </div>
+                    <div id="test" class="panel panel-default tab-pane fade">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" th:text="${testFileName}"></h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="test-editor" style="height: 300px" class="editortab" th:text="${testCode}"></div>
+                            <textarea name="testCode" id="test-code" style="display: none;" th:text="${testCode}"/>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary" onclick="clicked(event)">Submit</button>
                 </div>
             </form>
-
         </div>
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.8/ace.js" type="text/javascript" charset="utf-8"></script>
-        <script th:inline="text">
-            var tabs = document.getElementsByClassName("editortab");
-            for (t in tabs) {
-               var editor = ace.edit(tabs[t].id);
-               editor.setTheme("ace/theme/monokai");
-               editor.getSession().setMode("ace/mode/java");
-               var textarea = document.getElementById("shadow-"+tabs[t].id);
-               editor.getSession().on("change", function () {
-                   textarea.value = editor.getSession().getValue();
-               });
+
+        <script>
+            function createEditor(editorId, textareaId) {
+                let editor = ace.edit(editorId);
+                let textarea = document.getElementById(textareaId);
+
+                editor.setTheme("ace/theme/monokai");
+                editor.getSession().setMode("ace/mode/java");
+                editor.getSession().on("change", () => {
+                    textarea.value = editor.getSession().getValue();
+                });
             }
+
+            createEditor("implementation-editor", "implementation-code");
+            createEditor("test-editor", "test-code");
+
             function clicked(e) {
                 if (!confirm("Are you ready to submit?")) {
                     e.preventDefault();
