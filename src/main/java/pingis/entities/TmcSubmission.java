@@ -12,7 +12,6 @@ import java.util.UUID;
 @Entity
 public class TmcSubmission {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     private Integer exitCode;
