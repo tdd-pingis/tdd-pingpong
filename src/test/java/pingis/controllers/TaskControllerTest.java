@@ -14,9 +14,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import pingis.config.SecurityDevConfig;
 import pingis.entities.*;
-import pingis.services.ChallengeService;
-import pingis.services.EditorService;
-import pingis.services.TaskService;
+import pingis.services.*;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.mockito.Mockito.*;
@@ -33,6 +31,12 @@ public class TaskControllerTest {
     WebApplicationContext context;
 
     private MockMvc mvc;
+
+    @MockBean
+    private SubmissionPackagingService packagingService;
+
+    @MockBean
+    private SubmissionSenderService senderService;
 
     @MockBean
     private ChallengeService challengeServiceMock;
