@@ -7,7 +7,6 @@ Feature: Content check for multiple editor tabs
     Then the page contains <content>
 
     Examples:
-      |user   |tab_name                |content             |page       |
-      |User   |CalculatorTest.java     |testMultiplication  |task/1/0/  |
-      |User   |Calculator.java         |Calculator          |task/1/1/  |
-      |Admin  |Model solution          |assertEquals        |task/1/1/  |
+      |user   |tab_name                     |content             |page       |
+      |User   |test/CalculatorTest.java     |testMultiplication  |task/1/0/  |
+      |User   |src/Calculator.java          |Calculator          |task/1/1/  |

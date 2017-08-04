@@ -30,8 +30,6 @@ public class SubmissionPackagingServiceTest {
             "nbproject/project.properties",
             "nbproject/project.xml",
             "tmc-run",
-            "test/KoiraTest.java",
-            "src/Koira.java",
             "src/Paaohjelma.java",
             "build.xml",
             ".tmcparams",

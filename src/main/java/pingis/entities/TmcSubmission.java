@@ -1,9 +1,6 @@
 package pingis.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
 /**
@@ -12,15 +9,25 @@ import java.util.UUID;
 @Entity
 public class TmcSubmission {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     private Integer exitCode;
+
+    @Lob
     private String stderr;
+
+    @Lob
     private String stdout;
+
     private TmcSubmissionStatus status;
+
+    @Lob
     private String testOutput;
+
+    @Lob
     private String validations;
+
+    @Lob
     private String vmLog;
 
     public UUID getId() {
