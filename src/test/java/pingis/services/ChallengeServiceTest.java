@@ -21,7 +21,7 @@ import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {Application.class})
+@ContextConfiguration(classes = {ChallengeService.class})
 public class ChallengeServiceTest {
 
     @Autowired
