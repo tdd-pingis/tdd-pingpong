@@ -73,6 +73,21 @@ public class TaskController {
         return "task";
     }
 
+    // TODO: This should actually be a separate service...
+    private TmcSubmission submitToTmc(Challenge challenge, String implementationCode, String testCode)
+            throws IOException, ArchiveException {
+        Map<String, byte[]> files = new HashMap<>();
+
+        String implFileName = JavaClassGenerator.generateImplClassFilename(challenge);
+        String testFileName = JavaClassGenerator.generateTestClassFilename(challenge);
+
+        files.put(implFileName, implementationCode.getBytes());
+        files.put(testFileName, testCode.getBytes());
+
+        byte[] packaged = packagingService.packageSubmission(files);
+        return senderService.sendSubmission(packaged);
+    }
+
     @RequestMapping(value = "/task", method = RequestMethod.POST)
     public RedirectView task(String implementationCode,
                              String testCode,
@@ -80,11 +95,11 @@ public class TaskController {
                              Integer taskId,
                              RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
 
-        redirectAttributes.addAttribute("challengeId", challengeId);
-        redirectAttributes.addAttribute("taskId", taskId);
-
         Challenge currentChallenge = challengeService.findOne(challengeId);
         Task currentTask = taskService.findTaskInChallenge(challengeId, taskId);
+
+        redirectAttributes.addAttribute("challengeId", currentChallenge.getId());
+        redirectAttributes.addAttribute("taskId", currentTask.getTaskId());
 
         String checkedCode;
 
@@ -103,22 +118,11 @@ public class TaskController {
             return new RedirectView("/task/{challengeId}/{taskId}");
         }
 
-        Map<String, byte[]> files = new HashMap<>();
-
-        String implFileName = JavaClassGenerator.generateImplClassFilename(currentChallenge);
-        String testFileName = JavaClassGenerator.generateTestClassFilename(currentChallenge);
-
-        files.put(implFileName, implementationCode.getBytes());
-        files.put(testFileName, testCode.getBytes());
-
-        byte[] packaged = packagingService.packageSubmission(files);
-        TmcSubmission submission = senderService.sendSubmission(packaged);
-
+        TmcSubmission submission = submitToTmc(currentChallenge, implementationCode, testCode);
         redirectAttributes.addAttribute("submission", submission);
 
         return new RedirectView("/feedback");
     }
-
 
     @RequestMapping("/feedback")
     public String feedback(Model model) {
