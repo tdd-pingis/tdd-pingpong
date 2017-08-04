@@ -72,7 +72,6 @@ public class TaskControllerTest {
                 simpleCalculatortask.getTaskId()-1))
                 .thenReturn(simpleCalculatortask);
 
-
         String uri = "/task/"+calculatorChallenge.getId()+"/"+simpleCalculatortask.getId();
 
         performSimpleGetRequestAndFindContent(uri, "task", simpleCalculatortask.getDesc());
