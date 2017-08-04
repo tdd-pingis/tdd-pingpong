@@ -94,6 +94,7 @@ public class TaskController {
                              Long challengeId,
                              Integer taskId,
                              RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
+
         Challenge currentChallenge = challengeService.findOne(challengeId);
         Task currentTask = taskService.findTaskInChallenge(challengeId, taskId);
 
