@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package pingis.services;
 
 import java.util.ArrayList;
@@ -28,7 +24,7 @@ import pingis.repositories.TaskRepository;
 import pingis.repositories.UserRepository;
 
 @Component
-public class DataImporter implements ApplicationRunner{
+public class DataImporter implements ApplicationRunner {
     private static final int TMC_USER_LEVEL = 100;
     private static final int TEST_USER_LEVEL = 5;
     private static final int IMPLEMENTATION_USER_LEVEL = 1;
@@ -37,7 +33,7 @@ public class DataImporter implements ApplicationRunner{
     private ChallengeRepository cr;
     private ChallengeImplementationRepository cir;
     private TaskRepository tr;
-    private UserRepository ur;
+    private UserService ps;
     private TaskImplementationRepository tir;
     private HashMap<String, User> users = new LinkedHashMap();
     private HashMap<String, Challenge> challenges = new HashMap();
@@ -45,26 +41,39 @@ public class DataImporter implements ApplicationRunner{
     private ArrayList<TaskImplementation> taskImplementations = new ArrayList();
     private ArrayList<ChallengeImplementation> challengeImplementations = new ArrayList();
     private int taskid = 0;
-//CHECKSTYLE:OFF
+
     public enum UserType {
-        TMC_MODEL_USER(0), TEST_USER(1), IMPLEMENTATION_USER(2);
-        private final long id;
+        TMC_MODEL_USER("admin", 0, true), 
+        TEST_USER("user", 1, false), 
+        IMPLEMENTATION_USER("impluser",2, false);
         
-        private UserType(long id) {
+        private final String login;
+        private final long id;
+        private final boolean admin;
+        
+        private UserType(String login, long id, boolean admin) {
+            this.login = login;
             this.id = id;
+            this.admin = admin;
         }
         
         public long getId() { 
             return id; 
         }
+        public String getLogin() { 
+            return login; 
+        }
+        public boolean isAdmin() { 
+            return admin; 
+        }
     }
     
     @Autowired
-    public DataImporter(ChallengeRepository cr, TaskRepository tr, UserRepository ur,
+    public DataImporter(ChallengeRepository cr, TaskRepository tr, UserService ps,
             ChallengeImplementationRepository cir, TaskImplementationRepository tir) {
         this.cr = cr;
         this.tr = tr;
-        this.ur = ur;
+        this.ps = ps;
         this.cir = cir;
         this.tir = tir;
     }
@@ -77,6 +86,7 @@ public class DataImporter implements ApplicationRunner{
         generateUsers();
         generateEntities();        
         populateDatabase();
+        ps.verifyUserInitialization();  
     }
 
     public void readData(IO io) {
@@ -98,14 +108,19 @@ public class DataImporter implements ApplicationRunner{
     public void generateUsers() {
         long userId = new Random().nextInt(Integer.MAX_VALUE);
         
-        users.put("modeluser", new User(UserType.TMC_MODEL_USER.getId(), 
-                  UserType.TMC_MODEL_USER.name(), TMC_USER_LEVEL)); 
-        users.put("testuser", new User(UserType.TEST_USER.getId(), 
-                  UserType.TEST_USER.name(), TEST_USER_LEVEL));
-        users.put("impluser", new User(UserType.IMPLEMENTATION_USER.getId(), 
-                  UserType.IMPLEMENTATION_USER.name(), IMPLEMENTATION_USER_LEVEL));
-
-
+        users.put("modeluser", new User(
+                    UserType.TMC_MODEL_USER.getId(), 
+                    UserType.TMC_MODEL_USER.getLogin(), 
+                    Task.LEVEL_MAX_VALUE, 
+                    UserType.TMC_MODEL_USER.isAdmin())); 
+        
+        users.put("testuser", new User(
+                    UserType.TEST_USER.getId(), 
+                    UserType.TEST_USER.getLogin(), TEST_USER_LEVEL)); 
+        
+        users.put("impluser", new User(
+                    UserType.IMPLEMENTATION_USER.getId(), 
+                    UserType.IMPLEMENTATION_USER.getLogin(), IMPLEMENTATION_USER_LEVEL));
     }
 
     public HashMap<String, User> getUsers() {
@@ -115,7 +130,6 @@ public class DataImporter implements ApplicationRunner{
     public HashMap<String, Challenge> getChallenges() {
         return challenges;
     }
-
 
     public ArrayList<Task> getTasks() {
         return tasks;
@@ -196,7 +210,7 @@ public class DataImporter implements ApplicationRunner{
         task.addImplementation(taskImplementation);
         challengeImp.addTaskImplementation(taskImplementation);
         
-        // Set it to it's parent ChallengeImplementation
+        // Set it to its parent ChallengeImplementation
         taskImplementation.setChallengeImplementation(challengeImp);
         taskImplementation.setTask(task);
         
@@ -250,8 +264,8 @@ public class DataImporter implements ApplicationRunner{
     }
     
     public void populateDatabase() {
-        for (String key : this.users.keySet()) {
-            ur.save(this.users.get(key));
+        for (User user : this.users.values()) {
+            ps.save(user);
         }
      
         for (String name : this.challenges.keySet()) {

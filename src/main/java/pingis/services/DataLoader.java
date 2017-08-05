@@ -19,6 +19,7 @@ import pingis.repositories.TaskRepository;
 import pingis.repositories.ChallengeRepository;
 import pingis.repositories.TaskImplementationRepository;
 import pingis.repositories.UserRepository;
+import static pingis.services.DataImporter.UserType;
 
 @Component
 public class DataLoader implements ApplicationRunner {
@@ -34,19 +35,6 @@ public class DataLoader implements ApplicationRunner {
     private List<ChallengeImplementation> challengeImplementations;
     private List<TaskImplementation> taskImplementations;
     
-    public enum UserType {
-        TMC_MODEL_USER(0), TEST_USER(1), IMPLEMENTATION_USER(2);
-        private final long id;
-        
-        private UserType(long id) {
-            this.id = id;
-        }
-        
-        public long getId() { 
-            return id; 
-        }
-    }
-
     @Autowired
     public DataLoader(ChallengeRepository cr, TaskRepository tr, UserRepository ur, 
             ChallengeImplementationRepository cir, TaskImplementationRepository tir) {
@@ -74,7 +62,7 @@ public class DataLoader implements ApplicationRunner {
     private void generateUsers() {
         long userId = new Random().nextInt(Integer.MAX_VALUE);
         
-        this.users.add(new User(UserType.TMC_MODEL_USER.getId(), UserType.TMC_MODEL_USER.name(), 100)); 
+        this.users.add(new User(UserType.TMC_MODEL_USER.getId(), UserType.TMC_MODEL_USER.getLogin(), Task.LEVEL_MAX_VALUE, UserType.TMC_MODEL_USER.isAdmin())); 
         this.users.add(new User(UserType.TEST_USER.getId(), UserType.TEST_USER.name(), 5)); 
         this.users.add(new User(UserType.IMPLEMENTATION_USER.getId(), UserType.IMPLEMENTATION_USER.name(), 1));
     }
@@ -237,9 +225,9 @@ public class DataLoader implements ApplicationRunner {
     public void generateChallengeImplementations() {
         // Generate first ChallengeImplementation for Challenge: Calculator
         this.challengeImplementations.add(new ChallengeImplementation(
-                calculatorChallenge, 
-                users.get((int) UserType.TEST_USER.getId()),             // Challenge tester
-                users.get((int) UserType.IMPLEMENTATION_USER.getId()))); // Challenge implementator
+                calculatorChallenge,
+                users.get((int) UserType.TEST_USER.getId()), // Challenge tester
+users.get((int) UserType.IMPLEMENTATION_USER.getId()))); // Challenge implementator
     }
     
     private void generateTaskImplementations() {

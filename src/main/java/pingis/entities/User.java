@@ -1,10 +1,7 @@
 package pingis.entities;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -12,14 +9,13 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import java.util.UUID;
+
 import static pingis.entities.Task.LEVEL_MAX_VALUE;
 import static pingis.entities.Task.LEVEL_MIN_VALUE;
 
 @Entity
-public class User implements OAuth2User {
+public class User {
 
     @Id
     @NotNull
@@ -51,11 +47,20 @@ public class User implements OAuth2User {
     private List<Task> authoredTasks;
 
     public User() {}
-
+    
+    public User(String name) {
+        this(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE, name, LEVEL_MIN_VALUE);
+    }
+    
     public User(long id, String name, int level) {
+        this(id, name, level, false);
+    }
+    
+    public User(long id, String name, int level, boolean isAdministrator) {
         this.id = id;
         this.name = name;
         this.level = level;
+        this.administrator = isAdministrator;
         this.taskImplementations = new ArrayList<>();
         this.implementedChallenges = new ArrayList<>();
         this.testedChallenges = new ArrayList<>();
@@ -63,7 +68,6 @@ public class User implements OAuth2User {
         this.authoredTasks = new ArrayList<>();
     }
 
-    @Override
     public String getName() {
         return name;
     }
@@ -140,23 +144,8 @@ public class User implements OAuth2User {
         this.authoredTasks = authoredTasks;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        String roles = "USER";
-        if (administrator) {
-            roles += ",ADMIN";
-        }
-        return AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
-    }
-
-    @Override
-    public Map<String, Object> getAttributes() {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("id", id);
-        attributes.put("username", name);
-        attributes.put("email", email);
-        attributes.put("administrator", administrator);
-        return attributes;
+    public boolean isAdministrator() {
+        return administrator;
     }
 
     @Override
@@ -185,4 +174,15 @@ public class User implements OAuth2User {
     public void addAuthoredChallenge(Challenge c) {
         this.authoredChallenges.add(c);
     }
+
+    @Override
+    public String toString() {
+        return  "User Details: "
+                + "n\ttype: User"
+                + "\n\tname: " + getName() 
+                + "\n\tid: " + getId()
+                + "\n\tadmin: " + isAdministrator()
+                + "\n\tlevel: " + getLevel();
+    }
+    
 }
