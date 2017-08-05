@@ -19,10 +19,4 @@ public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBro
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/websocket").withSockJS();
     }
-
-    //Temporary solution until proper CSRF protection is added
-    @Override
-    protected boolean sameOriginDisabled() {
-        return true;
-    }
 }
