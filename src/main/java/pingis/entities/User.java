@@ -47,8 +47,10 @@ public class User {
     private List<Task> authoredTasks;
 
     public User() {}
-    
+
     public User(String name) {
+        // This constructor is only for 'dev'-profile, thus the pseudo-random id generation
+        // -> real user-id's are fetched under 'oauth'-profile from TMC-server
         this(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE, name, LEVEL_MIN_VALUE);
     }
     

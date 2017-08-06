@@ -21,7 +21,6 @@ import pingis.repositories.ChallengeImplementationRepository;
 import pingis.repositories.ChallengeRepository;
 import pingis.repositories.TaskImplementationRepository;
 import pingis.repositories.TaskRepository;
-import pingis.repositories.UserRepository;
 
 @Component
 public class DataImporter implements ApplicationRunner {
@@ -116,11 +115,13 @@ public class DataImporter implements ApplicationRunner {
         
         users.put("testuser", new User(
                     UserType.TEST_USER.getId(), 
-                    UserType.TEST_USER.getLogin(), TEST_USER_LEVEL)); 
+                    UserType.TEST_USER.getLogin(), 
+                TEST_USER_LEVEL)); 
         
         users.put("impluser", new User(
                     UserType.IMPLEMENTATION_USER.getId(), 
-                    UserType.IMPLEMENTATION_USER.getLogin(), IMPLEMENTATION_USER_LEVEL));
+                    UserType.IMPLEMENTATION_USER.getLogin(), 
+                IMPLEMENTATION_USER_LEVEL));
     }
 
     public HashMap<String, User> getUsers() {
