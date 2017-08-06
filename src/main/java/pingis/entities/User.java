@@ -181,4 +181,8 @@ public class User implements OAuth2User {
         }
         return true;
     }
+    
+    public void addAuthoredChallenge(Challenge c) {
+        this.authoredChallenges.add(c);
+    }
 }

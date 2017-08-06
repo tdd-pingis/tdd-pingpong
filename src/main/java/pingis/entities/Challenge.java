@@ -36,33 +36,37 @@ public class Challenge {
     @Max(LEVEL_MAX_VALUE)
     private int level;
     private float rating;
+    private ChallengeType type;
 
     @NotEmpty
-    @OneToMany(fetch=FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy="challenge")
+
+    @OneToMany(fetch=FetchType.EAGER, mappedBy="challenge")
     private List<Task> tasks;
 
-    @OneToMany(fetch=FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy = "challenge")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy = "challenge")
     private List<ChallengeImplementation> implementations;
 
     @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
     private User author;
-
-    private String classFileName;
-    private String testFileName;
-
+    
     protected Challenge() {}
 
-    public Challenge(String name, User author, String description, String classFileName, String testFileName) {
+
+    public Challenge(String name, User author, String description, ChallengeType type) {
+
         this.name = name;
         this.author = author;
+        this.type = type;
         this.description = description;
-        this.classFileName = classFileName;
-        this.testFileName = testFileName;
-        this.rating = 0;
         this.tasks = new ArrayList<>();
         this.implementations = new ArrayList<>();
     }
+    
+    public Challenge(String name, User author, String description) {
+        this(name, author, description, ChallengeType.MIXED);
+    }
+
 
     public void setAuthor(User author) {
         this.author = author;
@@ -122,6 +126,14 @@ public class Challenge {
         this.level = level;
     }
 
+    public ChallengeType getType() {
+        return type;
+    }
+
+    public void setType(ChallengeType type) {
+        this.type = type;
+    }
+    
     public void setName(String name) {
         this.name = name;
     }
@@ -144,21 +156,5 @@ public class Challenge {
 
     public void setImplementations(List<ChallengeImplementation> implementations) {
         this.implementations = implementations;
-    }
-
-    public String getClassFileName() {
-        return classFileName;
-    }
-
-    public void setClassFileName(String classFileName) {
-        this.classFileName = classFileName;
-    }
-
-    public String getTestFileName() {
-        return testFileName;
-    }
-
-    public void setTestFileName(String testFileName) {
-        this.testFileName = testFileName;
     }
 }

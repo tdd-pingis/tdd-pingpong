@@ -2,28 +2,93 @@
     "challenges": [
         {
             "name": "calculator",
-            "user": "testuser",
+            "author": "modeluser",
             "desc": "Test and implement a simple command line based calculator.",
             "tasks": [
+
                 {
-                    "user" : "testuser",
+                    "author": "modeluser",
+                    "index": 1,
                     "name": "Test multiplication",
                     "type": "test",
                     "desc": "Write a JUnit test case that tests the multiplication method for two integers. \nMethod should take two integers as arguments and return the product of those as an integer.",
-                    "code":  ["@Test\npublic void testMultiplication() {\n\t//TODO: implement this\n\n}"],
-                    "modeltest": ["public class CalculatorTest {\n    @Test\n    public void testAddition() {\n        Calculator calc = new Calculator();\n        assertEquals(23, calc.multiply(18, 5));\n    }\n}"],
-                    "modelimplementation": ["public class Calculator {\n\n    public Calculator() {}\n\n    public int multiply(int a, int b) {\n        return a*b;\n    }\n}"]
+                    "codeStub": ["@Test\n",
+                        "public void testMultiplication() {\n",
+                        "    //TODO: implement this\n\n",
+                        "}"],
+                    "modelimplementation": ["public class CalculatorTest {\n",
+                        "    @Test\n",
+                        "    public void testMultiplication() {\n",
+                        "        Calculator calc = new Calculator();\n",
+                        "        assertEquals(23, calc.multiply(18, 5));\n",
+                        "    }\n",
+                        "}\n"]
                 },
                 {
-                    "user": "tmcuser",
-                    "name": "Test addition",
-                    "type": "test",
+                    "author": "modeluser",
+                    "index": 2,
+                    "name": "Make multiplication test pass",
+                    "type": "implementation",
                     "desc": "Write a JUnit test case that test the addition method for two integers.\nMethod should take two integers as arguments and return the sum of those as an integer.",
-                    "code": ["Test\npublic void testAddition() {\n\tTODO: implement this\n\n}"],
-                    "modeltest": ["public class CalculatorTest {\n    @Test\n    public void testAddition() {\n        Calculator calc = new Calculator();\n        assertEquals(23, calc.add(18, 5));\n    }\n}"],
+                    "codeStub": ["public class Calculator {\n",
+                        "    public Calculator() {}\n",
+                        "    public void multiply(int a, int b) {\n",
+                        "        TODO: implement this\n",
+                        "    }\n",
+                        "}\n"],
+
                     "modelimplementation": ["public class Calculator {\n\n    public Calculator() {}\n\n    public int add(int a, int b) {\n        return a+b;\n    }\n}"]
                 }
+
             ]
+        },
+        {
+            "name": "beginner 1",
+            "author": "modeluser",
+            "desc": "Easy programming tasks for beginners.",
+            "tasks": [
+                {
+                    "author": "modeluser",
+                    "index": 1,
+                    "name": "Test Hello World",
+                    "type": "test",
+                    "desc": "Write a JUnit test case for classic Hello World -method",
+                    "codeStub": ["@Test\n",
+                        "public void helloTest() {\n",
+                        "   //TODO: implement this\n",
+                        "}\n"
+                    ],
+                    "modelimplementation": ["@Test\n",
+                        "public void helloTest() {\n",
+                        "    assertTrue(hello().equals(\"Hello, world!\"));\n",
+                        "}\n"]
+                },
+                {
+                    "author": "modeluser",
+                    "index": 2,
+                    "name": "Implement Hello World",
+                    "type": "implementation",
+                    "desc": "Write a method that makes the given test pass",
+                    "codeStub": ["public void hello() {\n",
+                        "   //TODO: implement this\n",
+                        "}",
+                        "\n"],
+                    "modelimplementation": ["public void hello() {",
+                        "   System.out.println(\"Hello, world!\");",
+                        "}"]
+                }
+            ]
+        }
+    ],
+    "dummyimplementations": [
+        {
+            "challenge": "beginner 1",
+            "testuser": "testuser",
+            "implementationuser": "impluser",
+            "taskimplementations": [{
+                    "user": "testuser",
+                    "taskindex": 1
+                }]
         }
     ]
 }

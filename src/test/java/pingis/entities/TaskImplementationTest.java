@@ -17,6 +17,7 @@ public class TaskImplementationTest {
     public void setUp() {
         authorUser = new User(1, "ModelUser", TMC_USER_LEVEL);
         testTask = new Task(0,
+                ImplementationType.IMPLEMENTATION,
                             authorUser,
                             "Test Addition",
                             "Test addition with two integers.",
@@ -27,7 +28,6 @@ public class TaskImplementationTest {
         userImplementation = new TaskImplementation(
                             authorUser, 
                             "return true;", 
-                            ImplementationType.IMPLEMENTATION, 
                             testTask);
         
         protectedImplementation = new TaskImplementation();

@@ -33,11 +33,10 @@ public class ChallengeImplementationTest {
         author          = new User(incrUserId++, "ModelUser",     TMC_USER_LEVEL);
         implementator   = new User(incrUserId++, "Implementator", USER_1_LEVEL  );
         tester          = new User(incrUserId++, "Tester",        USER_2_LEVEL  );
-        Challenge chal1 = new Challenge("Calculator", author, "Calculator description.",
-            "src/Calculator.java", "test/CalculatorTest.java");
+        Challenge chal1 = new Challenge("Calculator", author, "Calculator description.", ChallengeType.PROJECT);
         chImp1          = new ChallengeImplementation(chal1, tester, implementator);
         
-        Task task = new Task(1, author, "TestAddition", "Test addition for two integers",
+        Task task = new Task(1, ImplementationType.TEST, author, "TestAddition", "Test addition for two integers",
                 "Test_code here a lot of.", 1, 0);
 
         TaskImplementation[] taskImplementations = generateTaskImplementations(task);
@@ -45,7 +44,7 @@ public class ChallengeImplementationTest {
         for (TaskImplementation taskImplementation : taskImplementations) {
             // Set same task for TaskImplementations
             taskImplementation.setTask(task);
-            if (taskImplementation.getType() == ImplementationType.TEST) {
+            if (taskImplementation.getTask().getType() == ImplementationType.TEST) {
                 taskImplementation.setUser(tester);
             } else {
                 taskImplementation.setUser(implementator);
@@ -57,14 +56,12 @@ public class ChallengeImplementationTest {
     private TaskImplementation[] generateTaskImplementations(Task task) {
         TaskImplementation testImp1 
                 = new TaskImplementation(implementator, 
-                                        "Random testcode", 
-                                        ImplementationType.TEST, 
+                                        "Random testcode",  
                                         task
                                         );
         TaskImplementation imp1 
                 = new TaskImplementation(tester, 
                                         "Random code implementation", 
-                                        ImplementationType.IMPLEMENTATION, 
                                         task
                                         );
         return new TaskImplementation[]{ testImp1, imp1 };

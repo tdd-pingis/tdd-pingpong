@@ -25,7 +25,7 @@ public class Task {
     private long id; // unique primary ID
 
     @NotNull
-    private int taskId; // ID in relation to parent Challenge
+    private int index; // sequence number in relation to parent Challenge
 
     @NotNull
     @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH)
@@ -33,9 +33,12 @@ public class Task {
 
     @NotNull
     private String desc;
+    
+    @NotNull
+    private ImplementationType type;
 
     @NotNull
-    private String code;
+    private String codeStub;
 
     @NotNull
     @Min(LEVEL_MIN_VALUE)
@@ -51,17 +54,19 @@ public class Task {
     @ManyToOne(fetch=FetchType.EAGER)
     private User author;
 
-    @OneToMany(fetch=FetchType.LAZY, cascade = {CascadeType.ALL}, mappedBy="task")
+    @OneToMany(fetch=FetchType.LAZY, mappedBy="task")
     private List<TaskImplementation> implementations;
 
     protected Task() {}
-
-    public Task(int taskId, User author, String name, String desc, String code, int level, int rating) {
-        this.taskId = taskId;
+    
+    public Task(int index,  ImplementationType type, User author,
+            String name, String desc, String codeStub, int level, int rating) {
+        this.index = index;
+        this.type = type;
         this.author = author;
         this.name = name;
         this.desc = desc;
-        this.code = code;
+        this.codeStub = codeStub;
         this.level = level;
         this.rating = rating;
         this.implementations = new ArrayList<>();
@@ -80,15 +85,15 @@ public class Task {
     }
 
     public long getId() {
-        return this.taskId;
+        return this.id;
     }
 
-    public String getCode() {
-        return this.code;
+    public String getCodeStub() {
+        return this.codeStub;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setCodeStub(String codeStub) {
+        this.codeStub = codeStub;
     }
 
     public float getRating() {
@@ -131,14 +136,6 @@ public class Task {
         this.level = level;
     }
 
-    public int getSequenceId() {
-        return this.taskId;
-    }
-
-    public void setSequenceId(int sequenceId) {
-        this.taskId = sequenceId;
-    }
-
     public List<TaskImplementation> getImplementations() {
         return this.implementations;
     }
@@ -147,11 +144,28 @@ public class Task {
         this.implementations = implementations;
     }
 
-    public int getTaskId() {
-        return this.taskId;
+    public int getIndex() {
+        return this.index;
     }
 
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
+    public void setIndex(int index) {
+        this.index = index;
     }
+
+    public ImplementationType getType() {
+        return type;
+    }
+
+    public void setType(ImplementationType type) {
+        this.type = type;
+    }
+
+    public void setTypeTest() {
+        this.type = ImplementationType.TEST;
+    }
+
+    public void setTypeImplementation() {
+        this.type = ImplementationType.IMPLEMENTATION;
+    }
+
 }

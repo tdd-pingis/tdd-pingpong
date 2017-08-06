@@ -37,7 +37,7 @@ public class ChallengeServiceTest {
     @Before
     public void setUp() {
         testUser = new User(1, "Matti", 1);
-        testChallenge = new Challenge("Calculator", testUser, "SimpleCalculatorDesc", "class", "test");
+        testChallenge = new Challenge("Calculator", testUser, "SimpleCalculatorDesc");
         challengeCaptor = ArgumentCaptor.forClass(Challenge.class);
     }
 

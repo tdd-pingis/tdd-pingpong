@@ -32,6 +32,7 @@
                 <div class="tab-content" th:inline="text">        
                     <input type="hidden" name="challenge" th:value="${challenge.id}" />
                     <input type="hidden" name="task" th:value="${task.id}" />
+                    <input type="hidden" name="taskImplementationId" th:value="${taskImplementationId}" />
                     <div th:each="editor, iter: ${editorContents}" th:id="${editor.key}+'_item'" th:class="${iter.index == 0}?'panel panel-default tab-pane fade in active':'panel panel-default tab-pane fade'">
                         <div class="panel-heading">
                             <h3 class="panel-title" th:inline="text">[[${editor.value.title}]]</h3>

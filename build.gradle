@@ -1,7 +1,10 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url "https://repo.spring.io/milestone" }
+        maven {
+            url "https://repo.spring.io/milestone"
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE'
@@ -19,6 +22,7 @@ apply plugin: 'jacoco'
 apply plugin: 'checkstyle'
 apply plugin: 'org.springframework.boot'
 apply plugin: 'io.spring.dependency-management'
+
 
 jar {
     baseName = 'tdd-pingpong'
@@ -71,7 +75,7 @@ dependencies {
     compile 'org.apache.commons:commons-compress:1.14'
     compile 'com.fasterxml.jackson.core:jackson-databind'
     compile 'org.json:json:20160212'
-
+    compile group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: '5.0.11.Final'
 
     testCompile 'junit:junit'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
@@ -103,6 +107,15 @@ test {
     systemProperty "spring.profiles.active", "dev"
 }
 
+
+checkstyleMain {
+    exclude '**/generated/**'
+}
+
+
+
+//compileJava.options.compilerArgs += ["-proc:none"]
+
 bootRun { 
     if(project.hasProperty('TMC_SECRET')) {
         environment 'TMC_APP_ID', TMC_APP_ID
@@ -113,6 +126,7 @@ bootRun {
         environment 'TMC_APP_ID', "dummy"
         environment 'TMC_SECRET', "dummy"
     }
+	systemProperties System.properties
 }
 
 
@@ -120,6 +134,7 @@ bootRun {
 test {
     exclude '**'
 }
+
 
 task unitTest (type: Test) {
     systemProperty "spring.profiles.active", "dev"
@@ -135,6 +150,38 @@ task cucumberTest (type: Test) {
 
 test.dependsOn cucumberTest, unitTest
 cucumberTest.mustRunAfter unitTest
+
+ext {
+    generatedSourcesDir = file("src/main/java/generated")
+}
+
+sourceSets {
+    unitTest {
+        resources {
+            srcDir "resources"
+        }
+    }
+    main {
+        java {
+            srcDir 'src/main/java'
+            srcDir generatedSourcesDir
+        }
+    }
+}
+
+task removeGeneratedMetamodel(type: Delete) {
+    generatedSourcesDir.deleteDir()
+}
+
+compileJava {
+    doFirst {
+        generatedSourcesDir.mkdirs()
+    }
+    dependsOn(removeGeneratedMetamodel)
+    options.compilerArgs += ['-s', generatedSourcesDir]
+}
+
+clean.dependsOn(removeGeneratedMetamodel)
 
 
 //Full debug prints for Travis, custom report prints for local

@@ -1,11 +1,22 @@
 package pingis.services;
 
+import java.util.LinkedHashMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pingis.entities.Task;
 import pingis.repositories.ChallengeRepository;
 import pingis.repositories.TaskRepository;
 import java.util.List;
+import static org.springframework.data.jpa.domain.Specifications.where;
+import org.springframework.ui.Model;
+import pingis.entities.Challenge;
+import pingis.entities.ChallengeImplementation;
+import pingis.entities.ImplementationType;
+import pingis.entities.QuerySpecifications;
+import static pingis.entities.QuerySpecifications.*;
+import pingis.entities.TaskImplementation;
+import pingis.repositories.TaskImplementationRepository;
+import pingis.utils.EditorTabData;
 
 @Service
 public class TaskService {
@@ -14,6 +25,8 @@ public class TaskService {
     private TaskRepository taskRepository;
     @Autowired
     private ChallengeRepository challengeRepository;
+    @Autowired
+    private TaskImplementationRepository taskImplementationRepository;
 
     public Task findTaskInChallenge(Long challengeId, int taskId) {
         // Implement validation here
@@ -44,4 +57,14 @@ public class TaskService {
     public boolean contains(Long taskId) {
         return taskRepository.exists(taskId);
     }
+
+    public TaskImplementation getCorrespondingTestTaskImplementation(
+            TaskImplementation implTaskImplementation,
+            Challenge challenge) {
+        return taskImplementationRepository.
+                findOne(where(QuerySpecifications.hasTask(taskRepository
+                .findOne(where(hasIndex(implTaskImplementation.getTask().getIndex() - 1))
+                        .and(hasChallenge(challenge))))));
+    }
+
 }
