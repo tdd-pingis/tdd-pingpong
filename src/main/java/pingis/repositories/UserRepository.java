@@ -13,5 +13,5 @@ public interface UserRepository extends CrudRepository<User, Long>, JpaSpecifica
 //    @Query("delete From Reference r Where r.name = ?1")
 //    void deleteReferenceByName(String name);
     
-
+    User findByName(String name);
 }

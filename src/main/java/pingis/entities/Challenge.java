@@ -54,7 +54,6 @@ public class Challenge {
 
 
     public Challenge(String name, User author, String description, ChallengeType type) {
-
         this.name = name;
         this.author = author;
         this.type = type;

@@ -16,6 +16,7 @@ import pingis.entities.QuerySpecifications;
 import static pingis.entities.QuerySpecifications.hasChallenge;
 import static pingis.entities.QuerySpecifications.hasIndex;
 import pingis.entities.TaskImplementation;
+import pingis.utils.JavaClassGenerator;
 
 @Service
 public class EditorService {
@@ -31,24 +32,27 @@ public class EditorService {
     }
 
     public Map<String, EditorTabData> generateEditorContents(TaskImplementation taskImplementation) {
-
         Map<String, EditorTabData> tabData = new LinkedHashMap();
+        Challenge currentChallenge = taskImplementation.getChallengeImplementation().getChallenge();
         if (taskImplementation.getTask().getType().equals(ImplementationType.TEST)) {
-            EditorTabData editorTabData = new EditorTabData(
-                    "Write your test here",
+            TaskImplementation implTaskImplementation =
+                    taskImplementationService.getCorrespondingImplTaskImplementation(taskImplementation);
+            EditorTabData tab1 = new EditorTabData(
+                    JavaClassGenerator.generateTestClassFilename(currentChallenge),
                     taskImplementation.getTask().getCodeStub());
-            tabData.put("editor1", editorTabData);
+            EditorTabData tab2 = new EditorTabData(
+                    JavaClassGenerator.generateImplClassFilename(currentChallenge),
+                    implTaskImplementation.getTask().getCodeStub());
+            tabData.put("editor1", tab1);
+            tabData.put("editor2", tab2);
         } else {
             TaskImplementation testTaskImplementation =
                     taskImplementationService.getCorrespondingTestTaskImplementation(
                             taskImplementation);
-            EditorTabData tab1 =
-                    new EditorTabData(
+            EditorTabData tab1 = new EditorTabData(
                             "Implement code here",
-                            taskImplementation.getTask().getCodeStub());
- 
-            EditorTabData tab2
-                    = new EditorTabData("Test to fulfill",
+                            taskImplementation.getTask().getCodeStub()); 
+            EditorTabData tab2 = new EditorTabData("Test to fulfill",
                             testTaskImplementation
                                     .getCode());
             tabData.put("editor1", tab1);

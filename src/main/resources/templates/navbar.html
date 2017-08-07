@@ -29,18 +29,22 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
           <li sec:authorize="isAuthenticated()" class="Account">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account<span class="caret"></span></a>
+            <a id="account-button" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Account<span class="caret"></span></a>
             <ul class="dropdown-menu">
               <li><a href="#">Profile</a></li>
               <li><a  href="#">Explore</a></li>
               <li><a href="#">Help</a></li>
               <li><a href="#">Settings</a></li>
               <li role="separator" class="divider"></li>
-              <li><a href="#">Logout</a></li>
+              <li>
+                <form action="#" th:action="@{/logout}" method="post">
+                  <input id="logout-button" value="Logout" type="submit" class="btn btn-primary" />
+		</form>
+              </li>
             </ul>
           </li>
           <li sec:authorize="isAnonymous()" class="Account">
-            <a href="/login" class="btn btn-primary">Login</a>
+            <a id="login-button" href="/login" class="btn btn-primary">Login</a>
           </li>
       </ul>
       <form class="navbar-form navbar-right">

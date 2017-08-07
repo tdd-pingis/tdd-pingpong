@@ -35,7 +35,6 @@ public class ChallengeImplementation {
     @ManyToOne(fetch=FetchType.EAGER)
     private User implementationUser;
     
-
     @OneToMany(fetch=FetchType.LAZY, mappedBy = "challengeImplementation")
     private List<TaskImplementation> taskImplementations;
 

@@ -10,6 +10,7 @@ spring:
     driverClassName: org.h2.Driver
   profiles:
     default: dev
+    active: dev
 
 security:
   oauth2:
@@ -24,3 +25,9 @@ security:
         scopes: public
         clientName: TMC
         clientAlias: tmc
+        redirectUri: http://localhost:8080/oauth2/authorize/code/tmc
+
+tmc:
+  sandboxUrl: http://localhost:3001
+  notifyUrl: http://localhost:1337/submission-result
+  

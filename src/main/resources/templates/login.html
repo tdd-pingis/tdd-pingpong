@@ -7,10 +7,10 @@
     <!--/* The form uses Thymeleaf to automatically handle CSRF tokens which Spring Security requires. */-->
     <form th:action="login" method="post">
       <label for="username">Username</label>:
-      <input type="text" id="username" name="username" autofocus="autofocus" /> <br />
+      <input id="session_login" type="text" name="username" autofocus="autofocus" /> <br />
       <label for="password">Password</label>:
-      <input type="password" id="password" name="password" /> <br />
-      <input type="submit" id="submit" value="Log in" />
+      <input id="session_password" type="password" name="password" /> <br />
+      <input id="log-in-button" type="submit" value="Log in" />
     </form>
 </body>
 </html>

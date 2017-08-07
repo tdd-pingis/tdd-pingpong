@@ -33,6 +33,7 @@ public class IOStub implements IO{
         "       }",
         "    ],",
         "   \"dummyimplementations\": []",
+
         "}"};
     //CHECKSTYLE:ON
     private int currentLine = 0;

@@ -1,18 +1,22 @@
 package pingis.config;
 
+import java.io.IOException;
 import java.net.URI;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationProperties;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import pingis.entities.User;
 
 @Profile(value = {"prod", "oauth"})
@@ -28,17 +32,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private OAuthProperties oauthProperties;
-    private ClientRegistration tmcClientRegistration;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-            .authorizeRequests().anyRequest().permitAll()
+            .authorizeRequests().antMatchers("/css/**", "/webjars/**", "/", "/login", "/logout").permitAll()
+                .anyRequest().authenticated()
             .and()
             .exceptionHandling()
-            .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"));
-
+            .authenticationEntryPoint(new OAuthAuthenticationEntryPoint());
+        
         oauthLoginConfiguration(http);
+        oauth2LogoutConfiguration(http);
     }
 
     private void oauthLoginConfiguration(HttpSecurity http) throws Exception {
@@ -46,15 +51,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .clients(tmcClientRegistration())
             .userInfoEndpoint().customUserType(User.class, URI.create(oauthProperties.getUserInfoUri()));
     }
+    
+    private void oauth2LogoutConfiguration(HttpSecurity http) throws Exception {
+        http.logout()
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/");
+    }
 
     //Registers TMC's information for the application
-    private ClientRegistration[] tmcClientRegistration() {
+    private ClientRegistration tmcClientRegistration() {
         ClientRegistrationProperties clientRegistrationProperties = new ClientRegistrationProperties();
 
         //copies all fields from the first object to the second
         BeanUtils.copyProperties(oauthProperties, clientRegistrationProperties);
 
-        tmcClientRegistration = new ClientRegistration.Builder(clientRegistrationProperties).build();
-        return new ClientRegistration[]{tmcClientRegistration};
+        return new ClientRegistration.Builder(clientRegistrationProperties).build();
+    }
+    
+    class OAuthAuthenticationEntryPoint implements AuthenticationEntryPoint {
+        @Override
+        public void commence(HttpServletRequest hsr, HttpServletResponse hsr1, AuthenticationException ae)
+                throws IOException, ServletException {
+            hsr1.sendRedirect("/login");
+        }
     }
 }

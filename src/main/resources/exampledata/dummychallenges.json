@@ -1,11 +1,10 @@
 {
     "challenges": [
         {
-            "name": "calculator",
+            "name": "Calculator",
             "author": "modeluser",
             "desc": "Test and implement a simple command line based calculator.",
             "tasks": [
-
                 {
                     "author": "modeluser",
                     "index": 1,
@@ -39,7 +38,6 @@
 
                     "modelimplementation": ["public class Calculator {\n\n    public Calculator() {}\n\n    public int add(int a, int b) {\n        return a+b;\n    }\n}"]
                 }
-
             ]
         },
         {
@@ -52,7 +50,7 @@
                     "index": 1,
                     "name": "Test Hello World",
                     "type": "test",
-                    "desc": "Write a JUnit test case for classic Hello World -method",
+                    "desc": "Write a JUnit test case for a method that takes no arguments and returns \"Hello, world!\" as a string.",
                     "codeStub": ["@Test\n",
                         "public void helloTest() {\n",
                         "   //TODO: implement this\n",
@@ -74,7 +72,7 @@
                         "}",
                         "\n"],
                     "modelimplementation": ["public void hello() {",
-                        "   System.out.println(\"Hello, world!\");",
+                        "   return \"Hello, world!\";",
                         "}"]
                 }
             ]

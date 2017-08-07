@@ -1,9 +1,9 @@
-
+@dev
 Feature: Content check for multiple editor tabs
 
   Scenario Outline: <user> can examine content in multiple editors
     Given <user> navigates to the task page at <page>
-    When <user> clicks the <tab_name>
+    When <user> clicks the <tab_name> tab
     Then the page contains <content>
 
     Examples:
@@ -12,4 +12,5 @@ Feature: Content check for multiple editor tabs
       |User   |Write your test here    |public void testMultiplication()      |task/1        |
       |User   |Implement code here     |public class Calculator               |task/2        |
       |Admin  |Test to fulfill         |assertEquals                          |task/2        |
+
 

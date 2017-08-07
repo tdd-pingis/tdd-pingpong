@@ -10,7 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import pingis.Application;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(plugin = {"html:build/reports/tests/cucumber"}, tags = {"~@OAuth"})
+@CucumberOptions(plugin = {"html:build/reports/tests/cucumber"})
 public class RunCukesTest {
     @ClassRule
     public static ExternalResource server = new ExternalResource(){

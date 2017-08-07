@@ -16,9 +16,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import pingis.Application;
 import pingis.entities.Challenge;
+import pingis.entities.ChallengeImplementation;
 import pingis.entities.ImplementationType;
 import pingis.entities.TaskImplementation;
 import pingis.utils.EditorTabData;
+
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {Application.class})
@@ -32,12 +34,14 @@ public class EditorServiceTest {
     private Task testTask;
     private Task implementationTask;
     private Challenge challenge;
+    private ChallengeImplementation challengeImplementation;
     private TaskImplementation passedTaskImplementation;
     private TaskImplementation returnedTaskImplementation;
 
     @Before
     public void setUp() {
         this.challenge = new Challenge("testchallenge", testUser, "testing");
+        this.challengeImplementation = new ChallengeImplementation(challenge, testUser, testUser);
         this.testTask = new Task(
                 1,
                 ImplementationType.TEST,
@@ -56,13 +60,19 @@ public class EditorServiceTest {
                 2, 2);
         this.passedTaskImplementation = new TaskImplementation(testUser, "", implementationTask);
         this.returnedTaskImplementation = new TaskImplementation(testUser, "public void test", testTask);
+        this.passedTaskImplementation.setChallengeImplementation(challengeImplementation);
+        this.returnedTaskImplementation.setChallengeImplementation(challengeImplementation);
+                
     }
     
     @Test
     public void testEditorServiceWithTestTask() {
-        
+        when(taskImplementationServiceMock.getCorrespondingImplTaskImplementation(returnedTaskImplementation))
+                .thenReturn(this.passedTaskImplementation);
         Map<String, EditorTabData> result = editorService.generateEditorContents(returnedTaskImplementation);
-        assertEquals(result.get("editor1").title, "Write your test here");
+        assertEquals(result.get("editor1").code, "public void test");
+        verify(taskImplementationServiceMock, times(1)).
+                getCorrespondingImplTaskImplementation(returnedTaskImplementation);
     }
     
     @Test
