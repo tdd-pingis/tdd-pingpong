@@ -89,10 +89,12 @@ function showResults(response) {
     }
 }
 
+//Possible statuses are: PASSED, TESTS_FAILED, COMPILE_FAILED, TESTRUN_INTERRUPTED
+//See fi.helsinki.cs.tmc.langs.domain.RunResult at testmycode/tmc-langs for more info
 function resultDiv(status) {
     var resultDiv = $("<div>");
     
-    if (status === 'TESTS_PASSED') {
+    if (status === 'PASSED') {
         return resultDiv
                 .addClass("alert alert-success")
                 .text("Success!!");
