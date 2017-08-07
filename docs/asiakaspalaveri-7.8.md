@@ -1,4 +1,4 @@
-##TDD-pingis Asiakaspalaveri 7.8.
+## TDD-pingis Asiakaspalaveri 7.8.
 
 Brief:
 Pelimekaniikan "vuorottelun" toteuttaminen jatkuu. Toiveena ensi viikon demo kahdella käyttäjällä. 
