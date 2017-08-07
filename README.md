@@ -15,23 +15,5 @@ TDD-PingPong is developed in Java 8 using Spring-boot's Web MVC framework. Depen
 
 For more details,[see our Wiki](https://github.com/tdd-pingis/tdd-pingpong/wiki)
 
-### Testing
-Project utilizes following testing-technologies:
-
-Class functionality:
-* __JUnit__-testing with Mockito and AssertJ
-
-Controller-targeted testing:
-* Spring's __WebMvcTest__ 
-
-User story/feature testing:
-* Cucumber with Selenium for testing system features
-
-Metrics of test-coverage:
-* __Coveralls__ provides information about current test-coverage + history
-
-Layout and formatting:
-* __Checkstyle__ (Google's Java Checkstyle)
-
 ### License
 TDD-PingPong is developed under MIT license. 
