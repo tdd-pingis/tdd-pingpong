@@ -35,8 +35,3 @@ Layout and formatting:
 
 ### License
 TDD-PingPong is developed under MIT license. 
-
-### Requirements
-
-
-
