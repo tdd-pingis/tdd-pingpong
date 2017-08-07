@@ -1,5 +1,0 @@
-security:
-  oauth2:
-    client:
-      tmc:
-        redirectUri: http://localhost:8080/oauth2/authorize/code/tmc

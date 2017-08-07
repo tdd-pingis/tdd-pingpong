@@ -30,4 +30,4 @@ security:
 tmc:
   sandboxUrl: http://localhost:3001
   notifyUrl: http://localhost:1337/submission-result
-  
+
