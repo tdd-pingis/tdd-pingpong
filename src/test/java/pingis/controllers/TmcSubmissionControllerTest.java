@@ -17,6 +17,7 @@ import pingis.entities.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 import pingis.Application;
 import pingis.config.SecurityDevConfig;
+import pingis.config.WebSocketSecurityConfig;
 
 import java.util.UUID;
 
@@ -28,7 +29,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Created by dwarfcrank on 7/28/17.
  */
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {Application.class, TmcSubmissionController.class, SecurityDevConfig.class})
+@ContextConfiguration(classes = 
+        {Application.class, TmcSubmissionController.class, SecurityDevConfig.class, WebSocketSecurityConfig.class})
 @WebAppConfiguration
 @WebMvcTest(TmcSubmissionController.class)
 public class TmcSubmissionControllerTest {

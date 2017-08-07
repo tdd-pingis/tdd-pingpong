@@ -9,14 +9,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pingis.entities.TmcSubmission;
 import pingis.entities.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
-
-import java.util.Optional;
 import java.util.UUID;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 @Controller
 public class TmcSubmissionController {
     @Autowired
     private TmcSubmissionRepository submissionRepository;
+    @Autowired
+    private SimpMessagingTemplate template;
 
     // These request parameters are specified separately because there doesn't seem to
     // be a simple way to rename fields when doing data binding.
@@ -54,7 +55,9 @@ public class TmcSubmissionController {
         submission.setVmLog(vmLog);
 
         submissionRepository.save(submission);
-
+        
+        //Broadcasts the submission to /topic/results
+        this.template.convertAndSend("/topic/results", submission);
         return new ResponseEntity(HttpStatus.OK);
     }
 }
