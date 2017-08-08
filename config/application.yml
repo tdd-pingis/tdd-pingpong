@@ -10,8 +10,8 @@ spring:
     driverClassName: org.h2.Driver
   profiles:
     default: dev
-    active: dev
-
+    active: oauth
+    
 security:
   oauth2:
     client:

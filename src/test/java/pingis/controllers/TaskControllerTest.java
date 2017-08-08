@@ -34,8 +34,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import pingis.entities.ChallengeImplementation;
 import pingis.entities.TaskImplementation;
-import pingis.repositories.TaskImplementationRepository;
-import pingis.repositories.UserRepository;
 import pingis.utils.EditorTabData;
 
 
@@ -142,9 +140,9 @@ public class TaskControllerTest {
         verifyNoMoreInteractions(editorServiceMock);
     }
     
-    public Map<String, EditorTabData> generateImplTabData(TaskImplementation implTaskImplementation,
+    private Map<String, EditorTabData> generateImplTabData(TaskImplementation implTaskImplementation,
             TaskImplementation testTaskImplementation) {
-        Map<String, EditorTabData> tabData = new LinkedHashMap();
+        Map<String, EditorTabData> tabData = new LinkedHashMap<String, EditorTabData>();
         EditorTabData tab1 = new EditorTabData("Implement code here",
                         implTaskImplementation.getTask().getCodeStub());
         EditorTabData tab2 = new EditorTabData("Test to fulfill",testTaskImplementation.getTask().getCodeStub());
@@ -153,9 +151,9 @@ public class TaskControllerTest {
         return tabData;
     }
   
-    public Map<String, EditorTabData> generateTestTabData(TaskImplementation implTaskImplementation,
+    private Map<String, EditorTabData> generateTestTabData(TaskImplementation implTaskImplementation,
             TaskImplementation testTaskImplementation) {
-        Map<String, EditorTabData> tabData = new LinkedHashMap();
+        Map<String, EditorTabData> tabData = new LinkedHashMap<String, EditorTabData>();
         EditorTabData tab1 = new EditorTabData("Implement code here",
                 implTaskImplementation.getTask().getCodeStub());
         EditorTabData tab2 = new EditorTabData("Test to fulfill", testTaskImplementation.getTask().getCodeStub());
@@ -185,7 +183,12 @@ public class TaskControllerTest {
         assertArrayEquals(implCode.getBytes(), files.get(implFileName));
         assertArrayEquals(testCode.getBytes(), files.get(testFileName));
 
+        verify(taskImplementationServiceMock, times(1)).findOne(implTaskImplementation.getId());
+
         verifyNoMoreInteractions(packagingService);
+        verifyNoMoreInteractions(taskImplementationServiceMock);
+        verifyNoMoreInteractions(challengeServiceMock);
+        verifyNoMoreInteractions(taskServiceMock);
     }
 
     @Test

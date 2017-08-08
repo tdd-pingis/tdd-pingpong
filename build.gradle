@@ -1,10 +1,7 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven {
-            url "https://repo.spring.io/milestone"
-            url "https://plugins.gradle.org/m2/"
-        }
+        maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
         classpath 'org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE'
@@ -82,7 +79,6 @@ dependencies {
     compile 'org.apache.commons:commons-compress:1.14'
     compile 'com.fasterxml.jackson.core:jackson-databind'
     compile 'org.json:json:20160212'
-    compile group: 'org.hibernate', name: 'hibernate-jpamodelgen', version: '5.0.11.Final'
 
     testCompile 'junit:junit'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
@@ -100,15 +96,6 @@ dependencies {
     testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.4.0'
 }
 
-
-//checkstyleMain {
-//    exclude '**/generated/**'
-//}
-
-
-
-//compileJava.options.compilerArgs += ["-proc:none"]
-
 bootRun { 
     if(project.hasProperty('TMC_SECRET')) {
         environment 'TMC_APP_ID', TMC_APP_ID
@@ -122,43 +109,6 @@ bootRun {
 // Defines tasks unitTest, cucumberTest and cucumberOAuthTest and clears out the task test
 apply from: 'gradle/helpers/test-tasks.gradle'
 
-
-//test.dependsOn cucumberTest, unitTest
-//cucumberTest.mustRunAfter unitTest
-
-ext {
-    generatedSourcesDir = file("src/main/java/generated")
-}
-
-sourceSets {
-    //unitTest {
-    //    resources {
-    //        srcDir "resources"
-    //    }
-   // }
-    main {
-        java {
-            srcDir 'src/main/java'
-            srcDir generatedSourcesDir
-        }
-    }
-}
-
-task removeGeneratedMetamodel(type: Delete) {
-    generatedSourcesDir.deleteDir()
-}
-
-compileJava {
-    doFirst {
-        generatedSourcesDir.mkdirs()
-    }
-    dependsOn(removeGeneratedMetamodel)
-    options.compilerArgs += ['-s', generatedSourcesDir]
-}
-
-clean.dependsOn(removeGeneratedMetamodel)
-
-
 cucumberOAuthTest {
     if(project.hasProperty('TMC_SECRET')) {
         environment 'TMC_TEST_USER_LOGIN', TMC_TEST_USER_LOGIN
@@ -170,7 +120,7 @@ cucumberOAuthTest {
 
 //Full debug prints for Travis, custom report prints for local
 if(System.env.TRAVIS == 'true') {
-  unitTest.testLogging.showStandardStreams = true
+  unitTest.testLogging.showStandardStreams = false
   cucumberTest.testLogging.showStandardStreams = true
   cucumberOAuthTest.testLogging.showStandardStreams = true
 } else {

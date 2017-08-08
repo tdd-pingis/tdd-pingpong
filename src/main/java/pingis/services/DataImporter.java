@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
-import java.util.Scanner;
 import org.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
@@ -99,11 +98,11 @@ public class DataImporter implements ApplicationRunner{
     public void generateUsers() {
         long userId = new Random().nextInt(Integer.MAX_VALUE);
         
-        users.put("modeluser", new User(DataLoader.UserType.TMC_MODEL_USER.getId(), 
+        users.put("modeluser", new User(UserType.TMC_MODEL_USER.getId(), 
                   UserType.TMC_MODEL_USER.name(), TMC_USER_LEVEL)); 
-        users.put("testuser", new User(DataLoader.UserType.TEST_USER.getId(), 
+        users.put("testuser", new User(UserType.TEST_USER.getId(), 
                   UserType.TEST_USER.name(), TEST_USER_LEVEL));
-        users.put("impluser", new User(DataLoader.UserType.IMPLEMENTATION_USER.getId(), 
+        users.put("impluser", new User(UserType.IMPLEMENTATION_USER.getId(), 
                   UserType.IMPLEMENTATION_USER.name(), IMPLEMENTATION_USER_LEVEL));
 
 

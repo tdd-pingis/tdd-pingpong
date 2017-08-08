@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.*;
+import org.springframework.test.annotation.DirtiesContext;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
@@ -31,6 +32,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @RestClientTest(SubmissionSenderService.class)
 @TestPropertySource(properties = {"tmc.sandboxUrl=http://localhost:3001", "tmc.notifyUrl=http://localhost:1337"})
 @ContextConfiguration(classes = {SubmissionProperties.class, SubmissionSenderService.class})
+@DirtiesContext
 public class SubmissionSenderServiceTest {
     @Autowired
     private SubmissionSenderService sender;
