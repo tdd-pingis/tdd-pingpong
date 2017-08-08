@@ -25,7 +25,7 @@ public class Task {
     private long id; // unique primary ID
 
     @NotNull
-    private int taskId; // ID in relation to parent Challenge
+    private int index; // sequence number in relation to parent Challenge
 
     @NotNull
     @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH)
@@ -59,9 +59,9 @@ public class Task {
 
     protected Task() {}
     
-    public Task(int taskId,  ImplementationType type, User author,
+    public Task(int index,  ImplementationType type, User author,
             String name, String desc, String codeStub, int level, int rating) {
-        this.taskId = taskId;
+        this.index = index;
         this.type = type;
         this.author = author;
         this.name = name;
@@ -144,12 +144,12 @@ public class Task {
         this.implementations = implementations;
     }
 
-    public int getTaskId() {
-        return this.taskId;
+    public int getIndex() {
+        return this.index;
     }
 
-    public void setTaskId(int taskId) {
-        this.taskId = taskId;
+    public void setIndex(int index) {
+        this.index = index;
     }
 
     public ImplementationType getType() {

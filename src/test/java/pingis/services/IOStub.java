@@ -18,6 +18,7 @@ public class IOStub implements IO{
         "         \"tasks\": [",
         "            {",
         "               \"author\": \"modeluser\",",
+        "               \"index\": 1,",
         "               \"name\": \"Test multiplication\",",
         "               \"type\": \"test\",",
         "               \"desc\": \"Write a JUnit test case that tests the multiplication method for two integers. \\nMethod should take two integers as arguments and return the product of those as an integer.\",",
@@ -30,7 +31,9 @@ public class IOStub implements IO{
         "             }",
         "          ]",
         "       }",
-        "    ]",
+        "    ],",
+        "   \"dummyimplementations\": []",
+
         "}"};
     //CHECKSTYLE:ON
     private int currentLine = 0;

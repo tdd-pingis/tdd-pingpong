@@ -23,6 +23,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.BDDMockito.*;
+import org.springframework.test.annotation.DirtiesContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 /**
@@ -31,6 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = 
         {Application.class, TmcSubmissionController.class, SecurityDevConfig.class, WebSocketSecurityConfig.class})
+@DirtiesContext
 @WebAppConfiguration
 @WebMvcTest(TmcSubmissionController.class)
 public class TmcSubmissionControllerTest {

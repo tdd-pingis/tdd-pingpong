@@ -59,15 +59,17 @@ public class DataImporterTest {
     public void testGenerateEntities() {
         importer.generateUsers();
         importer.generateEntities();
-        ArrayList<Challenge> challenges = importer.getChallenges();
+        HashMap<String, Challenge> challenges = importer.getChallenges();
+
         ArrayList<Task> tasks = importer.getTasks();
         ArrayList<TaskImplementation> taskImplementations = importer.getTaskImplementations();
         ArrayList<ChallengeImplementation> challengeImplementations = importer.getChallengeImplementations();
 
-        assertEquals(challenges.get(0).getName(), "calculator");
+        assertEquals(challenges.get("calculator").getName(), "calculator");
         assertEquals(tasks.get(0).getName(), "Test multiplication");
         assertEquals(taskImplementations.get(0).getTask(), tasks.get(0));
-        assertEquals(challengeImplementations.get(0).getChallenge(), challenges.get(0));
+        assertEquals(challengeImplementations.get(0).getChallenge(), challenges.get("calculator"));
+
     }
 
 }
