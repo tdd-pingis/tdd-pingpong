@@ -1,41 +1,67 @@
 package pingis.services;
 
 import org.springframework.stereotype.Service;
-import pingis.entities.Task;
 import pingis.utils.EditorTabData;
 
 import java.util.LinkedHashMap;
+import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
+import pingis.entities.Challenge;
+import pingis.entities.ImplementationType;
+import pingis.entities.TaskImplementation;
+import pingis.utils.JavaClassGenerator;
 
 @Service
 public class EditorService {
-
-    private LinkedHashMap<String, EditorTabData> content;
-
+    
+    @Autowired
+    TaskImplementationService taskImplementationService;
+    
     public EditorService() {
-        content = new LinkedHashMap<>();
     }
 
-    public LinkedHashMap<String, EditorTabData> generateContent(Task t) {
-        // Implement DB solution here
-        content.put("editor1", new EditorTabData("CalculatorTest.java", t.getCodeStub()));
-        content.put("editor2", new EditorTabData("Calculator.java",
-                "public class Calculator {\n"
-                        + "    \n"
-                        + "    public Calculator() {}\n"
-                        + "\n"
-                        + "    public int multiply(int a, int b) {\n"
-                        + "        return a*b;\n"
-                        + "    }\n"
-                        + "}"));
-        content.put("editor3", new EditorTabData("Model solution", "public void testAddition() {\n"
-                + "    Calculator c = new Calculator();\n"
-                + "    assertEquals(8, c.multiply(2, 4));\n"
-                + "}"));
-
-        return content;
+    public Map<String, EditorTabData> generateEditorContents(TaskImplementation taskImplementation) {
+        Map<String, EditorTabData> tabData;
+        Challenge currentChallenge = taskImplementation.getChallengeImplementation().getChallenge();
+        if (taskImplementation.getTask().getType().equals(ImplementationType.TEST)) {
+            tabData = this.generateTestTaskTabs(taskImplementation, currentChallenge);
+        } else {
+            tabData = this.generateImplTaskTabs(taskImplementation, currentChallenge);
+        }
+        return tabData;
     }
 
-    public LinkedHashMap<String, EditorTabData> getContent() {
-        return content;
+    private Map<String, EditorTabData> generateTestTaskTabs(TaskImplementation taskImplementation,
+            Challenge currentChallenge) {
+        Map<String, EditorTabData> tabData = new LinkedHashMap();
+        TaskImplementation implTaskImplementation
+                = taskImplementationService.getCorrespondingImplTaskImplementation(taskImplementation);
+        EditorTabData tab1 = new EditorTabData(
+                JavaClassGenerator.generateTestClassFilename(currentChallenge),
+                taskImplementation.getTask().getCodeStub());
+        EditorTabData tab2 = new EditorTabData(
+                JavaClassGenerator.generateImplClassFilename(currentChallenge),
+                implTaskImplementation.getTask().getCodeStub());
+        tabData.put("editor1", tab1);
+        tabData.put("editor2", tab2);
+        return tabData;
     }
+
+    private Map<String, EditorTabData> generateImplTaskTabs(TaskImplementation taskImplementation,
+            Challenge currentChallenge) {
+        Map<String, EditorTabData> tabData = new LinkedHashMap();
+        TaskImplementation testTaskImplementation
+                = taskImplementationService.getCorrespondingTestTaskImplementation(
+                        taskImplementation);
+        EditorTabData tab2 = new EditorTabData(
+                "Implement code here",
+                taskImplementation.getTask().getCodeStub());
+        EditorTabData tab1 = new EditorTabData("Test to fulfill",
+                testTaskImplementation
+                        .getCode());
+        tabData.put("editor1", tab1);
+        tabData.put("editor2", tab2);
+        return tabData;
+    }
+
 }

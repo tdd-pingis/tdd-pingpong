@@ -79,9 +79,8 @@ public class ChallengeServiceTest {
         challengeService.delete(challengeCaptor.getValue().getId());
 
         verify(challengeRepositoryMock, times(1)).delete(challengeCaptor.getValue().getId());
-
         boolean deleted = challengeService.contains(challengeCaptor.getValue().getId());
-
+        verify(challengeRepositoryMock, times(1)).exists(challengeCaptor.getValue().getId());
         assertFalse(deleted);
     }
 
