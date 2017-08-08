@@ -1,4 +1,3 @@
-# Base image from Spring Docker tutorial
 FROM frolvlad/alpine-oraclejdk8:slim
 # Accept two arguments for injecting the TMC credentials in the container
 ARG tmcappid
@@ -8,9 +7,9 @@ ARG tmcsecret
 VOLUME /tmp
 
 # Add the jar and the properties to the working directory of the container
-ADD build/libs/tdd-pingpong-0.1.0.jar app.jar
-ADD config/ .
-
+COPY build/libs/tdd-pingpong-0.1.0.jar app.jar
+COPY config config
+COPY tmc-assets tmc-assets
 
 # Static files, such as index.html, supposedly need a modification time, which are set when created by touch
 RUN sh -c 'touch /app.jar'
