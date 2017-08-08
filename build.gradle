@@ -118,16 +118,16 @@ cucumberOAuthTest {
     }
 }
 
+apply from: 'gradle/helpers/test-printing.gradle'
+
+// Set the print function to be called after tests
+unitTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'UNIT') } } }
+
 //Full debug prints for Travis, custom report prints for local
 if(System.env.TRAVIS == 'true') {
-  unitTest.testLogging.showStandardStreams = true
   cucumberTest.testLogging.showStandardStreams = true
   cucumberOAuthTest.testLogging.showStandardStreams = true
 } else {
-  apply from: 'gradle/helpers/test-printing.gradle'
-  
-  // Set the print function to be called after tests
-  unitTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'UNIT') } } }
   cucumberTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'CUKE') } } }
   cucumberOAuthTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'CUKE') } } }
 }
