@@ -32,7 +32,7 @@ public class DataImporter implements ApplicationRunner {
     private ChallengeRepository cr;
     private ChallengeImplementationRepository cir;
     private TaskRepository tr;
-    private UserService ps;
+    private UserService us;
     private TaskImplementationRepository tir;
     private HashMap<String, User> users = new LinkedHashMap();
     private HashMap<String, Challenge> challenges = new HashMap();
@@ -72,7 +72,7 @@ public class DataImporter implements ApplicationRunner {
             ChallengeImplementationRepository cir, TaskImplementationRepository tir) {
         this.cr = cr;
         this.tr = tr;
-        this.ps = ps;
+        this.us = ps;
         this.cir = cir;
         this.tir = tir;
     }
@@ -85,7 +85,6 @@ public class DataImporter implements ApplicationRunner {
         generateUsers();
         generateEntities();        
         populateDatabase();
-        ps.verifyUserInitialization();  
     }
 
     public void readData(IO io) {
@@ -266,7 +265,7 @@ public class DataImporter implements ApplicationRunner {
     
     public void populateDatabase() {
         for (User user : this.users.values()) {
-            ps.save(user);
+            us.save(user);
         }
      
         for (String name : this.challenges.keySet()) {
@@ -288,13 +287,20 @@ public class DataImporter implements ApplicationRunner {
         }
     }
     
-    //CHECKSTYLE:OFF
-    private void printResults() {
+
+    private void printDatabase() {
         // For debugging-purposes
         System.out.println("users:");
         for (String key : this.users.keySet()) {
             System.out.println("key: "+key+", value: "+this.users.get(key).toString()+"\n");
         }
+        printChallenges();
+        printTaskImplementations();
+        printChallengeImplementations();
+       
+    }
+
+    private void printChallenges() {
         System.out.println("---");
         System.out.println("challenges:");
         for (String s : this.challenges.keySet()) {
@@ -304,27 +310,22 @@ public class DataImporter implements ApplicationRunner {
                 System.out.println("  task: "+t.toString());
             }
         }
+    }
+
+    private void printTaskImplementations() {
         System.out.println("---");
         System.out.println("taskimplementations:");
         for (TaskImplementation i : this.taskImplementations) {
             System.out.println("ti: "+i.toString());
             System.out.println("-");
         }
-        System.out.println("---");
-        System.out.println("challenge implementations:");
-        for (ChallengeImplementation imp : this.challengeImplementations) {
-            System.out.println(imp);
-        }
-        System.out.println("---");
-        System.out.println("challenge implementations:");
-        for (ChallengeImplementation imp : this.challengeImplementations) {
-            System.out.println(imp);
-        }
+    }
+
+    private void printChallengeImplementations() {
         System.out.println("---");
         System.out.println("challenge implementations:");
         for (ChallengeImplementation imp : this.challengeImplementations) {
             System.out.println(imp);
         }
     }
-    //CHECKSTYLE:ON
 }

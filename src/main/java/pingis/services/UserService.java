@@ -97,15 +97,4 @@ public class UserService {
         return userRepository.findByName(name);
     }
 
-    public void verifyUserInitialization() throws IllegalStateException {
-        if (!this.contains(DEV_USER_ID)) {
-            throw new IllegalStateException("Database initialization error: "
-                    + "'user' does not exist in the DB.");
-            
-        } else if (!this.contains(DEV_ADMIN_ID)) {
-            throw new  IllegalStateException("Database initialization error: "
-                    + "'admin' does not exist in the DB.");
-        }
-    }
-    
 }
