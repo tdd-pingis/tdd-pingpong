@@ -164,27 +164,28 @@ public class TaskControllerTest {
 
     @Test
     public void submitTask() throws Exception {
-        String implFileName = JavaClassGenerator.generateImplClassFilename(challenge);
-        String implCode = "/* this is an implementation */";
-        String testFileName = JavaClassGenerator.generateTestClassFilename(challenge);
-        String testCode = "/* this is a test */";
+        String submissionFileName = JavaClassGenerator.generateImplClassFilename(challenge);
+        String submissionCode = "/* this is an implementation */";
+        String staticFileName = JavaClassGenerator.generateTestClassFilename(challenge);
+        String staticCode = "/* this is a test */";
         when(taskImplementationServiceMock.findOne(implTaskImplementation.getId())).thenReturn(implTaskImplementation);
         when(challengeServiceMock.findOne(challenge.getId())).thenReturn(challenge);
         when(taskServiceMock.findTaskInChallenge(challenge.getId(), testTask.getIndex())).thenReturn(testTask);
         mvc.perform(post("/task")
-                .param("implementationCode", implCode)
-                .param("testCode", testCode)
+                .param("submissionCode", submissionCode)
+                .param("staticCode", staticCode)
                 .param("taskImplementationId", Long.toString(implTaskImplementation.getId())))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/feedback*"));
         verify(packagingService).packageSubmission(packagingArgCaptor.capture());
 
         Map<String, byte[]> files = packagingArgCaptor.getValue();
-        assertArrayEquals(implCode.getBytes(), files.get(implFileName));
-        assertArrayEquals(testCode.getBytes(), files.get(testFileName));
+        assertArrayEquals(submissionCode.getBytes(), files.get(submissionFileName));
+        assertArrayEquals(staticCode.getBytes(), files.get(staticFileName));
 
         verify(taskImplementationServiceMock, times(1)).findOne(implTaskImplementation.getId());
-        verify(taskImplementationServiceMock).updateTaskImplementationCode(implTaskImplementation.getId(), implCode);
+        verify(taskImplementationServiceMock).updateTaskImplementationCode(implTaskImplementation.getId(),
+                                                                           submissionCode);
 
         verifyNoMoreInteractions(packagingService);
         verifyNoMoreInteractions(taskImplementationServiceMock);

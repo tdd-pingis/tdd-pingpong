@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Task;
@@ -57,70 +58,81 @@ public class TaskController {
             return "error";
         }
         Challenge currentChallenge = taskImplementation.getChallengeImplementation().getChallenge();
-        model.addAttribute("challenge",
-                currentChallenge);
-        model.addAttribute("task",
-                taskImplementation.getTask());
-        model.addAttribute("taskImplementationId",
-                taskImplementationId);
+        model.addAttribute("challenge", currentChallenge);
+        model.addAttribute("task", taskImplementation.getTask());
+        model.addAttribute("taskImplementationId", taskImplementationId);
         Map<String, EditorTabData> editorContents = editorService.generateEditorContents(taskImplementation);
-        model.addAttribute("testCode", editorContents.get("editor1").code);
-        model.addAttribute("implementationCode", editorContents.get("editor2").code);
+        model.addAttribute("submissionCodeStub", editorContents.get("editor1").code);
+        model.addAttribute("staticCode", editorContents.get("editor2").code);
         String implFileName = JavaClassGenerator.generateImplClassFilename(currentChallenge);
         String testFileName = JavaClassGenerator.generateTestClassFilename(currentChallenge);
-
-        model.addAttribute("implementationFileName", implFileName);
-        model.addAttribute("testFileName", testFileName);
-
+        
+        if (taskImplementation.getTask().getType() == ImplementationType.TEST) {
+            model.addAttribute("submissionTabFileName", testFileName);
+            model.addAttribute("staticTabFileName", implFileName);
+        } else {
+            model.addAttribute("submissionTabFileName", implFileName);
+            model.addAttribute("staticTabFileName", testFileName);
+        }
+        if (model.containsAttribute("code")) {
+            model.addAttribute("submissionCodeStub", model.asMap().get("code"));
+        }
         return "task";
+    }
+    
+    private String[] checkErrors(String submissionCode, String staticCode) {
+        String[] submissionSyntaxErrors = JavaSyntaxChecker.parseCode(submissionCode);
+        String[] staticSyntaxErrors = JavaSyntaxChecker.parseCode(staticCode);
+        if (submissionSyntaxErrors != null || staticSyntaxErrors != null) {
+            String[] errors = ArrayUtils.addAll(submissionSyntaxErrors, staticSyntaxErrors);
+            return errors;
+        }
+        return null;
     }
 
     // TODO: This should actually be a separate service...
-    private TmcSubmission submitToTmc(Challenge challenge, String implementationCode, String testCode)
+    private TmcSubmission submitToTmc(Challenge challenge, String submissionCode,
+            String staticCode, ImplementationType taskType)
             throws IOException, ArchiveException {
         Map<String, byte[]> files = new HashMap<>();
-
         String implFileName = JavaClassGenerator.generateImplClassFilename(challenge);
         String testFileName = JavaClassGenerator.generateTestClassFilename(challenge);
 
-        files.put(implFileName, implementationCode.getBytes());
-        files.put(testFileName, testCode.getBytes());
-
+        if (taskType == ImplementationType.TEST) {
+            files.put(testFileName, submissionCode.getBytes());
+            files.put(implFileName, staticCode.getBytes());
+        } else {
+            files.put(implFileName, submissionCode.getBytes());
+            files.put(testFileName, staticCode.getBytes());
+        }
         byte[] packaged = packagingService.packageSubmission(files);
         return senderService.sendSubmission(packaged);
     }
 
     @RequestMapping(value = "/task", method = RequestMethod.POST)
-    public RedirectView task(String implementationCode,
-                             String testCode,
+    public RedirectView task(String submissionCode,
+                             String staticCode,
                              long taskImplementationId,
                              RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
         TaskImplementation taskImplementation = taskImplementationService.findOne(taskImplementationId);
         Task currentTask = taskImplementation.getTask();
 
         Challenge currentChallenge = currentTask.getChallenge();
-
         redirectAttributes.addAttribute("taskImplementationId", taskImplementationId);
-        String checkedCode;
-        if (currentTask.getType() == ImplementationType.IMPLEMENTATION) {
-            checkedCode = implementationCode;
-        } else {
-            checkedCode = testCode;
-        }
-        String[] syntaxErrors = JavaSyntaxChecker.parseCode(checkedCode);
 
-        if (syntaxErrors != null) {
-            redirectAttributes.addFlashAttribute("errors", syntaxErrors);
-            redirectAttributes.addFlashAttribute("code", checkedCode);
-
+        String[] errors = checkErrors(submissionCode, staticCode);
+        if (errors != null) {
+            redirectAttributes.addFlashAttribute("errors", errors);
+            redirectAttributes.addFlashAttribute("code", submissionCode);
             return new RedirectView("/task/{taskImplementationId}");
         }
+     
+        TmcSubmission submission = submitToTmc(currentChallenge, submissionCode, staticCode, currentTask.getType());
 
-        TmcSubmission submission = submitToTmc(currentChallenge, implementationCode, testCode);
         redirectAttributes.addAttribute("submission", submission);
 
-        // Save user's answer from 2nd editor
-        taskImplementationService.updateTaskImplementationCode(taskImplementationId, checkedCode);
+        // Save user's answer from left editor
+        taskImplementationService.updateTaskImplementationCode(taskImplementationId, submissionCode);
 
         return new RedirectView("/feedback");
     }
