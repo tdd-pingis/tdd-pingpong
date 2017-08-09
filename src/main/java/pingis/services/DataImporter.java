@@ -288,6 +288,7 @@ public class DataImporter implements ApplicationRunner {
         }
     }
     
+    //CHECKSTYLE:OFF
     private void printResults() {
         // For debugging-purposes
         System.out.println("users:");
