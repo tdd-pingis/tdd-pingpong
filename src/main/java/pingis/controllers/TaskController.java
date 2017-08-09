@@ -64,35 +64,43 @@ public class TaskController {
         model.addAttribute("taskImplementationId",
                 taskImplementationId);
         Map<String, EditorTabData> editorContents = editorService.generateEditorContents(taskImplementation);
-        model.addAttribute("testCode", editorContents.get("editor1").code);
-        model.addAttribute("implementationCode", editorContents.get("editor2").code);
+        model.addAttribute("submissionCodeStub", editorContents.get("editor1").code);
+        model.addAttribute("staticCode", editorContents.get("editor2").code);
         String implFileName = JavaClassGenerator.generateImplClassFilename(currentChallenge);
         String testFileName = JavaClassGenerator.generateTestClassFilename(currentChallenge);
-
-        model.addAttribute("implementationFileName", implFileName);
-        model.addAttribute("testFileName", testFileName);
-
+        
+        if (taskImplementation.getTask().getType() == ImplementationType.TEST) {
+            model.addAttribute("submissionTabFileName", testFileName);
+            model.addAttribute("staticTabFileName", implFileName);
+        } else {
+            model.addAttribute("submissionTabFileName", implFileName);
+            model.addAttribute("staticTabFileName", testFileName);
+        }
         return "task";
     }
 
     // TODO: This should actually be a separate service...
-    private TmcSubmission submitToTmc(Challenge challenge, String implementationCode, String testCode)
+    private TmcSubmission submitToTmc(Challenge challenge, String submissionCode,
+            String staticCode, ImplementationType taskType)
             throws IOException, ArchiveException {
         Map<String, byte[]> files = new HashMap<>();
-
         String implFileName = JavaClassGenerator.generateImplClassFilename(challenge);
         String testFileName = JavaClassGenerator.generateTestClassFilename(challenge);
 
-        files.put(implFileName, implementationCode.getBytes());
-        files.put(testFileName, testCode.getBytes());
-
+        if (taskType == ImplementationType.TEST) {
+            files.put(testFileName, submissionCode.getBytes());
+            files.put(implFileName, staticCode.getBytes());
+        } else {
+            files.put(implFileName, submissionCode.getBytes());
+            files.put(testFileName, staticCode.getBytes());
+        }
         byte[] packaged = packagingService.packageSubmission(files);
         return senderService.sendSubmission(packaged);
     }
 
     @RequestMapping(value = "/task", method = RequestMethod.POST)
-    public RedirectView task(String implementationCode,
-                             String testCode,
+    public RedirectView task(String submissionCode,
+                             String staticCode,
                              long taskImplementationId,
                              RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
         TaskImplementation taskImplementation = taskImplementationService.findOne(taskImplementationId);
@@ -101,22 +109,16 @@ public class TaskController {
         Challenge currentChallenge = currentTask.getChallenge();
 
         redirectAttributes.addAttribute("taskImplementationId", taskImplementationId);
-        String checkedCode;
-        if (currentTask.getType() == ImplementationType.IMPLEMENTATION) {
-            checkedCode = implementationCode;
-        } else {
-            checkedCode = testCode;
-        }
-        String[] syntaxErrors = JavaSyntaxChecker.parseCode(checkedCode);
+
+        String[] syntaxErrors = JavaSyntaxChecker.parseCode(submissionCode);
 
         if (syntaxErrors != null) {
             redirectAttributes.addFlashAttribute("errors", syntaxErrors);
-            redirectAttributes.addFlashAttribute("code", checkedCode);
-
+            redirectAttributes.addFlashAttribute("code", submissionCode);
             return new RedirectView("/task/{taskImplementationId}");
         }
         
-        TmcSubmission submission = submitToTmc(currentChallenge, implementationCode, testCode);
+        TmcSubmission submission = submitToTmc(currentChallenge, submissionCode, staticCode, currentTask.getType());
         redirectAttributes.addAttribute("submission", submission);
 
         return new RedirectView("/feedback");
