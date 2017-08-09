@@ -115,9 +115,12 @@ public class TaskController {
 
             return new RedirectView("/task/{taskImplementationId}");
         }
-        
+
         TmcSubmission submission = submitToTmc(currentChallenge, implementationCode, testCode);
         redirectAttributes.addAttribute("submission", submission);
+
+        // Save user's answer from 2nd editor
+        taskImplementationService.updateTaskImplementationCode(taskImplementationId, checkedCode);
 
         return new RedirectView("/feedback");
     }
