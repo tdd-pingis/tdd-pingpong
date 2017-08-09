@@ -1,5 +1,6 @@
 package pingis.controllers;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.context.annotation.Profile;
@@ -25,15 +26,7 @@ public class UserController {
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public String user(Model model, @AuthenticationPrincipal OAuthUser user) {
-        
-        if(!userService.authenticateOAuthUser(user)) {
-            User initializedUser = userService.initializeUser(user);
-            // TODO: return "redirect:/welcome-new-user";
-            return "user";
-        }
-        
-        // Add necessary attributes here to model...
-        // model.addAttribute(key, value);
+        userService.handleOAuthUserAuthentication(user);
         return "user";
     }
 

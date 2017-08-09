@@ -1,5 +1,6 @@
 package pingis.controllers;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
@@ -24,18 +25,7 @@ public class UserDevController {
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public String user(Model model) {
-        
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        
-        if(!userService.authenticateUser(username)) {
-            userService.save(new User(username));
-            
-            // TODO: return "redirect:/welcome-new-user";
-            return "user";
-        }
-        
-        // Add necessary attributes...
-        // model.addAttribute(key, value);
+        userService.handleDevUserAuthentication(SecurityContextHolder.getContext().getAuthentication().getName());
         return "user";
     }
 

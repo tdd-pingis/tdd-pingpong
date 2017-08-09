@@ -251,36 +251,42 @@ public class UserServiceTest {
     }
     
     @Test
-    public void testDoesNotAuthenticateUnknownOAuthUser() {
+    public void testHandleUnknownOAuthUser() {
         ArgumentCaptor<Long> capturedId = ArgumentCaptor.forClass(Long.class);
-        OAuthUser user = new OAuthUser();
-        String randomUserId = Long.toString(new Random(Long.MAX_VALUE).nextLong());
+        OAuthUser oauthUser1 = new OAuthUser();
+        Long randomUserId = new Random(Long.MAX_VALUE).nextLong();
+        String randomUserIdString = Long.toString(randomUserId);
         
-        user.setAdministrator(true);
-        user.setName(TEST_USER2_NAME);
-        user.setId(randomUserId);
-        
-        when(userRepositoryMock.exists(Long.parseLong(randomUserId))).thenReturn(false);
-        boolean authenticated = userService.authenticateOAuthUser(user);
-        verify(userRepositoryMock).exists(capturedId.capture());
-        
-        assertThat(authenticated).isFalse();
-        assertThat(capturedId.getValue()).isEqualTo((Long.parseLong(randomUserId)));
+        oauthUser1.setAdministrator(true);
+        oauthUser1.setName(TEST_USER2_NAME);
+        oauthUser1.setId(randomUserIdString);
+
+        when(userRepositoryMock.findOne(Long.parseLong(randomUserIdString))).thenReturn(null);
+        when(userRepositoryMock.save(userCaptor.capture())).thenReturn(testUser2);
+        User newUser = userService.handleOAuthUserAuthentication(oauthUser1);
+
+        verify(userRepositoryMock).findOne(capturedId.capture());
+        verify(userRepositoryMock, times(1)).save(userCaptor.capture());
+
+        assertThat(newUser).isNotNull();
+        assertThat(newUser.getName()).isEqualTo(TEST_USER2_NAME);
+        assertThat(userCaptor.getValue().getId()).isEqualTo((Long.parseLong(randomUserIdString)));
     }
     
     @Test
-    public void testAuthenticateWithKnownOAuthUser() {
+    public void testHandleKnownOAuthUser() {
         ArgumentCaptor<Long> capturedId = ArgumentCaptor.forClass(Long.class);
         OAuthUser user = generateOauthTestUser();
-        
+
         userService.save(testUser);
         verify(userRepositoryMock).save(userCaptor.capture());
-        
-        when(userRepositoryMock.exists((long) TEST_USER_ID)).thenReturn(true);
-        boolean authenticated = userService.authenticateOAuthUser(user);
-        
-        verify(userRepositoryMock).exists(capturedId.capture());
-        assertThat(authenticated).isTrue();
+
+        when(userRepositoryMock.findOne((long) TEST_USER_ID)).thenReturn(testUser);
+        User newUser = userService.handleOAuthUserAuthentication(user);
+
+        verify(userRepositoryMock).findOne(capturedId.capture());
+        verify(userRepositoryMock).save(testUser);
+        assertThat(newUser).isEqualTo(testUser);
         assertThat(capturedId.getValue()).isEqualTo((long) TEST_USER_ID);
     }
 
@@ -289,37 +295,29 @@ public class UserServiceTest {
         user.setAdministrator(true);
         user.setName(TEST_USER_NAME);
         user.setId(Long.toString(TEST_USER_ID));
+        
         return user;
     }
     
     @Test
-    public void testAuthenticateKnownUser() {
+    public void testHandleKnownUser() {
         userService.save(testUser);
         verify(userRepositoryMock).save(userCaptor.capture());
         
         when(userRepositoryMock.findByName(testUser.getName())).thenReturn(userCaptor.getValue());
-        boolean authenticated = userService.authenticateUser(testUser.getName());
-        assertThat(authenticated).isTrue();
+        User newUser = userService.handleDevUserAuthentication(TEST_USER_NAME);
+        assertThat(newUser).isEqualTo(testUser);
     }
     
     @Test
-    public void testDoesNotAuthenticateUnknownUser() {
-        userService.save(testUser);
-        verify(userRepositoryMock).save(userCaptor.capture());
-        
+    public void testHandleUnknownUser() {
         when(userRepositoryMock.findByName(testUser2.getName())).thenReturn(null);
-        boolean authenticated = userService.authenticateUser(testUser2.getName());
-        assertThat(authenticated).isFalse();
-    }
-    
-    
-    
-    @After
-    public void tearDown() {
-    }
-
-    @Test
-    public void testSomeMethod() {
+        when(userRepositoryMock.save(testUser2)).thenReturn(testUser2);
+        User newUser = userService.handleDevUserAuthentication(testUser2.getName());
+        
+        assertThat(newUser).isNotNull();
+        assertThat(newUser.getName()).isEqualTo(testUser2.getName());
+        assertThat(newUser.getId()).isExactlyInstanceOf(Long.class);
     }
     
 }
