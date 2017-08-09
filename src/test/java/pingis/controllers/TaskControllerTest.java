@@ -184,7 +184,8 @@ public class TaskControllerTest {
         assertArrayEquals(staticCode.getBytes(), files.get(staticFileName));
 
         verify(taskImplementationServiceMock, times(1)).findOne(implTaskImplementation.getId());
-        verify(taskImplementationServiceMock).updateTaskImplementationCode(implTaskImplementation.getId(), submissionCode);
+        verify(taskImplementationServiceMock).updateTaskImplementationCode(implTaskImplementation.getId(),
+                                                                           submissionCode);
 
         verifyNoMoreInteractions(packagingService);
         verifyNoMoreInteractions(taskImplementationServiceMock);
