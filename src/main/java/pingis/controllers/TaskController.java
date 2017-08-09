@@ -123,7 +123,7 @@ public class TaskController {
         redirectAttributes.addAttribute("submission", submission);
 
         // Save user's answer from left editor
-        taskImplementationService.updateTaskImplementationCode(taskImplementationId, checkedCode);
+        taskImplementationService.updateTaskImplementationCode(taskImplementationId, submissionCode);
 
         return new RedirectView("/feedback");
     }
