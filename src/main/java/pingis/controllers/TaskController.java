@@ -76,7 +76,8 @@ public class TaskController {
     }
 
     // TODO: This should actually be a separate service...
-    private TmcSubmission submitToTmc(TaskImplementation taskImplementation, Challenge challenge, String implementationCode, String testCode)
+    private TmcSubmission submitToTmc(
+            TaskImplementation taskImplementation, Challenge challenge, String implementationCode, String testCode)
             throws IOException, ArchiveException {
         Map<String, byte[]> files = new HashMap<>();
 
