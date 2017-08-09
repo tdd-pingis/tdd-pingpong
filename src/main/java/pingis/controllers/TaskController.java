@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import pingis.entities.ImplementationType;
 import pingis.entities.TaskImplementation;
 
-import pingis.entities.TmcSubmission;
+import pingis.entities.tmc.TmcSubmission;
 import pingis.services.*;
 import pingis.utils.EditorTabData;
 import pingis.utils.JavaClassGenerator;
@@ -76,7 +76,7 @@ public class TaskController {
     }
 
     // TODO: This should actually be a separate service...
-    private TmcSubmission submitToTmc(Challenge challenge, String implementationCode, String testCode)
+    private TmcSubmission submitToTmc(TaskImplementation taskImplementation, Challenge challenge, String implementationCode, String testCode)
             throws IOException, ArchiveException {
         Map<String, byte[]> files = new HashMap<>();
 
@@ -87,7 +87,9 @@ public class TaskController {
         files.put(testFileName, testCode.getBytes());
 
         byte[] packaged = packagingService.packageSubmission(files);
-        return senderService.sendSubmission(packaged);
+        TmcSubmission submission = new TmcSubmission();
+        submission.setTaskImplementation(taskImplementation);
+        return senderService.sendSubmission(submission, packaged);
     }
 
     @RequestMapping(value = "/task", method = RequestMethod.POST)
@@ -112,13 +114,10 @@ public class TaskController {
         if (syntaxErrors != null) {
             redirectAttributes.addFlashAttribute("errors", syntaxErrors);
             redirectAttributes.addFlashAttribute("code", checkedCode);
-
-            return new RedirectView("/task/{taskImplementationId}");
+            return new RedirectView("/task/"+taskImplementationId);
         }
-        
-        TmcSubmission submission = submitToTmc(currentChallenge, implementationCode, testCode);
+        TmcSubmission submission = submitToTmc(taskImplementation, currentChallenge, implementationCode, testCode);
         redirectAttributes.addAttribute("submission", submission);
-
         return new RedirectView("/feedback");
     }
 

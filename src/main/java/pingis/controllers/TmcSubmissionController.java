@@ -1,16 +1,19 @@
 package pingis.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import pingis.entities.TmcSubmission;
-import pingis.entities.TmcSubmissionStatus;
+import pingis.entities.tmc.TmcSubmission;
+import pingis.entities.tmc.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 import java.util.UUID;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import pingis.entities.tmc.TestOutput;
 
 @Controller
 public class TmcSubmissionController {
@@ -30,7 +33,7 @@ public class TmcSubmissionController {
             @RequestParam("vm_log") String vmLog,
             @RequestParam String token,
             @RequestParam String status,
-            @RequestParam("exit_code") String exitCode) {
+            @RequestParam("exit_code") String exitCode) throws IOException {
         UUID submissionId = UUID.fromString(token);
         TmcSubmission submission = submissionRepository.findOne(submissionId);
 
@@ -45,19 +48,19 @@ public class TmcSubmissionController {
         }
 
         int exitCodeValue = Integer.parseInt(exitCode.trim());
-
+        ObjectMapper mapper = new ObjectMapper();
+        
         submission.setExitCode(exitCodeValue);
         submission.setStatus(status);
         submission.setStderr(stderr);
         submission.setStdout(stdout);
-        submission.setTestOutput(testOutput);
+        submission.setTestOutput(mapper.readValue(testOutput, TestOutput.class));
         submission.setValidations(validations);
         submission.setVmLog(vmLog);
-
         submissionRepository.save(submission);
         
         //Broadcasts the submission to /topic/results
-        this.template.convertAndSend("/topic/results", submission);
+        this.template.convertAndSend("/topic/results", submission.getTestOutput());
         return new ResponseEntity(HttpStatus.OK);
     }
 }
