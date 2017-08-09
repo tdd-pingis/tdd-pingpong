@@ -11,6 +11,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Task;
 import pingis.entities.Challenge;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ import pingis.services.*;
 import pingis.utils.EditorTabData;
 import pingis.utils.JavaClassGenerator;
 import pingis.utils.JavaSyntaxChecker;
+import pingis.services.UserService;
 
 
 @Controller
@@ -43,7 +45,7 @@ public class TaskController {
     @Autowired
     TaskImplementationService taskImplementationService;
     @Autowired
-    UserRepository userRepository;
+    UserService userService;
     @Autowired
     ChallengeImplementationRepository challengeImplementationRepository;
 
@@ -155,7 +157,7 @@ public class TaskController {
     public RedirectView newTaskImplementation(@PathVariable long taskId,
             RedirectAttributes redirectAttributes) {
         Task task = taskService.findOne(taskId);
-        User user = userRepository.findOne(0l); // TODO: FIX THIS
+        User user = userService.getCurrentUser();
         ChallengeImplementation ci = challengeImplementationRepository.findOne(1l);
         TaskImplementation newTaskImplementation = taskImplementationService.createEmpty(user, task);
         newTaskImplementation.setChallengeImplementation(ci);
