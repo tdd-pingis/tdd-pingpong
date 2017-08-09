@@ -22,7 +22,7 @@ public class TmcSubmission {
 
     private TmcSubmissionStatus status;
     
-    @Transient
+    @OneToOne
     private TestOutput testOutput;
 
     @Lob
