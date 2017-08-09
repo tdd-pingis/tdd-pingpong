@@ -9,10 +9,9 @@
 
         <button class="btn btn-primary">Next task</button>
 
-        <script src="/webjars/jquery/jquery.min.js"></script>
-        <script src="/webjars/sockjs-client/sockjs.min.js"></script>
-        <script src="/webjars/stomp-websocket/stomp.min.js"></script>
-        <script src="/js/results.js"></script>
+        <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+        <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
+        <script th:src="@{/js/results.js}"></script>
     </body>
 </html>
 
