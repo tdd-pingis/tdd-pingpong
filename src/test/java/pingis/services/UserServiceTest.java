@@ -27,10 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import pingis.Application;
 import pingis.entities.OAuthUser;
 import pingis.entities.User;
-import pingis.entities.Task;
 import pingis.repositories.UserRepository;
-import static pingis.services.DataImporter.UserType.TEST_USER;
-import static pingis.services.DataImporter.UserType.TMC_MODEL_USER;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {Application.class})
@@ -140,8 +137,8 @@ public class UserServiceTest {
         userService.delete(userCaptor.getValue());
         verify(userRepositoryMock).delete(userCaptor.getValue());
 
-        boolean deleted = userService.contains(userCaptor.getValue().getId());
-        assertFalse(deleted);
+        boolean userExists = userService.contains(userCaptor.getValue().getId());
+        assertFalse(userExists);
     }
     
     @Test
@@ -210,44 +207,6 @@ public class UserServiceTest {
         assertThat(userCaptor.getValue().getId()).isEqualTo(Long.parseLong(user.getId()));
         assertThat(userCaptor.getValue().getLevel()).isEqualTo(1);
         assertThat(userCaptor.getValue().isAdministrator()).isEqualTo(user.isAdministrator());
-    }
-    
-    @Test
-    public void testVerifyUserInitializationWithRandomUser() {
-        userService.save(new User("TEST1"));
-        userService.save(new User("TEST2"));
-        
-        verify(userRepositoryMock, times(2)).save(userCaptor.capture());
-        when(userRepositoryMock.exists(userCaptor.getAllValues().get(0).getId())).thenReturn(Boolean.FALSE);
-        when(userRepositoryMock.exists(userCaptor.getAllValues().get(1).getId())).thenReturn(Boolean.FALSE);
-        
-        try {
-            userService.verifyUserInitialization();
-            assertEquals(this, this);
-            assertTrue("VerifyUserInitialization should throw IllegalStateException if user-ids are "
-                        + "different than the, now it didnt", false);
-        } catch (IllegalStateException ie) {
-            assertTrue(true);
-        }
-    }
-    
-    @Test
-    public void testVerifyUserInitializationWithRightIDs() {
-        userService.save(new User(TMC_MODEL_USER.getId(),TMC_MODEL_USER.getLogin(), 
-                                      Task.LEVEL_MAX_VALUE, TMC_MODEL_USER.isAdmin()));
-        userService.save(new User(TEST_USER.getId(),TEST_USER.getLogin(), 
-                                      TEST_USER2_LEVEL ,TEST_USER.isAdmin()));
-        
-        verify(userRepositoryMock, times(2)).save(userCaptor.capture());
-        when(userRepositoryMock.exists(TEST_USER.getId())).thenReturn(Boolean.TRUE);
-        when(userRepositoryMock.exists(TMC_MODEL_USER.getId())).thenReturn(Boolean.TRUE);
-        
-        try {
-            userService.verifyUserInitialization();
-            assertTrue(true);
-        } catch (IllegalStateException ie) {
-            assertFalse(ie.getMessage(), true);
-        }
     }
     
     @Test
