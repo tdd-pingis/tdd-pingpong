@@ -35,7 +35,7 @@ public class TaskImplementation {
     @ManyToOne(fetch=FetchType.EAGER)
     private User user;
     
-    @NotNull
+    //@NotNull
     @ManyToOne(fetch=FetchType.EAGER)
     private ChallengeImplementation challengeImplementation;
 

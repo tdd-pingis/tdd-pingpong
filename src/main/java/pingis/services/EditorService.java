@@ -22,7 +22,7 @@ public class EditorService {
 
     public Map<String, EditorTabData> generateEditorContents(TaskImplementation taskImplementation) {
         Map<String, EditorTabData> tabData;
-        Challenge currentChallenge = taskImplementation.getChallengeImplementation().getChallenge();
+        Challenge currentChallenge = taskImplementation.getTask().getChallenge();
         if (taskImplementation.getTask().getType().equals(ImplementationType.TEST)) {
             tabData = this.generateTestTaskTabs(taskImplementation, currentChallenge);
         } else {
