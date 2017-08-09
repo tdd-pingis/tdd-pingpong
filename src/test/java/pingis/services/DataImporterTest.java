@@ -13,6 +13,9 @@ import pingis.entities.ChallengeImplementation;
 import pingis.entities.Task;
 import pingis.entities.TaskImplementation;
 import pingis.entities.User;
+import static pingis.services.DataImporter.UserType.TEST_USER;
+import static pingis.services.DataImporter.UserType.TMC_MODEL_USER;
+import static pingis.services.DataImporter.UserType.IMPLEMENTATION_USER;
 
 public class DataImporterTest {
 
@@ -50,9 +53,9 @@ public class DataImporterTest {
     public void testGenerateUsers() {
         importer.generateUsers();
         HashMap<String, User> users = importer.getUsers();
-        assertEquals(users.get("testuser").getName(), DataLoader.UserType.TEST_USER.name());
-        assertEquals(users.get("modeluser").getName(), DataLoader.UserType.TMC_MODEL_USER.name());
-        assertEquals(users.get("impluser").getName(), DataLoader.UserType.IMPLEMENTATION_USER.name());
+        assertEquals(users.get("testuser").getName(), TEST_USER.getLogin());
+        assertEquals(users.get("modeluser").getName(), TMC_MODEL_USER.getLogin());
+        assertEquals(users.get("impluser").getName(), IMPLEMENTATION_USER.getLogin());
     }
 
     @Test
