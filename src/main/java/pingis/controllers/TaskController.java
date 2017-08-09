@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Task;
@@ -57,12 +58,9 @@ public class TaskController {
             return "error";
         }
         Challenge currentChallenge = taskImplementation.getChallengeImplementation().getChallenge();
-        model.addAttribute("challenge",
-                currentChallenge);
-        model.addAttribute("task",
-                taskImplementation.getTask());
-        model.addAttribute("taskImplementationId",
-                taskImplementationId);
+        model.addAttribute("challenge", currentChallenge);
+        model.addAttribute("task", taskImplementation.getTask());
+        model.addAttribute("taskImplementationId", taskImplementationId);
         Map<String, EditorTabData> editorContents = editorService.generateEditorContents(taskImplementation);
         model.addAttribute("submissionCodeStub", editorContents.get("editor1").code);
         model.addAttribute("staticCode", editorContents.get("editor2").code);
@@ -76,7 +74,20 @@ public class TaskController {
             model.addAttribute("submissionTabFileName", implFileName);
             model.addAttribute("staticTabFileName", testFileName);
         }
+        if (model.containsAttribute("code")) {
+            model.addAttribute("submissionCodeStub", model.asMap().get("code"));
+        }
         return "task";
+    }
+    
+    private String[] checkErrors(String submissionCode, String staticCode) {
+        String[] submissionSyntaxErrors = JavaSyntaxChecker.parseCode(submissionCode);
+        String[] staticSyntaxErrors = JavaSyntaxChecker.parseCode(staticCode);
+        if (submissionSyntaxErrors != null || staticSyntaxErrors != null) {
+            String[] errors = ArrayUtils.addAll(submissionSyntaxErrors, staticSyntaxErrors);
+            return errors;
+        }
+        return null;
     }
 
     // TODO: This should actually be a separate service...
@@ -107,13 +118,11 @@ public class TaskController {
         Task currentTask = taskImplementation.getTask();
 
         Challenge currentChallenge = currentTask.getChallenge();
-
         redirectAttributes.addAttribute("taskImplementationId", taskImplementationId);
 
-        String[] syntaxErrors = JavaSyntaxChecker.parseCode(submissionCode);
-
-        if (syntaxErrors != null) {
-            redirectAttributes.addFlashAttribute("errors", syntaxErrors);
+        String[] errors = checkErrors(submissionCode, staticCode);
+        if (errors != null) {
+            redirectAttributes.addFlashAttribute("errors", errors);
             redirectAttributes.addFlashAttribute("code", submissionCode);
             return new RedirectView("/task/{taskImplementationId}");
         }
