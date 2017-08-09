@@ -18,18 +18,18 @@ public class TestOutput {
         private byte[] stdout;
         private byte[] stderr;
 
-        public String getStdout() {
-            return new String(stdout);
+        public byte[] getStdout() {
+            return stdout;
         }
-
+        
         public void setStdout(byte[] stdout) {
             this.stdout = stdout;
         }
 
-        public String getStderr() {
-            return new String(stderr);
+        public byte[] getStderr() {
+            return stderr;
         }
-
+        
         public void setStderr(byte[] stderr) {
             this.stderr = stderr;
         }

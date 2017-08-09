@@ -1,5 +1,8 @@
 package pingis.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -22,10 +25,14 @@ import pingis.config.WebSocketSecurityConfig;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import org.junit.Before;
 import static org.mockito.BDDMockito.*;
 import org.springframework.test.annotation.DirtiesContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import pingis.entities.tmc.TestOutput;
+import pingis.entities.tmc.TestOutput.Logs;
 /**
  * Created by dwarfcrank on 7/28/17.
  */
@@ -44,12 +51,14 @@ public class TmcSubmissionControllerTest {
 
     @MockBean
     private TmcSubmissionRepository submissionRepository;
+    
+    private String testOutput;
 
     // TODO: Make this generate random data. This is a separate method just to please checkstyle.
     private ResultActions performMockRequest(UUID submissionId) throws Exception {
         return mvc.perform(
                 post("/submission-result")
-                        .param("test_output", "test_output")
+                        .param("test_output", testOutput)
                         .param("stdout", "test_stdout")
                         .param("stderr", "test_stderr")
                         .param("validations", "test_validations")
@@ -57,6 +66,22 @@ public class TmcSubmissionControllerTest {
                         .param("token", submissionId.toString())
                         .param("status", "finished")
                         .param("exit_code", "0"));
+    }
+    
+    @Before
+    public void initializeTestOutput() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        
+        TestOutput top = new TestOutput();
+        top.setStatus(TestOutput.Status.PASSED);
+        top.setTestResults(new ArrayList<>());
+        
+        Logs logs = top.new Logs();
+        logs.setStderr("stderr".getBytes());
+        logs.setStdout("stdout".getBytes());
+        top.setLogs(logs);
+        
+        this.testOutput = mapper.writeValueAsString(top);
     }
 
     @Test
@@ -116,15 +141,23 @@ public class TmcSubmissionControllerTest {
         verifyNoMoreInteractions(submissionRepository);
 
         TmcSubmission captured = submissionCaptor.getValue();
-
+        
+        assertSubmission(captured, submissionId);
+    }
+    
+    private void assertSubmission(TmcSubmission captured, UUID submissionId) {
         assertEquals((int)captured.getExitCode(), 0);
-        assertEquals(captured.getTestOutput(), "test_output");
         assertEquals(captured.getStdout(), "test_stdout");
         assertEquals(captured.getStderr(), "test_stderr");
         assertEquals(captured.getValidations(), "test_validations");
         assertEquals(captured.getVmLog(), "test_vm_log");
         assertEquals(captured.getStatus(), TmcSubmissionStatus.FINISHED);
         assertEquals(captured.getId(), submissionId);
-
+        
+        TestOutput top = captured.getTestOutput();
+        assertEquals(top.getStatus(), TestOutput.Status.PASSED);
+        assertNotNull(top.getTestResults());
+        assertEquals("stderr", new String(top.getLogs().getStderr()));
+        assertEquals("stdout", new String(top.getLogs().getStdout()));
     }
 }
