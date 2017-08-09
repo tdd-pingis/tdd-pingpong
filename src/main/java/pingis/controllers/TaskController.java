@@ -117,9 +117,13 @@ public class TaskController {
             redirectAttributes.addFlashAttribute("code", submissionCode);
             return new RedirectView("/task/{taskImplementationId}");
         }
-        
+     
         TmcSubmission submission = submitToTmc(currentChallenge, submissionCode, staticCode, currentTask.getType());
+
         redirectAttributes.addAttribute("submission", submission);
+
+        // Save user's answer from left editor
+        taskImplementationService.updateTaskImplementationCode(taskImplementationId, checkedCode);
 
         return new RedirectView("/feedback");
     }
