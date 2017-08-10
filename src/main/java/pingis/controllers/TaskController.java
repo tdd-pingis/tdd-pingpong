@@ -40,7 +40,7 @@ public class TaskController {
     @Autowired
     EditorService editorService;
     @Autowired
-    TaskImplementationService taskImplementationService;
+    TaskInstanceService taskInstanceService;
 
 
     @Autowired
@@ -55,7 +55,7 @@ public class TaskController {
             @PathVariable Long taskImplementationId) {
 
         TaskInstance taskInstance =
-                taskImplementationService.findOne(taskImplementationId);
+                taskInstanceService.findOne(taskImplementationId);
         if (taskInstance == null) {
             model.addAttribute("errormessage","no such task implementation");
             return "error";
@@ -121,7 +121,7 @@ public class TaskController {
                              String staticCode,
                              long taskImplementationId,
                              RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
-        TaskInstance taskInstance = taskImplementationService.findOne(taskImplementationId);
+        TaskInstance taskInstance = taskInstanceService.findOne(taskImplementationId);
         Task currentTask = taskInstance.getTask();
 
         Challenge currentChallenge = currentTask.getChallenge();
@@ -139,7 +139,7 @@ public class TaskController {
         redirectAttributes.addAttribute("submission", submission);
 
         // Save user's answer from left editor
-        taskImplementationService.updateTaskImplementationCode(taskImplementationId, submissionCode);
+        taskInstanceService.updateTaskInstanceCode(taskImplementationId, submissionCode);
         logger.debug("Redirecting to feedback");
         return new RedirectView("/feedback");
     }

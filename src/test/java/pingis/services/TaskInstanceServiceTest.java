@@ -20,11 +20,11 @@ import static org.mockito.Mockito.when;
 
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {TaskImplementationService.class})
+@ContextConfiguration(classes = {TaskInstanceService.class})
 public class TaskInstanceServiceTest {
 
     @Autowired
-    private TaskImplementationService taskImplementationService;
+    private TaskInstanceService taskInstanceService;
     @MockBean
     private TaskInstanceRepository taskInstanceRepositoryMock;
     @MockBean
@@ -71,7 +71,7 @@ public class TaskInstanceServiceTest {
         when(taskInstanceRepositoryMock.findByTaskAndUser(testTask, testUser))
                 .thenReturn(testTaskInstance);
 
-        TaskInstance result = taskImplementationService
+        TaskInstance result = taskInstanceService
                 .getCorrespondingTestTaskInstance(implementationTaskInstance);
 
         verify(userRepositoryMock).findOne(0l);
@@ -93,7 +93,7 @@ public class TaskInstanceServiceTest {
         when(taskInstanceRepositoryMock.findByTaskAndUser(implementationTask, testUser))
                 .thenReturn(implementationTaskInstance);
 
-        TaskInstance result = taskImplementationService
+        TaskInstance result = taskInstanceService
                 .getCorrespondingImplTaskInstance(testTaskInstance);
 
         verify(userRepositoryMock).findOne(0l);
@@ -112,7 +112,7 @@ public class TaskInstanceServiceTest {
         when(taskInstanceRepositoryMock.findOne(testTaskInstance.getId()))
                 .thenReturn(testTaskInstance);
 
-        TaskInstance result = taskImplementationService.findOne(testTaskInstance.getId());
+        TaskInstance result = taskInstanceService.findOne(testTaskInstance.getId());
 
         verify(taskInstanceRepositoryMock).findOne(testTaskInstance.getId());
         verifyNoMoreInteractions(taskInstanceRepositoryMock);
@@ -130,8 +130,8 @@ public class TaskInstanceServiceTest {
 
         String testCode = "Return 1+1;";
 
-        TaskInstance result = taskImplementationService
-                .updateTaskImplementationCode(testTaskInstance.getId(), testCode);
+        TaskInstance result = taskInstanceService
+                .updateTaskInstanceCode(testTaskInstance.getId(), testCode);
 
         verify(taskInstanceRepositoryMock).findOne(testTaskInstance.getId());
         verifyNoMoreInteractions(taskInstanceRepositoryMock);

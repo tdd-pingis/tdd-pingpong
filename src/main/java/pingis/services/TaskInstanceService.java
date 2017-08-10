@@ -10,7 +10,7 @@ import pingis.repositories.TaskRepository;
 import pingis.repositories.UserRepository;
 
 @Service
-public class TaskImplementationService {
+public class TaskInstanceService {
 
     @Autowired
     private TaskRepository taskRepository;
@@ -47,7 +47,7 @@ public class TaskImplementationService {
     }
 
     @Transactional
-    public TaskInstance updateTaskImplementationCode(Long taskInstanceId, String taskInstanceCode) {
+    public TaskInstance updateTaskInstanceCode(Long taskInstanceId, String taskInstanceCode) {
         TaskInstance taskInstanceToUpdate = taskInstanceRepository.findOne(taskInstanceId);
         taskInstanceToUpdate.setCode(taskInstanceCode);
         return taskInstanceToUpdate;

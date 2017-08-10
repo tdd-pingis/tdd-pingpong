@@ -25,7 +25,7 @@ public class EditorServiceTest {
     @Autowired
     private EditorService editorService;
     @MockBean
-    private TaskImplementationService taskImplementationServiceMock;
+    private TaskInstanceService taskInstanceServiceMock;
     
     private User testUser;
     private Task testTask;
@@ -62,25 +62,25 @@ public class EditorServiceTest {
     
     @Test
     public void testEditorServiceWithTestTask() {
-        when(taskImplementationServiceMock.getCorrespondingImplTaskInstance(returnedTaskInstance))
+        when(taskInstanceServiceMock.getCorrespondingImplTaskInstance(returnedTaskInstance))
                 .thenReturn(this.passedTaskInstance);
         Map<String, EditorTabData> result = editorService.generateEditorContents(returnedTaskInstance);
         assertEquals(result.get("editor1").code, "public void test");
-        verify(taskImplementationServiceMock, times(1)).
+        verify(taskInstanceServiceMock, times(1)).
                 getCorrespondingImplTaskInstance(returnedTaskInstance);
-        verifyNoMoreInteractions(taskImplementationServiceMock);
+        verifyNoMoreInteractions(taskInstanceServiceMock);
     }
     
     @Test
     public void testEditorServiceWithImplementationTask() {
-        when(taskImplementationServiceMock.getCorrespondingTestTaskInstance(this.passedTaskInstance)).
+        when(taskInstanceServiceMock.getCorrespondingTestTaskInstance(this.passedTaskInstance)).
                 thenReturn(this.returnedTaskInstance);
         Map<String, EditorTabData> result = this.editorService.generateEditorContents(passedTaskInstance);
         assertEquals(result.get("editor2").code, "public void test");
         assertEquals(result.get("editor1").code, "public void implementation");
-        verify(taskImplementationServiceMock, times(1)).
+        verify(taskInstanceServiceMock, times(1)).
                 getCorrespondingTestTaskInstance(passedTaskInstance);
-        verifyNoMoreInteractions(taskImplementationServiceMock);
+        verifyNoMoreInteractions(taskInstanceServiceMock);
     }
 
 }

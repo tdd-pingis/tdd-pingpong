@@ -15,7 +15,7 @@ import pingis.utils.JavaClassGenerator;
 public class EditorService {
     
     @Autowired
-    TaskImplementationService taskImplementationService;
+    TaskInstanceService taskInstanceService;
     
     public EditorService() {
     }
@@ -35,7 +35,7 @@ public class EditorService {
             Challenge currentChallenge) {
         Map<String, EditorTabData> tabData = new LinkedHashMap();
         TaskInstance implTaskInstance
-                = taskImplementationService.getCorrespondingImplTaskInstance(taskInstance);
+                = taskInstanceService.getCorrespondingImplTaskInstance(taskInstance);
         EditorTabData tab1 = new EditorTabData(
                 JavaClassGenerator.generateTestClassFilename(currentChallenge),
                 taskInstance.getTask().getCodeStub());
@@ -51,7 +51,7 @@ public class EditorService {
             Challenge currentChallenge) {
         Map<String, EditorTabData> tabData = new LinkedHashMap();
         TaskInstance testTaskInstance
-                = taskImplementationService.getCorrespondingTestTaskInstance(
+                = taskInstanceService.getCorrespondingTestTaskInstance(
                 taskInstance);
         EditorTabData tab2 = new EditorTabData(
                 "Implement code here",
