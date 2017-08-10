@@ -50,20 +50,20 @@ public class TaskController {
     private SubmissionSenderService senderService;
 
 
-    @RequestMapping(value = "/task/{taskImplementationId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/task/{taskInstanceId}", method = RequestMethod.GET)
     public String task(Model model,
-            @PathVariable Long taskImplementationId) {
+            @PathVariable Long taskInstanceId) {
 
         TaskInstance taskInstance =
-                taskInstanceService.findOne(taskImplementationId);
+                taskInstanceService.findOne(taskInstanceId);
         if (taskInstance == null) {
-            model.addAttribute("errormessage","no such task implementation");
+            model.addAttribute("errormessage","no such task instance");
             return "error";
         }
         Challenge currentChallenge = taskInstance.getTask().getChallenge();
         model.addAttribute("challenge", currentChallenge);
         model.addAttribute("task", taskInstance.getTask());
-        model.addAttribute("taskImplementationId", taskImplementationId);
+        model.addAttribute("taskInstanceId", taskInstanceId);
         Map<String, EditorTabData> editorContents = editorService.generateEditorContents(taskInstance);
         model.addAttribute("submissionCodeStub", editorContents.get("editor1").code);
         model.addAttribute("staticCode", editorContents.get("editor2").code);
@@ -119,19 +119,19 @@ public class TaskController {
     @RequestMapping(value = "/task", method = RequestMethod.POST)
     public RedirectView task(String submissionCode,
                              String staticCode,
-                             long taskImplementationId,
+                             long taskInstanceId,
                              RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
-        TaskInstance taskInstance = taskInstanceService.findOne(taskImplementationId);
+        TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);
         Task currentTask = taskInstance.getTask();
 
         Challenge currentChallenge = currentTask.getChallenge();
-        redirectAttributes.addAttribute("taskImplementationId", taskImplementationId);
+        redirectAttributes.addAttribute("taskInstanceId", taskInstanceId);
 
         String[] errors = checkErrors(submissionCode, staticCode);
         if (errors != null) {
             redirectAttributes.addFlashAttribute("errors", errors);
             redirectAttributes.addFlashAttribute("code", submissionCode);
-            return new RedirectView("/task/{taskImplementationId}");
+            return new RedirectView("/task/{taskInstanceId}");
         }
      
         TmcSubmission submission = submitToTmc(taskInstance, currentChallenge, submissionCode, staticCode);
@@ -139,7 +139,7 @@ public class TaskController {
         redirectAttributes.addAttribute("submission", submission);
 
         // Save user's answer from left editor
-        taskInstanceService.updateTaskInstanceCode(taskImplementationId, submissionCode);
+        taskInstanceService.updateTaskInstanceCode(taskInstanceId, submissionCode);
         logger.debug("Redirecting to feedback");
         return new RedirectView("/feedback");
     }

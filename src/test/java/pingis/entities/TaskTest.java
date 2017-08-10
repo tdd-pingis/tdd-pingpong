@@ -27,7 +27,7 @@ public class TaskTest {
     }
     
     @Test
-    public void testTaskImplementations() {
+    public void testTaskInstances() {
         assertEquals(0, normalTask.getTaskInstances().size());
     }
 

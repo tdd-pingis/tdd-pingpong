@@ -167,7 +167,7 @@ public class TaskControllerTest {
         mvc.perform(post("/task")
                 .param("submissionCode", submissionCode)
                 .param("staticCode", staticCode)
-                .param("taskImplementationId", Long.toString(implTaskInstance.getId())))
+                .param("taskInstanceId", Long.toString(implTaskInstance.getId())))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/feedback*"));
         verify(packagingService).packageSubmission(packagingArgCaptor.capture());

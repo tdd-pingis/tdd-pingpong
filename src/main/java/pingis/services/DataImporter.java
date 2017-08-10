@@ -152,7 +152,7 @@ public class DataImporter implements ApplicationRunner {
             // a challenge start from zero.
             this.taskid = 0;
         }
-        this.createDummyImplementations(jsonImportObject.getJSONArray("dummyimplementations"));
+        this.createDummyInstances(jsonImportObject.getJSONArray("dummyimplementations"));
 
     }
 
@@ -207,14 +207,14 @@ public class DataImporter implements ApplicationRunner {
         return task;
     }
     
-    private void createDummyImplementations(JSONArray implementations) {
-        for (int i = 0; i < implementations.length(); i++) {
-            JSONObject implementation = implementations.getJSONObject(i);
-            JSONArray taskImplementations = implementation.getJSONArray("taskimplementations");
-            for (int j = 0; j < taskImplementations.length(); j++) {
-                JSONObject implementationObject = taskImplementations.getJSONObject(j);
+    private void createDummyInstances(JSONArray instances) {
+        for (int i = 0; i < instances.length(); i++) {
+            JSONObject instance = instances.getJSONObject(i);
+            JSONArray taskInstances = instance.getJSONArray("taskinstances");
+            for (int j = 0; j < taskInstances.length(); j++) {
+                JSONObject implementationObject = taskInstances.getJSONObject(j);
                 User user = users.get(implementationObject.getString("user"));
-                List<Task> tasks = this.challenges.get(implementation.getString("challenge")).getTasks();
+                List<Task> tasks = this.challenges.get(instance.getString("challenge")).getTasks();
                 Task task = tasks.get(implementationObject.getInt("taskindex")-1);
                 TaskInstance taskInstance =
                         createTaskInstance(
@@ -263,7 +263,7 @@ public class DataImporter implements ApplicationRunner {
             System.out.println("key: "+key+", value: "+this.users.get(key).toString()+"\n");
         }
         printChallenges();
-        printTaskImplementations();
+        printTaskInstances();
     }
 
     private void printChallenges() {
@@ -278,9 +278,9 @@ public class DataImporter implements ApplicationRunner {
         }
     }
 
-    private void printTaskImplementations() {
+    private void printTaskInstances() {
         System.out.println("---");
-        System.out.println("taskimplementations:");
+        System.out.println("taskinstances:");
         for (TaskInstance i : this.taskInstances) {
             System.out.println("ti: "+i.toString());
             System.out.println("-");

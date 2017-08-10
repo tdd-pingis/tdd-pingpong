@@ -63,7 +63,7 @@ public class TaskInstanceServiceTest {
     }
 
     @Test
-    public void getCorrespondingTestTaskImplementationTest() {
+    public void getCorrespondingTestTaskInstanceTest() {
         when(userRepositoryMock.findOne(0l)).thenReturn(testUser);
         when(taskRepositoryMock.findByIndexAndChallenge(implementationTask
                 .getIndex() - 1, testChallenge))
@@ -86,7 +86,7 @@ public class TaskInstanceServiceTest {
     }
 
     @Test
-    public void getCorrespondingImplementationTaskImplementationTest() {
+    public void getCorrespondingImplementationTaskInstanceTest() {
         when(userRepositoryMock.findOne(0l)).thenReturn(testUser);
         when(taskRepositoryMock.findByIndexAndChallenge(testTask.getIndex() + 1, testChallenge))
                 .thenReturn(implementationTask);
@@ -122,7 +122,7 @@ public class TaskInstanceServiceTest {
 
 
     @Test
-    public void testUpdateTaskImplementationCode() {
+    public void testUpdateTaskInstanceCode() {
         assertEquals("thisShouldBeEmpty", testTaskInstance.getCode());
 
         when(taskInstanceRepositoryMock.findOne(testTaskInstance.getId()))
