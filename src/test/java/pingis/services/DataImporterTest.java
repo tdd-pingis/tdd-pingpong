@@ -9,7 +9,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import pingis.entities.Challenge;
-import pingis.entities.ChallengeImplementation;
 import pingis.entities.Task;
 import pingis.entities.TaskImplementation;
 import pingis.entities.User;
@@ -66,13 +65,10 @@ public class DataImporterTest {
 
         ArrayList<Task> tasks = importer.getTasks();
         ArrayList<TaskImplementation> taskImplementations = importer.getTaskImplementations();
-        ArrayList<ChallengeImplementation> challengeImplementations = importer.getChallengeImplementations();
 
         assertEquals(challenges.get("calculator").getName(), "calculator");
         assertEquals(tasks.get(0).getName(), "Test multiplication");
         assertEquals(taskImplementations.get(0).getTask(), tasks.get(0));
-        assertEquals(challengeImplementations.get(0).getChallenge(), challenges.get("calculator"));
-
     }
 
 }

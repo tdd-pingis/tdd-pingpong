@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import pingis.entities.ChallengeImplementation;
+
 import pingis.entities.TaskImplementation;
 import pingis.utils.EditorTabData;
 
@@ -73,7 +73,6 @@ public class TaskControllerTest {
     private Challenge challenge;
     private Task testTask;
     private Task implementationTask;
-    private ChallengeImplementation testChallengeImplementation;
     private TaskImplementation testTaskImplementation;
     private TaskImplementation implTaskImplementation;
     private User testUser;
@@ -89,14 +88,11 @@ public class TaskControllerTest {
         implementationTask = new Task(2,
                 ImplementationType.IMPLEMENTATION, testUser, "implement addition",
                 "implement addition", "public test", 1, 1);
-        testChallengeImplementation
-                = new ChallengeImplementation(challenge, testUser, testUser);
         testTaskImplementation
                 = new TaskImplementation(testUser, "", testTask);
-        testTaskImplementation.setChallengeImplementation(testChallengeImplementation);
         implTaskImplementation = new TaskImplementation(testUser, "",
                 implementationTask);
-        implTaskImplementation.setChallengeImplementation(testChallengeImplementation);
+        testTask.setChallenge(challenge);
         challenge.addTask(implementationTask);
         implementationTask.setChallenge(challenge);
         MockitoAnnotations.initMocks(this);
