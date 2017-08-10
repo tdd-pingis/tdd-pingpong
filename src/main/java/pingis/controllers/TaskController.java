@@ -57,7 +57,7 @@ public class TaskController {
             model.addAttribute("errormessage","no such task implementation");
             return "error";
         }
-        Challenge currentChallenge = taskImplementation.getChallengeImplementation().getChallenge();
+        Challenge currentChallenge = taskImplementation.getTask().getChallenge();
         model.addAttribute("challenge", currentChallenge);
         model.addAttribute("task", taskImplementation.getTask());
         model.addAttribute("taskImplementationId", taskImplementationId);
