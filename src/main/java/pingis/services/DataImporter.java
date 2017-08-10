@@ -195,9 +195,6 @@ public class DataImporter implements ApplicationRunner {
         TaskImplementation taskImplementation = new TaskImplementation(author, modelImp, task);
         task.addImplementation(taskImplementation);
         
-        // Set it to its parent ChallengeImplementation
-        taskImplementation.setTask(task);
-        
         return taskImplementation;
     }
 
