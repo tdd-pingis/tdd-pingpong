@@ -23,7 +23,7 @@ public class UserDevController {
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public String user(Model model) {
-        userService.handleUserAuthentication(SecurityContextHolder.getContext().getAuthentication().getName());
+        userService.handleUserAuthenticationByName(SecurityContextHolder.getContext().getAuthentication().getName());
         return "user";
     }
 

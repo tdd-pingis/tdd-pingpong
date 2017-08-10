@@ -42,7 +42,7 @@ public class UserService {
         return user;
     }
     
-    public User handleUserAuthentication(String userName) {
+    public User handleUserAuthenticationByName(String userName) {
         User user = userRepository.findByName(userName);
         if(user == null) {
             user = new User(userName);

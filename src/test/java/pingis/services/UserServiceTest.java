@@ -264,7 +264,7 @@ public class UserServiceTest {
         verify(userRepositoryMock).save(userCaptor.capture());
         
         when(userRepositoryMock.findByName(testUser.getName())).thenReturn(userCaptor.getValue());
-        User newUser = userService.handleUserAuthentication(TEST_USER_NAME);
+        User newUser = userService.handleUserAuthenticationByName(TEST_USER_NAME);
         assertThat(newUser).isEqualTo(testUser);
     }
     
@@ -272,7 +272,7 @@ public class UserServiceTest {
     public void testHandleUnknownUser() {
         when(userRepositoryMock.findByName(testUser2.getName())).thenReturn(null);
         when(userRepositoryMock.save(testUser2)).thenReturn(testUser2);
-        User newUser = userService.handleUserAuthentication(testUser2.getName());
+        User newUser = userService.handleUserAuthenticationByName(testUser2.getName());
         
         assertThat(newUser).isNotNull();
         assertThat(newUser.getName()).isEqualTo(testUser2.getName());
