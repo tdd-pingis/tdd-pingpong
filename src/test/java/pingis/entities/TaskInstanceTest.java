@@ -5,11 +5,11 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-public class TaskImplementationTest {
+public class TaskInstanceTest {
 
     private static final int TMC_USER_LEVEL = 100;
     
-    TaskImplementation userImplementation, protectedImplementation;
+    TaskInstance userImplementation, protectedImplementation;
     Task testTask;
     User authorUser;
     
@@ -17,7 +17,7 @@ public class TaskImplementationTest {
     public void setUp() {
         authorUser = new User(1, "ModelUser", TMC_USER_LEVEL);
         testTask = new Task(0,
-                ImplementationType.IMPLEMENTATION,
+                TaskType.IMPLEMENTATION,
                             authorUser,
                             "Test Addition",
                             "Test addition with two integers.",
@@ -25,12 +25,12 @@ public class TaskImplementationTest {
                             1,
                             0);
         
-        userImplementation = new TaskImplementation(
+        userImplementation = new TaskInstance(
                             authorUser, 
                             "return true;", 
                             testTask);
         
-        protectedImplementation = new TaskImplementation();
+        protectedImplementation = new TaskInstance();
     }
 
     @Test

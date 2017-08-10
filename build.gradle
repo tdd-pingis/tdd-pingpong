@@ -104,6 +104,9 @@ bootRun {
         environment 'TMC_SECRET', TMC_SECRET
     }
 	systemProperties System.properties
+
+    // Make static classpath resources reloadable when using bootRun
+    addResources = true
 }
 
 

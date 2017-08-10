@@ -12,7 +12,7 @@ public class TaskTest {
 
     @Before
     public void setUp() {
-        normalTask = new Task(1, ImplementationType.TEST,
+        normalTask = new Task(1, TaskType.TEST,
                 new User(new Random().nextLong(), "Test_user", 1),
                 "tostring", 
                 "generate toString()",
@@ -27,8 +27,8 @@ public class TaskTest {
     }
     
     @Test
-    public void testTaskImplementations() {
-        assertEquals(0, normalTask.getImplementations().size());
+    public void testTaskInstances() {
+        assertEquals(0, normalTask.getTaskInstances().size());
     }
 
     @Test

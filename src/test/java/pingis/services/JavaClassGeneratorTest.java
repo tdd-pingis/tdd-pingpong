@@ -1,7 +1,6 @@
 
 package pingis.services;
 
-import antlr.JavaCodeGenerator;
 import pingis.utils.JavaClassGenerator;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +14,7 @@ import static org.junit.Assert.*;
 import static org.assertj.core.api.Assertions.*;
 import pingis.entities.Challenge;
 import pingis.entities.ChallengeType;
-import pingis.entities.ImplementationType;
+import pingis.entities.TaskType;
 import pingis.entities.Task;
 import pingis.entities.User;
 
@@ -35,17 +34,17 @@ public class JavaClassGeneratorTest {
 
         User testUser = new User(new Random().nextLong(), "Test_userfirst", Challenge1Level);
         
-        task1 = new Task(0, ImplementationType.TEST, testUser, "testAddition",
+        task1 = new Task(0, TaskType.TEST, testUser, "testAddition",
                 "test addition of two integers, return single value", 
                 "@Test\npublic void testAddition() {\n\t//TODO: implement this\n\n}", 
                 Challenge1Level, 0);
         
-        task2 = new Task(1, ImplementationType.TEST, testUser, "testSubstraction",
+        task2 = new Task(1, TaskType.TEST, testUser, "testSubstraction",
                 "test substraction of two integers, return single value", 
                 "@Test\npublic void testSubstraction() {\n\t//TODO: implement this\n\n}", 
                 Challenge1Level, 0);
         
-        task3 = new Task(2, ImplementationType.TEST, testUser, "testMultiplication",
+        task3 = new Task(2, TaskType.TEST, testUser, "testMultiplication",
                 "test multiplication of two integers, return single value", 
                 "@Test\npublic void testMultiplication() {\n\t//TODO: implement this\n\n}", 
                 Challenge1Level, 0);

@@ -2,7 +2,7 @@ package pingis.entities.tmc;
 
 import javax.persistence.*;
 import java.util.UUID;
-import pingis.entities.TaskImplementation;
+import pingis.entities.TaskInstance;
 
 /**
  * Created by dwarfcrank on 7/28/17.
@@ -32,7 +32,7 @@ public class TmcSubmission {
     private String vmLog;
     
     @OneToOne
-    private TaskImplementation taskImplementation;
+    private TaskInstance taskInstance;
 
     public UUID getId() {
         return id;
@@ -102,11 +102,11 @@ public class TmcSubmission {
         this.vmLog = vmLog;
     }
 
-    public void setTaskImplementation(TaskImplementation taskImplementation) {
-        this.taskImplementation = taskImplementation;
+    public void setTaskInstance(TaskInstance taskInstance) {
+        this.taskInstance = taskInstance;
     }
 
-    public TaskImplementation getTaskImplementation() {
-        return taskImplementation;
+    public TaskInstance getTaskInstance() {
+        return taskInstance;
     }
 }

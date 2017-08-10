@@ -17,10 +17,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import pingis.config.SecurityDevConfig;
-import pingis.entities.Challenge;
-import pingis.entities.ImplementationType;
-import pingis.entities.Task;
-import pingis.entities.User;
+import pingis.entities.*;
 import pingis.services.*;
 import pingis.utils.JavaClassGenerator;
 
@@ -32,8 +29,8 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import pingis.entities.ChallengeImplementation;
-import pingis.entities.TaskImplementation;
+
+import pingis.entities.TaskInstance;
 import pingis.utils.EditorTabData;
 
 
@@ -58,7 +55,7 @@ public class TaskControllerTest {
     private ChallengeService challengeServiceMock;
 
     @MockBean
-    private TaskImplementationService taskImplementationServiceMock;
+    private TaskInstanceService taskInstanceServiceMock;
             
     @MockBean
     private TaskService taskServiceMock;
@@ -73,9 +70,8 @@ public class TaskControllerTest {
     private Challenge challenge;
     private Task testTask;
     private Task implementationTask;
-    private ChallengeImplementation testChallengeImplementation;
-    private TaskImplementation testTaskImplementation;
-    private TaskImplementation implTaskImplementation;
+    private TaskInstance testTaskInstance;
+    private TaskInstance implTaskInstance;
     private User testUser;
 
     @Before
@@ -84,19 +80,16 @@ public class TaskControllerTest {
         challenge = new Challenge("Calculator", testUser,
                 "Simple calculator");
         testTask = new Task(1,
-                ImplementationType.TEST, testUser, "CalculatorAddition",
+                TaskType.TEST, testUser, "CalculatorAddition",
                 "Implement addition", "return 1+1;", 1, 1);
         implementationTask = new Task(2,
-                ImplementationType.IMPLEMENTATION, testUser, "implement addition",
+                TaskType.IMPLEMENTATION, testUser, "implement addition",
                 "implement addition", "public test", 1, 1);
-        testChallengeImplementation
-                = new ChallengeImplementation(challenge, testUser, testUser);
-        testTaskImplementation
-                = new TaskImplementation(testUser, "", testTask);
-        testTaskImplementation.setChallengeImplementation(testChallengeImplementation);
-        implTaskImplementation = new TaskImplementation(testUser, "",
+        testTaskInstance
+                = new TaskInstance(testUser, "", testTask);
+        implTaskInstance = new TaskInstance(testUser, "",
                 implementationTask);
-        implTaskImplementation.setChallengeImplementation(testChallengeImplementation);
+        testTask.setChallenge(challenge);
         challenge.addTask(implementationTask);
         implementationTask.setChallenge(challenge);
         MockitoAnnotations.initMocks(this);
@@ -110,16 +103,16 @@ public class TaskControllerTest {
 
     @Test
     public void givenTaskWhenGetTestTask() throws Exception {
-        when(taskImplementationServiceMock.findOne(testTaskImplementation.getId()))
-                .thenReturn(testTaskImplementation);
-        Map<String, EditorTabData> tabData = this.generateTestTabData(implTaskImplementation, testTaskImplementation);
-        when(editorServiceMock.generateEditorContents(testTaskImplementation)).thenReturn(tabData);
-        String uri = "/task/"+testTaskImplementation.getId();
+        when(taskInstanceServiceMock.findOne(testTaskInstance.getId()))
+                .thenReturn(testTaskInstance);
+        Map<String, EditorTabData> tabData = this.generateTestTabData(implTaskInstance, testTaskInstance);
+        when(editorServiceMock.generateEditorContents(testTaskInstance)).thenReturn(tabData);
+        String uri = "/task/"+ testTaskInstance.getId();
         performSimpleGetRequestAndFindContent(uri, "task", testTask.getCodeStub());
-        verify(taskImplementationServiceMock, times(1)).findOne(testTaskImplementation.getId());
+        verify(taskInstanceServiceMock, times(1)).findOne(testTaskInstance.getId());
         verify(editorServiceMock, times(1))
-                .generateEditorContents(testTaskImplementation);
-        verifyNoMoreInteractions(taskImplementationServiceMock);
+                .generateEditorContents(testTaskInstance);
+        verifyNoMoreInteractions(taskInstanceServiceMock);
         verifyNoMoreInteractions(editorServiceMock);
     }
     
@@ -127,36 +120,36 @@ public class TaskControllerTest {
     public void givenTaskWhenGetImplementationTask() throws Exception {
         User testUser = new User(1, "TESTUSER", 1);
 
-        when(taskImplementationServiceMock.findOne(implTaskImplementation.getId()))
-                .thenReturn(implTaskImplementation);
-        Map<String, EditorTabData> tabData = generateImplTabData(implTaskImplementation, testTaskImplementation);
-        when(editorServiceMock.generateEditorContents(implTaskImplementation)).thenReturn(tabData);
-        String uri = "/task/" + implTaskImplementation.getId();
+        when(taskInstanceServiceMock.findOne(implTaskInstance.getId()))
+                .thenReturn(implTaskInstance);
+        Map<String, EditorTabData> tabData = generateImplTabData(implTaskInstance, testTaskInstance);
+        when(editorServiceMock.generateEditorContents(implTaskInstance)).thenReturn(tabData);
+        String uri = "/task/" + implTaskInstance.getId();
         performSimpleGetRequestAndFindContent(uri, "task", implementationTask.getCodeStub());
-        verify(taskImplementationServiceMock, times(1)).findOne(implTaskImplementation.getId());
+        verify(taskInstanceServiceMock, times(1)).findOne(implTaskInstance.getId());
         verify(editorServiceMock, times(1))
-                .generateEditorContents(implTaskImplementation);
-        verifyNoMoreInteractions(taskImplementationServiceMock);
+                .generateEditorContents(implTaskInstance);
+        verifyNoMoreInteractions(taskInstanceServiceMock);
         verifyNoMoreInteractions(editorServiceMock);
     }
     
-    private Map<String, EditorTabData> generateImplTabData(TaskImplementation implTaskImplementation,
-            TaskImplementation testTaskImplementation) {
+    private Map<String, EditorTabData> generateImplTabData(TaskInstance implTaskInstance,
+            TaskInstance testTaskInstance) {
         Map<String, EditorTabData> tabData = new LinkedHashMap<String, EditorTabData>();
         EditorTabData tab1 = new EditorTabData("Implement code here",
-                        implTaskImplementation.getTask().getCodeStub());
-        EditorTabData tab2 = new EditorTabData("Test to fulfill",testTaskImplementation.getTask().getCodeStub());
+                        implTaskInstance.getTask().getCodeStub());
+        EditorTabData tab2 = new EditorTabData("Test to fulfill", testTaskInstance.getTask().getCodeStub());
         tabData.put("editor1", tab1);
         tabData.put("editor2", tab2);
         return tabData;
     }
   
-    private Map<String, EditorTabData> generateTestTabData(TaskImplementation implTaskImplementation,
-            TaskImplementation testTaskImplementation) {
+    private Map<String, EditorTabData> generateTestTabData(TaskInstance implTaskInstance,
+            TaskInstance testTaskInstance) {
         Map<String, EditorTabData> tabData = new LinkedHashMap<String, EditorTabData>();
         EditorTabData tab1 = new EditorTabData("Implement code here",
-                implTaskImplementation.getTask().getCodeStub());
-        EditorTabData tab2 = new EditorTabData("Test to fulfill", testTaskImplementation.getTask().getCodeStub());
+                implTaskInstance.getTask().getCodeStub());
+        EditorTabData tab2 = new EditorTabData("Test to fulfill", testTaskInstance.getTask().getCodeStub());
         tabData.put("editor1", tab1);
         tabData.put("editor2", tab2);
         return tabData;
@@ -168,13 +161,13 @@ public class TaskControllerTest {
         String submissionCode = "/* this is an implementation */";
         String staticFileName = JavaClassGenerator.generateTestClassFilename(challenge);
         String staticCode = "/* this is a test */";
-        when(taskImplementationServiceMock.findOne(implTaskImplementation.getId())).thenReturn(implTaskImplementation);
+        when(taskInstanceServiceMock.findOne(implTaskInstance.getId())).thenReturn(implTaskInstance);
         when(challengeServiceMock.findOne(challenge.getId())).thenReturn(challenge);
         when(taskServiceMock.findTaskInChallenge(challenge.getId(), testTask.getIndex())).thenReturn(testTask);
         mvc.perform(post("/task")
                 .param("submissionCode", submissionCode)
                 .param("staticCode", staticCode)
-                .param("taskImplementationId", Long.toString(implTaskImplementation.getId())))
+                .param("taskInstanceId", Long.toString(implTaskInstance.getId())))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrlPattern("/feedback*"));
         verify(packagingService).packageSubmission(packagingArgCaptor.capture());
@@ -183,12 +176,12 @@ public class TaskControllerTest {
         assertArrayEquals(submissionCode.getBytes(), files.get(submissionFileName));
         assertArrayEquals(staticCode.getBytes(), files.get(staticFileName));
 
-        verify(taskImplementationServiceMock, times(1)).findOne(implTaskImplementation.getId());
-        verify(taskImplementationServiceMock).updateTaskImplementationCode(implTaskImplementation.getId(),
+        verify(taskInstanceServiceMock, times(1)).findOne(implTaskInstance.getId());
+        verify(taskInstanceServiceMock).updateTaskInstanceCode(implTaskInstance.getId(),
                                                                            submissionCode);
 
         verifyNoMoreInteractions(packagingService);
-        verifyNoMoreInteractions(taskImplementationServiceMock);
+        verifyNoMoreInteractions(taskInstanceServiceMock);
         verifyNoMoreInteractions(challengeServiceMock);
         verifyNoMoreInteractions(taskServiceMock);
     }

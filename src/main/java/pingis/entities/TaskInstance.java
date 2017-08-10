@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import pingis.entities.tmc.TmcSubmission;
 
 @Entity
-public class TaskImplementation {
+public class TaskInstance {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
@@ -37,14 +37,10 @@ public class TaskImplementation {
     @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
     private User user;
-    
-    @NotNull
-    @ManyToOne(fetch=FetchType.EAGER)
-    private ChallengeImplementation challengeImplementation;
 
-    protected TaskImplementation() {}
+    protected TaskInstance() {}
 
-    public TaskImplementation(User user, String code, Task task) {
+    public TaskInstance(User user, String code, Task task) {
         this.user = user;
         this.code = code;
         this.task = task;
@@ -105,11 +101,4 @@ public class TaskImplementation {
         this.user = user;
     }
 
-    public void setChallengeImplementation(ChallengeImplementation challengeImplementation) {
-        this.challengeImplementation = challengeImplementation;
-    }
-
-    public ChallengeImplementation getChallengeImplementation() {
-        return challengeImplementation;
-    }
 }

@@ -9,9 +9,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import pingis.entities.Challenge;
-import pingis.entities.ChallengeImplementation;
 import pingis.entities.Task;
-import pingis.entities.TaskImplementation;
+import pingis.entities.TaskInstance;
 import pingis.entities.User;
 import static pingis.services.DataImporter.UserType.TEST_USER;
 import static pingis.services.DataImporter.UserType.TMC_MODEL_USER;
@@ -65,14 +64,11 @@ public class DataImporterTest {
         HashMap<String, Challenge> challenges = importer.getChallenges();
 
         ArrayList<Task> tasks = importer.getTasks();
-        ArrayList<TaskImplementation> taskImplementations = importer.getTaskImplementations();
-        ArrayList<ChallengeImplementation> challengeImplementations = importer.getChallengeImplementations();
+        ArrayList<TaskInstance> taskInstances = importer.getTaskInstances();
 
         assertEquals(challenges.get("calculator").getName(), "calculator");
         assertEquals(tasks.get(0).getName(), "Test multiplication");
-        assertEquals(taskImplementations.get(0).getTask(), tasks.get(0));
-        assertEquals(challengeImplementations.get(0).getChallenge(), challenges.get("calculator"));
-
+        assertEquals(taskInstances.get(0).getTask(), tasks.get(0));
     }
 
 }

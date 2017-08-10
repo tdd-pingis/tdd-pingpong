@@ -32,13 +32,7 @@ public class User {
     private int level;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<TaskImplementation> taskImplementations;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "testUser")
-    private List<ChallengeImplementation> testedChallenges;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "implementationUser")
-    private List<ChallengeImplementation> implementedChallenges;
+    private List<TaskInstance> taskInstances;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private List<Challenge> authoredChallenges;
@@ -63,9 +57,7 @@ public class User {
         this.name = name;
         this.level = level;
         this.administrator = isAdministrator;
-        this.taskImplementations = new ArrayList<>();
-        this.implementedChallenges = new ArrayList<>();
-        this.testedChallenges = new ArrayList<>();
+        this.taskInstances = new ArrayList<>();
         this.authoredChallenges = new ArrayList<>();
         this.authoredTasks = new ArrayList<>();
     }
@@ -106,30 +98,14 @@ public class User {
         this.level = level;
     }
 
-    public void setTaskImplementations(List<TaskImplementation> taskImplementations) {
-        this.taskImplementations = taskImplementations;
+    public void setTaskInstances(List<TaskInstance> taskInstances) {
+        this.taskInstances = taskInstances;
     }
 
-    public List<TaskImplementation> getTaskImplementations() {
-        return this.taskImplementations;
+    public List<TaskInstance> getTaskInstances() {
+        return this.taskInstances;
     }
-
-    public List<ChallengeImplementation> getTestedChallenges() {
-        return testedChallenges;
-    }
-
-    public void setTestedChallenges(List<ChallengeImplementation> testedChallenges) {
-        this.testedChallenges = testedChallenges;
-    }
-
-    public List<ChallengeImplementation> getImplementedChallenges() {
-        return implementedChallenges;
-    }
-
-    public void setImplementedChallenges(List<ChallengeImplementation> implementedChallenges) {
-        this.implementedChallenges = implementedChallenges;
-    }
-
+    
     public List<Challenge> getAuthoredChallenges() {
         return authoredChallenges;
     }

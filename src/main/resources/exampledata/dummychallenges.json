@@ -37,7 +37,7 @@
                     "codeStub": ["public class Calculator {\n",
                         "    public Calculator() {}\n",
                         "    public void multiply(int a, int b) {\n",
-                        "        TODO: implement this\n",
+                        "        //TODO: implement this\n",
                         "    }\n",
                         "}\n"],
 
@@ -101,7 +101,7 @@
             "challenge": "beginner 1",
             "testuser": "testuser",
             "implementationuser": "impluser",
-            "taskimplementations": [{
+            "taskinstances": [{
                     "user": "testuser",
                     "taskindex": 1
                 }]
