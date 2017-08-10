@@ -33,7 +33,7 @@
                         </ul>
                     </li>
                     <li sec:authorize="isAnonymous()" class="Account">
-                        <a id="login-button" href="/login" class="btn btn-primary">Login</a>
+                        <a id="login-button" th:href="@{/login}" class="btn btn-primary">Login</a>
                     </li>
                 </ul>
             </div><!-- /.navbar-collapse -->
