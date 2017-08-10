@@ -1,7 +1,7 @@
 package pingis.repositories;
 
 import org.springframework.data.repository.CrudRepository;
-import pingis.entities.TmcSubmission;
+import pingis.entities.tmc.TmcSubmission;
 
 import java.util.UUID;
 

@@ -1,5 +1,8 @@
 package pingis.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.ArrayList;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -12,8 +15,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.web.context.WebApplicationContext;
-import pingis.entities.TmcSubmission;
-import pingis.entities.TmcSubmissionStatus;
+import pingis.entities.tmc.TmcSubmission;
+import pingis.entities.tmc.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 import pingis.Application;
 import pingis.config.SecurityDevConfig;
@@ -22,10 +25,15 @@ import pingis.config.WebSocketSecurityConfig;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import org.junit.Before;
 import static org.mockito.BDDMockito.*;
 import org.springframework.test.annotation.DirtiesContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import pingis.entities.tmc.Logs;
+import pingis.entities.tmc.ResultStatus;
+import pingis.entities.tmc.TestOutput;
 /**
  * Created by dwarfcrank on 7/28/17.
  */
@@ -44,12 +52,14 @@ public class TmcSubmissionControllerTest {
 
     @MockBean
     private TmcSubmissionRepository submissionRepository;
+    
+    private String testOutput;
 
     // TODO: Make this generate random data. This is a separate method just to please checkstyle.
     private ResultActions performMockRequest(UUID submissionId) throws Exception {
         return mvc.perform(
                 post("/submission-result")
-                        .param("test_output", "test_output")
+                        .param("test_output", testOutput)
                         .param("stdout", "test_stdout")
                         .param("stderr", "test_stderr")
                         .param("validations", "test_validations")
@@ -57,6 +67,22 @@ public class TmcSubmissionControllerTest {
                         .param("token", submissionId.toString())
                         .param("status", "finished")
                         .param("exit_code", "0"));
+    }
+    
+    @Before
+    public void initializeTestOutput() throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        
+        TestOutput top = new TestOutput();
+        top.setStatus(ResultStatus.PASSED);
+        top.setTestResults(new ArrayList<>());
+        
+        Logs logs = new Logs();
+        logs.setStderr("stderr".getBytes());
+        logs.setStdout("stdout".getBytes());
+        top.setLogs(logs);
+        
+        this.testOutput = mapper.writeValueAsString(top);
     }
 
     @Test
@@ -116,15 +142,23 @@ public class TmcSubmissionControllerTest {
         verifyNoMoreInteractions(submissionRepository);
 
         TmcSubmission captured = submissionCaptor.getValue();
-
+        
+        assertSubmission(captured, submissionId);
+    }
+    
+    private void assertSubmission(TmcSubmission captured, UUID submissionId) {
         assertEquals((int)captured.getExitCode(), 0);
-        assertEquals(captured.getTestOutput(), "test_output");
         assertEquals(captured.getStdout(), "test_stdout");
         assertEquals(captured.getStderr(), "test_stderr");
         assertEquals(captured.getValidations(), "test_validations");
         assertEquals(captured.getVmLog(), "test_vm_log");
         assertEquals(captured.getStatus(), TmcSubmissionStatus.FINISHED);
         assertEquals(captured.getId(), submissionId);
-
+        
+        TestOutput top = captured.getTestOutput();
+        assertEquals(top.getStatus(), ResultStatus.PASSED);
+        assertNotNull(top.getTestResults());
+        assertEquals("stderr", new String(top.getLogs().getStderr()));
+        assertEquals("stdout", new String(top.getLogs().getStdout()));
     }
 }

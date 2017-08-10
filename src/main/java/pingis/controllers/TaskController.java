@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.compress.archivers.ArchiveException;
+import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Task;
@@ -17,15 +20,15 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import pingis.entities.ChallengeImplementation;
 
 import pingis.entities.ImplementationType;
 import pingis.entities.TaskImplementation;
 import pingis.repositories.UserRepository;
-import pingis.repositories.ChallengeImplementationRepository;
+
 
 import pingis.entities.User;
-import pingis.entities.TmcSubmission;
+import pingis.entities.tmc.TmcSubmission;
+
 import pingis.services.*;
 import pingis.utils.EditorTabData;
 import pingis.utils.JavaClassGenerator;
@@ -35,6 +38,7 @@ import pingis.services.UserService;
 
 @Controller
 public class TaskController {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     ChallengeService challengeService;
@@ -46,8 +50,6 @@ public class TaskController {
     TaskImplementationService taskImplementationService;
     @Autowired
     UserService userService;
-    @Autowired
-    ChallengeImplementationRepository challengeImplementationRepository;
 
 
     @Autowired
@@ -68,12 +70,10 @@ public class TaskController {
             return "error";
         }
         Challenge currentChallenge = taskImplementation.getTask().getChallenge();
-        model.addAttribute("challenge",
-                currentChallenge);
-        model.addAttribute("task",
-                taskImplementation.getTask());
-        model.addAttribute("taskImplementationId",
-                taskImplementationId);
+
+        model.addAttribute("challenge", currentChallenge);
+        model.addAttribute("task", taskImplementation.getTask());
+        model.addAttribute("taskImplementationId", taskImplementationId);
         Map<String, EditorTabData> editorContents = editorService.generateEditorContents(taskImplementation);
         model.addAttribute("submissionCodeStub", editorContents.get("editor1").code);
         model.addAttribute("staticCode", editorContents.get("editor2").code);
@@ -87,18 +87,32 @@ public class TaskController {
             model.addAttribute("submissionTabFileName", implFileName);
             model.addAttribute("staticTabFileName", testFileName);
         }
+        if (model.containsAttribute("code")) {
+            model.addAttribute("submissionCodeStub", model.asMap().get("code"));
+        }
         return "task";
+    }
+    
+    private String[] checkErrors(String submissionCode, String staticCode) {
+        String[] submissionSyntaxErrors = JavaSyntaxChecker.parseCode(submissionCode);
+        String[] staticSyntaxErrors = JavaSyntaxChecker.parseCode(staticCode);
+        if (submissionSyntaxErrors != null || staticSyntaxErrors != null) {
+            String[] errors = ArrayUtils.addAll(submissionSyntaxErrors, staticSyntaxErrors);
+            return errors;
+        }
+        return null;
     }
 
     // TODO: This should actually be a separate service...
-    private TmcSubmission submitToTmc(Challenge challenge, String submissionCode,
-            String staticCode, ImplementationType taskType)
+    private TmcSubmission submitToTmc(TaskImplementation taskImplementation, Challenge challenge, String submissionCode,
+            String staticCode)
             throws IOException, ArchiveException {
+        logger.debug("Submitting to TMC");
         Map<String, byte[]> files = new HashMap<>();
         String implFileName = JavaClassGenerator.generateImplClassFilename(challenge);
         String testFileName = JavaClassGenerator.generateTestClassFilename(challenge);
 
-        if (taskType == ImplementationType.TEST) {
+        if (taskImplementation.getTask().getType() == ImplementationType.TEST) {
             files.put(testFileName, submissionCode.getBytes());
             files.put(implFileName, staticCode.getBytes());
         } else {
@@ -106,7 +120,10 @@ public class TaskController {
             files.put(testFileName, staticCode.getBytes());
         }
         byte[] packaged = packagingService.packageSubmission(files);
-        return senderService.sendSubmission(packaged);
+        TmcSubmission submission = new TmcSubmission();
+        logger.debug("Created the submission");
+        submission.setTaskImplementation(taskImplementation);
+        return senderService.sendSubmission(submission, packaged);
     }
 
     @RequestMapping(value = "/task", method = RequestMethod.POST)
@@ -118,23 +135,22 @@ public class TaskController {
         Task currentTask = taskImplementation.getTask();
 
         Challenge currentChallenge = currentTask.getChallenge();
-
         redirectAttributes.addAttribute("taskImplementationId", taskImplementationId);
 
-        String[] syntaxErrors = JavaSyntaxChecker.parseCode(submissionCode);
-
-        if (syntaxErrors != null) {
-            redirectAttributes.addFlashAttribute("errors", syntaxErrors);
+        String[] errors = checkErrors(submissionCode, staticCode);
+        if (errors != null) {
+            redirectAttributes.addFlashAttribute("errors", errors);
             redirectAttributes.addFlashAttribute("code", submissionCode);
             return new RedirectView("/task/{taskImplementationId}");
         }
-        
-        TmcSubmission submission = submitToTmc(currentChallenge, submissionCode, staticCode, currentTask.getType());
+
+        TmcSubmission submission = submitToTmc(taskImplementation, currentChallenge, submissionCode, staticCode);
+
         redirectAttributes.addAttribute("submission", submission);
 
-        // Save user's answer from 2nd editor
+        // Save user's answer from left editor
         taskImplementationService.updateTaskImplementationCode(taskImplementationId, submissionCode);
-
+        logger.debug("Redirecting to feedback");
         return new RedirectView("/feedback");
     }
 
@@ -158,11 +174,7 @@ public class TaskController {
             RedirectAttributes redirectAttributes) {
         Task task = taskService.findOne(taskId);
         User user = userService.getCurrentUser();
-        ChallengeImplementation ci = challengeImplementationRepository.findOne(1l);
         TaskImplementation newTaskImplementation = taskImplementationService.createEmpty(user, task);
-        newTaskImplementation.setChallengeImplementation(ci);
-        ci.addTaskImplementation(newTaskImplementation);
-        ci.setChallenge(task.getChallenge());
         redirectAttributes.addAttribute("taskImplementationId", newTaskImplementation.getId());
         return new RedirectView("/task/{taskImplementationId}");
     }

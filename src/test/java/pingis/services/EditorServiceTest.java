@@ -16,7 +16,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import pingis.Application;
 import pingis.entities.Challenge;
-import pingis.entities.ChallengeImplementation;
 import pingis.entities.ImplementationType;
 import pingis.entities.TaskImplementation;
 import pingis.utils.EditorTabData;
@@ -35,14 +34,12 @@ public class EditorServiceTest {
     private Task testTask;
     private Task implementationTask;
     private Challenge challenge;
-    private ChallengeImplementation challengeImplementation;
     private TaskImplementation passedTaskImplementation;
     private TaskImplementation returnedTaskImplementation;
 
     @Before
     public void setUp() {
         this.challenge = new Challenge("testchallenge", testUser, "testing");
-        this.challengeImplementation = new ChallengeImplementation(challenge, testUser, testUser);
         this.testTask = new Task(
                 1,
                 ImplementationType.TEST,
@@ -59,10 +56,10 @@ public class EditorServiceTest {
                 "testing",
                 "public void implementation",
                 2, 2);
+        testTask.setChallenge(challenge);
+        implementationTask.setChallenge(challenge);
         this.passedTaskImplementation = new TaskImplementation(testUser, "", implementationTask);
         this.returnedTaskImplementation = new TaskImplementation(testUser, "public void test", testTask);
-        this.passedTaskImplementation.setChallengeImplementation(challengeImplementation);
-        this.returnedTaskImplementation.setChallengeImplementation(challengeImplementation);
                 
     }
     

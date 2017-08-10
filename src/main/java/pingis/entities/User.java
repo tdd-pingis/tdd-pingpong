@@ -34,12 +34,6 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<TaskImplementation> taskImplementations;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "testUser")
-    private List<ChallengeImplementation> testedChallenges;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "implementationUser")
-    private List<ChallengeImplementation> implementedChallenges;
-
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
     private List<Challenge> authoredChallenges;
 
@@ -64,8 +58,6 @@ public class User {
         this.level = level;
         this.administrator = isAdministrator;
         this.taskImplementations = new ArrayList<>();
-        this.implementedChallenges = new ArrayList<>();
-        this.testedChallenges = new ArrayList<>();
         this.authoredChallenges = new ArrayList<>();
         this.authoredTasks = new ArrayList<>();
     }
@@ -113,23 +105,7 @@ public class User {
     public List<TaskImplementation> getTaskImplementations() {
         return this.taskImplementations;
     }
-
-    public List<ChallengeImplementation> getTestedChallenges() {
-        return testedChallenges;
-    }
-
-    public void setTestedChallenges(List<ChallengeImplementation> testedChallenges) {
-        this.testedChallenges = testedChallenges;
-    }
-
-    public List<ChallengeImplementation> getImplementedChallenges() {
-        return implementedChallenges;
-    }
-
-    public void setImplementedChallenges(List<ChallengeImplementation> implementedChallenges) {
-        this.implementedChallenges = implementedChallenges;
-    }
-
+    
     public List<Challenge> getAuthoredChallenges() {
         return authoredChallenges;
     }

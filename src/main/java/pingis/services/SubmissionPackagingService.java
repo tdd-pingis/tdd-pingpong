@@ -5,6 +5,8 @@ import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
@@ -22,6 +24,8 @@ import java.util.Map;
  */
 @Service
 public class SubmissionPackagingService {
+    private final Logger logger = LoggerFactory.getLogger(SubmissionPackagingService.class);
+
     private List<Path> getDirectoryEntries(Path directory) throws IOException {
         List<Path> entries = new ArrayList<>();
 
@@ -45,6 +49,8 @@ public class SubmissionPackagingService {
         archive.putArchiveEntry(archiveEntry);
         Files.copy(filePath, archive);
         archive.closeArchiveEntry();
+
+        logger.debug("Added file {} as {}", filePath.toAbsolutePath(), tarFileName);
     }
 
     private void addFile(ArchiveOutputStream archive, String tarFileName, byte[] fileContent) throws IOException {
@@ -54,6 +60,8 @@ public class SubmissionPackagingService {
         archive.putArchiveEntry(tarEntry);
         archive.write(fileContent);
         archive.closeArchiveEntry();
+
+        logger.debug("Added file {}", tarFileName);
     }
 
     private void addTemplateFiles(ArchiveOutputStream archive) throws IOException {
@@ -98,6 +106,8 @@ public class SubmissionPackagingService {
 
             archive.finish();
         }
+
+        logger.debug("Finished packaging submission, size {} bytes.", outputStream.size());
 
         return outputStream.toByteArray();
     }

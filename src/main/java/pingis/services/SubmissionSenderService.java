@@ -1,5 +1,7 @@
 package pingis.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.io.ByteArrayResource;
@@ -11,14 +13,16 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import pingis.config.SubmissionProperties;
-import pingis.entities.TmcSubmission;
-import pingis.entities.TmcSubmissionStatus;
+import pingis.entities.tmc.TmcSubmission;
+import pingis.entities.tmc.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 
 import java.util.UUID;
 
 @Service
 public class SubmissionSenderService {
+    private final Logger logger = LoggerFactory.getLogger(SubmissionSenderService.class);
+
     private static final String SUBMISSION_FILENAME = "submission.tar";
 
     private RestTemplate restTemplate;
@@ -55,10 +59,11 @@ public class SubmissionSenderService {
         return new HttpEntity<>(map);
     }
 
-    public TmcSubmission sendSubmission(byte[] packaged) {
-        TmcSubmission submission = new TmcSubmission();
+    public TmcSubmission sendSubmission(TmcSubmission submission, byte[] packaged) {
         submission.setId(UUID.randomUUID());
         submission.setStatus(TmcSubmissionStatus.PENDING);
+
+        logger.debug("Created new submission, id: {}", submission.getId());
 
         String notifyUrl = submissionProperties.getNotifyUrl();
 
@@ -68,7 +73,10 @@ public class SubmissionSenderService {
         TmcSubmissionResponse response = restTemplate.postForObject("/tasks.json", requestEntity,
                 TmcSubmissionResponse.class);
 
+        logger.debug("Received sandbox response: {}", response.getStatus());
+
         if (!response.getStatus().equals(TmcSubmissionResponse.OK)) {
+            logger.error("Sandbox submission failed!");
             return null;
         }
 
