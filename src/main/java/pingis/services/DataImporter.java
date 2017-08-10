@@ -11,13 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-import pingis.entities.Challenge;
-import pingis.entities.ImplementationType;
-import pingis.entities.Task;
-import pingis.entities.TaskImplementation;
-import pingis.entities.User;
+import pingis.entities.*;
+import pingis.entities.TaskInstance;
 import pingis.repositories.ChallengeRepository;
-import pingis.repositories.TaskImplementationRepository;
+import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.TaskRepository;
 
 @Component
@@ -30,11 +27,11 @@ public class DataImporter implements ApplicationRunner {
     private ChallengeRepository cr;
     private TaskRepository tr;
     private UserService us;
-    private TaskImplementationRepository tir;
+    private TaskInstanceRepository tir;
     private HashMap<String, User> users = new LinkedHashMap();
     private HashMap<String, Challenge> challenges = new HashMap();
     private ArrayList<Task> tasks = new ArrayList();
-    private ArrayList<TaskImplementation> taskImplementations = new ArrayList();
+    private ArrayList<TaskInstance> taskInstances = new ArrayList();
     private int taskid = 0;
 
     public enum UserType {
@@ -65,7 +62,7 @@ public class DataImporter implements ApplicationRunner {
     
     @Autowired
     public DataImporter(ChallengeRepository cr, TaskRepository tr, UserService ps,
-            TaskImplementationRepository tir) {
+            TaskInstanceRepository tir) {
         this.cr = cr;
         this.tr = tr;
         this.us = ps;
@@ -130,8 +127,8 @@ public class DataImporter implements ApplicationRunner {
         return tasks;
     }
 
-    public ArrayList<TaskImplementation> getTaskImplementations() {
-        return taskImplementations;
+    public ArrayList<TaskInstance> getTaskInstances() {
+        return taskInstances;
     }
 
     public void generateEntities() {
@@ -155,7 +152,7 @@ public class DataImporter implements ApplicationRunner {
             // a challenge start from zero.
             this.taskid = 0;
         }
-        this.createDummyImplementations(jsonImportObject.getJSONArray("dummyimplementations"));
+        this.createDummyInstances(jsonImportObject.getJSONArray("dummyimplementations"));
 
     }
 
@@ -173,33 +170,33 @@ public class DataImporter implements ApplicationRunner {
         String codeStub = assembleString(codeArray);
         
         String taskType = taskObject.getString("type");
-        ImplementationType type;
+        TaskType type;
         Task task;
         
         if (taskType.equals("test")) {
-            task = createTask(ImplementationType.TEST, author, taskObject, codeStub, challenge);
+            task = createTask(TaskType.TEST, author, taskObject, codeStub, challenge);
         } else {
-            task = createTask(ImplementationType.IMPLEMENTATION, author, taskObject, codeStub, challenge);            
+            task = createTask(TaskType.IMPLEMENTATION, author, taskObject, codeStub, challenge);
         }
         String modelImp = "";
         JSONArray modelImpArray = taskObject.getJSONArray("modelimplementation");
         modelImp = assembleString(modelImpArray);
-        TaskImplementation taskImplementation = createTaskImplementation(author, modelImp, task);
+        TaskInstance taskInstance = createTaskInstance(author, modelImp, task);
         
-        this.taskImplementations.add(taskImplementation);
+        this.taskInstances.add(taskInstance);
     }
 
-    private TaskImplementation createTaskImplementation(User author, String modelImp, 
-                        Task task) {
-        // Create new TaskImplementation
-        TaskImplementation taskImplementation = new TaskImplementation(author, modelImp, task);
-        task.addImplementation(taskImplementation);
+    private TaskInstance createTaskInstance(User author, String modelImp,
+                                            Task task) {
+        // Create new TaskInstance
+        TaskInstance taskInstance = new TaskInstance(author, modelImp, task);
+        task.addTaskInstance(taskInstance);
         
-        return taskImplementation;
+        return taskInstance;
     }
 
-    private Task createTask(ImplementationType type, User author, JSONObject taskObject, 
-                        String codeStub, Challenge challenge) {
+    private Task createTask(TaskType type, User author, JSONObject taskObject,
+                            String codeStub, Challenge challenge) {
         Task task = new Task(taskObject.getInt("index"), type, author,
                 taskObject.getString("name"),
                 taskObject.getString("desc"),
@@ -210,20 +207,20 @@ public class DataImporter implements ApplicationRunner {
         return task;
     }
     
-    private void createDummyImplementations(JSONArray implementations) {
-        for (int i = 0; i < implementations.length(); i++) {
-            JSONObject implementation = implementations.getJSONObject(i);
-            JSONArray taskImplementations = implementation.getJSONArray("taskimplementations");
-            for (int j = 0; j < taskImplementations.length(); j++) {
-                JSONObject implementationObject = taskImplementations.getJSONObject(j);
+    private void createDummyInstances(JSONArray instances) {
+        for (int i = 0; i < instances.length(); i++) {
+            JSONObject instance = instances.getJSONObject(i);
+            JSONArray taskInstances = instance.getJSONArray("taskinstances");
+            for (int j = 0; j < taskInstances.length(); j++) {
+                JSONObject implementationObject = taskInstances.getJSONObject(j);
                 User user = users.get(implementationObject.getString("user"));
-                List<Task> tasks = this.challenges.get(implementation.getString("challenge")).getTasks();
+                List<Task> tasks = this.challenges.get(instance.getString("challenge")).getTasks();
                 Task task = tasks.get(implementationObject.getInt("taskindex")-1);
-                TaskImplementation taskImplementation =
-                        createTaskImplementation(
+                TaskInstance taskInstance =
+                        createTaskInstance(
                                 user,"",
                                 task);
-                this.taskImplementations.add(taskImplementation);
+                this.taskInstances.add(taskInstance);
             }
         }
     }
@@ -253,7 +250,7 @@ public class DataImporter implements ApplicationRunner {
         }
 
 
-        for (TaskImplementation i : this.taskImplementations) {
+        for (TaskInstance i : this.taskInstances) {
             tir.save(i);
         }
     }
@@ -266,7 +263,7 @@ public class DataImporter implements ApplicationRunner {
             System.out.println("key: "+key+", value: "+this.users.get(key).toString()+"\n");
         }
         printChallenges();
-        printTaskImplementations();
+        printTaskInstances();
     }
 
     private void printChallenges() {
@@ -281,10 +278,10 @@ public class DataImporter implements ApplicationRunner {
         }
     }
 
-    private void printTaskImplementations() {
+    private void printTaskInstances() {
         System.out.println("---");
-        System.out.println("taskimplementations:");
-        for (TaskImplementation i : this.taskImplementations) {
+        System.out.println("taskinstances:");
+        for (TaskInstance i : this.taskInstances) {
             System.out.println("ti: "+i.toString());
             System.out.println("-");
         }

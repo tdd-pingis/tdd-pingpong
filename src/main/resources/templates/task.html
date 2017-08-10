@@ -35,7 +35,7 @@
 
             <form method="post" th:action="@{/task}">
                 <div class="tab-content" th:inline="text">
-                    <input type="hidden" name="taskImplementationId" th:value="${taskImplementationId}" />
+                    <input type="hidden" name="taskInstanceId" th:value="${taskInstanceId}" />
                     <div id="implementation" class="panel panel-default tab-pane fade in active">
                         <div class="panel-heading">
                             <h3 class="panel-title" th:text="${submissionTabFileName}"></h3>
