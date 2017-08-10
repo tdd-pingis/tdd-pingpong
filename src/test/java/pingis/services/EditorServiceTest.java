@@ -39,7 +39,7 @@ public class EditorServiceTest {
         this.challenge = new Challenge("testchallenge", testUser, "testing");
         this.testTask = new Task(
                 1,
-                ImplementationType.TEST,
+                TaskType.TEST,
                 testUser,
                 "test",
                 "testing",
@@ -47,7 +47,7 @@ public class EditorServiceTest {
                 1, 1);
         this.implementationTask = new Task(
                 2,
-                ImplementationType.IMPLEMENTATION,
+                TaskType.IMPLEMENTATION,
                 testUser,
                 "implementing",
                 "testing",

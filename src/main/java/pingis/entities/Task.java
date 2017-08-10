@@ -34,7 +34,7 @@ public class Task {
     private String desc;
     
     @NotNull
-    private ImplementationType type;
+    private TaskType type;
 
     @NotNull
     private String codeStub;
@@ -58,8 +58,8 @@ public class Task {
 
     protected Task() {}
     
-    public Task(int index,  ImplementationType type, User author,
-            String name, String desc, String codeStub, int level, int rating) {
+    public Task(int index, TaskType type, User author,
+                String name, String desc, String codeStub, int level, int rating) {
         this.index = index;
         this.type = type;
         this.author = author;
@@ -151,20 +151,20 @@ public class Task {
         this.index = index;
     }
 
-    public ImplementationType getType() {
+    public TaskType getType() {
         return type;
     }
 
-    public void setType(ImplementationType type) {
+    public void setType(TaskType type) {
         this.type = type;
     }
 
     public void setTypeTest() {
-        this.type = ImplementationType.TEST;
+        this.type = TaskType.TEST;
     }
 
     public void setTypeImplementation() {
-        this.type = ImplementationType.IMPLEMENTATION;
+        this.type = TaskType.IMPLEMENTATION;
     }
 
 }

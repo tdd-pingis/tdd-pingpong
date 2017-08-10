@@ -42,11 +42,11 @@ public class TaskInstanceServiceTest {
     @Before
     public void setUp() {
         testUser = new User(1l, "testUser", 1);
-        testTask = new Task(1, ImplementationType.TEST, testUser,
+        testTask = new Task(1, TaskType.TEST, testUser,
                 "Desc", "Desc", "Code",
                 1, 1);
         implementationTask = new Task(2,
-                ImplementationType.IMPLEMENTATION, testUser,
+                TaskType.IMPLEMENTATION, testUser,
                 "Desc", "Desc", "Code",
                 1, 1);
         testTaskInstance = new TaskInstance(testUser,

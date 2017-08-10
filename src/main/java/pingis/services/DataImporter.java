@@ -170,13 +170,13 @@ public class DataImporter implements ApplicationRunner {
         String codeStub = assembleString(codeArray);
         
         String taskType = taskObject.getString("type");
-        ImplementationType type;
+        TaskType type;
         Task task;
         
         if (taskType.equals("test")) {
-            task = createTask(ImplementationType.TEST, author, taskObject, codeStub, challenge);
+            task = createTask(TaskType.TEST, author, taskObject, codeStub, challenge);
         } else {
-            task = createTask(ImplementationType.IMPLEMENTATION, author, taskObject, codeStub, challenge);            
+            task = createTask(TaskType.IMPLEMENTATION, author, taskObject, codeStub, challenge);
         }
         String modelImp = "";
         JSONArray modelImpArray = taskObject.getJSONArray("modelimplementation");
@@ -195,8 +195,8 @@ public class DataImporter implements ApplicationRunner {
         return taskInstance;
     }
 
-    private Task createTask(ImplementationType type, User author, JSONObject taskObject, 
-                        String codeStub, Challenge challenge) {
+    private Task createTask(TaskType type, User author, JSONObject taskObject,
+                            String codeStub, Challenge challenge) {
         Task task = new Task(taskObject.getInt("index"), type, author,
                 taskObject.getString("name"),
                 taskObject.getString("desc"),

@@ -80,10 +80,10 @@ public class TaskControllerTest {
         challenge = new Challenge("Calculator", testUser,
                 "Simple calculator");
         testTask = new Task(1,
-                ImplementationType.TEST, testUser, "CalculatorAddition",
+                TaskType.TEST, testUser, "CalculatorAddition",
                 "Implement addition", "return 1+1;", 1, 1);
         implementationTask = new Task(2,
-                ImplementationType.IMPLEMENTATION, testUser, "implement addition",
+                TaskType.IMPLEMENTATION, testUser, "implement addition",
                 "implement addition", "public test", 1, 1);
         testTaskInstance
                 = new TaskInstance(testUser, "", testTask);

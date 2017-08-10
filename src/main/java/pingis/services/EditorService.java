@@ -7,7 +7,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import pingis.entities.Challenge;
-import pingis.entities.ImplementationType;
+import pingis.entities.TaskType;
 import pingis.entities.TaskInstance;
 import pingis.utils.JavaClassGenerator;
 
@@ -23,7 +23,7 @@ public class EditorService {
     public Map<String, EditorTabData> generateEditorContents(TaskInstance taskInstance) {
         Map<String, EditorTabData> tabData;
         Challenge currentChallenge = taskInstance.getTask().getChallenge();
-        if (taskInstance.getTask().getType().equals(ImplementationType.TEST)) {
+        if (taskInstance.getTask().getType().equals(TaskType.TEST)) {
             tabData = this.generateTestTaskTabs(taskInstance, currentChallenge);
         } else {
             tabData = this.generateImplTaskTabs(taskInstance, currentChallenge);

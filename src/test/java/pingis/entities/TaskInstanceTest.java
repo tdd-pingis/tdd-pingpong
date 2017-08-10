@@ -17,7 +17,7 @@ public class TaskInstanceTest {
     public void setUp() {
         authorUser = new User(1, "ModelUser", TMC_USER_LEVEL);
         testTask = new Task(0,
-                ImplementationType.IMPLEMENTATION,
+                TaskType.IMPLEMENTATION,
                             authorUser,
                             "Test Addition",
                             "Test addition with two integers.",

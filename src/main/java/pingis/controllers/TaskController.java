@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import pingis.entities.ImplementationType;
+import pingis.entities.TaskType;
 import pingis.entities.TaskInstance;
 
 import pingis.entities.tmc.TmcSubmission;
@@ -70,7 +70,7 @@ public class TaskController {
         String implFileName = JavaClassGenerator.generateImplClassFilename(currentChallenge);
         String testFileName = JavaClassGenerator.generateTestClassFilename(currentChallenge);
         
-        if (taskInstance.getTask().getType() == ImplementationType.TEST) {
+        if (taskInstance.getTask().getType() == TaskType.TEST) {
             model.addAttribute("submissionTabFileName", testFileName);
             model.addAttribute("staticTabFileName", implFileName);
         } else {
@@ -102,7 +102,7 @@ public class TaskController {
         String implFileName = JavaClassGenerator.generateImplClassFilename(challenge);
         String testFileName = JavaClassGenerator.generateTestClassFilename(challenge);
 
-        if (taskInstance.getTask().getType() == ImplementationType.TEST) {
+        if (taskInstance.getTask().getType() == TaskType.TEST) {
             files.put(testFileName, submissionCode.getBytes());
             files.put(implFileName, staticCode.getBytes());
         } else {
