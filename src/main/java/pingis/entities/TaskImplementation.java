@@ -37,10 +37,6 @@ public class TaskImplementation {
     @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
     private User user;
-    
-    @NotNull
-    @ManyToOne(fetch=FetchType.EAGER)
-    private ChallengeImplementation challengeImplementation;
 
     protected TaskImplementation() {}
 
@@ -105,11 +101,4 @@ public class TaskImplementation {
         this.user = user;
     }
 
-    public void setChallengeImplementation(ChallengeImplementation challengeImplementation) {
-        this.challengeImplementation = challengeImplementation;
-    }
-
-    public ChallengeImplementation getChallengeImplementation() {
-        return challengeImplementation;
-    }
 }

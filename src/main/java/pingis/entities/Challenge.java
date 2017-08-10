@@ -42,9 +42,6 @@ public class Challenge {
     @OneToMany(fetch=FetchType.EAGER, mappedBy="challenge")
     private List<Task> tasks;
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy = "challenge")
-    private List<ChallengeImplementation> implementations;
-
     @NotNull
     @ManyToOne(fetch=FetchType.EAGER)
     private User author;
@@ -57,7 +54,6 @@ public class Challenge {
         this.type = type;
         this.description = description;
         this.tasks = new ArrayList<>();
-        this.implementations = new ArrayList<>();
     }
     
     public Challenge(String name, User author, String description) {
@@ -146,11 +142,4 @@ public class Challenge {
         this.tasks = tasks;
     }
 
-    public List<ChallengeImplementation> getImplementations() {
-        return implementations;
-    }
-
-    public void setImplementations(List<ChallengeImplementation> implementations) {
-        this.implementations = implementations;
-    }
 }
