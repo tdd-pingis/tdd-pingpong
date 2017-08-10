@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Task;
@@ -29,6 +31,7 @@ import pingis.utils.JavaSyntaxChecker;
 
 @Controller
 public class TaskController {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     ChallengeService challengeService;
@@ -94,6 +97,7 @@ public class TaskController {
     private TmcSubmission submitToTmc(TaskImplementation taskImplementation, Challenge challenge, String submissionCode,
             String staticCode)
             throws IOException, ArchiveException {
+        logger.debug("Submitting to TMC");
         Map<String, byte[]> files = new HashMap<>();
         String implFileName = JavaClassGenerator.generateImplClassFilename(challenge);
         String testFileName = JavaClassGenerator.generateTestClassFilename(challenge);
@@ -107,6 +111,7 @@ public class TaskController {
         }
         byte[] packaged = packagingService.packageSubmission(files);
         TmcSubmission submission = new TmcSubmission();
+        logger.debug("Created the submission");
         submission.setTaskImplementation(taskImplementation);
         return senderService.sendSubmission(submission, packaged);
     }
@@ -135,7 +140,7 @@ public class TaskController {
 
         // Save user's answer from left editor
         taskImplementationService.updateTaskImplementationCode(taskImplementationId, submissionCode);
-
+        logger.debug("Redirecting to feedback");
         return new RedirectView("/feedback");
     }
 

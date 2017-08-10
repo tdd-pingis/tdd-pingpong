@@ -1,6 +1,7 @@
 package pingis.entities.tmc;
 
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,62 +19,23 @@ public class TestOutput {
     @OneToOne
     TmcSubmission tmcSubmission;
 
-    //Identical to the Status used by TMC Sandbox results
-    public enum Status {
-        PASSED,
-        TESTS_FAILED,
-        COMPILE_FAILED,
-        TESTRUN_INTERRUPTED,
-        GENERIC_ERROR
-    }
-
-    @Entity
-    public class Logs {
-
-        @Id
-        @GeneratedValue(strategy=GenerationType.AUTO)
-        private long id;
-        
-        @OneToOne
-        private TestOutput testOutput;
-        
-        private byte[] stdout;
-        private byte[] stderr;
-
-        public byte[] getStdout() {
-            return stdout;
-        }
-        
-        public void setStdout(byte[] stdout) {
-            this.stdout = stdout;
-        }
-
-        public byte[] getStderr() {
-            return stderr;
-        }
-        
-        public void setStderr(byte[] stderr) {
-            this.stderr = stderr;
-        }
-    }
-
-    private Status status;
+    private ResultStatus status;
     
-    @OneToMany
+    @OneToMany(cascade = {CascadeType.ALL})
     private List<TestResult> testResults;
     
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private Logs logs;
 
     public long getId() {
         return id;
     }
     
-    public Status getStatus() {
+    public ResultStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(ResultStatus status) {
         this.status = status;
     }
 

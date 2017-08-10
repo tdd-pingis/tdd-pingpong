@@ -31,8 +31,9 @@ import static org.mockito.BDDMockito.*;
 import org.springframework.test.annotation.DirtiesContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import pingis.entities.tmc.Logs;
+import pingis.entities.tmc.ResultStatus;
 import pingis.entities.tmc.TestOutput;
-import pingis.entities.tmc.TestOutput.Logs;
 /**
  * Created by dwarfcrank on 7/28/17.
  */
@@ -73,10 +74,10 @@ public class TmcSubmissionControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         
         TestOutput top = new TestOutput();
-        top.setStatus(TestOutput.Status.PASSED);
+        top.setStatus(ResultStatus.PASSED);
         top.setTestResults(new ArrayList<>());
         
-        Logs logs = top.new Logs();
+        Logs logs = new Logs();
         logs.setStderr("stderr".getBytes());
         logs.setStdout("stdout".getBytes());
         top.setLogs(logs);
@@ -155,7 +156,7 @@ public class TmcSubmissionControllerTest {
         assertEquals(captured.getId(), submissionId);
         
         TestOutput top = captured.getTestOutput();
-        assertEquals(top.getStatus(), TestOutput.Status.PASSED);
+        assertEquals(top.getStatus(), ResultStatus.PASSED);
         assertNotNull(top.getTestResults());
         assertEquals("stderr", new String(top.getLogs().getStderr()));
         assertEquals("stdout", new String(top.getLogs().getStdout()));

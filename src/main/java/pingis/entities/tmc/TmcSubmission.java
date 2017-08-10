@@ -22,7 +22,7 @@ public class TmcSubmission {
 
     private TmcSubmissionStatus status;
     
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private TestOutput testOutput;
 
     @Lob

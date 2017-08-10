@@ -12,11 +12,15 @@ import pingis.entities.tmc.TmcSubmission;
 import pingis.entities.tmc.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import pingis.entities.tmc.TestOutput;
 
 @Controller
 public class TmcSubmissionController {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+    
     @Autowired
     private TmcSubmissionRepository submissionRepository;
     @Autowired
@@ -34,13 +38,13 @@ public class TmcSubmissionController {
             @RequestParam String token,
             @RequestParam String status,
             @RequestParam("exit_code") String exitCode) throws IOException {
+        logger.debug("Received a response from TMC sandbox");
         UUID submissionId = UUID.fromString(token);
         TmcSubmission submission = submissionRepository.findOne(submissionId);
 
         if (submission == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
-
         if (submission.getStatus() != TmcSubmissionStatus.PENDING) {
             // Result is being submitted twice.
             // TODO: decide on a better response code for this...
@@ -49,7 +53,6 @@ public class TmcSubmissionController {
 
         int exitCodeValue = Integer.parseInt(exitCode.trim());
         ObjectMapper mapper = new ObjectMapper();
-        
         submission.setExitCode(exitCodeValue);
         submission.setStatus(status);
         submission.setStderr(stderr);
@@ -61,6 +64,7 @@ public class TmcSubmissionController {
         
         //Broadcasts the submission to /topic/results
         this.template.convertAndSend("/topic/results", submission.getTestOutput());
+        logger.debug("Sent the TMC sandbox results to /topic/results");
         return new ResponseEntity(HttpStatus.OK);
     }
 }
