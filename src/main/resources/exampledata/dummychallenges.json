@@ -101,7 +101,7 @@
             "challenge": "beginner 1",
             "testuser": "testuser",
             "implementationuser": "impluser",
-            "taskimplementations": [{
+            "taskinstances": [{
                     "user": "testuser",
                     "taskindex": 1
                 }]

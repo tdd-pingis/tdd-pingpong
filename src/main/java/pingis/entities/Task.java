@@ -6,12 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.util.List;
 import java.util.ArrayList;
-import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.*;
-import pingis.entities.tmc.TmcSubmission;
 
 @Entity
 public class Task {
@@ -36,7 +34,7 @@ public class Task {
     private String desc;
     
     @NotNull
-    private ImplementationType type;
+    private TaskType type;
 
     @NotNull
     private String codeStub;
@@ -56,12 +54,12 @@ public class Task {
     private User author;
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy="task")
-    private List<TaskImplementation> implementations;
+    private List<TaskInstance> taskInstances;
 
     protected Task() {}
     
-    public Task(int index,  ImplementationType type, User author,
-            String name, String desc, String codeStub, int level, int rating) {
+    public Task(int index, TaskType type, User author,
+                String name, String desc, String codeStub, int level, int rating) {
         this.index = index;
         this.type = type;
         this.author = author;
@@ -70,15 +68,15 @@ public class Task {
         this.codeStub = codeStub;
         this.level = level;
         this.rating = rating;
-        this.implementations = new ArrayList<>();
+        this.taskInstances = new ArrayList<>();
     }
 
     public void setAuthor(User author) {
         this.author = author;
     }
 
-    public void addImplementation(TaskImplementation taskImplementation) {
-        this.implementations.add(taskImplementation);
+    public void addTaskInstance(TaskInstance taskInstance) {
+        this.taskInstances.add(taskInstance);
     }
 
     public User getAuthor() {
@@ -137,12 +135,12 @@ public class Task {
         this.level = level;
     }
 
-    public List<TaskImplementation> getImplementations() {
-        return this.implementations;
+    public List<TaskInstance> getTaskInstances() {
+        return this.taskInstances;
     }
 
-    public void setImplementations(List<TaskImplementation> implementations) {
-        this.implementations = implementations;
+    public void setTaskInstances(List<TaskInstance> taskInstances) {
+        this.taskInstances = taskInstances;
     }
 
     public int getIndex() {
@@ -153,20 +151,20 @@ public class Task {
         this.index = index;
     }
 
-    public ImplementationType getType() {
+    public TaskType getType() {
         return type;
     }
 
-    public void setType(ImplementationType type) {
+    public void setType(TaskType type) {
         this.type = type;
     }
 
     public void setTypeTest() {
-        this.type = ImplementationType.TEST;
+        this.type = TaskType.TEST;
     }
 
     public void setTypeImplementation() {
-        this.type = ImplementationType.IMPLEMENTATION;
+        this.type = TaskType.IMPLEMENTATION;
     }
 
 }
