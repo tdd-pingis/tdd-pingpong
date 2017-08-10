@@ -3,15 +3,25 @@
     <head th:include="base :: header"></head>
     <body onload="connect()">
         <nav th:include="navbar :: navigation"></nav>
-        <h1>Feedback</h1>
-        <p> Your solution has been successfully received.</p>
-        <div id="results" >Waiting for results...</div>
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Feedback</h1>
+                    <p>Your solution has been successfully received.</p>
+                    <div id="results">Waiting for results...</div>
+                </div>
+            </div>
 
-        <button class="btn btn-primary">Next task</button>
+            <div class="row">
+                <div class="col-md-6">
+                    <button class="btn btn-primary">Next task</button>
+                </div>
+            </div>
 
-        <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
-        <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
-        <script th:src="@{/js/results.js}"></script>
+            <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+            <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
+            <script th:src="@{/js/results.js}"></script>
+        </div>
     </body>
 </html>
 
