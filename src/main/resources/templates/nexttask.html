@@ -8,7 +8,7 @@
     <div class="row">
         <ul>
             <li th:each="task: ${tasks}">
-                <a th:href="'/newTaskImplementation/'+${task.id}"><p th:text="${task.name}"/></a>
+                <a th:href="'/newTaskInstance/'+${task.id}"><p th:text="${task.name}"/></a>
             </li>
         </ul>
 

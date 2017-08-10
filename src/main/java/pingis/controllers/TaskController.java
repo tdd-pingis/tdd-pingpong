@@ -150,9 +150,9 @@ public class TaskController {
     }
 
     @RequestMapping("/feedback")
-    public String feedback(Model model, @RequestParam long taskImplementationId) {
+    public String feedback(Model model, @RequestParam long taskInstanceId) {
         Challenge currentChallenge = taskInstanceService
-                .findOne(taskImplementationId)
+                .findOne(taskInstanceId)
                 .getTask().getChallenge();
         model.addAttribute("challengeId", currentChallenge.getId());
         model.addAttribute("feedback", "Good work!");
@@ -168,14 +168,14 @@ public class TaskController {
         return "nexttask";
     }
 
-    @RequestMapping("/newTaskImplementation/{taskId}")
-    public RedirectView newTaskImplementation(@PathVariable long taskId,
+    @RequestMapping("/newTaskInstance/{taskId}")
+    public RedirectView newTaskInstance(@PathVariable long taskId,
             RedirectAttributes redirectAttributes) {
         Task task = taskService.findOne(taskId);
         User user = userService.getCurrentUser();
-        TaskInstance newTaskImplementation = taskInstanceService.createEmpty(user, task);
-        redirectAttributes.addAttribute("taskImplementationId", newTaskImplementation.getId());
-        return new RedirectView("/task/{taskImplementationId}");
+        TaskInstance newTaskInstance = taskInstanceService.createEmpty(user, task);
+        redirectAttributes.addAttribute("taskInstanceId", newTaskInstance.getId());
+        return new RedirectView("/task/{taskInstanceId}");
     }
 
 }
