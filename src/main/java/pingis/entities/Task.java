@@ -11,6 +11,7 @@ import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.*;
+import pingis.entities.tmc.TmcSubmission;
 
 @Entity
 public class Task {

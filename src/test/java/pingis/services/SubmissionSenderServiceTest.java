@@ -14,8 +14,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import pingis.config.SubmissionProperties;
-import pingis.entities.TmcSubmission;
-import pingis.entities.TmcSubmissionStatus;
+import pingis.entities.tmc.TmcSubmission;
+import pingis.entities.tmc.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 
 import java.io.IOException;
@@ -54,7 +54,8 @@ public class SubmissionSenderServiceTest {
                 .andExpect(content().contentTypeCompatibleWith(MediaType.MULTIPART_FORM_DATA))
                 .andRespond(withSuccess("{\"status\":\"ok\"}", MediaType.APPLICATION_JSON));
 
-        TmcSubmission submission = sender.sendSubmission(packageData.getBytes());
+        TmcSubmission submission = new TmcSubmission();
+        sender.sendSubmission(submission, packageData.getBytes());
 
         ArgumentCaptor<TmcSubmission> submissionCaptor = ArgumentCaptor.forClass(TmcSubmission.class);
         verify(submissionRepository, times(1)).save(submissionCaptor.capture());

@@ -6,7 +6,9 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
+import pingis.entities.tmc.TmcSubmission;
 
 @Entity
 public class TaskImplementation {
@@ -20,7 +22,8 @@ public class TaskImplementation {
     // TODO: Decide scaling of rating, then set @DecimalMin and @DecimalMax constraints here
     private float rating;
 
-    
+    @OneToOne
+    private TmcSubmission submission;
 
     @NotNull
     private CodeStatus status;

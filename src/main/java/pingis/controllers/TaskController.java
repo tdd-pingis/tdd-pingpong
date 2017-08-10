@@ -6,6 +6,8 @@ import java.util.Map;
 
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.lang3.ArrayUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Task;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import pingis.entities.ImplementationType;
 import pingis.entities.TaskImplementation;
 
-import pingis.entities.TmcSubmission;
+import pingis.entities.tmc.TmcSubmission;
 import pingis.services.*;
 import pingis.utils.EditorTabData;
 import pingis.utils.JavaClassGenerator;
@@ -29,6 +31,7 @@ import pingis.utils.JavaSyntaxChecker;
 
 @Controller
 public class TaskController {
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     ChallengeService challengeService;
@@ -91,14 +94,15 @@ public class TaskController {
     }
 
     // TODO: This should actually be a separate service...
-    private TmcSubmission submitToTmc(Challenge challenge, String submissionCode,
-            String staticCode, ImplementationType taskType)
+    private TmcSubmission submitToTmc(TaskImplementation taskImplementation, Challenge challenge, String submissionCode,
+            String staticCode)
             throws IOException, ArchiveException {
+        logger.debug("Submitting to TMC");
         Map<String, byte[]> files = new HashMap<>();
         String implFileName = JavaClassGenerator.generateImplClassFilename(challenge);
         String testFileName = JavaClassGenerator.generateTestClassFilename(challenge);
 
-        if (taskType == ImplementationType.TEST) {
+        if (taskImplementation.getTask().getType() == ImplementationType.TEST) {
             files.put(testFileName, submissionCode.getBytes());
             files.put(implFileName, staticCode.getBytes());
         } else {
@@ -106,7 +110,10 @@ public class TaskController {
             files.put(testFileName, staticCode.getBytes());
         }
         byte[] packaged = packagingService.packageSubmission(files);
-        return senderService.sendSubmission(packaged);
+        TmcSubmission submission = new TmcSubmission();
+        logger.debug("Created the submission");
+        submission.setTaskImplementation(taskImplementation);
+        return senderService.sendSubmission(submission, packaged);
     }
 
     @RequestMapping(value = "/task", method = RequestMethod.POST)
@@ -127,13 +134,13 @@ public class TaskController {
             return new RedirectView("/task/{taskImplementationId}");
         }
      
-        TmcSubmission submission = submitToTmc(currentChallenge, submissionCode, staticCode, currentTask.getType());
+        TmcSubmission submission = submitToTmc(taskImplementation, currentChallenge, submissionCode, staticCode);
 
         redirectAttributes.addAttribute("submission", submission);
 
         // Save user's answer from left editor
         taskImplementationService.updateTaskImplementationCode(taskImplementationId, submissionCode);
-
+        logger.debug("Redirecting to feedback");
         return new RedirectView("/feedback");
     }
 

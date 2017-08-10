@@ -1,7 +1,8 @@
-package pingis.entities;
+package pingis.entities.tmc;
 
 import javax.persistence.*;
 import java.util.UUID;
+import pingis.entities.TaskImplementation;
 
 /**
  * Created by dwarfcrank on 7/28/17.
@@ -20,15 +21,18 @@ public class TmcSubmission {
     private String stdout;
 
     private TmcSubmissionStatus status;
-
-    @Lob
-    private String testOutput;
+    
+    @OneToOne(cascade = {CascadeType.ALL})
+    private TestOutput testOutput;
 
     @Lob
     private String validations;
 
     @Lob
     private String vmLog;
+    
+    @OneToOne
+    private TaskImplementation taskImplementation;
 
     public UUID getId() {
         return id;
@@ -74,11 +78,11 @@ public class TmcSubmission {
         this.status = status;
     }
 
-    public String getTestOutput() {
+    public TestOutput getTestOutput() {
         return testOutput;
     }
 
-    public void setTestOutput(String testOutput) {
+    public void setTestOutput(TestOutput testOutput) {
         this.testOutput = testOutput;
     }
 
@@ -96,5 +100,13 @@ public class TmcSubmission {
 
     public void setVmLog(String vmLog) {
         this.vmLog = vmLog;
+    }
+
+    public void setTaskImplementation(TaskImplementation taskImplementation) {
+        this.taskImplementation = taskImplementation;
+    }
+
+    public TaskImplementation getTaskImplementation() {
+        return taskImplementation;
     }
 }

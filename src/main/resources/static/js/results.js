@@ -23,8 +23,7 @@ function connectStomp(csrf) {
 }
 
 function showResults(response) {
-    var responseBody = JSON.parse(response.body);
-    var testOutput = JSON.parse(responseBody.testOutput);
+    var testOutput = JSON.parse(response.body);
 
     var status = testOutput.status;
     var testResults = testOutput.testResults;
