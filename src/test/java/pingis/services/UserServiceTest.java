@@ -25,7 +25,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import pingis.Application;
-import pingis.entities.OAuthUser;
+import pingis.entities.TmcUserDto;
 import pingis.entities.User;
 import pingis.repositories.UserRepository;
 
@@ -200,7 +200,7 @@ public class UserServiceTest {
     
     @Test
     public void testInitializeUserWithOauthUser() {
-        OAuthUser user = generateOauthTestUser();
+        TmcUserDto user = generateOauthTestUser();
         userService.initializeUser(user);
         verify(userRepositoryMock).save(userCaptor.capture());
         assertThat(userCaptor.getValue().getName()).isEqualTo(user.getName());
@@ -212,7 +212,7 @@ public class UserServiceTest {
     @Test
     public void testHandleUnknownOAuthUser() {
         ArgumentCaptor<Long> capturedId = ArgumentCaptor.forClass(Long.class);
-        OAuthUser oauthUser1 = new OAuthUser();
+        TmcUserDto oauthUser1 = new TmcUserDto();
         Long randomUserId = new Random(Long.MAX_VALUE).nextLong();
         String randomUserIdString = Long.toString(randomUserId);
         
@@ -235,7 +235,7 @@ public class UserServiceTest {
     @Test
     public void testHandleKnownOAuthUser() {
         ArgumentCaptor<Long> capturedId = ArgumentCaptor.forClass(Long.class);
-        OAuthUser user = generateOauthTestUser();
+        TmcUserDto user = generateOauthTestUser();
 
         userService.save(testUser);
         verify(userRepositoryMock).save(userCaptor.capture());
@@ -249,8 +249,8 @@ public class UserServiceTest {
         assertThat(capturedId.getValue()).isEqualTo((long) TEST_USER_ID);
     }
 
-    private OAuthUser generateOauthTestUser() {
-        OAuthUser user = new OAuthUser();
+    private TmcUserDto generateOauthTestUser() {
+        TmcUserDto user = new TmcUserDto();
         user.setAdministrator(true);
         user.setName(TEST_USER_NAME);
         user.setId(Long.toString(TEST_USER_ID));

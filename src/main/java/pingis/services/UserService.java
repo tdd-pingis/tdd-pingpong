@@ -5,7 +5,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pingis.entities.OAuthUser;
+import pingis.entities.TmcUserDto;
 import pingis.entities.User;
 import pingis.repositories.UserRepository;
         
@@ -31,7 +31,7 @@ public class UserService {
         return userRepository.save(user);
     }
     
-    public User handleOAuthUserAuthentication(OAuthUser authUser) {
+    public User handleOAuthUserAuthentication(TmcUserDto authUser) {
         User user = findOne(Long.parseLong(authUser.getId()));
         if(user == null) {
             user = initializeUser(authUser);
@@ -54,7 +54,7 @@ public class UserService {
         return user;
     }
     
-    public User initializeUser(OAuthUser newUser) {
+    public User initializeUser(TmcUserDto newUser) {
         // Implement validation here
         return userRepository.save(new User(Long.parseLong(newUser.getId()), 
                              newUser.getName(), 

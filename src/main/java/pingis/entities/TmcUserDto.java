@@ -3,18 +3,37 @@ package pingis.entities;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-public class OAuthUser implements OAuth2User {
+/**
+* Implements Spring Security's OAuth2User and works only as a data transfer object 
+* keeping the user-information secure. This is later on extracted in UserService and 
+* exported into database as TmcUser in UserService.
+* @author  villburn
+*/
+public class TmcUserDto implements OAuth2User {
     
+    @NotNull
+    @NotEmpty
     public String id;
+    
+    @NotNull
+    @NotEmpty
     public String username;
+    
+    @NotNull
+    @NotEmpty
     public String email;
+    
+    @NotNull
+    @NotEmpty
     public boolean administrator;
     
-    public OAuthUser() {}
+    public TmcUserDto() {}
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
