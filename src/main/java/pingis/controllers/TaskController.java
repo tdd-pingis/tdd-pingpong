@@ -70,7 +70,6 @@ public class TaskController {
             return "error";
         }
         Challenge currentChallenge = taskImplementation.getTask().getChallenge();
-
         model.addAttribute("challenge", currentChallenge);
         model.addAttribute("task", taskImplementation.getTask());
         model.addAttribute("taskImplementationId", taskImplementationId);

@@ -63,9 +63,11 @@ public class TaskControllerTest {
     @MockBean
     private TaskService taskServiceMock;
 
-
     @MockBean
     private EditorService editorServiceMock;
+
+    @MockBean
+    private UserService userServiceMock;
 
     @Captor
     private ArgumentCaptor<Map<String, byte[]>> packagingArgCaptor;
