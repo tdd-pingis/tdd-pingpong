@@ -6,7 +6,7 @@ import pingis.entities.Task;
 import pingis.repositories.ChallengeRepository;
 import pingis.repositories.TaskRepository;
 import java.util.List;
-import pingis.repositories.TaskImplementationRepository;
+import pingis.repositories.TaskInstanceRepository;
 
 @Service
 public class TaskService {
@@ -16,7 +16,7 @@ public class TaskService {
     @Autowired
     private ChallengeRepository challengeRepository;
     @Autowired
-    private TaskImplementationRepository taskImplementationRepository;
+    private TaskInstanceRepository taskInstanceRepository;
 
     public Task findTaskInChallenge(Long challengeId, int taskId) {
         // Implement validation here

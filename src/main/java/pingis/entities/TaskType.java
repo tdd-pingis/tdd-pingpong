@@ -1,7 +1,7 @@
 
 package pingis.entities;
 
-public enum ImplementationType {
+public enum TaskType {
     TEST, IMPLEMENTATION
 }
 

@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import pingis.entities.tmc.TmcSubmission;
 
 @Entity
-public class TaskImplementation {
+public class TaskInstance {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private long id;
@@ -38,9 +38,9 @@ public class TaskImplementation {
     @ManyToOne(fetch=FetchType.EAGER)
     private User user;
 
-    protected TaskImplementation() {}
+    protected TaskInstance() {}
 
-    public TaskImplementation(User user, String code, Task task) {
+    public TaskInstance(User user, String code, Task task) {
         this.user = user;
         this.code = code;
         this.task = task;

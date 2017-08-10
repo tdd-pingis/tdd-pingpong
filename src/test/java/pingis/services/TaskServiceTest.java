@@ -21,7 +21,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.*;
-import pingis.entities.ImplementationType;
+import pingis.entities.TaskType;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {Application.class})
@@ -43,7 +43,7 @@ public class TaskServiceTest {
     @Before
     public void setUp() {
         testUser = new User(1, "Matti", 1);
-        testTask = new Task(1, ImplementationType.TEST, testUser, "FirstTask", "SimpleCalcluator", "return 0;", 1, 1);
+        testTask = new Task(1, TaskType.TEST, testUser, "FirstTask", "SimpleCalcluator", "return 0;", 1, 1);
         taskCaptor = ArgumentCaptor.forClass(Task.class);
     }
 
