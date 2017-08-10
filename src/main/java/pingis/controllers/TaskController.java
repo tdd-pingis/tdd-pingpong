@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import pingis.entities.ImplementationType;
 import pingis.entities.TaskImplementation;
@@ -154,7 +155,11 @@ public class TaskController {
     }
 
     @RequestMapping("/feedback")
-    public String feedback(Model model) {
+    public String feedback(Model model, @RequestParam long taskImplementationId) {
+        Challenge currentChallenge = taskImplementationService
+                .findOne(taskImplementationId)
+                .getTask().getChallenge();
+        model.addAttribute("challengeId", currentChallenge.getId());
         model.addAttribute("feedback", "Good work!");
         return "feedback";
     }

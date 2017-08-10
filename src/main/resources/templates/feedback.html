@@ -5,9 +5,10 @@
         <nav th:include="navbar :: navigation"></nav>
         <h1>Feedback</h1>
         <p> Your solution has been successfully received.</p>
+        <p th:text="${challengeId}" />
         <div id="results" >Waiting for results...</div>
 
-        <button class="btn btn-primary">Next task</button>
+        <a th:href="'nextTask/'+${challengeId}" class="btn btn-primary">Next task</a>
 
         <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
         <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>

@@ -193,7 +193,10 @@ public class TaskControllerTest {
 
     @Test
     public void givenFeedbackWhenGetFeedback() throws Exception {
-        performSimpleGetRequestAndFindContent("/feedback", "feedback", "<h1>Feedback</h1>");
+        when(taskImplementationServiceMock.findOne(1l)).thenReturn(testTaskImplementation);
+        performSimpleGetRequestAndFindContent("/feedback?taskImplementationId=1", "feedback", "<h1>Feedback</h1>");
+        verify(taskImplementationServiceMock).findOne(1l);
+        verifyNoMoreInteractions(taskImplementationServiceMock);
     }
 
 
