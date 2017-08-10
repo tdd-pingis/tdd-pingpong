@@ -4,7 +4,7 @@ package pingis.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pingis.entities.TaskImplementation;
+import pingis.entities.TaskInstance;
 import pingis.repositories.TaskImplementationRepository;
 import pingis.repositories.TaskRepository;
 import pingis.repositories.UserRepository;
@@ -21,35 +21,35 @@ public class TaskImplementationService {
 
 
     
-    public TaskImplementation getCorrespondingTestTaskImplementation(
-            TaskImplementation implTaskImplementation) {
+    public TaskInstance getCorrespondingTestTaskInstance(
+            TaskInstance implTaskInstance) {
         return taskImplementationRepository.
                 findByTaskAndUser(
                         taskRepository.
-                                findByIndexAndChallenge(implTaskImplementation.getTask().getIndex()-1,
-                                        implTaskImplementation.getTask().getChallenge()),
+                                findByIndexAndChallenge(implTaskInstance.getTask().getIndex()-1,
+                                        implTaskInstance.getTask().getChallenge()),
                         userRepository.findOne(0l));
     }
     
 
     
-    public TaskImplementation getCorrespondingImplTaskImplementation(TaskImplementation testTaskImplementation) {
+    public TaskInstance getCorrespondingImplTaskInstance(TaskInstance testTaskInstance) {
         return taskImplementationRepository.
                 findByTaskAndUser(
-                        taskRepository.findByIndexAndChallenge(testTaskImplementation.getTask().getIndex()+1,
-                                testTaskImplementation.getTask().getChallenge()),
+                        taskRepository.findByIndexAndChallenge(testTaskInstance.getTask().getIndex()+1,
+                                testTaskInstance.getTask().getChallenge()),
                         userRepository.findOne(0l));
     }
 
-    public TaskImplementation findOne(long taskImplementationId) {
-        return taskImplementationRepository.findOne(taskImplementationId);
+    public TaskInstance findOne(long taskInstanceId) {
+        return taskImplementationRepository.findOne(taskInstanceId);
 
     }
 
     @Transactional
-    public TaskImplementation updateTaskImplementationCode(Long taskImplementationId, String taskImplementationCode) {
-        TaskImplementation taskImplementationToUpdate = taskImplementationRepository.findOne(taskImplementationId);
-        taskImplementationToUpdate.setCode(taskImplementationCode);
-        return taskImplementationToUpdate;
+    public TaskInstance updateTaskImplementationCode(Long taskInstanceId, String taskInstanceCode) {
+        TaskInstance taskInstanceToUpdate = taskImplementationRepository.findOne(taskInstanceId);
+        taskInstanceToUpdate.setCode(taskInstanceCode);
+        return taskInstanceToUpdate;
     }
 }

@@ -2,15 +2,15 @@
  */
 package pingis.repositories;
 
-import pingis.entities.TaskImplementation;
+import pingis.entities.TaskInstance;
 import org.springframework.data.repository.CrudRepository;
 import pingis.entities.Task;
 import pingis.entities.User;
 
-public interface TaskImplementationRepository extends CrudRepository<TaskImplementation, Long> {
+public interface TaskImplementationRepository extends CrudRepository<TaskInstance, Long> {
     
 //    @Query("delete From Reference r Where r.name = ?1")
 //    void deleteReferenceByName(String name);
-    TaskImplementation findByTaskAndUser(Task task, User user);
+    TaskInstance findByTaskAndUser(Task task, User user);
 
 }

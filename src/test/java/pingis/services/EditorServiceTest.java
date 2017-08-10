@@ -3,8 +3,7 @@ package pingis.services;
 import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
-import pingis.entities.Task;
-import pingis.entities.User;
+import pingis.entities.*;
 
 import static org.mockito.Mockito.*;
 
@@ -15,9 +14,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import pingis.Application;
-import pingis.entities.Challenge;
-import pingis.entities.ImplementationType;
-import pingis.entities.TaskImplementation;
+import pingis.entities.TaskInstance;
 import pingis.utils.EditorTabData;
 
 
@@ -34,8 +31,8 @@ public class EditorServiceTest {
     private Task testTask;
     private Task implementationTask;
     private Challenge challenge;
-    private TaskImplementation passedTaskImplementation;
-    private TaskImplementation returnedTaskImplementation;
+    private TaskInstance passedTaskInstance;
+    private TaskInstance returnedTaskInstance;
 
     @Before
     public void setUp() {
@@ -58,31 +55,31 @@ public class EditorServiceTest {
                 2, 2);
         testTask.setChallenge(challenge);
         implementationTask.setChallenge(challenge);
-        this.passedTaskImplementation = new TaskImplementation(testUser, "", implementationTask);
-        this.returnedTaskImplementation = new TaskImplementation(testUser, "public void test", testTask);
+        this.passedTaskInstance = new TaskInstance(testUser, "", implementationTask);
+        this.returnedTaskInstance = new TaskInstance(testUser, "public void test", testTask);
                 
     }
     
     @Test
     public void testEditorServiceWithTestTask() {
-        when(taskImplementationServiceMock.getCorrespondingImplTaskImplementation(returnedTaskImplementation))
-                .thenReturn(this.passedTaskImplementation);
-        Map<String, EditorTabData> result = editorService.generateEditorContents(returnedTaskImplementation);
+        when(taskImplementationServiceMock.getCorrespondingImplTaskInstance(returnedTaskInstance))
+                .thenReturn(this.passedTaskInstance);
+        Map<String, EditorTabData> result = editorService.generateEditorContents(returnedTaskInstance);
         assertEquals(result.get("editor1").code, "public void test");
         verify(taskImplementationServiceMock, times(1)).
-                getCorrespondingImplTaskImplementation(returnedTaskImplementation);
+                getCorrespondingImplTaskInstance(returnedTaskInstance);
         verifyNoMoreInteractions(taskImplementationServiceMock);
     }
     
     @Test
     public void testEditorServiceWithImplementationTask() {
-        when(taskImplementationServiceMock.getCorrespondingTestTaskImplementation(this.passedTaskImplementation)).
-                thenReturn(this.returnedTaskImplementation);
-        Map<String, EditorTabData> result = this.editorService.generateEditorContents(passedTaskImplementation);
+        when(taskImplementationServiceMock.getCorrespondingTestTaskInstance(this.passedTaskInstance)).
+                thenReturn(this.returnedTaskInstance);
+        Map<String, EditorTabData> result = this.editorService.generateEditorContents(passedTaskInstance);
         assertEquals(result.get("editor2").code, "public void test");
         assertEquals(result.get("editor1").code, "public void implementation");
         verify(taskImplementationServiceMock, times(1)).
-                getCorrespondingTestTaskImplementation(passedTaskImplementation);
+                getCorrespondingTestTaskInstance(passedTaskInstance);
         verifyNoMoreInteractions(taskImplementationServiceMock);
     }
 

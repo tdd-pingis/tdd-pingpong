@@ -11,11 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
-import pingis.entities.Challenge;
-import pingis.entities.ImplementationType;
-import pingis.entities.Task;
-import pingis.entities.TaskImplementation;
-import pingis.entities.User;
+import pingis.entities.*;
+import pingis.entities.TaskInstance;
 import pingis.repositories.ChallengeRepository;
 import pingis.repositories.TaskImplementationRepository;
 import pingis.repositories.TaskRepository;
@@ -34,7 +31,7 @@ public class DataImporter implements ApplicationRunner {
     private HashMap<String, User> users = new LinkedHashMap();
     private HashMap<String, Challenge> challenges = new HashMap();
     private ArrayList<Task> tasks = new ArrayList();
-    private ArrayList<TaskImplementation> taskImplementations = new ArrayList();
+    private ArrayList<TaskInstance> taskInstances = new ArrayList();
     private int taskid = 0;
 
     public enum UserType {
@@ -130,8 +127,8 @@ public class DataImporter implements ApplicationRunner {
         return tasks;
     }
 
-    public ArrayList<TaskImplementation> getTaskImplementations() {
-        return taskImplementations;
+    public ArrayList<TaskInstance> getTaskInstances() {
+        return taskInstances;
     }
 
     public void generateEntities() {
@@ -184,18 +181,18 @@ public class DataImporter implements ApplicationRunner {
         String modelImp = "";
         JSONArray modelImpArray = taskObject.getJSONArray("modelimplementation");
         modelImp = assembleString(modelImpArray);
-        TaskImplementation taskImplementation = createTaskImplementation(author, modelImp, task);
+        TaskInstance taskInstance = createTaskInstance(author, modelImp, task);
         
-        this.taskImplementations.add(taskImplementation);
+        this.taskInstances.add(taskInstance);
     }
 
-    private TaskImplementation createTaskImplementation(User author, String modelImp, 
-                        Task task) {
-        // Create new TaskImplementation
-        TaskImplementation taskImplementation = new TaskImplementation(author, modelImp, task);
-        task.addImplementation(taskImplementation);
+    private TaskInstance createTaskInstance(User author, String modelImp,
+                                            Task task) {
+        // Create new TaskInstance
+        TaskInstance taskInstance = new TaskInstance(author, modelImp, task);
+        task.addTaskInstance(taskInstance);
         
-        return taskImplementation;
+        return taskInstance;
     }
 
     private Task createTask(ImplementationType type, User author, JSONObject taskObject, 
@@ -219,11 +216,11 @@ public class DataImporter implements ApplicationRunner {
                 User user = users.get(implementationObject.getString("user"));
                 List<Task> tasks = this.challenges.get(implementation.getString("challenge")).getTasks();
                 Task task = tasks.get(implementationObject.getInt("taskindex")-1);
-                TaskImplementation taskImplementation =
-                        createTaskImplementation(
+                TaskInstance taskInstance =
+                        createTaskInstance(
                                 user,"",
                                 task);
-                this.taskImplementations.add(taskImplementation);
+                this.taskInstances.add(taskInstance);
             }
         }
     }
@@ -253,7 +250,7 @@ public class DataImporter implements ApplicationRunner {
         }
 
 
-        for (TaskImplementation i : this.taskImplementations) {
+        for (TaskInstance i : this.taskInstances) {
             tir.save(i);
         }
     }
@@ -284,7 +281,7 @@ public class DataImporter implements ApplicationRunner {
     private void printTaskImplementations() {
         System.out.println("---");
         System.out.println("taskimplementations:");
-        for (TaskImplementation i : this.taskImplementations) {
+        for (TaskInstance i : this.taskInstances) {
             System.out.println("ti: "+i.toString());
             System.out.println("-");
         }

@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {TaskImplementationService.class})
-public class TaskImplementationServiceTest {
+public class TaskInstanceServiceTest {
 
     @Autowired
     private TaskImplementationService taskImplementationService;
@@ -35,8 +35,8 @@ public class TaskImplementationServiceTest {
     private User testUser;
     private Task testTask;
     private Task implementationTask;
-    private TaskImplementation testTaskImplementation;
-    private TaskImplementation implementationTaskImplementation;
+    private TaskInstance testTaskInstance;
+    private TaskInstance implementationTaskInstance;
     private Challenge testChallenge;
 
     @Before
@@ -49,10 +49,10 @@ public class TaskImplementationServiceTest {
                 ImplementationType.IMPLEMENTATION, testUser,
                 "Desc", "Desc", "Code",
                 1, 1);
-        testTaskImplementation = new TaskImplementation(testUser,
+        testTaskInstance = new TaskInstance(testUser,
                 "thisShouldBeEmpty", testTask);
 
-        implementationTaskImplementation = new TaskImplementation(testUser,
+        implementationTaskInstance = new TaskInstance(testUser,
                 "return 'This is my implementation';", implementationTask);
         testChallenge = new Challenge("Name",
                 testUser, "Simple calculator", ChallengeType.MIXED);
@@ -69,10 +69,10 @@ public class TaskImplementationServiceTest {
                 .getIndex() - 1, testChallenge))
                 .thenReturn(testTask);
         when(taskImplementationRepositoryMock.findByTaskAndUser(testTask, testUser))
-                .thenReturn(testTaskImplementation);
+                .thenReturn(testTaskInstance);
 
-        TaskImplementation result = taskImplementationService
-                .getCorrespondingTestTaskImplementation(implementationTaskImplementation);
+        TaskInstance result = taskImplementationService
+                .getCorrespondingTestTaskInstance(implementationTaskInstance);
 
         verify(userRepositoryMock).findOne(0l);
         verify(taskRepositoryMock).findByIndexAndChallenge(implementationTask.getIndex() - 1, testChallenge);
@@ -82,7 +82,7 @@ public class TaskImplementationServiceTest {
         verifyNoMoreInteractions(userRepositoryMock);
         verifyNoMoreInteractions(taskImplementationRepositoryMock);
 
-        assertEquals(result, testTaskImplementation);
+        assertEquals(result, testTaskInstance);
     }
 
     @Test
@@ -91,10 +91,10 @@ public class TaskImplementationServiceTest {
         when(taskRepositoryMock.findByIndexAndChallenge(testTask.getIndex() + 1, testChallenge))
                 .thenReturn(implementationTask);
         when(taskImplementationRepositoryMock.findByTaskAndUser(implementationTask, testUser))
-                .thenReturn(implementationTaskImplementation);
+                .thenReturn(implementationTaskInstance);
 
-        TaskImplementation result = taskImplementationService
-                .getCorrespondingImplTaskImplementation(testTaskImplementation);
+        TaskInstance result = taskImplementationService
+                .getCorrespondingImplTaskInstance(testTaskInstance);
 
         verify(userRepositoryMock).findOne(0l);
         verify(taskRepositoryMock).findByIndexAndChallenge(testTask.getIndex() + 1, testChallenge);
@@ -104,36 +104,36 @@ public class TaskImplementationServiceTest {
         verifyNoMoreInteractions(userRepositoryMock);
         verifyNoMoreInteractions(taskImplementationRepositoryMock);
 
-        assertEquals(result, implementationTaskImplementation);
+        assertEquals(result, implementationTaskInstance);
     }
 
     @Test
     public void testFindOne() {
-        when(taskImplementationRepositoryMock.findOne(testTaskImplementation.getId()))
-                .thenReturn(testTaskImplementation);
+        when(taskImplementationRepositoryMock.findOne(testTaskInstance.getId()))
+                .thenReturn(testTaskInstance);
 
-        TaskImplementation result = taskImplementationService.findOne(testTaskImplementation.getId());
+        TaskInstance result = taskImplementationService.findOne(testTaskInstance.getId());
 
-        verify(taskImplementationRepositoryMock).findOne(testTaskImplementation.getId());
+        verify(taskImplementationRepositoryMock).findOne(testTaskInstance.getId());
         verifyNoMoreInteractions(taskImplementationRepositoryMock);
 
-        assertEquals(result, testTaskImplementation);
+        assertEquals(result, testTaskInstance);
     }
 
 
     @Test
     public void testUpdateTaskImplementationCode() {
-        assertEquals("thisShouldBeEmpty", testTaskImplementation.getCode());
+        assertEquals("thisShouldBeEmpty", testTaskInstance.getCode());
 
-        when(taskImplementationRepositoryMock.findOne(testTaskImplementation.getId()))
-                .thenReturn(testTaskImplementation);
+        when(taskImplementationRepositoryMock.findOne(testTaskInstance.getId()))
+                .thenReturn(testTaskInstance);
 
         String testCode = "Return 1+1;";
 
-        TaskImplementation result = taskImplementationService
-                .updateTaskImplementationCode(testTaskImplementation.getId(), testCode);
+        TaskInstance result = taskImplementationService
+                .updateTaskImplementationCode(testTaskInstance.getId(), testCode);
 
-        verify(taskImplementationRepositoryMock).findOne(testTaskImplementation.getId());
+        verify(taskImplementationRepositoryMock).findOne(testTaskInstance.getId());
         verifyNoMoreInteractions(taskImplementationRepositoryMock);
 
         assertEquals(testCode, result.getCode());

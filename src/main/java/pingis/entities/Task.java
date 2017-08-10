@@ -6,12 +6,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.util.List;
 import java.util.ArrayList;
-import javax.persistence.CascadeType;
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.*;
-import pingis.entities.tmc.TmcSubmission;
 
 @Entity
 public class Task {
@@ -56,7 +54,7 @@ public class Task {
     private User author;
 
     @OneToMany(fetch=FetchType.LAZY, mappedBy="task")
-    private List<TaskImplementation> implementations;
+    private List<TaskInstance> taskInstances;
 
     protected Task() {}
     
@@ -70,15 +68,15 @@ public class Task {
         this.codeStub = codeStub;
         this.level = level;
         this.rating = rating;
-        this.implementations = new ArrayList<>();
+        this.taskInstances = new ArrayList<>();
     }
 
     public void setAuthor(User author) {
         this.author = author;
     }
 
-    public void addImplementation(TaskImplementation taskImplementation) {
-        this.implementations.add(taskImplementation);
+    public void addTaskInstance(TaskInstance taskInstance) {
+        this.taskInstances.add(taskInstance);
     }
 
     public User getAuthor() {
@@ -137,12 +135,12 @@ public class Task {
         this.level = level;
     }
 
-    public List<TaskImplementation> getImplementations() {
-        return this.implementations;
+    public List<TaskInstance> getTaskInstances() {
+        return this.taskInstances;
     }
 
-    public void setImplementations(List<TaskImplementation> implementations) {
-        this.implementations = implementations;
+    public void setTaskInstances(List<TaskInstance> taskInstances) {
+        this.taskInstances = taskInstances;
     }
 
     public int getIndex() {
