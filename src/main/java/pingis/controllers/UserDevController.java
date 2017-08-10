@@ -1,13 +1,11 @@
 package pingis.controllers;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import pingis.entities.User;
 import pingis.services.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 
@@ -25,7 +23,7 @@ public class UserDevController {
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public String user(Model model) {
-        userService.handleDevUserAuthentication(SecurityContextHolder.getContext().getAuthentication().getName());
+        userService.handleUserAuthentication(SecurityContextHolder.getContext().getAuthentication().getName());
         return "user";
     }
 

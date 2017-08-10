@@ -8,16 +8,12 @@ import org.springframework.stereotype.Service;
 import pingis.entities.OAuthUser;
 import pingis.entities.User;
 import pingis.repositories.UserRepository;
-import static pingis.services.DataImporter.UserType.TEST_USER;
-import static pingis.services.DataImporter.UserType.TMC_MODEL_USER;
         
 @Service
 public class UserService {
     
-    private final static long DEV_USER_ID  = TEST_USER.getId();
-    private final static long DEV_ADMIN_ID = TMC_MODEL_USER.getId();
     private final UserRepository userRepository;
-    private final Logger logger = Logger.getLogger("UserService");
+    private final Logger logger = Logger.getLogger(UserService.class);
     
     @Autowired
     public UserService(UserRepository userRepository) {
@@ -46,16 +42,16 @@ public class UserService {
         return user;
     }
     
-    public User handleDevUserAuthentication(String userName) {
-        User newUser = userRepository.findByName(userName);
-        if(newUser == null) {
-            newUser = new User(userName);
-            userRepository.save(newUser);
+    public User handleUserAuthentication(String userName) {
+        User user = userRepository.findByName(userName);
+        if(user == null) {
+            user = new User(userName);
+            userRepository.save(user);
             logger.info("New TMCuser detected and initialized.");
         }
         
         logger.info("TMCuser successfully authenticated.");
-        return newUser;
+        return user;
     }
     
     public User initializeUser(OAuthUser newUser) {
