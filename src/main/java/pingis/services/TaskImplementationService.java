@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pingis.entities.TaskInstance;
-import pingis.repositories.TaskImplementationRepository;
+import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.TaskRepository;
 import pingis.repositories.UserRepository;
 
@@ -15,7 +15,7 @@ public class TaskImplementationService {
     @Autowired
     private TaskRepository taskRepository;
     @Autowired
-    private TaskImplementationRepository taskImplementationRepository;
+    private TaskInstanceRepository taskInstanceRepository;
     @Autowired
     private UserRepository userRepository;
 
@@ -23,7 +23,7 @@ public class TaskImplementationService {
     
     public TaskInstance getCorrespondingTestTaskInstance(
             TaskInstance implTaskInstance) {
-        return taskImplementationRepository.
+        return taskInstanceRepository.
                 findByTaskAndUser(
                         taskRepository.
                                 findByIndexAndChallenge(implTaskInstance.getTask().getIndex()-1,
@@ -34,7 +34,7 @@ public class TaskImplementationService {
 
     
     public TaskInstance getCorrespondingImplTaskInstance(TaskInstance testTaskInstance) {
-        return taskImplementationRepository.
+        return taskInstanceRepository.
                 findByTaskAndUser(
                         taskRepository.findByIndexAndChallenge(testTaskInstance.getTask().getIndex()+1,
                                 testTaskInstance.getTask().getChallenge()),
@@ -42,13 +42,13 @@ public class TaskImplementationService {
     }
 
     public TaskInstance findOne(long taskInstanceId) {
-        return taskImplementationRepository.findOne(taskInstanceId);
+        return taskInstanceRepository.findOne(taskInstanceId);
 
     }
 
     @Transactional
     public TaskInstance updateTaskImplementationCode(Long taskInstanceId, String taskInstanceCode) {
-        TaskInstance taskInstanceToUpdate = taskImplementationRepository.findOne(taskInstanceId);
+        TaskInstance taskInstanceToUpdate = taskInstanceRepository.findOne(taskInstanceId);
         taskInstanceToUpdate.setCode(taskInstanceCode);
         return taskInstanceToUpdate;
     }

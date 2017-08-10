@@ -8,7 +8,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import pingis.entities.*;
-import pingis.repositories.TaskImplementationRepository;
+import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.TaskRepository;
 import pingis.repositories.UserRepository;
 
@@ -26,7 +26,7 @@ public class TaskInstanceServiceTest {
     @Autowired
     private TaskImplementationService taskImplementationService;
     @MockBean
-    private TaskImplementationRepository taskImplementationRepositoryMock;
+    private TaskInstanceRepository taskInstanceRepositoryMock;
     @MockBean
     private UserRepository userRepositoryMock;
     @MockBean
@@ -68,7 +68,7 @@ public class TaskInstanceServiceTest {
         when(taskRepositoryMock.findByIndexAndChallenge(implementationTask
                 .getIndex() - 1, testChallenge))
                 .thenReturn(testTask);
-        when(taskImplementationRepositoryMock.findByTaskAndUser(testTask, testUser))
+        when(taskInstanceRepositoryMock.findByTaskAndUser(testTask, testUser))
                 .thenReturn(testTaskInstance);
 
         TaskInstance result = taskImplementationService
@@ -76,11 +76,11 @@ public class TaskInstanceServiceTest {
 
         verify(userRepositoryMock).findOne(0l);
         verify(taskRepositoryMock).findByIndexAndChallenge(implementationTask.getIndex() - 1, testChallenge);
-        verify(taskImplementationRepositoryMock).findByTaskAndUser(testTask, testUser);
+        verify(taskInstanceRepositoryMock).findByTaskAndUser(testTask, testUser);
 
         verifyNoMoreInteractions(taskRepositoryMock);
         verifyNoMoreInteractions(userRepositoryMock);
-        verifyNoMoreInteractions(taskImplementationRepositoryMock);
+        verifyNoMoreInteractions(taskInstanceRepositoryMock);
 
         assertEquals(result, testTaskInstance);
     }
@@ -90,7 +90,7 @@ public class TaskInstanceServiceTest {
         when(userRepositoryMock.findOne(0l)).thenReturn(testUser);
         when(taskRepositoryMock.findByIndexAndChallenge(testTask.getIndex() + 1, testChallenge))
                 .thenReturn(implementationTask);
-        when(taskImplementationRepositoryMock.findByTaskAndUser(implementationTask, testUser))
+        when(taskInstanceRepositoryMock.findByTaskAndUser(implementationTask, testUser))
                 .thenReturn(implementationTaskInstance);
 
         TaskInstance result = taskImplementationService
@@ -98,24 +98,24 @@ public class TaskInstanceServiceTest {
 
         verify(userRepositoryMock).findOne(0l);
         verify(taskRepositoryMock).findByIndexAndChallenge(testTask.getIndex() + 1, testChallenge);
-        verify(taskImplementationRepositoryMock).findByTaskAndUser(implementationTask, testUser);
+        verify(taskInstanceRepositoryMock).findByTaskAndUser(implementationTask, testUser);
 
         verifyNoMoreInteractions(taskRepositoryMock);
         verifyNoMoreInteractions(userRepositoryMock);
-        verifyNoMoreInteractions(taskImplementationRepositoryMock);
+        verifyNoMoreInteractions(taskInstanceRepositoryMock);
 
         assertEquals(result, implementationTaskInstance);
     }
 
     @Test
     public void testFindOne() {
-        when(taskImplementationRepositoryMock.findOne(testTaskInstance.getId()))
+        when(taskInstanceRepositoryMock.findOne(testTaskInstance.getId()))
                 .thenReturn(testTaskInstance);
 
         TaskInstance result = taskImplementationService.findOne(testTaskInstance.getId());
 
-        verify(taskImplementationRepositoryMock).findOne(testTaskInstance.getId());
-        verifyNoMoreInteractions(taskImplementationRepositoryMock);
+        verify(taskInstanceRepositoryMock).findOne(testTaskInstance.getId());
+        verifyNoMoreInteractions(taskInstanceRepositoryMock);
 
         assertEquals(result, testTaskInstance);
     }
@@ -125,7 +125,7 @@ public class TaskInstanceServiceTest {
     public void testUpdateTaskImplementationCode() {
         assertEquals("thisShouldBeEmpty", testTaskInstance.getCode());
 
-        when(taskImplementationRepositoryMock.findOne(testTaskInstance.getId()))
+        when(taskInstanceRepositoryMock.findOne(testTaskInstance.getId()))
                 .thenReturn(testTaskInstance);
 
         String testCode = "Return 1+1;";
@@ -133,8 +133,8 @@ public class TaskInstanceServiceTest {
         TaskInstance result = taskImplementationService
                 .updateTaskImplementationCode(testTaskInstance.getId(), testCode);
 
-        verify(taskImplementationRepositoryMock).findOne(testTaskInstance.getId());
-        verifyNoMoreInteractions(taskImplementationRepositoryMock);
+        verify(taskInstanceRepositoryMock).findOne(testTaskInstance.getId());
+        verifyNoMoreInteractions(taskInstanceRepositoryMock);
 
         assertEquals(testCode, result.getCode());
     }

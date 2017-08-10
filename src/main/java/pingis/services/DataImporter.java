@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import pingis.entities.*;
 import pingis.entities.TaskInstance;
 import pingis.repositories.ChallengeRepository;
-import pingis.repositories.TaskImplementationRepository;
+import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.TaskRepository;
 
 @Component
@@ -27,7 +27,7 @@ public class DataImporter implements ApplicationRunner {
     private ChallengeRepository cr;
     private TaskRepository tr;
     private UserService us;
-    private TaskImplementationRepository tir;
+    private TaskInstanceRepository tir;
     private HashMap<String, User> users = new LinkedHashMap();
     private HashMap<String, Challenge> challenges = new HashMap();
     private ArrayList<Task> tasks = new ArrayList();
@@ -62,7 +62,7 @@ public class DataImporter implements ApplicationRunner {
     
     @Autowired
     public DataImporter(ChallengeRepository cr, TaskRepository tr, UserService ps,
-            TaskImplementationRepository tir) {
+            TaskInstanceRepository tir) {
         this.cr = cr;
         this.tr = tr;
         this.us = ps;
