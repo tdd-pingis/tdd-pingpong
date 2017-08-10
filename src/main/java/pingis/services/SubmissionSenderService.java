@@ -1,5 +1,7 @@
 package pingis.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.core.io.ByteArrayResource;
@@ -19,6 +21,8 @@ import java.util.UUID;
 
 @Service
 public class SubmissionSenderService {
+    private final Logger logger = LoggerFactory.getLogger(SubmissionSenderService.class);
+
     private static final String SUBMISSION_FILENAME = "submission.tar";
 
     private RestTemplate restTemplate;
@@ -59,6 +63,8 @@ public class SubmissionSenderService {
         submission.setId(UUID.randomUUID());
         submission.setStatus(TmcSubmissionStatus.PENDING);
 
+        logger.debug("Created new submission, id: {}", submission.getId());
+
         String notifyUrl = submissionProperties.getNotifyUrl();
 
         HttpEntity<MultiValueMap<String, Object>> requestEntity = buildRequestEntity(packaged,
@@ -67,7 +73,10 @@ public class SubmissionSenderService {
         TmcSubmissionResponse response = restTemplate.postForObject("/tasks.json", requestEntity,
                 TmcSubmissionResponse.class);
 
+        logger.debug("Received sandbox response: {}", response.getStatus());
+
         if (!response.getStatus().equals(TmcSubmissionResponse.OK)) {
+            logger.error("Sandbox submission failed!");
             return null;
         }
 

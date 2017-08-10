@@ -59,8 +59,8 @@ public class EditorService {
         EditorTabData tab1 = new EditorTabData("Test to fulfill",
                 testTaskImplementation
                         .getCode());
-        tabData.put("editor1", tab1);
-        tabData.put("editor2", tab2);
+        tabData.put("editor2", tab1);
+        tabData.put("editor1", tab2);
         return tabData;
     }
 

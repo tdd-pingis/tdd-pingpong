@@ -79,6 +79,8 @@ dependencies {
     compile 'com.fasterxml.jackson.core:jackson-databind'
     compile 'org.json:json:20160212'
 
+    // Ace editor
+    compile 'org.webjars.bower:ace-builds:1.2.8'
 
     testCompile 'junit:junit'
     testCompile 'org.springframework.boot:spring-boot-starter-test'
