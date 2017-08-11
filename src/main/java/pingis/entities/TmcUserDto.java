@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 /**
 * Implements Spring Security's OAuth2User and works only as a data transfer object 
-* between Spring Security layer and UserService. This is then extracted in UserService 
+* between Spring Security layer and UserService. Extracted in UserService 
 * and exported into database as a TmcUser.
 * @author  villburn
 */
@@ -34,6 +34,13 @@ public class TmcUserDto implements OAuth2User {
     public boolean administrator;
     
     public TmcUserDto() {}
+
+    public TmcUserDto(String id, String username, String email, boolean administrator) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.administrator = administrator;
+    }
     
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
