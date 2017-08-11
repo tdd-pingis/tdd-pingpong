@@ -1,9 +1,3 @@
-// Separates the test task into unit and cucumber test tasks
-
-test {
-    exclude '**'
-}
-
 task unitTest (type: Test) {
     systemProperty "spring.profiles.active", "dev"
 
@@ -24,16 +18,29 @@ task cucumberOAuthTest (type: Test) {
     include '**/cucumber/**'
 }
 
-test.dependsOn unitTest
+if (System.env.TRAVIS == 'true') {
+    test {
+        systemProperty "spring.profiles.active", "dev"
+        systemProperty "cucumber.options", "--tags @dev"
 
-// If running in Travis, we want build to run the dev Cucumber tests as well
-if(System.env.TRAVIS == 'true') {
-  test.dependsOn cucumberTest
+        include '**/cucumber/**'
+    }
+
+    // If running in Travis, we want build to run the dev Cucumber tests as well
+    test.dependsOn cucumberTest
+
+    // If running in Travis and it is not a pull request, we want to run the OAuth Cucumber tests as well
+    if(System.env.TRAVIS_PULL_REQUEST == 'false') {
+        test.dependsOn cucumberOAuthTest
+    }
+} else {
+    // Separates the test task into unit and cucumber test tasks
+    test {
+        exclude '**'
+    }
 }
-// If running in Travis and it is not a pull request, we want to run the OAuth Cucumber tests as well
-if(System.env.TRAVIS_PULL_REQUEST == 'false') {
-  test.dependsOn cucumberOAuthTest
-}
+
+test.dependsOn unitTest
 
 // For running all tests during build
 if(System.env.TESTS == 'ALL') {
