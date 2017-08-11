@@ -16,6 +16,8 @@ public class EditorService {
     
     @Autowired
     TaskInstanceService taskInstanceService;
+    @Autowired
+    TaskService taskService;
     
     public EditorService() {
     }
@@ -34,14 +36,12 @@ public class EditorService {
     private Map<String, EditorTabData> generateTestTaskTabs(TaskInstance taskInstance,
             Challenge currentChallenge) {
         Map<String, EditorTabData> tabData = new LinkedHashMap();
-        TaskInstance implTaskInstance
-                = taskInstanceService.getCorrespondingImplTaskInstance(taskInstance);
         EditorTabData tab1 = new EditorTabData(
                 JavaClassGenerator.generateTestClassFilename(currentChallenge),
                 taskInstance.getTask().getCodeStub());
         EditorTabData tab2 = new EditorTabData(
                 JavaClassGenerator.generateImplClassFilename(currentChallenge),
-                implTaskInstance.getTask().getCodeStub());
+                taskService.getCorrespondingImplementationTask(taskInstance, currentChallenge).getCodeStub());
         tabData.put("editor1", tab1);
         tabData.put("editor2", tab2);
         return tabData;

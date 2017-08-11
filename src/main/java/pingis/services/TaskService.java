@@ -7,6 +7,8 @@ import pingis.repositories.ChallengeRepository;
 import pingis.repositories.TaskRepository;
 import java.util.List;
 import pingis.repositories.TaskInstanceRepository;
+import pingis.entities.TaskInstance;
+import pingis.entities.Challenge;
 
 @Service
 public class TaskService {
@@ -49,4 +51,7 @@ public class TaskService {
     }
 
 
+    public Task getCorrespondingImplementationTask(TaskInstance taskInstance, Challenge challenge) {
+        return taskRepository.findByIndexAndChallenge(taskInstance.getTask().getIndex()+1, challenge);
+    }
 }
