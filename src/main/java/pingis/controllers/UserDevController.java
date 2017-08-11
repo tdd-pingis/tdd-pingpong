@@ -1,5 +1,6 @@
 package pingis.controllers;
 
+import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
@@ -22,8 +23,8 @@ public class UserDevController {
     }
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
-    public String user(Model model) {
-        userService.handleUserAuthenticationByName(SecurityContextHolder.getContext().getAuthentication().getName());
+    public String user(Model model, Principal principal) {
+        userService.handleUserAuthenticationByName(principal.getName());
         return "user";
     }
 
