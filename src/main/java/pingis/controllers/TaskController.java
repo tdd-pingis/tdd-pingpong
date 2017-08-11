@@ -2,6 +2,7 @@ package pingis.controllers;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -18,15 +19,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import pingis.entities.TaskType;
 import pingis.entities.TaskInstance;
 
+import pingis.entities.User;
 import pingis.entities.tmc.TmcSubmission;
+
 import pingis.services.*;
 import pingis.utils.EditorTabData;
 import pingis.utils.JavaClassGenerator;
 import pingis.utils.JavaSyntaxChecker;
+import pingis.services.UserService;
 
 
 @Controller
@@ -41,7 +46,8 @@ public class TaskController {
     EditorService editorService;
     @Autowired
     TaskInstanceService taskInstanceService;
-
+    @Autowired
+    UserService userService;
 
     @Autowired
     private SubmissionPackagingService packagingService;
@@ -133,9 +139,8 @@ public class TaskController {
             redirectAttributes.addFlashAttribute("code", submissionCode);
             return new RedirectView("/task/{taskInstanceId}");
         }
-     
-        TmcSubmission submission = submitToTmc(taskInstance, currentChallenge, submissionCode, staticCode);
 
+        TmcSubmission submission = submitToTmc(taskInstance, currentChallenge, submissionCode, staticCode);
         redirectAttributes.addAttribute("submission", submission);
 
         // Save user's answer from left editor
@@ -145,10 +150,32 @@ public class TaskController {
     }
 
     @RequestMapping("/feedback")
-    public String feedback(Model model) {
+    public String feedback(Model model, @RequestParam long taskInstanceId) {
+        Challenge currentChallenge = taskInstanceService
+                .findOne(taskInstanceId)
+                .getTask().getChallenge();
+        model.addAttribute("challengeId", currentChallenge.getId());
         model.addAttribute("feedback", "Good work!");
         return "feedback";
     }
+    
+    @RequestMapping("/nextTask/{challengeId}")
+    public String nextTask(@PathVariable long challengeId, Model model) {
+        Challenge currentChallenge = challengeService.findOne(challengeId);
+        List<Task> tasks = currentChallenge.getTasks();
+        model.addAttribute("challenge", currentChallenge);
+        model.addAttribute("tasks", tasks);
+        return "nexttask";
+    }
 
+    @RequestMapping("/newTaskInstance/{taskId}")
+    public RedirectView newTaskInstance(@PathVariable long taskId,
+            RedirectAttributes redirectAttributes) {
+        Task task = taskService.findOne(taskId);
+        User user = userService.getCurrentUser();
+        TaskInstance newTaskInstance = taskInstanceService.createEmpty(user, task);
+        redirectAttributes.addAttribute("taskInstanceId", newTaskInstance.getId());
+        return new RedirectView("/task/{taskInstanceId}");
+    }
 
 }

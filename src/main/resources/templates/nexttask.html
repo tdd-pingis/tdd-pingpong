@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="base :: header"></head>
+<body>
+<nav th:include="navbar :: navigation"></nav>
+<div class="container">
+    <p class="lead" th:text="'Challenge: '+${challenge.name}"/>
+    <div class="row">
+        <ul>
+            <li th:each="task: ${tasks}">
+                <a th:href="'/newTaskInstance/'+${task.id}"><p th:text="${task.name}"/></a>
+            </li>
+        </ul>
+
+    </div>
+</div>
+</body>
+</html>
+

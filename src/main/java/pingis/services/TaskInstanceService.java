@@ -4,7 +4,9 @@ package pingis.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pingis.entities.Task;
 import pingis.entities.TaskInstance;
+import pingis.entities.User;
 import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.TaskRepository;
 import pingis.repositories.UserRepository;
@@ -51,5 +53,11 @@ public class TaskInstanceService {
         TaskInstance taskInstanceToUpdate = taskInstanceRepository.findOne(taskInstanceId);
         taskInstanceToUpdate.setCode(taskInstanceCode);
         return taskInstanceToUpdate;
+    }
+
+    public TaskInstance createEmpty(User user, Task task) {
+        TaskInstance newTaskInstance = new TaskInstance(user, "", task);
+        return taskInstanceRepository.save(newTaskInstance);
+
     }
 }

@@ -60,9 +60,11 @@ public class TaskControllerTest {
     @MockBean
     private TaskService taskServiceMock;
 
-
     @MockBean
     private EditorService editorServiceMock;
+
+    @MockBean
+    private UserService userServiceMock;
 
     @Captor
     private ArgumentCaptor<Map<String, byte[]>> packagingArgCaptor;
@@ -176,10 +178,10 @@ public class TaskControllerTest {
         assertArrayEquals(submissionCode.getBytes(), files.get(submissionFileName));
         assertArrayEquals(staticCode.getBytes(), files.get(staticFileName));
 
+
         verify(taskInstanceServiceMock, times(1)).findOne(implTaskInstance.getId());
         verify(taskInstanceServiceMock).updateTaskInstanceCode(implTaskInstance.getId(),
                                                                            submissionCode);
-
         verifyNoMoreInteractions(packagingService);
         verifyNoMoreInteractions(taskInstanceServiceMock);
         verifyNoMoreInteractions(challengeServiceMock);
@@ -188,7 +190,10 @@ public class TaskControllerTest {
 
     @Test
     public void givenFeedbackWhenGetFeedback() throws Exception {
-        performSimpleGetRequestAndFindContent("/feedback", "feedback", "<h1>Feedback</h1>");
+        when(taskInstanceServiceMock.findOne(1l)).thenReturn(testTaskInstance);
+        performSimpleGetRequestAndFindContent("/feedback?taskInstanceId=1", "feedback", "<h1>Feedback</h1>");
+        verify(taskInstanceServiceMock).findOne(1l);
+        verifyNoMoreInteractions(taskInstanceServiceMock);
     }
 
 
