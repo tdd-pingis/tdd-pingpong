@@ -18,8 +18,7 @@ public class ResultMessage {
     private ResultStatus status;
     
     private String stdout;
-    private List<TestResult> passedTests;
-    private List<TestResult> failedTests;
+    private List<TestResult> tests;
 
     public boolean isSuccess() {
         return success;
@@ -53,19 +52,11 @@ public class ResultMessage {
         this.stdout = stdout;
     }
 
-    public List<TestResult> getPassedTests() {
-        return passedTests;
+    public void setTests(List<TestResult> tests) {
+        this.tests = tests;
     }
 
-    public void setPassedTests(List<TestResult> passedTests) {
-        this.passedTests = passedTests;
-    }
-
-    public List<TestResult> getFailedTests() {
-        return failedTests;
-    }
-
-    public void setFailedTests(List<TestResult> failedTests) {
-        this.failedTests = failedTests;
+    public List<TestResult> getTests() {
+        return tests;
     }
 }

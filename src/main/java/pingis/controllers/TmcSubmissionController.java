@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import pingis.entities.TaskType;
 import pingis.entities.tmc.Logs;
 import pingis.entities.tmc.ResultMessage;
 import pingis.entities.tmc.ResultStatus;
@@ -80,19 +81,23 @@ public class TmcSubmissionController {
         ResultStatus status = top.getStatus();
         
         ResultMessage message = new ResultMessage();
-        message.setType(submission.getTaskInstance().getTask().getType());
+        TaskType type = submission.getTaskInstance().getTask().getType();
+        message.setType(type);
         message.setStatus(status);
-        
-        if(status == ResultStatus.COMPILE_FAILED) {
+
+        if (status == ResultStatus.COMPILE_FAILED) {
             message.setStdout(logs.getStdoutString());
-        } else if(status == ResultStatus.PASSED) {
-            message.setPassedTests(
+        } else if (status == ResultStatus.PASSED) {
+            message.setSuccess(type == TaskType.IMPLEMENTATION);
+            message.setTests(
                     top.getTestResults().stream()
-                    .filter(r -> r.isPassed()).collect(Collectors.toList()));
-            
-            message.setFailedTests(
+                            .filter(r -> r.isPassed()).collect(Collectors.toList()));
+
+        } else if (status == ResultStatus.TESTS_FAILED) {
+            message.setSuccess(type == TaskType.TEST);
+            message.setTests(
                     top.getTestResults().stream()
-                    .filter(r -> !r.isPassed()).collect(Collectors.toList()));
+                            .filter(r -> !r.isPassed()).collect(Collectors.toList()));
         }
         
         return message;
