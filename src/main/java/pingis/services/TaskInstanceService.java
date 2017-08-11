@@ -4,6 +4,7 @@ package pingis.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pingis.entities.CodeStatus;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.User;
@@ -58,6 +59,11 @@ public class TaskInstanceService {
     public TaskInstance createEmpty(User user, Task task) {
         TaskInstance newTaskInstance = new TaskInstance(user, "", task);
         return taskInstanceRepository.save(newTaskInstance);
+    }
 
+    @Transactional
+    public TaskInstance markAsDone(TaskInstance taskInstance) {
+        taskInstance.setStatus(CodeStatus.DONE);
+        return taskInstance;
     }
 }
