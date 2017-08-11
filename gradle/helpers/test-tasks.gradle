@@ -36,8 +36,6 @@ if (System.env.TRAVIS == 'true') {
     test.dependsOn unitTest
 }
 
-test.dependsOn unitTest
-
 // For running all tests during build
 if(System.env.TESTS == 'ALL') {
   test.dependsOn cucumberTest
