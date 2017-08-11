@@ -9,16 +9,17 @@ import org.springframework.security.test.context.support.WithSecurityContextFact
 import pingis.entities.TmcUserDto;
 import pingis.services.DataImporter.UserType;
 
-public class WithMockCustomUserSecurityContextFactory implements WithSecurityContextFactory<WithMockCustomUser> {
+public class WithMockCustomUserSecurityContextFactory {
+    
+    private static final String TEST_EMAIL = "testmail@mail.com";
      
-    @Override
-    public SecurityContext createSecurityContext(WithMockCustomUser customUser) {
+    public SecurityContext createSecurityContext(pingis.entities.User customUser) {
         SecurityContext context = SecurityContextHolder.createEmptyContext();
 
-        TmcUserDto principal = new TmcUserDto(customUser.id(), 
-                                              customUser.username(), 
-                                              customUser.email(), 
-                                              customUser.administrator());
+        TmcUserDto principal = new TmcUserDto(Long.toString(customUser.getId()), 
+                                              customUser.getName(), 
+                                              TEST_EMAIL, 
+                                              customUser.isAdministrator());
 
         Authentication authentication = new UsernamePasswordAuthenticationToken(principal, 
                                                                                "password", 
