@@ -49,8 +49,7 @@ public class TmcSubmissionController {
 
         if (submission == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-        if (submission.getStatus() != TmcSubmissionStatus.PENDING) {
+        } else if (submission.getStatus() != TmcSubmissionStatus.PENDING) {
             // Result is being submitted twice.
             // TODO: decide on a better response code for this...
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -68,7 +67,6 @@ public class TmcSubmissionController {
         submissionRepository.save(submission);
         
         ResultMessage message = createMessage(submission);
-        
         //Broadcasts the submission to /topic/results
         this.template.convertAndSend("/topic/results", submission.getTestOutput());
         logger.debug("Sent the TMC sandbox results to /topic/results");
