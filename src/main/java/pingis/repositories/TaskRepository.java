@@ -11,5 +11,6 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
 //    @Query("delete From Reference r Where r.name = ?1")
 //    void deleteReferenceByName(String name);
     Task findByIndexAndChallenge(int index, Challenge challenge);
+    Task findByIndex(int index);
 
 }
