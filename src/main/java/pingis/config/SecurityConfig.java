@@ -17,7 +17,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationProperties;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import pingis.entities.OAuthUser;
+import pingis.entities.TmcUserDto;
 
 
 @Profile(value = {"prod", "oauth"})
@@ -52,7 +52,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private void oauthLoginConfiguration(HttpSecurity http) throws Exception {
         http.oauth2Login()
             .clients(tmcClientRegistration())
-            .userInfoEndpoint().customUserType(OAuthUser.class, URI.create(oauthProperties.getUserInfoUri()));
+            .userInfoEndpoint().customUserType(TmcUserDto.class, URI.create(oauthProperties.getUserInfoUri()));
     }
     
     private void oauth2LogoutConfiguration(HttpSecurity http) throws Exception {
