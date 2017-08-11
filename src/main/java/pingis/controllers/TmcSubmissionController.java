@@ -12,9 +12,14 @@ import pingis.entities.tmc.TmcSubmission;
 import pingis.entities.tmc.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import pingis.entities.TaskType;
+import pingis.entities.tmc.Logs;
+import pingis.entities.tmc.ResultMessage;
+import pingis.entities.tmc.ResultStatus;
 import pingis.entities.tmc.TestOutput;
 
 @Controller
@@ -44,8 +49,7 @@ public class TmcSubmissionController {
 
         if (submission == null) {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
-        }
-        if (submission.getStatus() != TmcSubmissionStatus.PENDING) {
+        } else if (submission.getStatus() != TmcSubmissionStatus.PENDING) {
             // Result is being submitted twice.
             // TODO: decide on a better response code for this...
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -62,9 +66,38 @@ public class TmcSubmissionController {
         submission.setVmLog(vmLog);
         submissionRepository.save(submission);
         
+        ResultMessage message = createMessage(submission);
         //Broadcasts the submission to /topic/results
         this.template.convertAndSend("/topic/results", submission.getTestOutput());
         logger.debug("Sent the TMC sandbox results to /topic/results");
         return new ResponseEntity(HttpStatus.OK);
+    }
+    
+    private ResultMessage createMessage(TmcSubmission submission) {
+        TestOutput top = submission.getTestOutput();
+        Logs logs = top.getLogs();
+        ResultStatus status = top.getStatus();
+        
+        ResultMessage message = new ResultMessage();
+        TaskType type = submission.getTaskInstance().getTask().getType();
+        message.setType(type);
+        message.setStatus(status);
+
+        if (status == ResultStatus.COMPILE_FAILED) {
+            message.setStdout(logs.getStdoutString());
+        } else if (status == ResultStatus.PASSED) {
+            message.setSuccess(type == TaskType.IMPLEMENTATION);
+            message.setTests(
+                    top.getTestResults().stream()
+                            .filter(r -> r.isPassed()).collect(Collectors.toList()));
+
+        } else if (status == ResultStatus.TESTS_FAILED) {
+            message.setSuccess(type == TaskType.TEST);
+            message.setTests(
+                    top.getTestResults().stream()
+                            .filter(r -> !r.isPassed()).collect(Collectors.toList()));
+        }
+        
+        return message;
     }
 }
