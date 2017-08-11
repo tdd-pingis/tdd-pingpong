@@ -21,7 +21,7 @@ import pingis.repositories.TmcSubmissionRepository;
 import pingis.Application;
 import pingis.config.SecurityDevConfig;
 import pingis.config.WebSocketSecurityConfig;
-
+import pingis.services.TaskInstanceService;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
@@ -54,7 +54,10 @@ public class TmcSubmissionControllerTest {
 
     @MockBean
     private TmcSubmissionRepository submissionRepository;
-    
+
+    @MockBean
+    private TaskInstanceService taskInstanceServiceMock;
+
     private String testOutput;
 
     // TODO: Make this generate random data. This is a separate method just to please checkstyle.

@@ -139,4 +139,11 @@ public class TaskInstanceServiceTest {
         assertEquals(testCode, result.getCode());
     }
 
+    @Test
+    public void testMarkAsDone() {
+        TaskInstance result = taskInstanceService.markAsDone(testTaskInstance);
+        assertEquals(CodeStatus.DONE, result.getStatus());
+
+    }
+
 }
