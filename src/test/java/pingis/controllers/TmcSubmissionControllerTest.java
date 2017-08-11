@@ -31,6 +31,8 @@ import static org.mockito.BDDMockito.*;
 import org.springframework.test.annotation.DirtiesContext;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import pingis.entities.Task;
+import pingis.entities.TaskInstance;
 import pingis.entities.tmc.Logs;
 import pingis.entities.tmc.ResultStatus;
 import pingis.entities.tmc.TestOutput;
@@ -88,9 +90,7 @@ public class TmcSubmissionControllerTest {
     @Test
     public void doubleSubmitReturnsBadRequest() throws Exception {
         UUID submissionId = UUID.randomUUID();
-        TmcSubmission submission = new TmcSubmission();
-
-        submission.setStatus(TmcSubmissionStatus.PENDING);
+        TmcSubmission submission = createSubmission();
         submission.setId(submissionId);
 
         given(submissionRepository.findOne(submissionId))
@@ -111,6 +111,8 @@ public class TmcSubmissionControllerTest {
     @Test
     public void returnsNotFoundWithInvalidToken() throws Exception {
         UUID submissionId = UUID.randomUUID();
+        TmcSubmission submission = createSubmission();
+        submission.setId(submissionId);
 
         given(submissionRepository.findOne(submissionId))
                 .willReturn(null);
@@ -125,9 +127,7 @@ public class TmcSubmissionControllerTest {
     @Test
     public void testWithValidToken() throws Exception {
         UUID submissionId = UUID.randomUUID();
-        TmcSubmission submission = new TmcSubmission();
-
-        submission.setStatus(TmcSubmissionStatus.PENDING);
+        TmcSubmission submission = createSubmission();
         submission.setId(submissionId);
 
         given(submissionRepository.findOne(submissionId))
@@ -144,6 +144,17 @@ public class TmcSubmissionControllerTest {
         TmcSubmission captured = submissionCaptor.getValue();
         
         assertSubmission(captured, submissionId);
+    }
+    
+    private TmcSubmission createSubmission() {
+        TmcSubmission submission = new TmcSubmission();
+
+        submission.setStatus(TmcSubmissionStatus.PENDING);
+
+        Task task = new Task(0,null,null,null,null,null,0,0);
+        TaskInstance ti = new TaskInstance(null,null,task);
+        submission.setTaskInstance(ti);
+        return submission;
     }
     
     private void assertSubmission(TmcSubmission captured, UUID submissionId) {
