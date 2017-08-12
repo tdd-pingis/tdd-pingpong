@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.ArrayList;
 
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.lang3.ArrayUtils;
@@ -11,8 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
-import pingis.entities.Task;
-import pingis.entities.Challenge;
+import pingis.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,11 +20,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.util.MultiValueMap;
 
-import pingis.entities.TaskType;
-import pingis.entities.TaskInstance;
-
-import pingis.entities.User;
 import pingis.entities.tmc.TmcSubmission;
 
 import pingis.services.*;
@@ -163,17 +160,29 @@ public class TaskController {
     public String nextTask(@PathVariable long challengeId, Model model) {
         Challenge currentChallenge = challengeService.findOne(challengeId);
         List<Task> tasks = currentChallenge.getTasks();
+        List<Task> testTasks = taskService.getAvailableTestTasks(currentChallenge);
+        MultiValueMap<Task, TaskInstance> implementationTaskInstances =
+                taskService.getAvailableTestTaskInstances(currentChallenge);
         model.addAttribute("challenge", currentChallenge);
-        model.addAttribute("tasks", tasks);
+        model.addAttribute("testTasks", testTasks);
+        model.addAttribute("implementationTaskInstances", implementationTaskInstances);
         return "nexttask";
     }
 
-    @RequestMapping("/newTaskInstance/{taskId}")
-    public RedirectView newTaskInstance(@PathVariable long taskId,
+    @RequestMapping("/newTaskInstance")
+    public RedirectView newTaskInstance(@RequestParam long taskId, @RequestParam long testTaskInstanceId,
             RedirectAttributes redirectAttributes) {
         Task task = taskService.findOne(taskId);
         User user = userService.getCurrentUser();
         TaskInstance newTaskInstance = taskInstanceService.createEmpty(user, task);
+        System.out.println("new task instances test task instance: "+newTaskInstance.getTestTaskinstance());
+        if (task.getType() == TaskType.IMPLEMENTATION) {
+            TaskInstance testTaskInstance = taskInstanceService.findOne(testTaskInstanceId);
+            newTaskInstance.setTestTaskInstance(testTaskInstance);
+            testTaskInstance.addImplementionTaskInstance(newTaskInstance);
+            taskInstanceService.save(newTaskInstance);
+            taskInstanceService.save(testTaskInstance);
+        }
         redirectAttributes.addAttribute("taskInstanceId", newTaskInstance.getId());
         return new RedirectView("/task/{taskInstanceId}");
     }

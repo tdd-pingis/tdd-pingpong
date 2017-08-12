@@ -50,14 +50,11 @@ public class EditorService {
     private Map<String, EditorTabData> generateImplTaskTabs(TaskInstance taskInstance,
             Challenge currentChallenge) {
         Map<String, EditorTabData> tabData = new LinkedHashMap();
-        TaskInstance testTaskInstance
-                = taskInstanceService.getCorrespondingTestTaskInstance(
-                taskInstance);
         EditorTabData tab2 = new EditorTabData(
                 "Implement code here",
                 taskInstance.getTask().getCodeStub());
         EditorTabData tab1 = new EditorTabData("Test to fulfill",
-                testTaskInstance
+                taskInstance.getTestTaskinstance()
                         .getCode());
         tabData.put("editor2", tab1);
         tabData.put("editor1", tab2);

@@ -191,6 +191,7 @@ public class DataImporter implements ApplicationRunner {
         // Create new TaskInstance
         TaskInstance taskInstance = new TaskInstance(author, modelImp, task);
         task.addTaskInstance(taskInstance);
+        taskInstance.setStatus(CodeStatus.DONE);
         
         return taskInstance;
     }

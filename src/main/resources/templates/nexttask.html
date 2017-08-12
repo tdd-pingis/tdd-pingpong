@@ -6,9 +6,22 @@
 <div class="container">
     <p class="lead" th:text="'Challenge: '+${challenge.name}"/>
     <div class="row">
+        <h4>Test tasks:</h4>
         <ul>
-            <li th:each="task: ${tasks}">
-                <a th:href="'/newTaskInstance/'+${task.id}"><p th:text="${task.name}"/></a>
+            <li th:each="testtask: ${testTasks}">
+                <a th:href="'/newTaskInstance/'+${testtask.id}+'/0'"><p th:text="${testtask.name}"/></a>
+            </li>
+        </ul>
+        <h4>Implementation tasks:</h4>
+        <ul>
+            <li th:each="imptask: ${implementationTaskInstances}">
+                <div th:each="imptaskinstance : ${imptask.value}">
+                    <a th:href="'/newTaskInstance?taskId='
+                   +${imptask.key.id}
+                   +'&amp;testTaskInstanceId='+${imptaskinstance.id}">
+                        <p th:text="'task: '+${imptask.key.name}+', implementation by '+${imptaskinstance.user.name}"/>
+                    </a>
+                </div>
             </li>
         </ul>
 
