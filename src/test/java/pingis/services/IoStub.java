@@ -1,14 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pingis.services;
 
 
-public class IOStub implements IO {
+public class IoStub implements Io {
 
-  //CHECKSTYLE:OFF
   private String[] data = {
       "{",
       "   \"challenges\": [",
@@ -22,13 +16,16 @@ public class IOStub implements IO {
       "               \"index\": 1,",
       "               \"name\": \"Test multiplication\",",
       "               \"type\": \"test\",",
-      "               \"desc\": \"Write a JUnit test case that tests the multiplication method for two integers. \\nMethod should take two integers as arguments and return the product of those as an integer.\",",
-      "               \"codeStub\": [\"@Test\\npublic void testMultiplication() {\\n\\t//TODO: implement this\\n\\n}\"],",
+      "               \"desc\": \"Write a JUnit test case that tests the multiplication method for "
+          + "two integers. \\nMethod should take two integers as arguments "
+          + "and return the product of those as an integer.\",",
+      "               \"codeStub\": [\"@Test\\npublic void testMultiplication() {"
+          + "\\n\\t//TODO: implement this\\n\\n}\"],",
       "               \"modelimplementation\": [\"public class CalculatorTest {\\n\",",
       "                                         \"@Test\\n    public void testAddition() {\\n\",",
-      "                                             \"Calculator calc = new Calculator();\\n\",",
-      "                                             \"assertEquals(23, calc.multiply(18, 5));\\n\",",
-      "                                             \"}\\n}\"]",
+      "                                            \"Calculator calc = new Calculator();\\n\",",
+      "                                            \"assertEquals(23, calc.multiply(18, 5));\\n\",",
+      "                                            \"}\\n}\"]",
       "             }",
       "          ]",
       "       }",
@@ -36,10 +33,10 @@ public class IOStub implements IO {
       "   \"dummyimplementations\": []",
 
       "}"};
-  //CHECKSTYLE:ON
+
   private int currentLine = 0;
 
-  public IOStub() {
+  public IoStub() {
     System.out.println(data);
   }
 

@@ -12,17 +12,19 @@ import pingis.Application;
 @RunWith(Cucumber.class)
 @CucumberOptions(plugin = {"html:build/reports/tests/cucumber"})
 public class RunCukesTest {
-    @ClassRule
-    public static ExternalResource server = new ExternalResource(){
-        ConfigurableApplicationContext app;
-        
-        @Override
-        protected void before() throws Throwable {
-            this.app = SpringApplication.run(Application.class);
-        }
-        @Override
-        protected void after() {
-            app.close();
-        }
-    };
+
+  @ClassRule
+  public static ExternalResource server = new ExternalResource() {
+    ConfigurableApplicationContext app;
+
+    @Override
+    protected void before() throws Throwable {
+      this.app = SpringApplication.run(Application.class);
+    }
+
+    @Override
+    protected void after() {
+      app.close();
+    }
+  };
 }
