@@ -107,11 +107,9 @@ function showIndividualTestResult(resultMessage, i) {
 
     passedDiv = test.append($("<div>"));
     if (res.passed) {
-        passedDiv.append($("<div>")
-                .text("Passed"));
+        passedDiv.text("Passed");
     } else {
-        passedDiv.append($("<div>")
-                .text("Failed"));
+        passedDiv.text("Failed");
     }
 
     if (errorMessage) {
