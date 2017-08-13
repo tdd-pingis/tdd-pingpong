@@ -1,111 +1,146 @@
-var stompClient = null;
-
-//Requests the CSRF token and makes
-//the connection after receiving a response
-function connect() {
-    jQuery.ajax({
-        url: '/csrf',
-        success: connectStomp
-    });
-}
-
-function connectStomp(csrf) {
-    var headerName = csrf.headerName;
-    var token = csrf.token;
-
-    var headers = {};
-    headers[headerName] = token;
-
-    stompClient = Stomp.over(new SockJS('/websocket'));
-    stompClient.connect(headers, function () {
-        stompClient.subscribe('/topic/results', showResults);
-    });
-}
-
 function showResults(response) {
-    var testOutput = JSON.parse(response.body);
+    var resultMessage = JSON.parse(response.body);
+    var status = resultMessage.status;
 
-    var status = testOutput.status;
-    var testResults = testOutput.testResults;
+    makeResultsPanel();
 
+    if (status === 'COMPILE_FAILED') {
+        showCompilationError(resultMessage);
+    } else if (status === 'PASSED' || status === 'TESTS_FAILED') {
+        showTestResults(resultMessage);
+    } else {
+        $("#panel")
+                .addClass("alert alert-warning")
+                .text("Something happened: " + status);
+    }
+}
+
+function makeResultsPanel() {
     var results = $("#results");
     results.html(
             $("<div>")
             .addClass("col-md-6"));
     results.append($("<div>")
-            .attr("id", "panel")
-            .addClass("panel panel-default"));
+            .attr("id", "panel"));
 
-    var panel = $("#panel")
+    var panel = $("#panel");
     panel.append(
-            resultDiv(status));
+            $("<div>")
+            .attr("id", "panel-heading")
+            .addClass("panel-heading"));
     panel.append(
             $("<div>")
             .attr("id", "panel-body")
             .addClass("panel-body"));
 
-    var panelBody = $("#panel-body")
+}
 
-    for (i = 0; i < testResults.length; i++) {
-        
-        var res = testResults[i];
-        var name = res.name;
-        var passed = res.passed;
-        var points = res.points;
-        var errorMessage = res.errorMessage;
-        var backtrace = res.backtrace;
-        var testId = "test" + i;
-        var traceId = "backtrace" + i;
+function showCompilationError(resultMessage) {
+    //The standard out contains a lot of unnecessary data
+    //All the useful rows start with [javac], but some of
+    //the [javac] rows are still unnecessary.
+    var lines = resultMessage.stdout.split("\n");
+    lines = lines.filter(line => line.includes("[javac] "))
+            .map(line => line.replace("[javac] ", ""))
+            .slice(2, -1);
 
+    $("#panel").addClass("panel panel-warning");
+    $("#panel-heading")
+            .text("Oh no! Your submission did not compile!");
+    var panelBody = $("#panel-body");
+    for (const line of lines) {
         panelBody.append(
                 $("<div>")
-                .attr("id", testId))
+                .text(line));
+    }
+}
 
-        var test = $("#"+testId);
-        test.append($("<div>")
-                .text("Test name: " + name));
-        test.append($("<div>")
-                .text("Passed: " + passed));
-        test.append($("<div>")
-                .text("Points: " + points));
+function showTestResults(resultMessage) {
+    if (resultMessage.success) {
+        showSuccess();
+    } else {
+        showFailure(resultMessage);
+    }
+}
+
+function showSuccess() {
+    $("#panel").addClass("panel panel-success");
+    $("#panel-heading").text("Task cleared!");
+    $("#panel-body").text("Well done! Head onto the next task!");
+}
+
+function showFailure(resultMessage) {
+    $("#panel").addClass("panel panel-danger");
+    var panelHeading = $("#panel-heading");
+
+    if (resultMessage.type === 'TEST') {
+        panelHeading
+                .text("Hey! You're supposed to make a test that doesn't pass!");
+    } else {
+        panelHeading
+                .text("Uh oh! Your submission didn't pass the tests!");
+    }
+
+    if (resultMessage.tests.length > 0) {
+        for (i = 0; i < resultMessage.tests.length; i++) {
+            showIndividualTestResult(resultMessage, i);
+        }
+    } else {
+        $("#panel-body").text("No tests were found.");
+    }
+}
+
+function showIndividualTestResult(resultMessage, i) {
+    var res = resultMessage.tests[i];
+    //The name field is formatted like below,
+    //TestClass testMethod
+    var names = res.name.split(" ");
+    var className = names[0];
+    var testName = names[1];
+    var errorMessage = res.errorMessage;
+    var backtrace = res.backtrace;
+    var testId = "test" + i;
+    var traceId = "backtrace" + i;
+
+    var test = $("#panel-body").append(
+            $("<div>")
+            .attr("id", testId));
+
+    test.append($("<div>")
+            .text(testName + " (" + className + ")"));
+
+    passedDiv = test.append($("<div>"));
+    if (res.passed) {
+        passedDiv.text("Passed");
+    } else {
+        passedDiv.text("Failed");
+    }
+
+    if (errorMessage) {
         test.append($("<div>")
                 .text("Error message :" + errorMessage));
+    }
 
-        test.append(
+    if (backtrace.length > 0) {
+        test.append($("<br>"));
+        var trace = test.append(
                 $("<div>")
                 .attr("id", traceId)
-                .text("Backtrace: "));
+                .text("Stack trace: "));
 
-        var trace = $("#" + traceId);
         for (j = 0; j < backtrace.length; j++) {
             trace.append(
                     $("<div>")
                     .text(backtrace[j]));
         }
-        
+    }
+
+    //If this isn't the last test result, add some space
+    //before the next one
+    if (i !== resultMessage.tests.length - 1) {
         test.append(
                 $("<br>"));
-    }
-}
-
-//Possible statuses are: PASSED, TESTS_FAILED, COMPILE_FAILED, TESTRUN_INTERRUPTED
-//See fi.helsinki.cs.tmc.langs.domain.RunResult at testmycode/tmc-langs for more info
-function resultDiv(status) {
-    var resultDiv = $("<div>");
-    
-    if (status === 'PASSED') {
-        return resultDiv
-                .addClass("alert alert-success")
-                .text("Success!!");
-        
-    } else if (status === 'TESTS_FAILED') {
-        return resultDiv
-                .addClass("alert alert-danger")
-                .text("Some tests failed");
-        
-    } else {
-        return resultDiv
-                .addClass("alert alert-warning")
-                .text("Something happened: "+ status);
+        test.append(
+                $("<br>"));
     }
 }
