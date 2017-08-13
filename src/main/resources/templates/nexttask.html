@@ -9,7 +9,7 @@
         <h4>Test tasks:</h4>
         <ul>
             <li th:each="testtask: ${testTasks}">
-                <a th:href="'/newTaskInstance/'+${testtask.id}+'/0'"><p th:text="${testtask.name}"/></a>
+                <a th:href="'/newTaskInstance?taskId='+${testtask.id}+'&amp;testTaskInstanceId=0'"><p th:text="${testtask.name}"/></a>
             </li>
         </ul>
         <h4>Implementation tasks:</h4>

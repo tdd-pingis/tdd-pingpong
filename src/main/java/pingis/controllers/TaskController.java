@@ -175,7 +175,6 @@ public class TaskController {
         Task task = taskService.findOne(taskId);
         User user = userService.getCurrentUser();
         TaskInstance newTaskInstance = taskInstanceService.createEmpty(user, task);
-        System.out.println("new task instances test task instance: "+newTaskInstance.getTestTaskinstance());
         if (task.getType() == TaskType.IMPLEMENTATION) {
             TaskInstance testTaskInstance = taskInstanceService.findOne(testTaskInstanceId);
             newTaskInstance.setTestTaskInstance(testTaskInstance);
