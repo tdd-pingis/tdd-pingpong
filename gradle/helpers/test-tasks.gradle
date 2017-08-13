@@ -33,6 +33,9 @@ if (System.env.TRAVIS == 'true') {
         test.dependsOn cucumberOAuthTest
     }
 } else {
+    test {
+        exclude '**'
+    }
     test.dependsOn unitTest
 }
 
