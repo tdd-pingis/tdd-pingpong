@@ -58,8 +58,10 @@ public class EditorServiceTest {
                 2, 2);
         testTask.setChallenge(challenge);
         implementationTask.setChallenge(challenge);
-        this.passedTaskInstance = new TaskInstance(testUser, "", implementationTask);
+        this.passedTaskInstance = new TaskInstance(testUser, "public void implementation", implementationTask);
         this.returnedTaskInstance = new TaskInstance(testUser, "public void test", testTask);
+        passedTaskInstance.setTestTaskInstance(returnedTaskInstance);
+        returnedTaskInstance.addImplementionTaskInstance(passedTaskInstance);
                 
     }
     
@@ -75,14 +77,9 @@ public class EditorServiceTest {
     
     @Test
     public void testEditorServiceWithImplementationTask() {
-        when(taskInstanceServiceMock.getCorrespondingTestTaskInstance(this.passedTaskInstance)).
-                thenReturn(this.returnedTaskInstance);
         Map<String, EditorTabData> result = this.editorService.generateEditorContents(passedTaskInstance);
         assertEquals(result.get("editor2").code, "public void test");
         assertEquals(result.get("editor1").code, "public void implementation");
-        verify(taskInstanceServiceMock, times(1)).
-                getCorrespondingTestTaskInstance(passedTaskInstance);
-        verifyNoMoreInteractions(taskInstanceServiceMock);
     }
 
 }

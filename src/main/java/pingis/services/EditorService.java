@@ -50,15 +50,19 @@ public class EditorService {
     private Map<String, EditorTabData> generateImplTaskTabs(TaskInstance taskInstance,
             Challenge currentChallenge) {
         Map<String, EditorTabData> tabData = new LinkedHashMap();
-        TaskInstance testTaskInstance
-                = taskInstanceService.getCorrespondingTestTaskInstance(
-                taskInstance);
+        TaskInstance testTaskInstance = taskInstance.getTestTaskinstance();
+        if (testTaskInstance == null) {
+            // DataImporter does not set testTaskInstances. If null, use the old
+            // method that gets the test by modeluser
+            testTaskInstance
+                    = taskInstanceService.getCorrespondingTestTaskInstance(
+                    taskInstance);
+        }
         EditorTabData tab2 = new EditorTabData(
                 "Implement code here",
                 taskInstance.getTask().getCodeStub());
         EditorTabData tab1 = new EditorTabData("Test to fulfill",
-                testTaskInstance
-                        .getCode());
+                testTaskInstance.getCode());
         tabData.put("editor2", tab1);
         tabData.put("editor1", tab2);
         return tabData;

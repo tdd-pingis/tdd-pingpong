@@ -66,4 +66,8 @@ public class TaskInstanceService {
         taskInstance.setStatus(CodeStatus.DONE);
         return taskInstance;
     }
+
+    public TaskInstance save(TaskInstance taskInstance) {
+        return taskInstanceRepository.save(taskInstance);
+    }
 }
