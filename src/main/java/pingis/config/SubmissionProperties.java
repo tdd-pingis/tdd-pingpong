@@ -2,7 +2,6 @@ package pingis.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by dwarfcrank on 7/28/17.
@@ -10,22 +9,23 @@ import org.springframework.stereotype.Component;
 @Configuration
 @ConfigurationProperties(prefix = "tmc")
 public class SubmissionProperties {
-    private String sandboxUrl;
-    private String notifyUrl;
 
-    public String getNotifyUrl() {
-        return notifyUrl;
-    }
+  private String sandboxUrl;
+  private String notifyUrl;
 
-    public void setNotifyUrl(String notifyUrl) {
-        this.notifyUrl = notifyUrl;
-    }
+  public String getNotifyUrl() {
+    return notifyUrl;
+  }
 
-    public String getSandboxUrl() {
-        return sandboxUrl;
-    }
+  public void setNotifyUrl(String notifyUrl) {
+    this.notifyUrl = notifyUrl;
+  }
 
-    public void setSandboxUrl(String sandboxUrl) {
-        this.sandboxUrl = sandboxUrl;
-    }
+  public String getSandboxUrl() {
+    return sandboxUrl;
+  }
+
+  public void setSandboxUrl(String sandboxUrl) {
+    this.sandboxUrl = sandboxUrl;
+  }
 }
