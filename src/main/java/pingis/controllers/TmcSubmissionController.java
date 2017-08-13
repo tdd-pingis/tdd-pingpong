@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import pingis.entities.CodeStatus;
 import pingis.entities.tmc.TmcSubmission;
 import pingis.entities.tmc.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
@@ -21,6 +22,7 @@ import pingis.entities.tmc.Logs;
 import pingis.entities.tmc.ResultMessage;
 import pingis.entities.tmc.ResultStatus;
 import pingis.entities.tmc.TestOutput;
+import pingis.services.TaskInstanceService;
 
 @Controller
 public class TmcSubmissionController {
@@ -30,6 +32,8 @@ public class TmcSubmissionController {
     private TmcSubmissionRepository submissionRepository;
     @Autowired
     private SimpMessagingTemplate template;
+    @Autowired
+    private TaskInstanceService taskInstanceService;
 
     // These request parameters are specified separately because there doesn't seem to
     // be a simple way to rename fields when doing data binding.
@@ -65,12 +69,18 @@ public class TmcSubmissionController {
         submission.setValidations(validations);
         submission.setVmLog(vmLog);
         submissionRepository.save(submission);
-        
+        sendResults(submission);
+        return new ResponseEntity(HttpStatus.OK);
+    }
+
+    private void sendResults(TmcSubmission submission) {
         ResultMessage message = createMessage(submission);
+        if (message.isSuccess()) {
+            taskInstanceService.markAsDone(submission.getTaskInstance());
+        }
         //Broadcasts the submission to /topic/results
         this.template.convertAndSend("/topic/results", message);
         logger.debug("Sent the TMC sandbox results to /topic/results");
-        return new ResponseEntity(HttpStatus.OK);
     }
     
     private ResultMessage createMessage(TmcSubmission submission) {

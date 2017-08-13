@@ -24,8 +24,6 @@ Scenario Outline: <user> cannot login with an invalid username or password
     Examples:
         |user   |username   |password   |
         |User   |user       |passord    |
-        |Admin  |admin      |passord    |
-        |User   |uer        |password   |
         |Admin  |amin       |password   |
 
 @dev

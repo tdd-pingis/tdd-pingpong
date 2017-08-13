@@ -92,6 +92,55 @@
                         "       return \"Hello, world!\";",
                         "    }\n",
                         "}\n"]
+                },
+                {
+                    "author": "modeluser",
+                    "index": 3,
+                    "name": "Test even numbers",
+                    "type": "test",
+                    "desc": "Write a test for a method that checks if the argument is an even integer\n",
+                    "codeStub": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "public class EvenTest {\n",
+                        "    @Test\n",
+                        "    public void evenTest() {\n",
+                        "        // TODO: implement this\n",
+                        "    }\n",
+                        "}\n"
+                    ],
+                    "modelimplementation": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "public class EvenTest {\n",
+                        "    @Test\n",
+                        "    public void evenTest() {\n",
+                        "        Even even = new Even()",
+                        "        assertTrue(even.isEven(2));\n",
+                        "        assertFalse(even.isEven(3));\n",
+                        "    }\n",
+                        "}\n"]
+                },
+                {
+                    "author": "modeluser",
+                    "index": 4,
+                    "name": "Implement even numbers checker",
+                    "type": "implementation",
+                    "desc": "Implement a method that checks if the argument is an even integer.",
+                    "codeStub": [
+                        "public class Even {\n",
+                        "    public boolean isEven(int number) {\n",
+                        "        // TODO: implement this\n",
+                        "    }\n",
+                        "}\n"
+                    ],
+                    "modelimplementation": [
+                        "public class Even {\n",
+                        "    public boolean isEven(int number) {\n",
+                        "        return number % 2 == 0 ? true : false;\n",
+                        "    }\n",
+                        "}\n"
+                    ]
                 }
             ]
         }

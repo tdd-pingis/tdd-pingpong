@@ -8,6 +8,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
+import java.util.List;
+import java.util.ArrayList;
+
 import javax.validation.constraints.NotNull;
 import pingis.entities.tmc.TmcSubmission;
 
@@ -40,6 +43,12 @@ public class TaskInstance {
     @ManyToOne(fetch=FetchType.EAGER)
     private User user;
 
+    @ManyToOne
+    private TaskInstance testTaskInstance;
+
+    @OneToMany
+    private List<TaskInstance> implementionTaskInstances;
+
     protected TaskInstance() {}
 
     public TaskInstance(User user, String code, Task task) {
@@ -48,7 +57,8 @@ public class TaskInstance {
         this.task = task;
         this.status = CodeStatus.IN_PROGRESS;
         this.isExample = false; // by default
-        this.rating = 0;    
+        this.rating = 0;
+        this.implementionTaskInstances = new ArrayList();
     }
 
     public long getId() {
@@ -102,5 +112,22 @@ public class TaskInstance {
     public void setUser(User user) {
         this.user = user;
     }
+
+    public void setTestTaskInstance(TaskInstance testTaskInstance) {
+        this.testTaskInstance = testTaskInstance;
+    }
+
+    public TaskInstance getTestTaskinstance() {
+        return this.testTaskInstance;
+    }
+
+    public void addImplementionTaskInstance(TaskInstance implementationTaskInstance) {
+        this.implementionTaskInstances.add(implementationTaskInstance);
+    }
+
+    public List<TaskInstance> getImplementationTaskInstances() {
+        return this.implementionTaskInstances;
+    }
+
 
 }

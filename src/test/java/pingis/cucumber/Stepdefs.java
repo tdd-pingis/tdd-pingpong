@@ -30,8 +30,9 @@ public class Stepdefs {
     private String tmcLogin;
     @Value("${TMC_TEST_USER_PASSWORD:dummy}")
     private String tmcPassword;
+    @Value("${CUKE_WAIT_TIME:4}")
+    private int DRIVER_WAIT_TIME;
     
-    private final int DRIVER_WAIT_TIME = 4;
     private final int LOAD_WAIT_TIME = 1000;
     
     WebDriver driver;
@@ -115,7 +116,7 @@ public class Stepdefs {
 
     @Then(".*is not authenticated$")
     public void not_authenticated() throws Throwable {
-        assertFalse(exists("My Account"));
+        assertTrue(exists("Log in"));
     }
 
     @And("clicks Sign in")

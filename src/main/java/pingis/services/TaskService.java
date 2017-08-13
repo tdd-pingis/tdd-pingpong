@@ -2,11 +2,15 @@ package pingis.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pingis.entities.Task;
+import pingis.entities.*;
 import pingis.repositories.ChallengeRepository;
 import pingis.repositories.TaskRepository;
 import java.util.List;
+import java.util.ArrayList;
+import org.springframework.util.MultiValueMap;
+import org.springframework.util.LinkedMultiValueMap;
 import pingis.repositories.TaskInstanceRepository;
+import pingis.services.TaskInstanceService;
 
 @Service
 public class TaskService {
@@ -48,5 +52,42 @@ public class TaskService {
         return taskRepository.exists(taskId);
     }
 
+
+    public Task getCorrespondingImplementationTask(TaskInstance taskInstance, Challenge challenge) {
+        return taskRepository.findByIndexAndChallenge(taskInstance.getTask().getIndex()+1, challenge);
+    }
+
+    public Task getCorrespondingTestTask(Task task) {
+        return taskRepository.findByIndexAndChallenge(task.getIndex()-1, task.getChallenge());
+    }
+
+    public List<Task> getAvailableTestTasks(Challenge challenge) {
+        List<Task> availableTestTasks = new ArrayList<Task>();
+        List<Task> testTasks = challenge.getTasks();
+        for (Task task: testTasks) {
+            if (task.getType() == TaskType.TEST) {
+                availableTestTasks.add(task);
+            }
+        }
+        return availableTestTasks;
+    }
+
+    public MultiValueMap<Task, TaskInstance> getAvailableTestTaskInstances(Challenge challenge) {
+        MultiValueMap<Task, TaskInstance> availableTestTaskInstances = new LinkedMultiValueMap();
+        List<Task> tasks = challenge.getTasks();
+        for (Task task: tasks) {
+            if (task.getType() == TaskType.TEST) {
+                continue;
+            }
+            Task testTask = getCorrespondingTestTask(task);
+            for (TaskInstance testTaskInstance : testTask.getTaskInstances()) {
+                if (testTaskInstance.getStatus() == CodeStatus.DONE) {
+                    availableTestTaskInstances.add(task, testTaskInstance);
+
+                }
+            }
+        }
+        return availableTestTaskInstances;
+    }
 
 }
