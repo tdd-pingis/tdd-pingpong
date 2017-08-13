@@ -1,7 +1,11 @@
 package pingis.entities.tmc;
 
-import javax.persistence.*;
 import java.util.UUID;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.OneToOne;
 import pingis.entities.TaskInstance;
 
 /**
@@ -9,104 +13,105 @@ import pingis.entities.TaskInstance;
  */
 @Entity
 public class TmcSubmission {
-    @Id
-    private UUID id;
 
-    private Integer exitCode;
+  @Id
+  private UUID id;
 
-    @Lob
-    private String stderr;
+  private Integer exitCode;
 
-    @Lob
-    private String stdout;
+  @Lob
+  private String stderr;
 
-    private TmcSubmissionStatus status;
-    
-    @OneToOne(cascade = {CascadeType.ALL})
-    private TestOutput testOutput;
+  @Lob
+  private String stdout;
 
-    @Lob
-    private String validations;
+  private TmcSubmissionStatus status;
 
-    @Lob
-    private String vmLog;
-    
-    @OneToOne
-    private TaskInstance taskInstance;
+  @OneToOne(cascade = {CascadeType.ALL})
+  private TestOutput testOutput;
 
-    public UUID getId() {
-        return id;
-    }
+  @Lob
+  private String validations;
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+  @Lob
+  private String vmLog;
 
-    public Integer getExitCode() {
-        return exitCode;
-    }
+  @OneToOne
+  private TaskInstance taskInstance;
 
-    public void setExitCode(Integer exitCode) {
-        this.exitCode = exitCode;
-    }
+  public UUID getId() {
+    return id;
+  }
 
-    public String getStderr() {
-        return stderr;
-    }
+  public void setId(UUID id) {
+    this.id = id;
+  }
 
-    public void setStderr(String stderr) {
-        this.stderr = stderr;
-    }
+  public Integer getExitCode() {
+    return exitCode;
+  }
 
-    public String getStdout() {
-        return stdout;
-    }
+  public void setExitCode(Integer exitCode) {
+    this.exitCode = exitCode;
+  }
 
-    public void setStdout(String stdout) {
-        this.stdout = stdout;
-    }
+  public String getStderr() {
+    return stderr;
+  }
 
-    public TmcSubmissionStatus getStatus() {
-        return status;
-    }
+  public void setStderr(String stderr) {
+    this.stderr = stderr;
+  }
 
-    public void setStatus(String status) {
-        this.status = TmcSubmissionStatus.valueOf(status.toUpperCase());
-    }
+  public String getStdout() {
+    return stdout;
+  }
 
-    public void setStatus(TmcSubmissionStatus status) {
-        this.status = status;
-    }
+  public void setStdout(String stdout) {
+    this.stdout = stdout;
+  }
 
-    public TestOutput getTestOutput() {
-        return testOutput;
-    }
+  public TmcSubmissionStatus getStatus() {
+    return status;
+  }
 
-    public void setTestOutput(TestOutput testOutput) {
-        this.testOutput = testOutput;
-    }
+  public void setStatus(String status) {
+    this.status = TmcSubmissionStatus.valueOf(status.toUpperCase());
+  }
 
-    public String getValidations() {
-        return validations;
-    }
+  public void setStatus(TmcSubmissionStatus status) {
+    this.status = status;
+  }
 
-    public void setValidations(String validations) {
-        this.validations = validations;
-    }
+  public TestOutput getTestOutput() {
+    return testOutput;
+  }
 
-    public String getVmLog() {
-        return vmLog;
-    }
+  public void setTestOutput(TestOutput testOutput) {
+    this.testOutput = testOutput;
+  }
 
-    public void setVmLog(String vmLog) {
-        this.vmLog = vmLog;
-    }
+  public String getValidations() {
+    return validations;
+  }
 
-    public void setTaskInstance(TaskInstance taskInstance) {
-        this.taskInstance = taskInstance;
-    }
+  public void setValidations(String validations) {
+    this.validations = validations;
+  }
 
-    public TaskInstance getTaskInstance() {
-        return taskInstance;
-    }
+  public String getVmLog() {
+    return vmLog;
+  }
+
+  public void setVmLog(String vmLog) {
+    this.vmLog = vmLog;
+  }
+
+  public void setTaskInstance(TaskInstance taskInstance) {
+    this.taskInstance = taskInstance;
+  }
+
+  public TaskInstance getTaskInstance() {
+    return taskInstance;
+  }
 }

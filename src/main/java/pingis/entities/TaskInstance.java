@@ -1,126 +1,135 @@
 package pingis.entities;
 
-import javax.persistence.*;
-import java.util.List;
 import java.util.ArrayList;
-
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import pingis.entities.tmc.TmcSubmission;
 
 @Entity
 public class TaskInstance {
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
-    
-    @NotNull
-    @Lob
-    private String code;
 
-    // TODO: Decide scaling of rating, then set @DecimalMin and @DecimalMax constraints here
-    private float rating;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
 
-    @OneToOne
-    private TmcSubmission submission;
+  @NotNull
+  @Lob
+  private String code;
 
-    @NotNull
-    private CodeStatus status;
+  // TODO: Decide scaling of rating, then set @DecimalMin and @DecimalMax constraints here
+  private float rating;
 
-    @NotNull
-    private boolean isExample; // true if accepted as model solution
+  @OneToOne
+  private TmcSubmission submission;
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    private Task task;
+  @NotNull
+  private CodeStatus status;
 
-    @NotNull
-    @ManyToOne(fetch=FetchType.EAGER)
-    private User user;
+  @NotNull
+  private boolean isExample; // true if accepted as model solution
 
-    @ManyToOne
-    private TaskInstance testTaskInstance;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Task task;
 
-    @OneToMany
-    private List<TaskInstance> implementionTaskInstances;
+  @NotNull
+  @ManyToOne(fetch = FetchType.EAGER)
+  private User user;
 
-    protected TaskInstance() {}
+  @ManyToOne
+  private TaskInstance testTaskInstance;
 
-    public TaskInstance(User user, String code, Task task) {
-        this.user = user;
-        this.code = code;
-        this.task = task;
-        this.status = CodeStatus.IN_PROGRESS;
-        this.isExample = false; // by default
-        this.rating = 0;
-        this.implementionTaskInstances = new ArrayList();
-    }
+  @OneToMany
+  private List<TaskInstance> implementionTaskInstances;
 
-    public long getId() {
-        return id;
-    }
+  protected TaskInstance() {
+  }
 
-    public String getCode() {
-        return code;
-    }
+  public TaskInstance(User user, String code, Task task) {
+    this.user = user;
+    this.code = code;
+    this.task = task;
+    this.status = CodeStatus.IN_PROGRESS;
+    this.isExample = false; // by default
+    this.rating = 0;
+    this.implementionTaskInstances = new ArrayList();
+  }
 
-    public void setCode(String code) {
-        this.code = code;   
-    }
+  public long getId() {
+    return id;
+  }
 
-    public float getRating() {
-        return rating;
-    }
+  public String getCode() {
+    return code;
+  }
 
-    public void setRating(float rating) {
-        this.rating = rating;
-    }
+  public void setCode(String code) {
+    this.code = code;
+  }
 
-    public boolean isExample() {
-        return isExample;
-    }
+  public float getRating() {
+    return rating;
+  }
 
-    public void setIsExample(boolean isExample) {
-        this.isExample = isExample;
-    }
+  public void setRating(float rating) {
+    this.rating = rating;
+  }
 
-    public CodeStatus getStatus() {
-        return status;
-    }
+  public boolean isExample() {
+    return isExample;
+  }
 
-    public void setStatus(CodeStatus status) {
-        this.status = status;
-    }
+  public void setIsExample(boolean isExample) {
+    this.isExample = isExample;
+  }
 
-    public Task getTask() {
-        return task;
-    }
+  public CodeStatus getStatus() {
+    return status;
+  }
 
-    public void setTask(Task task) {
-        this.task = task;
-    }
+  public void setStatus(CodeStatus status) {
+    this.status = status;
+  }
 
-    public User getUser() {
-        return user;
-    }
+  public Task getTask() {
+    return task;
+  }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
+  public void setTask(Task task) {
+    this.task = task;
+  }
 
-    public void setTestTaskInstance(TaskInstance testTaskInstance) {
-        this.testTaskInstance = testTaskInstance;
-    }
+  public User getUser() {
+    return user;
+  }
 
-    public TaskInstance getTestTaskinstance() {
-        return this.testTaskInstance;
-    }
+  public void setUser(User user) {
+    this.user = user;
+  }
 
-    public void addImplementionTaskInstance(TaskInstance implementationTaskInstance) {
-        this.implementionTaskInstances.add(implementationTaskInstance);
-    }
+  public void setTestTaskInstance(TaskInstance testTaskInstance) {
+    this.testTaskInstance = testTaskInstance;
+  }
 
-    public List<TaskInstance> getImplementationTaskInstances() {
-        return this.implementionTaskInstances;
-    }
+  public TaskInstance getTestTaskinstance() {
+    return this.testTaskInstance;
+  }
+
+  public void addImplementionTaskInstance(TaskInstance implementationTaskInstance) {
+    this.implementionTaskInstances.add(implementationTaskInstance);
+  }
+
+  public List<TaskInstance> getImplementationTaskInstances() {
+    return this.implementionTaskInstances;
+  }
 
 
 }
