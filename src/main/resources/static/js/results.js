@@ -81,8 +81,12 @@ function showFailure(resultMessage) {
                 .text("Uh oh! Your submission didn't pass the tests!");
     }
 
-    for (i = 0; i < resultMessage.tests.length; i++) {
-        showIndividualTestResult(resultMessage, i);
+    if (resultMessage.tests.length > 0) {
+        for (i = 0; i < resultMessage.tests.length; i++) {
+            showIndividualTestResult(resultMessage, i);
+        }
+    } else {
+        $("#panel-body").text("No tests were found.");
     }
 }
 
@@ -133,7 +137,7 @@ function showIndividualTestResult(resultMessage, i) {
 
     //If this isn't the last test result, add some space
     //before the next one
-    if (i !== resultMessage.tests.length-1) {
+    if (i !== resultMessage.tests.length - 1) {
         test.append(
                 $("<br>"));
         test.append(
