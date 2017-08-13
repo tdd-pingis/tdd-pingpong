@@ -90,7 +90,6 @@ function showIndividualTestResult(resultMessage, i) {
     var res = resultMessage.tests[i];
     //The name field is formatted like below,
     //TestClass testMethod
-    //so we only take the second word
     var names = res.name.split(" ");
     var className = names[0];
     var testName = names[1];
