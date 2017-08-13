@@ -6,10 +6,11 @@
 package pingis.services;
 
 /**
- *
  * @author lauri
  */
 public interface IO {
-    public boolean hasNext();
-    public String nextLine();
+
+  public boolean hasNext();
+
+  public String nextLine();
 }
