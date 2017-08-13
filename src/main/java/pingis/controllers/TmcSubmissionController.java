@@ -68,7 +68,7 @@ public class TmcSubmissionController {
         
         ResultMessage message = createMessage(submission);
         //Broadcasts the submission to /topic/results
-        this.template.convertAndSend("/topic/results", submission.getTestOutput());
+        this.template.convertAndSend("/topic/results", message);
         logger.debug("Sent the TMC sandbox results to /topic/results");
         return new ResponseEntity(HttpStatus.OK);
     }

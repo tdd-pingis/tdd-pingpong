@@ -5,6 +5,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ public class TaskInstance {
     private long id;
     
     @NotNull
+    @Lob
     private String code;
 
     // TODO: Decide scaling of rating, then set @DecimalMin and @DecimalMax constraints here
