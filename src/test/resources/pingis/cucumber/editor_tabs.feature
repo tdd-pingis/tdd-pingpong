@@ -11,6 +11,6 @@ Feature: Content check for multiple editor tabs
       |user   |tab_name                 |content                               |page          |
       |User   |test/CalculatorTest.java |public void testMultiplication        |task/1        |
       |User   |test/CalculatorTest.java |public class CalculatorTest           |task/2        |
-      |Admin  |src/Calculator.java      |public void add                       |task/3        |
+      |Admin  |src/Calculator.java      |public int add                       |task/3        |
 
 
