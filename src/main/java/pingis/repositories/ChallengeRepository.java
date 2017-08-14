@@ -1,6 +1,5 @@
 package pingis.repositories;
 
-import java.util.List;
 import pingis.entities.Challenge;
 import org.springframework.data.repository.CrudRepository;
 

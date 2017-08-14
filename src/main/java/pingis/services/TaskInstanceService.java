@@ -58,6 +58,7 @@ public class TaskInstanceService {
 
     public TaskInstance createEmpty(User user, Task task) {
         TaskInstance newTaskInstance = new TaskInstance(user, "", task);
+        newTaskInstance.setCode(task.getCodeStub());
         return taskInstanceRepository.save(newTaskInstance);
     }
 

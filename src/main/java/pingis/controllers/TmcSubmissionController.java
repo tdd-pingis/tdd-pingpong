@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import pingis.entities.CodeStatus;
 import pingis.entities.tmc.TmcSubmission;
 import pingis.entities.tmc.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;

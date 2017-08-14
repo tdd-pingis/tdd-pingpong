@@ -41,8 +41,7 @@ function showCompilationError(resultMessage) {
     //the [javac] rows are still unnecessary.
     var lines = resultMessage.stdout.split("\n");
     lines = lines.filter(line => line.includes("[javac] "))
-            .map(line => line.replace("[javac] ", ""))
-            .slice(2, -1);
+            .map(line => line.replace("[javac] ", ""));
 
     $("#panel").addClass("panel panel-warning");
     $("#panel-heading")

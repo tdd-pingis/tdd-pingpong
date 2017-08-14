@@ -4,10 +4,6 @@ package pingis.entities;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.junit4.SpringRunner;
-import pingis.repositories.UserRepository;
 
 public class UserTest {
 
