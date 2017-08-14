@@ -21,9 +21,8 @@ task cucumberOAuthTest (type: Test) {
 if (System.env.TRAVIS == 'true') {
     test {
         systemProperty "spring.profiles.active", "dev"
-        systemProperty "cucumber.options", "--tags @dev"
 
-        include '**/cucumber/**'
+        exclude '**/cucumber/**'
     }
 
     // If running in Travis, we want build to run the dev Cucumber tests as well
@@ -34,13 +33,11 @@ if (System.env.TRAVIS == 'true') {
         test.dependsOn cucumberOAuthTest
     }
 } else {
-    // Separates the test task into unit and cucumber test tasks
     test {
         exclude '**'
     }
+    test.dependsOn unitTest
 }
-
-test.dependsOn unitTest
 
 // For running all tests during build
 if(System.env.TESTS == 'ALL') {

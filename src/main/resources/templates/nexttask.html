@@ -5,11 +5,24 @@
 <nav th:include="navbar :: navigation"></nav>
 <div class="container">
     <p class="lead" th:text="'Challenge: '+${challenge.name}"/>
-    <div class="row">
+    <div class="container">
+        <h4>Test tasks:</h4>
         <ul>
-            <li th:each="task: ${tasks}">
-                <a th:href="'/newTaskInstance/'+${task.id}"><p th:text="${task.name}"/></a>
+            <li th:each="testtask: ${testTasks}">
+                <a th:href="'/newTaskInstance?taskId='+${testtask.id}+'&amp;testTaskInstanceId=0'"><span th:text="${testtask.name}"/></a>
             </li>
+        </ul>
+        <h4>Implementation tasks:</h4>
+        <ul>
+            <div th:each="imptask: ${implementationTaskInstances}">
+                <li th:each="imptaskinstance : ${imptask.value}">
+                    <a th:href="'/newTaskInstance?taskId='
+                   +${imptask.key.id}
+                   +'&amp;testTaskInstanceId='+${imptaskinstance.id}">
+                        <span th:text="'task: '+${imptask.key.name}+', test made by '+${imptaskinstance.user.name}"/>
+                    </a>
+                </li>
+            </div>
         </ul>
 
     </div>

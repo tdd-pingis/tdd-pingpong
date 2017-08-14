@@ -16,97 +16,98 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 * @author  villburn
 */
 public class TmcUserDto implements OAuth2User {
+
+  @NotNull
+  @NotEmpty
+  public String id;
+
+  @NotNull
+  @NotEmpty
+  public String username;
+
+  @NotNull
+  @NotEmpty
+  public String email;
+
+  @NotNull
+  @NotEmpty
+  public boolean administrator;
     
-    @NotNull
-    @NotEmpty
-    public String id;
-    
-    @NotNull
-    @NotEmpty
-    public String username;
-    
-    @NotNull
-    @NotEmpty
-    public String email;
-    
-    @NotNull
-    @NotEmpty
-    public boolean administrator;
-    
-    public TmcUserDto() {}
+  public TmcUserDto() {
+  }
 
-    public TmcUserDto(String id, String username, String email, boolean administrator) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.administrator = administrator;
+  public TmcUserDto(String id, String username, String email, boolean administrator) {
+    this.id = id;
+    this.username = username;
+    this.email = email;
+    this.administrator = administrator;
+  }
+  
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    String roles = "USER";
+    if (administrator) {
+      roles += ",ADMIN";
     }
-    
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        String roles = "USER";
-        if (administrator) {
-            roles += ",ADMIN";
-        }
-        return AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
-    }
+    return AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
+  }
 
-    @Override
-    public Map<String, Object> getAttributes() {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("id", id);
-        attributes.put("username", username);
-        attributes.put("email", email);
-        attributes.put("administrator", administrator);
-        
-        return attributes;
-    }
-    
-    @Override
-    public String toString() {
-        return "User Details: "
-                + "n\ttype: OAuthUser"
-                + "\n\tid: " + id
-                + "n\tname: " + username 
-                + "\n\tadministrator: " + administrator
-                + "\n\temail: " + email;
-    }
+  @Override
+  public Map<String, Object> getAttributes() {
+    Map<String, Object> attributes = new HashMap<>();
+    attributes.put("id", id);
+    attributes.put("username", username);
+    attributes.put("email", email);
+    attributes.put("administrator", administrator);
 
-    public String getId() {
-        return id;
-    }
+    return attributes;
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  @Override
+  public String toString() {
+    return "User Details: "
+        + "n\ttype: OAuthUser"
+        + "\n\tid: " + id
+        + "n\tname: " + username
+        + "\n\tadministrator: " + administrator
+        + "\n\temail: " + email;
+  }
 
-    @Override
-    public String getName() {
-        return username;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public void setName(String name) {
-        this.username = name;
-    }
-    
-    public void setUsername(String name) {
-        this.username = name;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  @Override
+  public String getName() {
+    return username;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setName(String name) {
+    this.username = name;
+  }
 
-    public boolean isAdministrator() {
-        return administrator;
-    }
+  public void setUsername(String name) {
+    this.username = name;
+  }
 
-    public void setAdministrator(boolean administrator) {
-        this.administrator = administrator;
-    }
-    
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public boolean isAdministrator() {
+    return administrator;
+  }
+
+  public void setAdministrator(boolean administrator) {
+    this.administrator = administrator;
+  }
+
 }

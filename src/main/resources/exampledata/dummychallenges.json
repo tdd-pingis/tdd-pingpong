@@ -13,18 +13,25 @@
                     "desc": "Write a JUnit test case that tests the multiplication method for two integers. \nMethod should take two integers as arguments and return the product of those as an integer.",
                     "codeStub": [
                         "import org.junit.Test;\n",
-                        "import static org.junit.Assert.*;\n\n",
-                        "public class CalculatorTest {\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class CalculatorTest {\n\n",
                         "    @Test\n",
                         "    public void testMultiplication() {\n",
-                        "        //TODO: implement this\n\n",
+                        "        //TODO: implement this\n",
                         "    }\n",
-                        "}"],
-                    "modelimplementation": ["public class CalculatorTest {\n",
+                        "}\n"],
+                    "modelimplementation": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class CalculatorTest {\n\n",
                         "    @Test\n",
                         "    public void testMultiplication() {\n",
                         "        Calculator calc = new Calculator();\n",
-                        "        assertEquals(23, calc.multiply(18, 5));\n",
+                        "        assertEquals(22, calc.multiply(11, 2));\n",
                         "    }\n",
                         "}\n"]
                 },
@@ -34,19 +41,185 @@
                     "name": "Make multiplication test pass",
                     "type": "implementation",
                     "desc": "Write code that makes the given test pass.\nMethod should take two integers as arguments and return the product of those as an integer.",
-                    "codeStub": ["public class Calculator {\n",
+                    "codeStub": [
+                        "public class Calculator {\n\n",
                         "    public Calculator() {}\n",
-                        "    public void multiply(int a, int b) {\n",
-                        "        //TODO: implement this\n",
+                        "    public int multiply(int a, int b) {\n",
+                        "        //TODO: make this work\n",
+                        "        return 0;\n",
                         "    }\n",
                         "}\n"],
 
-                    "modelimplementation": ["public class Calculator {\n\n    public Calculator() {}\n\n    public int multiply(int a, int b) {\n        return a*b;\n    }\n}"]
+                    "modelimplementation": ["public class Calculator {\n\n",
+                        "public Calculator() {}\n\n",
+                        "    public int multiply(int a, int b) {\n",
+                        "        return a*b;\n",
+                        "    }\n",
+                        "}\n"]
+                },
+                {
+
+                    "author": "modeluser",
+                    "index": 3,
+                    "name": "Test addition",
+                    "type": "test",
+                    "desc": "Write a JUnit test case that tests the addition method for two integers. \nMethod should take two integers as arguments and return the sum of those as an integer.",
+                    "codeStub": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class CalculatorTest {\n\n",
+                        "    @Test\n",
+                        "    public void testAddition() {\n",
+                        "        //TODO: implement this\n",
+                        "    }\n",
+                        "}\n"],
+                    "modelimplementation": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class CalculatorTest {\n\n",
+                        "    @Test\n",
+                        "    public void testAddition() {\n",
+                        "        Calculator calc = new Calculator();\n",
+                        "        assertEquals(23, calc.add(18, 5));\n",
+                        "    }\n",
+                        "}\n"]
+                },
+                {
+                    "author": "modeluser",
+                    "index": 4,
+                    "name": "Make addition test pass",
+                    "type": "implementation",
+                    "desc": "Write code that makes the given test pass.\nMethod should take two integers as arguments and return the sum of those as an integer.",
+                    "codeStub": [
+                        "public class Calculator {\n\n",
+                        "    public Calculator() {}\n",
+                        "    public int add(int a, int b) {\n",
+                        "        //TODO: make this work\n",
+                        "        return 0;\n",
+                        "    }\n",
+                        "}\n"],
+
+                    "modelimplementation": ["public class Calculator {\n\n",
+                        "public Calculator() {}\n\n",
+                        "    public int add(int a, int b) {\n",
+                        "        return a+b;\n",
+                        "    }\n",
+                        "}\n"]
+                },
+                {
+
+                    "author": "modeluser",
+                    "index": 5,
+                    "name": "Test division",
+                    "type": "test",
+                    "desc": "Write a JUnit test case that tests the division method for two integers. \nMethod should take two integers as arguments and return the quotient of those as an integer.",
+                    "codeStub": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class CalculatorTest {\n\n",
+                        "    @Test\n",
+                        "    public void testDivision() {\n",
+                        "        //TODO: implement this\n",
+                        "    }\n",
+                        "}\n"],
+                    "modelimplementation": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class CalculatorTest {\n\n",
+                        "    @Test\n",
+                        "    public void testMultiplication() {\n",
+                        "        Calculator calc = new Calculator();\n",
+                        "        assertEquals(21, calc.divide(42, 2));\n",
+                        "    }\n",
+                        "}\n"]
+                },
+                {
+                    "author": "modeluser",
+                    "index": 6,
+                    "name": "Make division test pass",
+                    "type": "implementation",
+                    "desc": "Write code that makes the given test pass.\nMethod should take two integers as arguments and return the quotient of those as an integer.",
+                    "codeStub": [
+                        "public class Calculator {\n\n",
+                        "    public Calculator() {}\n",
+                        "    public int divide(int a, int b) {\n",
+                        "        //TODO: make this work\n",
+                        "        return 0;\n",
+                        "    }\n",
+                        "}\n"],
+
+                    "modelimplementation": ["public class Calculator {\n\n",
+                        "public Calculator() {}\n\n",
+                        "    public int divide(int a, int b) {\n",
+                        "        return a/b;\n",
+                        "    }\n",
+                        "}\n"]
+                },
+                {
+
+                    "author": "modeluser",
+                    "index": 7,
+                    "name": "Test subtraction",
+                    "type": "test",
+                    "desc": "Write a JUnit test case that tests the subtraction method for two integers. \nMethod should take two integers as arguments and return the difference of those as an integer.",
+                    "codeStub": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class CalculatorTest {\n\n",
+                        "    @Test\n",
+                        "    public void testSubtraction() {\n",
+                        "        //TODO: implement this\n",
+                        "    }\n",
+                        "}\n"],
+                    "modelimplementation": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class CalculatorTest {\n\n",
+                        "    @Test\n",
+                        "    public void testSubtraction() {\n",
+                        "        Calculator calc = new Calculator();\n",
+                        "        assertEquals(13, calc.subtract(18, 5));\n",
+                        "    }\n",
+                        "}\n"]
+                },
+                {
+                    "author": "modeluser",
+                    "index": 8,
+                    "name": "Make subtraction test pass",
+                    "type": "implementation",
+                    "desc": "Write code that makes the given test pass.\nMethod should take two integers as arguments and return the difference of those as an integer.",
+                    "codeStub": [
+                        "public class Calculator {\n\n",
+                        "    public Calculator() {}\n",
+                        "    public int subtract(int a, int b) {\n",
+                        "        //TODO: make this work\n",
+                        "        return 0;\n",
+                        "    }\n",
+                        "}\n"],
+
+                    "modelimplementation": ["public class Calculator {\n\n",
+                        "public Calculator() {}\n\n",
+                        "    public int subtract(int a, int b) {\n",
+                        "        return a-b;\n",
+                        "    }\n",
+                        "}\n"]
                 }
             ]
         },
         {
-            "name": "beginner 1",
+            "name": "Beginner1",
             "author": "modeluser",
             "desc": "Easy programming tasks for beginners.",
             "tasks": [
@@ -58,8 +231,10 @@
                     "desc": "Write a JUnit test case for a method that takes no arguments and returns \"Hello, world!\" as a string.",
                     "codeStub": [
                         "import org.junit.Test;\n",
-                        "import static org.junit.Assert.*;\n\n",
-                        "public class HelloTest {\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class Beginner1Test {\n\n",
                         "    @Test\n",
                         "    public void helloTest() {\n",
                         "       //TODO: implement this\n",
@@ -68,11 +243,17 @@
                     ],
                     "modelimplementation": [
                         "import org.junit.Test;\n",
-                        "import static org.junit.Assert.*;\n\n",
-                        "@Test\n",
-                        "public void helloTest() {\n",
-                        "    assertTrue(hello().equals(\"Hello, world!\"));\n",
-                        "}\n"]
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class Beginner1Test {\n\n",
+                        "    @Test\n",
+                        "    public void helloTest() {\n",
+                        "        Beginner1 b = new Beginner1();\n",
+                        "        assertTrue(b.hello().equals(\"Hello, world!\"));\n",
+                        "    }\n",
+                        "}\n"
+                    ]
                 },
                 {
                     "author": "modeluser",
@@ -81,28 +262,31 @@
                     "type": "implementation",
                     "desc": "Write a method that makes the given test pass",
                     "codeStub": [
-                        "public class Hello {\n",
-                        "    public void hello() {\n",
-                        "       //TODO: implement this\n",
+                        "public class Beginner1 {\n\n",
+                        "    public String hello() {\n",
+                        "       //TODO: make this work\n",
+                        "       return \"broken\";\n",
                         "    }\n",
                         "}\n"],
                     "modelimplementation": [
-                        "public class Hello {\n",
-                        "    public void hello() {",
-                        "       return \"Hello, world!\";",
+                        "public class Beginner1 {\n\n",
+                        "    public String hello() {\n",
+                        "       return \"Hello, world!\";\n",
                         "    }\n",
                         "}\n"]
                 },
                 {
                     "author": "modeluser",
                     "index": 3,
-                    "name": "Test even numbers",
+                    "name": "Test even numbers checker",
                     "type": "test",
                     "desc": "Write a test for a method that checks if the argument is an even integer\n",
                     "codeStub": [
                         "import org.junit.Test;\n",
                         "import static org.junit.Assert.*;\n",
-                        "public class EvenTest {\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class Beginner1Test {\n\n",
                         "    @Test\n",
                         "    public void evenTest() {\n",
                         "        // TODO: implement this\n",
@@ -112,10 +296,12 @@
                     "modelimplementation": [
                         "import org.junit.Test;\n",
                         "import static org.junit.Assert.*;\n",
-                        "public class EvenTest {\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class Beginner1Test {\n\n",
                         "    @Test\n",
                         "    public void evenTest() {\n",
-                        "        Even even = new Even()",
+                        "        Beginner1 even = new Beginner1()",
                         "        assertTrue(even.isEven(2));\n",
                         "        assertFalse(even.isEven(3));\n",
                         "    }\n",
@@ -128,16 +314,73 @@
                     "type": "implementation",
                     "desc": "Implement a method that checks if the argument is an even integer.",
                     "codeStub": [
-                        "public class Even {\n",
+                        "public class Beginner1 {\n\n",
                         "    public boolean isEven(int number) {\n",
-                        "        // TODO: implement this\n",
+                        "        // TODO: make this work\n",
+                        "        return false;\n",
                         "    }\n",
                         "}\n"
                     ],
                     "modelimplementation": [
-                        "public class Even {\n",
+                        "public class Beginner1 {\n\n",
                         "    public boolean isEven(int number) {\n",
                         "        return number % 2 == 0 ? true : false;\n",
+                        "    }\n",
+                        "}\n"
+                    ]
+                },
+                {
+                    "author": "modeluser",
+                    "index" : 5,
+                    "name": "Moomins test",
+                    "type": "test",
+                    "desc": "Write a test for a method that returns true if the string argument contains the word \"muumi\".",
+                    "codeStub": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class Beginner1Test {\n\n",
+                        "    @Test\n",
+                        "    public void muumiTest() {\n",
+                        "        // TODO: make this work\n",
+                        "    }\n",
+                        "}\n"
+                    ],
+                    "modelimplementation": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+
+                        "public class Beginner1Test {\n\n",
+                        "    @Test\n",
+                        "    public void muumiTest() {\n",
+                        "        Beginner1 m = new Beginner1();\n",
+                        "        assertTrue(m.containsMuumi(\"Käy muumilaaksoon\"));\n",
+                        "        assertFalse(m.containsMuumi(\"Gotta catch em all\"));\n",
+                        "    }\n",
+                        "}\n"
+                    ]
+                },
+                {
+                    "author": "modeluser",
+                    "index": 6,
+                    "name": "Moomins",
+                    "type": "implementation",
+                    "desc": "Write a method that returns true if the argument contains the word \"muumi\".",
+                    "codeStub": [
+                        "public class Beginner1 {\n\n",
+                        "    public boolean containsMuumi(String text) {\n",
+                        "        // TODO: implement this\n",
+                        "        return false;\n",
+                        "    }\n",
+                        "}\n"
+                    ],
+                    "modelimplementation": [
+                        "public class Beginner1 {\n\n",
+                        "    public boolean containsMuumi(String text) {\n",
+                        "        return text.toLowerCase().contains(\"muumi\");\n",
                         "    }\n",
                         "}\n"
                     ]
@@ -146,14 +389,5 @@
         }
     ],
     "dummyimplementations": [
-        {
-            "challenge": "beginner 1",
-            "testuser": "testuser",
-            "implementationuser": "impluser",
-            "taskinstances": [{
-                    "user": "testuser",
-                    "taskindex": 1
-                }]
-        }
     ]
 }
