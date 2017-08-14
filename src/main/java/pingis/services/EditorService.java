@@ -38,7 +38,7 @@ public class EditorService {
         Map<String, EditorTabData> tabData = new LinkedHashMap();
         EditorTabData tab1 = new EditorTabData(
                 JavaClassGenerator.generateTestClassFilename(currentChallenge),
-                taskInstance.getTask().getCodeStub());
+                taskInstance.getCode());
         EditorTabData tab2 = new EditorTabData(
                 JavaClassGenerator.generateImplClassFilename(currentChallenge),
                 taskService.getCorrespondingImplementationTask(taskInstance, currentChallenge).getCodeStub());
