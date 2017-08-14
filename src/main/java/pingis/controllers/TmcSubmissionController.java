@@ -79,7 +79,7 @@ public class TmcSubmissionController {
       taskInstanceService.markAsDone(submission.getTaskInstance());
     }
     //Broadcasts the submission to /topic/results
-    this.template.convertAndSend("/topic/results", message);
+    this.template.convertAndSend("/topic/results/" + submission.getId(), message);
     logger.debug("Sent the TMC sandbox results to /topic/results");
   }
 

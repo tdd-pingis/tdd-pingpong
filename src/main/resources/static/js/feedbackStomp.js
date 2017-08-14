@@ -17,6 +17,6 @@ function connectStomp(csrf) {
 
     stompClient = Stomp.over(new SockJS('/websocket'));
     stompClient.connect(headers, function () {
-        stompClient.subscribe('/topic/results', showResults);
+        stompClient.subscribe('/topic/results/' + submissionId, showResults);
     });
 }
