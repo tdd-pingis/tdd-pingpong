@@ -11,47 +11,47 @@ import javax.persistence.OneToOne;
 
 @Entity
 public class TestOutput {
-    
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
-    
-    @OneToOne
-    TmcSubmission tmcSubmission;
 
-    private ResultStatus status;
-    
-    @OneToMany(cascade = {CascadeType.ALL})
-    private List<TestResult> testResults;
-    
-    @OneToOne(cascade = {CascadeType.ALL})
-    private Logs logs;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
 
-    public long getId() {
-        return id;
-    }
-    
-    public ResultStatus getStatus() {
-        return status;
-    }
+  @OneToOne
+  TmcSubmission tmcSubmission;
 
-    public void setStatus(ResultStatus status) {
-        this.status = status;
-    }
+  private ResultStatus status;
 
-    public List<TestResult> getTestResults() {
-        return testResults;
-    }
+  @OneToMany(cascade = {CascadeType.ALL})
+  private List<TestResult> testResults;
 
-    public void setTestResults(List<TestResult> testResults) {
-        this.testResults = testResults;
-    }
+  @OneToOne(cascade = {CascadeType.ALL})
+  private Logs logs;
 
-    public Logs getLogs() {
-        return logs;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public void setLogs(Logs logs) {
-        this.logs = logs;
-    }
+  public ResultStatus getStatus() {
+    return status;
+  }
+
+  public void setStatus(ResultStatus status) {
+    this.status = status;
+  }
+
+  public List<TestResult> getTestResults() {
+    return testResults;
+  }
+
+  public void setTestResults(List<TestResult> testResults) {
+    this.testResults = testResults;
+  }
+
+  public Logs getLogs() {
+    return logs;
+  }
+
+  public void setLogs(Logs logs) {
+    this.logs = logs;
+  }
 }

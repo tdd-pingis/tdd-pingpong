@@ -2,5 +2,5 @@
 package pingis.entities;
 
 public enum ChallengeType {
-    PROJECT, MIXED 
+  PROJECT, MIXED
 }

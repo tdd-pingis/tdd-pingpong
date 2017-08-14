@@ -1,8 +1,9 @@
 package pingis.repositories;
 
-import pingis.entities.Challenge;
 import org.springframework.data.repository.CrudRepository;
+import pingis.entities.Challenge;
 
 public interface ChallengeRepository extends CrudRepository<Challenge, Long> {
-    Challenge findByName(String name);
+
+  Challenge findByName(String name);
 }
