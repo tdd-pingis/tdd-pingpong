@@ -1,5 +1,6 @@
 package pingis.controllers;
 
+import java.security.Principal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -13,19 +14,18 @@ import pingis.services.UserService;
 @Controller
 public class UserDevController {
 
+  @RequestMapping(value = "/user", method = RequestMethod.GET)
+  public String user(Model model, Principal principal) {
+    userService.handleUserAuthenticationByName(principal.getName());
+    return "user";
+  }
+  
   @Autowired
   UserService userService;
 
   @RequestMapping(value = "/login", method = RequestMethod.GET)
   public String login(Model model) {
     return "login";
-  }
-
-  @RequestMapping(value = "/user", method = RequestMethod.GET)
-  public String user(Model model) {
-    userService.handleUserAuthenticationByName(
-        SecurityContextHolder.getContext().getAuthentication().getName());
-    return "user";
   }
 
   @RequestMapping(value = "/admin", method = RequestMethod.GET)
