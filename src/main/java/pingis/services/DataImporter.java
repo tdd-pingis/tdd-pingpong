@@ -72,7 +72,7 @@ public class DataImporter implements ApplicationRunner {
     protected DataImporter() {}
     
     public void run(ApplicationArguments args) throws Exception {
-        DataLoaderIO io = new DataLoaderIO();
+        IO io = new DataImporterIO();
         readData(io);
         generateUsers();
         generateEntities();        
