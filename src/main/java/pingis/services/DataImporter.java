@@ -24,15 +24,14 @@ public class DataImporter implements ApplicationRunner {
     private static final int IMPLEMENTATION_USER_LEVEL = 1;
     
     private String jsonString;
-    private ChallengeRepository cr;
-    private TaskRepository tr;
-    private UserService us;
-    private TaskInstanceRepository tir;
+    private ChallengeRepository challengeRepository;
+    private TaskRepository taskRepository;
+    private UserService userService;
+    private TaskInstanceRepository taskInstanceRepository;
     private HashMap<String, User> users = new LinkedHashMap();
     private HashMap<String, Challenge> challenges = new HashMap();
     private ArrayList<Task> tasks = new ArrayList();
     private ArrayList<TaskInstance> taskInstances = new ArrayList();
-    private int taskid = 0;
 
     public enum UserType {
         TMC_MODEL_USER("admin", 0, true), 
@@ -61,18 +60,18 @@ public class DataImporter implements ApplicationRunner {
     }
     
     @Autowired
-    public DataImporter(ChallengeRepository cr, TaskRepository tr, UserService ps,
-            TaskInstanceRepository tir) {
-        this.cr = cr;
-        this.tr = tr;
-        this.us = ps;
-        this.tir = tir;
+    public DataImporter(ChallengeRepository challengeRepository, TaskRepository taskRepository, UserService userService,
+                        TaskInstanceRepository taskInstanceRepository) {
+        this.challengeRepository = challengeRepository;
+        this.taskRepository = taskRepository;
+        this.userService = userService;
+        this.taskInstanceRepository = taskInstanceRepository;
     }
     
     protected DataImporter() {}
     
     public void run(ApplicationArguments args) throws Exception {
-        DataLoaderIO io = new DataLoaderIO();
+        IO io = new DataImporterIO();
         readData(io);
         generateUsers();
         generateEntities();        
@@ -91,10 +90,6 @@ public class DataImporter implements ApplicationRunner {
         return jsonString;
     }
 
-    public void setJsonString(String jsonString) {
-        this.jsonString = jsonString;
-    }
-    
     public void generateUsers() {
         long userId = new Random().nextInt(Integer.MAX_VALUE);
         
@@ -147,10 +142,6 @@ public class DataImporter implements ApplicationRunner {
             for (int j = 0; j < tasks.length(); j++) {
                 generateChallengeContent(tasks, j, challengeObject, challenge);
             }
-
-            // Taskid needs to be reset after each challenge to make sure task ID's within
-            // a challenge start from zero.
-            this.taskid = 0;
         }
         this.createDummyInstances(jsonImportObject.getJSONArray("dummyimplementations"));
 
@@ -238,21 +229,21 @@ public class DataImporter implements ApplicationRunner {
     
     public void populateDatabase() {
         for (User user : this.users.values()) {
-            us.save(user);
+            userService.save(user);
         }
      
         for (String name : this.challenges.keySet()) {
-            cr.save(this.challenges.get(name));
+            challengeRepository.save(this.challenges.get(name));
         } 
 
         
         for (Task t : this.tasks) {
-            tr.save(t);
+            taskRepository.save(t);
         }
 
 
         for (TaskInstance i : this.taskInstances) {
-            tir.save(i);
+            taskInstanceRepository.save(i);
         }
     }
     
