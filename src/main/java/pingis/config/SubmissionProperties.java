@@ -2,7 +2,6 @@ package pingis.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
 /**
  * Created by dwarfcrank on 7/28/17.

@@ -1,7 +1,6 @@
 
 package pingis.repositories;
 
-import java.io.Serializable;
 import pingis.entities.User;
 import org.springframework.data.repository.CrudRepository;
 
