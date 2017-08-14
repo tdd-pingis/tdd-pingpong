@@ -1,5 +1,6 @@
 package pingis.services;
 
+import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,71 +18,72 @@ import pingis.entities.tmc.TmcSubmission;
 import pingis.entities.tmc.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 
-import java.util.UUID;
-
 @Service
 public class SubmissionSenderService {
-    private final Logger logger = LoggerFactory.getLogger(SubmissionSenderService.class);
 
-    private static final String SUBMISSION_FILENAME = "submission.tar";
+  private final Logger logger = LoggerFactory.getLogger(SubmissionSenderService.class);
 
-    private RestTemplate restTemplate;
+  private static final String SUBMISSION_FILENAME = "submission.tar";
 
-    private final SubmissionProperties submissionProperties;
+  private RestTemplate restTemplate;
 
-    private final TmcSubmissionRepository submissionRepository;
+  private final SubmissionProperties submissionProperties;
 
-    @Autowired
-    public SubmissionSenderService(RestTemplateBuilder restTemplateBuilder, SubmissionProperties submissionProperties,
-                                   TmcSubmissionRepository submissionRepository) {
-        this.submissionProperties = submissionProperties;
-        this.submissionRepository = submissionRepository;
+  private final TmcSubmissionRepository submissionRepository;
 
-        restTemplate = restTemplateBuilder
-                .rootUri(submissionProperties.getSandboxUrl())
-                .build();
+  @Autowired
+  public SubmissionSenderService(RestTemplateBuilder restTemplateBuilder,
+      SubmissionProperties submissionProperties,
+      TmcSubmissionRepository submissionRepository) {
+    this.submissionProperties = submissionProperties;
+    this.submissionRepository = submissionRepository;
+
+    restTemplate = restTemplateBuilder
+        .rootUri(submissionProperties.getSandboxUrl())
+        .build();
+  }
+
+  private HttpEntity<MultiValueMap<String, Object>> buildRequestEntity(byte[] packaged,
+      String notifyToken,
+      String notifyUrl) {
+    MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+
+    HttpHeaders textHeaders = new HttpHeaders();
+    textHeaders.setContentType(MediaType.TEXT_PLAIN);
+
+    HttpHeaders binaryHeaders = new HttpHeaders();
+    binaryHeaders.setContentDispositionFormData("file", SUBMISSION_FILENAME);
+
+    map.add("file", new HttpEntity<>(new ByteArrayResource(packaged), binaryHeaders));
+    map.add("token", new HttpEntity<>(notifyToken, textHeaders));
+    map.add("notify", new HttpEntity<>(notifyUrl, textHeaders));
+
+    return new HttpEntity<>(map);
+  }
+
+  public TmcSubmission sendSubmission(TmcSubmission submission, byte[] packaged) {
+    submission.setId(UUID.randomUUID());
+    submission.setStatus(TmcSubmissionStatus.PENDING);
+
+    logger.debug("Created new submission, id: {}", submission.getId());
+
+    String notifyUrl = submissionProperties.getNotifyUrl();
+
+    HttpEntity<MultiValueMap<String, Object>> requestEntity = buildRequestEntity(packaged,
+        submission.getId().toString(), notifyUrl);
+
+    TmcSubmissionResponse response = restTemplate.postForObject("/tasks.json", requestEntity,
+        TmcSubmissionResponse.class);
+
+    logger.debug("Received sandbox response: {}", response.getStatus());
+
+    if (!response.getStatus().equals(TmcSubmissionResponse.OK)) {
+      logger.error("Sandbox submission failed!");
+      return null;
     }
 
-    private HttpEntity<MultiValueMap<String, Object>> buildRequestEntity(byte[] packaged, String notifyToken,
-                                                                         String notifyUrl) {
-        MultiValueMap<String, Object> map = new LinkedMultiValueMap<>();
+    submissionRepository.save(submission);
 
-        HttpHeaders textHeaders = new HttpHeaders();
-        textHeaders.setContentType(MediaType.TEXT_PLAIN);
-
-        HttpHeaders binaryHeaders = new HttpHeaders();
-        binaryHeaders.setContentDispositionFormData("file", SUBMISSION_FILENAME);
-
-        map.add("file", new HttpEntity<>(new ByteArrayResource(packaged), binaryHeaders));
-        map.add("token", new HttpEntity<>(notifyToken, textHeaders));
-        map.add("notify", new HttpEntity<>(notifyUrl, textHeaders));
-
-        return new HttpEntity<>(map);
-    }
-
-    public TmcSubmission sendSubmission(TmcSubmission submission, byte[] packaged) {
-        submission.setId(UUID.randomUUID());
-        submission.setStatus(TmcSubmissionStatus.PENDING);
-
-        logger.debug("Created new submission, id: {}", submission.getId());
-
-        String notifyUrl = submissionProperties.getNotifyUrl();
-
-        HttpEntity<MultiValueMap<String, Object>> requestEntity = buildRequestEntity(packaged,
-                submission.getId().toString(), notifyUrl);
-
-        TmcSubmissionResponse response = restTemplate.postForObject("/tasks.json", requestEntity,
-                TmcSubmissionResponse.class);
-
-        logger.debug("Received sandbox response: {}", response.getStatus());
-
-        if (!response.getStatus().equals(TmcSubmissionResponse.OK)) {
-            logger.error("Sandbox submission failed!");
-            return null;
-        }
-
-        submissionRepository.save(submission);
-
-        return submission;
-    }
+    return submission;
+  }
 }

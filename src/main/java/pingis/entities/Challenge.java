@@ -1,145 +1,149 @@
 package pingis.entities;
 
+import static pingis.entities.Task.LEVEL_MAX_VALUE;
+import static pingis.entities.Task.LEVEL_MIN_VALUE;
+import static pingis.entities.Task.NAME_MAX_LENGTH;
+import static pingis.entities.Task.NAME_MIN_LENGTH;
+
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import java.util.List;
-import java.util.ArrayList;
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.NotEmpty;
-import static pingis.entities.Task.LEVEL_MIN_VALUE;
-import static pingis.entities.Task.LEVEL_MAX_VALUE;
-import static pingis.entities.Task.NAME_MIN_LENGTH;
-import static pingis.entities.Task.NAME_MAX_LENGTH;
 
 @Entity
 public class Challenge {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id;
 
-    @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH)
-    @NotNull
-    private String name;
+  @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH)
+  @NotNull
+  private String name;
 
-    @NotNull
-    private String description;
+  @NotNull
+  private String description;
 
-    @NotNull
-    @Min(LEVEL_MIN_VALUE)
-    @Max(LEVEL_MAX_VALUE)
-    private int level;
-    private float rating;
-    private ChallengeType type;
+  @NotNull
+  @Min(LEVEL_MIN_VALUE)
+  @Max(LEVEL_MAX_VALUE)
+  private int level;
+  private float rating;
+  private ChallengeType type;
 
-    @NotEmpty
-    @OneToMany(fetch=FetchType.EAGER, mappedBy="challenge")
-    private List<Task> tasks;
+  @NotEmpty
+  @OneToMany(fetch = FetchType.EAGER, mappedBy = "challenge")
+  private List<Task> tasks;
 
-    @NotNull
-    @ManyToOne(fetch=FetchType.EAGER)
-    private User author;
-    
-    protected Challenge() {}
+  @NotNull
+  @ManyToOne(fetch = FetchType.EAGER)
+  private User author;
 
-    public Challenge(String name, User author, String description, ChallengeType type) {
-        this.name = name;
-        this.author = author;
-        this.type = type;
-        this.description = description;
-        this.tasks = new ArrayList<>();
+  protected Challenge() {
+  }
+
+  public Challenge(String name, User author, String description, ChallengeType type) {
+    this.name = name;
+    this.author = author;
+    this.type = type;
+    this.description = description;
+    this.tasks = new ArrayList<>();
+  }
+
+  public Challenge(String name, User author, String description) {
+    this(name, author, description, ChallengeType.MIXED);
+  }
+
+  public void setAuthor(User author) {
+    this.author = author;
+  }
+
+  public User getAuthor() {
+    return this.author;
+  }
+
+  public void addTask(Task task) {
+    this.tasks.add(task);
+    int newTaskLevel = task.getLevel();
+
+    if (this.level == 0) {
+      this.level = newTaskLevel;
+    } else {
+      if (newTaskLevel < this.level) {
+        this.level = newTaskLevel;
+      }
     }
-    
-    public Challenge(String name, User author, String description) {
-        this(name, author, description, ChallengeType.MIXED);
-    }
+  }
 
-    public void setAuthor(User author) {
-        this.author = author;
-    }
+  public String toString() {
+    String out = this.name + ": " + this.description;
+    return out;
+  }
 
-    public User getAuthor() {
-        return this.author;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public void addTask(Task task) {
-        this.tasks.add(task);
-        int newTaskLevel = task.getLevel();
-        
-        if(this.level == 0) {
-            this.level = newTaskLevel;
-        } else {
-            if(newTaskLevel < this.level) {
-                this.level = newTaskLevel;
-            }
-        }
-    }
+  public String getDesc() {
+    return this.description;
+  }
 
-    public String toString() {
-        String out = this.name+": "+this.description;
-        return out;
-    }
+  public int getLevel() {
+    return this.level;
+  }
 
-    public String getName() {
-        return this.name;
-    }
+  public float getRating() {
+    return this.rating;
+  }
 
-    public String getDesc() {
-        return this.description;
-    }
+  public long getId() {
+    return id;
+  }
 
-    public int getLevel() {
-        return this.level;
-    }
+  public String getDescription() {
+    return description;
+  }
 
-    public float getRating() {
-        return this.rating;
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public long getId() {
-        return id;
-    }
+  public void setLevel(int level) {
+    this.level = level;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public ChallengeType getType() {
+    return type;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setType(ChallengeType type) {
+    this.type = type;
+  }
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public ChallengeType getType() {
-        return type;
-    }
+  public void setRating(float rating) {
+    this.rating = rating;
+  }
 
-    public void setType(ChallengeType type) {
-        this.type = type;
-    }
-    
-    public void setName(String name) {
-        this.name = name;
-    }
+  public List<Task> getTasks() {
+    return tasks;
+  }
 
-    public void setRating(float rating) {
-        this.rating = rating;
-    }
-
-    public List<Task> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<Task> tasks) {
-        this.tasks = tasks;
-    }
+  public void setTasks(List<Task> tasks) {
+    this.tasks = tasks;
+  }
 
 }
