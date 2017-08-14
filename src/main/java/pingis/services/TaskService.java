@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.LinkedMultiValueMap;
 import pingis.repositories.TaskInstanceRepository;
-import pingis.services.TaskInstanceService;
 
 @Service
 public class TaskService {
