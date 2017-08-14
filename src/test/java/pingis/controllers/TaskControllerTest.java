@@ -15,11 +15,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -36,6 +38,7 @@ import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
+import pingis.entities.tmc.TmcSubmission;
 import pingis.services.ChallengeService;
 import pingis.services.EditorService;
 import pingis.services.SubmissionPackagingService;
@@ -88,6 +91,7 @@ public class TaskControllerTest {
   private TaskInstance testTaskInstance;
   private TaskInstance implTaskInstance;
   private User testUser;
+  private TmcSubmission submission;
 
   @Before
   public void setUp() {
@@ -107,6 +111,8 @@ public class TaskControllerTest {
     testTask.setChallenge(challenge);
     challenge.addTask(implementationTask);
     implementationTask.setChallenge(challenge);
+    submission = new TmcSubmission();
+    submission.setId(UUID.randomUUID());
     MockitoAnnotations.initMocks(this);
 
     this.mvc = MockMvcBuilders
@@ -169,6 +175,7 @@ public class TaskControllerTest {
     when(challengeServiceMock.findOne(challenge.getId())).thenReturn(challenge);
     when(taskServiceMock.findTaskInChallenge(challenge.getId(), testTask.getIndex()))
         .thenReturn(testTask);
+    when(senderService.sendSubmission(Mockito.any(), Mockito.any())).thenReturn(submission);
     mvc.perform(post("/task")
         .param("submissionCode", submissionCode)
         .param("staticCode", staticCode)
@@ -192,16 +199,6 @@ public class TaskControllerTest {
     verifyNoMoreInteractions(challengeServiceMock);
     verifyNoMoreInteractions(taskServiceMock);
   }
-
-  @Test
-  public void givenFeedbackWhenGetFeedback() throws Exception {
-    when(taskInstanceServiceMock.findOne(1L)).thenReturn(testTaskInstance);
-    performSimpleGetRequestAndFindContent("/feedback?taskInstanceId=1", "feedback",
-        "<h1>Feedback</h1>");
-    verify(taskInstanceServiceMock).findOne(1L);
-    verifyNoMoreInteractions(taskInstanceServiceMock);
-  }
-
 
   private void performSimpleGetRequestAndFindContent(String uri,
       String viewName,
