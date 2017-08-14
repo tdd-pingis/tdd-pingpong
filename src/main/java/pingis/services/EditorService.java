@@ -41,7 +41,7 @@ public class EditorService {
                 taskInstance.getTask().getCodeStub());
         EditorTabData tab2 = new EditorTabData(
                 JavaClassGenerator.generateImplClassFilename(currentChallenge),
-                taskService.getCorrespondingImplementationTask(taskInstance, currentChallenge).getCodeStub());
+                taskService.getCorrespondingTask(taskInstance.getTask()).getCodeStub());
         tabData.put("editor1", tab1);
         tabData.put("editor2", tab2);
         return tabData;

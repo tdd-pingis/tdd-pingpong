@@ -67,11 +67,11 @@ public class EditorServiceTest {
     
     @Test
     public void testEditorServiceWithTestTask() {
-        when(taskServiceMock.getCorrespondingImplementationTask(returnedTaskInstance, challenge))
+        when(taskServiceMock.getCorrespondingTask(returnedTaskInstance.getTask()))
                 .thenReturn(implementationTask);
         Map<String, EditorTabData> result = editorService.generateEditorContents(returnedTaskInstance);
         assertEquals(result.get("editor1").code, "public void test");
-        verify(taskServiceMock).getCorrespondingImplementationTask(returnedTaskInstance, challenge);
+        verify(taskServiceMock).getCorrespondingTask(returnedTaskInstance.getTask());
         verifyNoMoreInteractions(taskServiceMock);
     }
     
