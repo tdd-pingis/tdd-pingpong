@@ -17,7 +17,6 @@ import pingis.config.SubmissionProperties;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
 import pingis.repositories.sandbox.SubmissionRepository;
-import pingis.services.TmcSubmissionResponse;
 
 @Service
 public class SubmissionSenderService {
@@ -73,12 +72,12 @@ public class SubmissionSenderService {
     HttpEntity<MultiValueMap<String, Object>> requestEntity = buildRequestEntity(packaged,
         submission.getId().toString(), notifyUrl);
 
-    TmcSubmissionResponse response = restTemplate.postForObject("/tasks.json", requestEntity,
-        TmcSubmissionResponse.class);
+    SubmissionResponse response = restTemplate.postForObject("/tasks.json", requestEntity,
+        SubmissionResponse.class);
 
     logger.debug("Received sandbox response: {}", response.getStatus());
 
-    if (!response.getStatus().equals(TmcSubmissionResponse.OK)) {
+    if (!response.getStatus().equals(SubmissionResponse.OK)) {
       logger.error("Sandbox submission failed!");
       return null;
     }
