@@ -62,7 +62,6 @@ public class SubmissionSenderService {
   }
 
   public Submission sendSubmission(Submission submission, byte[] packaged) {
-    submission.setId(UUID.randomUUID());
     submission.setStatus(SubmissionStatus.PENDING);
 
     logger.debug("Created new submission, id: {}", submission.getId());
