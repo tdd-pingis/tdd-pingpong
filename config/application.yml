@@ -26,7 +26,7 @@ security:
         clientAlias: tmc
         redirectUri: http://localhost:8080/oauth2/authorize/code/tmc
 
-tmc:
+sandbox:
   sandboxUrl: http://localhost:3001
   notifyUrl: http://localhost:1337/submission-result
 
