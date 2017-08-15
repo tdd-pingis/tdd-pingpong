@@ -101,7 +101,6 @@ public class TaskController {
     Task currentTask = taskInstance.getTask();
 
     Challenge currentChallenge = currentTask.getChallenge();
-    redirectAttributes.addAttribute("taskInstanceId", taskInstanceId);
 
     String[] errors = checkErrors(submissionCode, staticCode);
     if (errors != null) {
@@ -112,7 +111,7 @@ public class TaskController {
 
     TmcSubmission submission = submitToTmc(taskInstance, currentChallenge, submissionCode,
         staticCode);
-    redirectAttributes.addAttribute("submission", submission);
+    redirectAttributes.addAttribute("submissionId", submission.getId());
 
     // Save user's answer from left editor
     taskInstanceService.updateTaskInstanceCode(taskInstanceId, submissionCode);
@@ -121,12 +120,8 @@ public class TaskController {
   }
 
   @RequestMapping("/feedback")
-  public String feedback(Model model, @RequestParam long taskInstanceId) {
-    Challenge currentChallenge = taskInstanceService
-        .findOne(taskInstanceId)
-        .getTask().getChallenge();
-    model.addAttribute("challengeId", currentChallenge.getId());
-    model.addAttribute("feedback", "Good work!");
+  public String feedback(Model model, @RequestParam String submissionId) {
+    model.addAttribute("submissionId", submissionId);
     return "feedback";
   }
 
