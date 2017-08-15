@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import pingis.entities.User;
 import pingis.services.UserService;
 
 @Profile("dev")
@@ -16,7 +17,9 @@ public class UserDevController {
 
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   public String user(Model model, Principal principal) {
-    userService.handleUserAuthenticationByName(principal.getName());
+    User user = userService.handleUserAuthenticationByName(principal.getName());
+   
+    model.addAttribute("user", user);
     return "user";
   }
   

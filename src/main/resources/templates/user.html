@@ -14,10 +14,10 @@
                 <img src="img/tomato.png"/>
             </div>
             <div class="col-md-8">
-                Name: jaakko<br/>
-                Level: 1<br/>
-                Points: 12<br/>
-                Rank: Tomato<br/>
+              <p th:inline="text">Name: [[${user.name}]]</p>
+              <p th:inline="text">Level: [[${user.level}]]</p>
+              <p th:inline="text">Level: [[${user.level}]]</p>
+              <p Rank: Tomato<br/>
             </div>
             <div class="col-md-2">
                 <canvas id="progresscircle" width="110" height="110"></canvas>
