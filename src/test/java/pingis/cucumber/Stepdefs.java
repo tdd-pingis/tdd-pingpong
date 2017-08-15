@@ -145,7 +145,6 @@ public class Stepdefs {
     driver.quit();
   }
 
-
   private Map<String, String> initializeIds() {
     Map<String, String> map = new HashMap<>();
 
@@ -154,6 +153,7 @@ public class Stepdefs {
     map.put("My Account", "account-button");
     map.put("Log in", "log-in-button");
     map.put("Logout", "logout-button");
+    map.put("user page", "user");
     map.put("front page", "");
     map.put("login error page", "login?error");
     map.put("username field", "session_login");
