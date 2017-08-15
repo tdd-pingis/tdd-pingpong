@@ -50,7 +50,7 @@ public class TaskInstanceServiceTest {
     testTask = new Task(1, TaskType.TEST, testUser,
         "Desc", "Desc", "Code",
         1, 1);
-    implementationTask = new Task(2,
+    implementationTask = new Task(1,
         TaskType.IMPLEMENTATION, testUser,
         "Desc", "Desc", "Code",
         1, 1);
@@ -70,8 +70,8 @@ public class TaskInstanceServiceTest {
   @Test
   public void getCorrespondingTestTaskInstanceTest() {
     when(userRepositoryMock.findOne(0L)).thenReturn(testUser);
-    when(taskRepositoryMock.findByIndexAndChallenge(implementationTask
-        .getIndex() - 1, testChallenge))
+    when(taskRepositoryMock.findByIndexAndChallengeAndType(implementationTask
+        .getIndex(), testChallenge, TaskType.TEST))
         .thenReturn(testTask);
     when(taskInstanceRepositoryMock.findByTaskAndUser(testTask, testUser))
         .thenReturn(testTaskInstance);
@@ -83,7 +83,10 @@ public class TaskInstanceServiceTest {
 
     verify(userRepositoryMock).findOne(0L);
     verify(taskRepositoryMock)
-        .findByIndexAndChallenge(implementationTask.getIndex() - 1, testChallenge);
+        .findByIndexAndChallengeAndType(
+            implementationTask.getIndex(),
+            testChallenge,
+            TaskType.TEST);
     verify(taskInstanceRepositoryMock).findByTaskAndUser(testTask, testUser);
 
     verifyNoMoreInteractions(taskRepositoryMock);
@@ -94,7 +97,10 @@ public class TaskInstanceServiceTest {
   @Test
   public void getCorrespondingImplementationTaskInstanceTest() {
     when(userRepositoryMock.findOne(0L)).thenReturn(testUser);
-    when(taskRepositoryMock.findByIndexAndChallenge(testTask.getIndex() + 1, testChallenge))
+    when(taskRepositoryMock.findByIndexAndChallengeAndType(
+        testTask.getIndex(),
+        testChallenge,
+        TaskType.IMPLEMENTATION))
         .thenReturn(implementationTask);
     when(taskInstanceRepositoryMock.findByTaskAndUser(implementationTask, testUser))
         .thenReturn(implementationTaskInstance);
@@ -105,7 +111,10 @@ public class TaskInstanceServiceTest {
     assertEquals(result, implementationTaskInstance);
 
     verify(userRepositoryMock).findOne(0L);
-    verify(taskRepositoryMock).findByIndexAndChallenge(testTask.getIndex() + 1, testChallenge);
+    verify(taskRepositoryMock).findByIndexAndChallengeAndType(
+        testTask.getIndex(),
+        testChallenge,
+        TaskType.IMPLEMENTATION);
     verify(taskInstanceRepositoryMock).findByTaskAndUser(implementationTask, testUser);
 
     verifyNoMoreInteractions(taskRepositoryMock);

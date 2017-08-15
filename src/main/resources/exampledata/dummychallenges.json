@@ -37,7 +37,7 @@
                 },
                 {
                     "author": "modeluser",
-                    "index": 2,
+                    "index": 1,
                     "name": "Make multiplication test pass",
                     "type": "implementation",
                     "desc": "Write code that makes the given test pass.\nMethod should take two integers as arguments and return the product of those as an integer.",
@@ -60,7 +60,7 @@
                 {
 
                     "author": "modeluser",
-                    "index": 3,
+                    "index": 2,
                     "name": "Test addition",
                     "type": "test",
                     "desc": "Write a JUnit test case that tests the addition method for two integers. \nMethod should take two integers as arguments and return the sum of those as an integer.",
@@ -90,7 +90,7 @@
                 },
                 {
                     "author": "modeluser",
-                    "index": 4,
+                    "index": 2,
                     "name": "Make addition test pass",
                     "type": "implementation",
                     "desc": "Write code that makes the given test pass.\nMethod should take two integers as arguments and return the sum of those as an integer.",
@@ -113,7 +113,7 @@
                 {
 
                     "author": "modeluser",
-                    "index": 5,
+                    "index": 3,
                     "name": "Test division",
                     "type": "test",
                     "desc": "Write a JUnit test case that tests the division method for two integers. \nMethod should take two integers as arguments and return the quotient of those as an integer.",
@@ -143,7 +143,7 @@
                 },
                 {
                     "author": "modeluser",
-                    "index": 6,
+                    "index": 3,
                     "name": "Make division test pass",
                     "type": "implementation",
                     "desc": "Write code that makes the given test pass.\nMethod should take two integers as arguments and return the quotient of those as an integer.",
@@ -166,7 +166,7 @@
                 {
 
                     "author": "modeluser",
-                    "index": 7,
+                    "index": 4,
                     "name": "Test subtraction",
                     "type": "test",
                     "desc": "Write a JUnit test case that tests the subtraction method for two integers. \nMethod should take two integers as arguments and return the difference of those as an integer.",
@@ -196,7 +196,7 @@
                 },
                 {
                     "author": "modeluser",
-                    "index": 8,
+                    "index": 4,
                     "name": "Make subtraction test pass",
                     "type": "implementation",
                     "desc": "Write code that makes the given test pass.\nMethod should take two integers as arguments and return the difference of those as an integer.",
@@ -257,7 +257,7 @@
                 },
                 {
                     "author": "modeluser",
-                    "index": 2,
+                    "index": 1,
                     "name": "Implement Hello World",
                     "type": "implementation",
                     "desc": "Write a method that makes the given test pass",
@@ -277,7 +277,7 @@
                 },
                 {
                     "author": "modeluser",
-                    "index": 3,
+                    "index": 2,
                     "name": "Test even numbers checker",
                     "type": "test",
                     "desc": "Write a test for a method that checks if the argument is an even integer\n",
@@ -309,7 +309,7 @@
                 },
                 {
                     "author": "modeluser",
-                    "index": 4,
+                    "index": 2,
                     "name": "Implement even numbers checker",
                     "type": "implementation",
                     "desc": "Implement a method that checks if the argument is an even integer.",
@@ -331,7 +331,7 @@
                 },
                 {
                     "author": "modeluser",
-                    "index" : 5,
+                    "index" : 3,
                     "name": "Moomins test",
                     "type": "test",
                     "desc": "Write a test for a method that returns true if the string argument contains the word \"muumi\".",
@@ -365,7 +365,7 @@
                 },
                 {
                     "author": "modeluser",
-                    "index": 6,
+                    "index": 3,
                     "name": "Moomins",
                     "type": "implementation",
                     "desc": "Write a method that returns true if the argument contains the word \"muumi\".",
