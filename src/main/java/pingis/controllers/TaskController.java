@@ -23,7 +23,7 @@ import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
-import pingis.entities.tmc.TmcSubmission;
+import pingis.entities.sandbox.TmcSubmission;
 import pingis.services.ChallengeService;
 import pingis.services.EditorService;
 import pingis.services.SubmissionPackagingService;

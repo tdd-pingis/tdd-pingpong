@@ -26,8 +26,8 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import pingis.config.SubmissionProperties;
-import pingis.entities.tmc.TmcSubmission;
-import pingis.entities.tmc.TmcSubmissionStatus;
+import pingis.entities.sandbox.TmcSubmission;
+import pingis.entities.sandbox.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 
 @RunWith(SpringRunner.class)

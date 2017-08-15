@@ -14,12 +14,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pingis.entities.TaskType;
-import pingis.entities.tmc.Logs;
-import pingis.entities.tmc.ResultMessage;
-import pingis.entities.tmc.ResultStatus;
-import pingis.entities.tmc.TestOutput;
-import pingis.entities.tmc.TmcSubmission;
-import pingis.entities.tmc.TmcSubmissionStatus;
+import pingis.entities.sandbox.Logs;
+import pingis.entities.sandbox.ResultMessage;
+import pingis.entities.sandbox.ResultStatus;
+import pingis.entities.sandbox.TestOutput;
+import pingis.entities.sandbox.TmcSubmission;
+import pingis.entities.sandbox.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 import pingis.services.TaskInstanceService;
 

@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
-import pingis.entities.tmc.TmcSubmission;
+import pingis.entities.sandbox.TmcSubmission;
 
 @Entity
 public class TaskInstance {

@@ -1,4 +1,4 @@
-package pingis.entities.tmc;
+package pingis.entities.sandbox;
 
 import java.util.List;
 import javax.persistence.CascadeType;

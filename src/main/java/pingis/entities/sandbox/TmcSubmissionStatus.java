@@ -1,4 +1,4 @@
-package pingis.entities.tmc;
+package pingis.entities.sandbox;
 
 public enum TmcSubmissionStatus {
   // Initial state, when the submission has been created.
