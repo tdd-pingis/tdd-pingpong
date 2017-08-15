@@ -1,9 +1,12 @@
 
 package pingis.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pingis.entities.Challenge;
 import pingis.entities.CodeStatus;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
@@ -59,6 +62,14 @@ public class TaskInstanceService {
     TaskInstance newTaskInstance = new TaskInstance(user, "", task);
     newTaskInstance.setCode(task.getCodeStub());
     return taskInstanceRepository.save(newTaskInstance);
+  }
+  
+  public List<TaskInstance> getByUserAndTask(User user, Challenge challenge) {
+    List<TaskInstance> taskInstances = new ArrayList<>();
+    for (Task task : challenge.getTasks()) {
+      taskInstances.add(taskInstanceRepository.findByTaskAndUser(task, user));
+    }
+    return taskInstances;
   }
 
 

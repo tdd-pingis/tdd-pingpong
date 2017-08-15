@@ -16,7 +16,6 @@
             <div class="col-md-8">
               <p th:inline="text">Name: [[${user.name}]]</p>
               <p th:inline="text">Level: [[${user.level}]]</p>
-              <p th:inline="text">Level: [[${user.level}]]</p>
               <p Rank: Tomato<br/>
             </div>
             <div class="col-md-2">
@@ -34,6 +33,16 @@
                 <p class="lead">Available challenges</p>
             </div>
         </div>
+        <tr th:each="challenge : ${user.authoredChallenges}" class="row challengeitem">
+            <a href="/nextTask/2"></a>[[${challenge.name}]]<br/>
+            <p th:inline="text">Progress: [[${challenge.task}]] ></p><p th:text="${#lists.size(challenge.tasks)}"></p>
+            <td ></td>
+                <div class="progress">
+                        <div class="progress-bar" role="progressbar" aria-valuenow="70"
+                             aria-valuemin="0" aria-valuemax="100" style="width:70%">
+                            <span class="sr-only">70% Complete</span>
+                        </div>
+                    </div>
         <div class="row">
             <div class="col-md-6">
                 <div class="row challengeitem">
