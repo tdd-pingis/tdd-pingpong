@@ -53,20 +53,22 @@ public class ChallengeController {
     Challenge newChallenge = new Challenge(challengeName,
         userService.getCurrentUser(),
         challengeDesc, challengeType == "PROJECT" ? ChallengeType.PROJECT : ChallengeType.MIXED);
-
+    logger.info(newChallenge.toString());
 
     return new RedirectView("/newtaskpair");
   }
 
-  @RequestMapping(value="/newtaskpair")
+  @RequestMapping(value = "/newtaskpair")
   public String newTaskPair(Model model) {
     return "newtaskpair";
   }
 
-  @RequestMapping(value="/createTaskPair", method = RequestMethod.POST)
+  @RequestMapping(value = "/createTaskPair", method = RequestMethod.POST)
   public RedirectView createTaskPair(String testTaskName, String implementationTaskName,
-      String testTaskDesc, String implementationTaskDesc, String testCodeStub, String implementatinCodeStub,
+      String testTaskDesc, String implementationTaskDesc,
+      String testCodeStub, String implementatinCodeStub,
       RedirectAttributes redirectAttributes) {
+    // create and save new tasks, redirect to createtaskinstance
 
     return new RedirectView("/user");
   }
