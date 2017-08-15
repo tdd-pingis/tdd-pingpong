@@ -27,7 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import pingis.config.SubmissionProperties;
 import pingis.entities.sandbox.Submission;
-import pingis.entities.sandbox.TmcSubmissionStatus;
+import pingis.entities.sandbox.SubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 
 @RunWith(SpringRunner.class)
@@ -69,6 +69,6 @@ public class SubmissionSenderServiceTest {
 
     assertNotNull(submission);
     assertEquals(captured, submission);
-    assertEquals(TmcSubmissionStatus.PENDING, captured.getStatus());
+    assertEquals(SubmissionStatus.PENDING, captured.getStatus());
   }
 }

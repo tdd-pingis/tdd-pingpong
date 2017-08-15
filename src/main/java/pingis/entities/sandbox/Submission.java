@@ -25,7 +25,7 @@ public class Submission {
   @Lob
   private String stdout;
 
-  private TmcSubmissionStatus status;
+  private SubmissionStatus status;
 
   @OneToOne(cascade = {CascadeType.ALL})
   private TestOutput testOutput;
@@ -71,15 +71,15 @@ public class Submission {
     this.stdout = stdout;
   }
 
-  public TmcSubmissionStatus getStatus() {
+  public SubmissionStatus getStatus() {
     return status;
   }
 
   public void setStatus(String status) {
-    this.status = TmcSubmissionStatus.valueOf(status.toUpperCase());
+    this.status = SubmissionStatus.valueOf(status.toUpperCase());
   }
 
-  public void setStatus(TmcSubmissionStatus status) {
+  public void setStatus(SubmissionStatus status) {
     this.status = status;
   }
 

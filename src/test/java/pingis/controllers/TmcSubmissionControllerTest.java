@@ -35,8 +35,8 @@ import pingis.entities.TaskInstance;
 import pingis.entities.sandbox.Logs;
 import pingis.entities.sandbox.ResultStatus;
 import pingis.entities.sandbox.Submission;
+import pingis.entities.sandbox.SubmissionStatus;
 import pingis.entities.sandbox.TestOutput;
-import pingis.entities.sandbox.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 import pingis.services.TaskInstanceService;
 
@@ -158,7 +158,7 @@ public class TmcSubmissionControllerTest {
   private Submission createSubmission() {
     Submission submission = new Submission();
 
-    submission.setStatus(TmcSubmissionStatus.PENDING);
+    submission.setStatus(SubmissionStatus.PENDING);
 
     Task task = new Task(0, null, null, null, null, null, 0, 0);
     TaskInstance ti = new TaskInstance(null, null, task);
@@ -172,7 +172,7 @@ public class TmcSubmissionControllerTest {
     assertEquals(captured.getStderr(), "test_stderr");
     assertEquals(captured.getValidations(), "test_validations");
     assertEquals(captured.getVmLog(), "test_vm_log");
-    assertEquals(captured.getStatus(), TmcSubmissionStatus.FINISHED);
+    assertEquals(captured.getStatus(), SubmissionStatus.FINISHED);
     assertEquals(captured.getId(), submissionId);
 
     TestOutput top = captured.getTestOutput();

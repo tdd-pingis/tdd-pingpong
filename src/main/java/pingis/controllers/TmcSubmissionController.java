@@ -19,7 +19,7 @@ import pingis.entities.sandbox.ResultMessage;
 import pingis.entities.sandbox.ResultStatus;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.TestOutput;
-import pingis.entities.sandbox.TmcSubmissionStatus;
+import pingis.entities.sandbox.SubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 import pingis.services.TaskInstanceService;
 
@@ -53,7 +53,7 @@ public class TmcSubmissionController {
 
     if (submission == null) {
       return new ResponseEntity(HttpStatus.NOT_FOUND);
-    } else if (submission.getStatus() != TmcSubmissionStatus.PENDING) {
+    } else if (submission.getStatus() != SubmissionStatus.PENDING) {
       // Result is being submitted twice.
       // TODO: decide on a better response code for this...
       return new ResponseEntity(HttpStatus.BAD_REQUEST);
