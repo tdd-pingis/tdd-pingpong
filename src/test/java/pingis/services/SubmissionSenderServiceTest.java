@@ -25,7 +25,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
-import pingis.config.SubmissionProperties;
+import pingis.config.SandboxSubmissionProperties;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
 import pingis.repositories.sandbox.SubmissionRepository;
@@ -35,7 +35,7 @@ import pingis.services.sandbox.SubmissionSenderService;
 @RestClientTest(SubmissionSenderService.class)
 @TestPropertySource(properties = {"tmc.sandboxUrl=http://localhost:3001",
     "tmc.notifyUrl=http://localhost:1337"})
-@ContextConfiguration(classes = {SubmissionProperties.class, SubmissionSenderService.class})
+@ContextConfiguration(classes = {SandboxSubmissionProperties.class, SubmissionSenderService.class})
 @DirtiesContext
 public class SubmissionSenderServiceTest {
 

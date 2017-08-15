@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import pingis.config.SubmissionProperties;
+import pingis.config.SandboxSubmissionProperties;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
 import pingis.repositories.sandbox.SubmissionRepository;
@@ -27,19 +27,19 @@ public class SubmissionSenderService {
 
   private RestTemplate restTemplate;
 
-  private final SubmissionProperties submissionProperties;
+  private final SandboxSubmissionProperties sandboxSubmissionProperties;
 
   private final SubmissionRepository submissionRepository;
 
   @Autowired
   public SubmissionSenderService(RestTemplateBuilder restTemplateBuilder,
-      SubmissionProperties submissionProperties,
+      SandboxSubmissionProperties sandboxSubmissionProperties,
       SubmissionRepository submissionRepository) {
-    this.submissionProperties = submissionProperties;
+    this.sandboxSubmissionProperties = sandboxSubmissionProperties;
     this.submissionRepository = submissionRepository;
 
     restTemplate = restTemplateBuilder
-        .rootUri(submissionProperties.getSandboxUrl())
+        .rootUri(sandboxSubmissionProperties.getSandboxUrl())
         .build();
   }
 
@@ -67,7 +67,7 @@ public class SubmissionSenderService {
 
     logger.debug("Created new submission, id: {}", submission.getId());
 
-    String notifyUrl = submissionProperties.getNotifyUrl();
+    String notifyUrl = sandboxSubmissionProperties.getNotifyUrl();
 
     HttpEntity<MultiValueMap<String, Object>> requestEntity = buildRequestEntity(packaged,
         submission.getId().toString(), notifyUrl);
