@@ -7,6 +7,7 @@
     <div class="row">
         <h1>new task pair</h1>
         <form th:action="@{/createTaskPair}" method="post">
+            <div class="row">
             <div class="col-md-6">
                 <label>test task name:</label><br/>
                 <input type="text" name="testTaskName" size="80"/><br/>
@@ -22,6 +23,10 @@
                 <textarea name="implementationTaskDesc" rows="10" cols="80"></textarea><br/>
                 <label>Code stub:</label><br/>
                 <textarea name="implementationCodeStub" rows="10" cols="80"></textarea><br/>
+            </div>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-primary">Create task pair</button>
             </div>
         </form>
     </div>
