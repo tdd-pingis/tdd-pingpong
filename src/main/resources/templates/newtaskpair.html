@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="base :: header"></head>
+<body>
+<nav th:include="navbar :: navigation"></nav>
+<div class="container">
+    <div class="row">
+        <h1>new task pair</h1>
+        <form th:action="@{/createTaskPair}" method="post">
+            <div class="row">
+            <div class="col-md-6">
+                <label>test task name:</label><br/>
+                <input type="text" name="testTaskName" size="80"/><br/>
+                <label>Test task description:</label><br/>
+                <textarea name="testTaskDesc" rows="10" cols="80"></textarea><br/>
+                <label>Code stub:</label><br/>
+                <textarea name="testCodeStub" rows="10" cols="80"></textarea><br/>
+            </div>
+            <div class="col-md-6">
+                <label>implementation task name:</label><br/>
+                <input type="text" name="implementationTaskName" size="80"/><br/>
+                <label>Implementation task description:</label><br/>
+                <textarea name="implementationTaskDesc" rows="10" cols="80"></textarea><br/>
+                <label>Code stub:</label><br/>
+                <textarea name="implementationCodeStub" rows="10" cols="80"></textarea><br/>
+            </div>
+            </div>
+            <div class="row">
+                <button type="submit" class="btn btn-primary">Create task pair</button>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+

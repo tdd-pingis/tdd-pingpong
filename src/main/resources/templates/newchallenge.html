@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="base :: header"></head>
+<body>
+<nav th:include="navbar :: navigation"></nav>
+<div class="container">
+    <h1>New challenge</h1>
+    <div class="row">
+        <form th:action="@{/createChallenge}" method="post">
+            <label>challenge name:</label><br />
+            <input type="text" name="challengeName" size="50"/><br />
+            <label>challenge description</label><br />
+            <textarea rows="10" cols="80" name="challengeDesc" /><br />
+            <label>Challenge type:</label>
+            <select name="challengeType">
+                <option value="PROJECT">Project</option>
+                <option value="MIXED">Mixed</option>
+            </select><br />
+            <label>Realm:</label>
+            <select name="realm">
+                <option value="BEGINNER">Beginner</option>
+                <option value="DATASTRUCTURES">Data structires</option>
+                <option value="ALGORITHMS">Algorithms</option>
+                <option value="RECURSION">Recursion</option>
+                <option value="AI">Artificial intelligence</option>
+            </select><br />
+            <button type="submit" class="btn btn-primary">Create challenge</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>
+
