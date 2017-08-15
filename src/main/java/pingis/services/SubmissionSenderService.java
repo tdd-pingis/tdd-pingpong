@@ -16,7 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import pingis.config.SubmissionProperties;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
-import pingis.repositories.TmcSubmissionRepository;
+import pingis.repositories.sandbox.SubmissionRepository;
 
 @Service
 public class SubmissionSenderService {
@@ -29,12 +29,12 @@ public class SubmissionSenderService {
 
   private final SubmissionProperties submissionProperties;
 
-  private final TmcSubmissionRepository submissionRepository;
+  private final SubmissionRepository submissionRepository;
 
   @Autowired
   public SubmissionSenderService(RestTemplateBuilder restTemplateBuilder,
       SubmissionProperties submissionProperties,
-      TmcSubmissionRepository submissionRepository) {
+      SubmissionRepository submissionRepository) {
     this.submissionProperties = submissionProperties;
     this.submissionRepository = submissionRepository;
 

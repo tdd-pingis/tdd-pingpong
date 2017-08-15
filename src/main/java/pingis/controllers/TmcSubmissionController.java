@@ -20,7 +20,7 @@ import pingis.entities.sandbox.ResultStatus;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.TestOutput;
 import pingis.entities.sandbox.SubmissionStatus;
-import pingis.repositories.TmcSubmissionRepository;
+import pingis.repositories.sandbox.SubmissionRepository;
 import pingis.services.TaskInstanceService;
 
 @Controller
@@ -29,7 +29,7 @@ public class TmcSubmissionController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
-  private TmcSubmissionRepository submissionRepository;
+  private SubmissionRepository submissionRepository;
   @Autowired
   private SimpMessagingTemplate template;
   @Autowired

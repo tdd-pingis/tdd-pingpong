@@ -37,7 +37,7 @@ import pingis.entities.sandbox.ResultStatus;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
 import pingis.entities.sandbox.TestOutput;
-import pingis.repositories.TmcSubmissionRepository;
+import pingis.repositories.sandbox.SubmissionRepository;
 import pingis.services.TaskInstanceService;
 
 /**
@@ -59,7 +59,7 @@ public class TmcSubmissionControllerTest {
   private MockMvc mvc;
 
   @MockBean
-  private TmcSubmissionRepository submissionRepository;
+  private SubmissionRepository submissionRepository;
 
   @MockBean
   private TaskInstanceService taskInstanceServiceMock;

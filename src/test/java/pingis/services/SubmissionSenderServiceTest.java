@@ -28,7 +28,7 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import pingis.config.SubmissionProperties;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
-import pingis.repositories.TmcSubmissionRepository;
+import pingis.repositories.sandbox.SubmissionRepository;
 
 @RunWith(SpringRunner.class)
 @RestClientTest(SubmissionSenderService.class)
@@ -45,7 +45,7 @@ public class SubmissionSenderServiceTest {
   private MockRestServiceServer server;
 
   @MockBean
-  private TmcSubmissionRepository submissionRepository;
+  private SubmissionRepository submissionRepository;
 
   @Test
   public void testSubmit() throws IOException, ArchiveException {
