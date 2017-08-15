@@ -21,6 +21,7 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import pingis.services.sandbox.SubmissionPackagingService;
 
 public class SubmissionPackagingServiceTest {
 

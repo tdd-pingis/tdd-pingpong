@@ -1,4 +1,4 @@
-package pingis.services;
+package pingis.services.sandbox;
 
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
-import pingis.config.SubmissionProperties;
-import pingis.entities.tmc.TmcSubmission;
-import pingis.entities.tmc.TmcSubmissionStatus;
-import pingis.repositories.TmcSubmissionRepository;
+import pingis.config.SandboxSubmissionProperties;
+import pingis.entities.sandbox.Submission;
+import pingis.entities.sandbox.SubmissionStatus;
+import pingis.repositories.sandbox.SubmissionRepository;
 
 @Service
 public class SubmissionSenderService {
@@ -27,19 +27,19 @@ public class SubmissionSenderService {
 
   private RestTemplate restTemplate;
 
-  private final SubmissionProperties submissionProperties;
+  private final SandboxSubmissionProperties sandboxSubmissionProperties;
 
-  private final TmcSubmissionRepository submissionRepository;
+  private final SubmissionRepository submissionRepository;
 
   @Autowired
   public SubmissionSenderService(RestTemplateBuilder restTemplateBuilder,
-      SubmissionProperties submissionProperties,
-      TmcSubmissionRepository submissionRepository) {
-    this.submissionProperties = submissionProperties;
+      SandboxSubmissionProperties sandboxSubmissionProperties,
+      SubmissionRepository submissionRepository) {
+    this.sandboxSubmissionProperties = sandboxSubmissionProperties;
     this.submissionRepository = submissionRepository;
 
     restTemplate = restTemplateBuilder
-        .rootUri(submissionProperties.getSandboxUrl())
+        .rootUri(sandboxSubmissionProperties.getSandboxUrl())
         .build();
   }
 
@@ -61,23 +61,23 @@ public class SubmissionSenderService {
     return new HttpEntity<>(map);
   }
 
-  public TmcSubmission sendSubmission(TmcSubmission submission, byte[] packaged) {
+  public Submission sendSubmission(Submission submission, byte[] packaged) {
     submission.setId(UUID.randomUUID());
-    submission.setStatus(TmcSubmissionStatus.PENDING);
+    submission.setStatus(SubmissionStatus.PENDING);
 
     logger.debug("Created new submission, id: {}", submission.getId());
 
-    String notifyUrl = submissionProperties.getNotifyUrl();
+    String notifyUrl = sandboxSubmissionProperties.getNotifyUrl();
 
     HttpEntity<MultiValueMap<String, Object>> requestEntity = buildRequestEntity(packaged,
         submission.getId().toString(), notifyUrl);
 
-    TmcSubmissionResponse response = restTemplate.postForObject("/tasks.json", requestEntity,
-        TmcSubmissionResponse.class);
+    SubmissionResponse response = restTemplate.postForObject("/tasks.json", requestEntity,
+        SubmissionResponse.class);
 
     logger.debug("Received sandbox response: {}", response.getStatus());
 
-    if (!response.getStatus().equals(TmcSubmissionResponse.OK)) {
+    if (!response.getStatus().equals(SubmissionResponse.OK)) {
       logger.error("Sandbox submission failed!");
       return null;
     }

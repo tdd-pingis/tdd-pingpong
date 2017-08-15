@@ -1,4 +1,4 @@
-package pingis.entities.tmc;
+package pingis.entities.sandbox;
 
 import java.util.List;
 import javax.persistence.CascadeType;
@@ -17,7 +17,7 @@ public class TestOutput {
   private long id;
 
   @OneToOne
-  TmcSubmission tmcSubmission;
+  Submission tmcSubmission;
 
   private ResultStatus status;
 

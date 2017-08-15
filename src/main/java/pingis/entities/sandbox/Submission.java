@@ -1,4 +1,4 @@
-package pingis.entities.tmc;
+package pingis.entities.sandbox;
 
 import java.util.UUID;
 import javax.persistence.CascadeType;
@@ -12,7 +12,7 @@ import pingis.entities.TaskInstance;
  * Created by dwarfcrank on 7/28/17.
  */
 @Entity
-public class TmcSubmission {
+public class Submission {
 
   @Id
   private UUID id;
@@ -25,7 +25,7 @@ public class TmcSubmission {
   @Lob
   private String stdout;
 
-  private TmcSubmissionStatus status;
+  private SubmissionStatus status;
 
   @OneToOne(cascade = {CascadeType.ALL})
   private TestOutput testOutput;
@@ -71,15 +71,15 @@ public class TmcSubmission {
     this.stdout = stdout;
   }
 
-  public TmcSubmissionStatus getStatus() {
+  public SubmissionStatus getStatus() {
     return status;
   }
 
   public void setStatus(String status) {
-    this.status = TmcSubmissionStatus.valueOf(status.toUpperCase());
+    this.status = SubmissionStatus.valueOf(status.toUpperCase());
   }
 
-  public void setStatus(TmcSubmissionStatus status) {
+  public void setStatus(SubmissionStatus status) {
     this.status = status;
   }
 

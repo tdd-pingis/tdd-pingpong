@@ -23,14 +23,14 @@ import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
-import pingis.entities.tmc.TmcSubmission;
+import pingis.entities.sandbox.Submission;
 import pingis.services.ChallengeService;
 import pingis.services.EditorService;
-import pingis.services.SubmissionPackagingService;
-import pingis.services.SubmissionSenderService;
 import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
+import pingis.services.sandbox.SubmissionPackagingService;
+import pingis.services.sandbox.SubmissionSenderService;
 import pingis.utils.EditorTabData;
 import pingis.utils.JavaClassGenerator;
 import pingis.utils.JavaSyntaxChecker;
@@ -108,7 +108,7 @@ public class TaskController {
     TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
 
-    TmcSubmission submission = submitToTmc(taskInstance, currentChallenge, submissionCode,
+    Submission submission = submitToTmc(taskInstance, currentChallenge, submissionCode,
         staticCode);
     
     redirectAttributes.addFlashAttribute("submissionId", submission.getId());
@@ -172,7 +172,7 @@ public class TaskController {
   }
 
   // TODO: This should actually be a separate service...
-  private TmcSubmission submitToTmc(TaskInstance taskInstance, Challenge challenge,
+  private Submission submitToTmc(TaskInstance taskInstance, Challenge challenge,
       String submissionCode,
       String staticCode)
       throws IOException, ArchiveException {
@@ -189,7 +189,7 @@ public class TaskController {
       files.put(testFileName, staticCode.getBytes());
     }
     byte[] packaged = packagingService.packageSubmission(files);
-    TmcSubmission submission = new TmcSubmission();
+    Submission submission = new Submission();
     logger.debug("Created the submission");
     submission.setTaskInstance(taskInstance);
     return senderService.sendSubmission(submission, packaged);

@@ -32,12 +32,12 @@ import pingis.config.SecurityDevConfig;
 import pingis.config.WebSocketSecurityConfig;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
-import pingis.entities.tmc.Logs;
-import pingis.entities.tmc.ResultStatus;
-import pingis.entities.tmc.TestOutput;
-import pingis.entities.tmc.TmcSubmission;
-import pingis.entities.tmc.TmcSubmissionStatus;
-import pingis.repositories.TmcSubmissionRepository;
+import pingis.entities.sandbox.Logs;
+import pingis.entities.sandbox.ResultStatus;
+import pingis.entities.sandbox.Submission;
+import pingis.entities.sandbox.SubmissionStatus;
+import pingis.entities.sandbox.TestOutput;
+import pingis.repositories.sandbox.SubmissionRepository;
 import pingis.services.TaskInstanceService;
 
 /**
@@ -59,7 +59,7 @@ public class TmcSubmissionControllerTest {
   private MockMvc mvc;
 
   @MockBean
-  private TmcSubmissionRepository submissionRepository;
+  private SubmissionRepository submissionRepository;
 
   @MockBean
   private TaskInstanceService taskInstanceServiceMock;
@@ -99,7 +99,7 @@ public class TmcSubmissionControllerTest {
   @Test
   public void doubleSubmitReturnsBadRequest() throws Exception {
     UUID submissionId = UUID.randomUUID();
-    TmcSubmission submission = createSubmission();
+    Submission submission = createSubmission();
     submission.setId(submissionId);
 
     given(submissionRepository.findOne(submissionId))
@@ -111,7 +111,7 @@ public class TmcSubmissionControllerTest {
     performMockRequest(submissionId)
         .andExpect(status().isBadRequest());
 
-    ArgumentCaptor<TmcSubmission> submissionCaptor = ArgumentCaptor.forClass(TmcSubmission.class);
+    ArgumentCaptor<Submission> submissionCaptor = ArgumentCaptor.forClass(Submission.class);
     verify(submissionRepository, times(2)).findOne(submissionId);
     verify(submissionRepository, times(1)).save(submissionCaptor.capture());
     verifyNoMoreInteractions(submissionRepository);
@@ -120,7 +120,7 @@ public class TmcSubmissionControllerTest {
   @Test
   public void returnsNotFoundWithInvalidToken() throws Exception {
     UUID submissionId = UUID.randomUUID();
-    TmcSubmission submission = createSubmission();
+    Submission submission = createSubmission();
     submission.setId(submissionId);
 
     given(submissionRepository.findOne(submissionId))
@@ -136,7 +136,7 @@ public class TmcSubmissionControllerTest {
   @Test
   public void testWithValidToken() throws Exception {
     UUID submissionId = UUID.randomUUID();
-    TmcSubmission submission = createSubmission();
+    Submission submission = createSubmission();
     submission.setId(submissionId);
 
     given(submissionRepository.findOne(submissionId))
@@ -145,20 +145,20 @@ public class TmcSubmissionControllerTest {
     performMockRequest(submissionId)
         .andExpect(status().isOk());
 
-    ArgumentCaptor<TmcSubmission> submissionCaptor = ArgumentCaptor.forClass(TmcSubmission.class);
+    ArgumentCaptor<Submission> submissionCaptor = ArgumentCaptor.forClass(Submission.class);
     verify(submissionRepository, times(1)).findOne(submissionId);
     verify(submissionRepository, times(1)).save(submissionCaptor.capture());
     verifyNoMoreInteractions(submissionRepository);
 
-    TmcSubmission captured = submissionCaptor.getValue();
+    Submission captured = submissionCaptor.getValue();
 
     assertSubmission(captured, submissionId);
   }
 
-  private TmcSubmission createSubmission() {
-    TmcSubmission submission = new TmcSubmission();
+  private Submission createSubmission() {
+    Submission submission = new Submission();
 
-    submission.setStatus(TmcSubmissionStatus.PENDING);
+    submission.setStatus(SubmissionStatus.PENDING);
 
     Task task = new Task(0, null, null, null, null, null, 0, 0);
     TaskInstance ti = new TaskInstance(null, null, task);
@@ -166,13 +166,13 @@ public class TmcSubmissionControllerTest {
     return submission;
   }
 
-  private void assertSubmission(TmcSubmission captured, UUID submissionId) {
+  private void assertSubmission(Submission captured, UUID submissionId) {
     assertEquals((int) captured.getExitCode(), 0);
     assertEquals(captured.getStdout(), "test_stdout");
     assertEquals(captured.getStderr(), "test_stderr");
     assertEquals(captured.getValidations(), "test_validations");
     assertEquals(captured.getVmLog(), "test_vm_log");
-    assertEquals(captured.getStatus(), TmcSubmissionStatus.FINISHED);
+    assertEquals(captured.getStatus(), SubmissionStatus.FINISHED);
     assertEquals(captured.getId(), submissionId);
 
     TestOutput top = captured.getTestOutput();

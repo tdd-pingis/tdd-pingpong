@@ -14,13 +14,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pingis.entities.TaskType;
-import pingis.entities.tmc.Logs;
-import pingis.entities.tmc.ResultMessage;
-import pingis.entities.tmc.ResultStatus;
-import pingis.entities.tmc.TestOutput;
-import pingis.entities.tmc.TmcSubmission;
-import pingis.entities.tmc.TmcSubmissionStatus;
-import pingis.repositories.TmcSubmissionRepository;
+import pingis.entities.sandbox.Logs;
+import pingis.entities.sandbox.ResultMessage;
+import pingis.entities.sandbox.ResultStatus;
+import pingis.entities.sandbox.Submission;
+import pingis.entities.sandbox.SubmissionStatus;
+import pingis.entities.sandbox.TestOutput;
+import pingis.repositories.sandbox.SubmissionRepository;
 import pingis.services.TaskInstanceService;
 
 @Controller
@@ -29,7 +29,7 @@ public class TmcSubmissionController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
-  private TmcSubmissionRepository submissionRepository;
+  private SubmissionRepository submissionRepository;
   @Autowired
   private SimpMessagingTemplate template;
   @Autowired
@@ -49,11 +49,11 @@ public class TmcSubmissionController {
       @RequestParam("exit_code") String exitCode) throws IOException {
     logger.debug("Received a response from TMC sandbox");
     UUID submissionId = UUID.fromString(token);
-    TmcSubmission submission = submissionRepository.findOne(submissionId);
+    Submission submission = submissionRepository.findOne(submissionId);
 
     if (submission == null) {
       return new ResponseEntity(HttpStatus.NOT_FOUND);
-    } else if (submission.getStatus() != TmcSubmissionStatus.PENDING) {
+    } else if (submission.getStatus() != SubmissionStatus.PENDING) {
       // Result is being submitted twice.
       // TODO: decide on a better response code for this...
       return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -73,7 +73,7 @@ public class TmcSubmissionController {
     return new ResponseEntity(HttpStatus.OK);
   }
 
-  private void sendResults(TmcSubmission submission) {
+  private void sendResults(Submission submission) {
     ResultMessage message = createMessage(submission);
     if (message.isSuccess()) {
       taskInstanceService.markAsDone(submission.getTaskInstance());
@@ -83,7 +83,7 @@ public class TmcSubmissionController {
     logger.debug("Sent the TMC sandbox results to /topic/results");
   }
 
-  private ResultMessage createMessage(TmcSubmission submission) {
+  private ResultMessage createMessage(Submission submission) {
     TestOutput top = submission.getTestOutput();
     Logs logs = top.getLogs();
     ResultStatus status = top.getStatus();

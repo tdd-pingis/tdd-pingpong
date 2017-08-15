@@ -1,4 +1,4 @@
-package pingis.entities.tmc;
+package pingis.entities.sandbox;
 
 /**
  * @author authority
