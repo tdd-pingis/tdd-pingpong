@@ -2,6 +2,7 @@ package pingis.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -111,5 +112,56 @@ public class TaskService {
     }
     return availableTestTaskInstances;
   }
+
+  public Task getRandomTestTask(Challenge currentChallenge, User currentUser) {
+    List<Task> testTasks = filterTasksByUser(
+        getAvailableTasksByType(currentChallenge, TaskType.TEST),
+        currentUser);
+    return getRandomElementFromList(testTasks);
+  }
+
+  public Task getRandomImplTask(Challenge currentChallenge, User currentUser) {
+    MultiValueMap<Task, TaskInstance> implementationTasks = getAvailableTestTaskInstances(
+        currentChallenge,
+        currentUser);
+    List<Task> keys = new ArrayList<>();
+    keys.addAll(implementationTasks.keySet());
+    return getRandomElementFromList(keys);
+  }
+
+  public TaskInstance getRandomTaskInstance(Challenge currentChallenge, User currentUser,
+      Task whichTask) {
+    MultiValueMap<Task, TaskInstance> allTaskInstances = getAvailableTestTaskInstances(
+        currentChallenge, currentUser);
+    return getRandomElementFromList(allTaskInstances.get(whichTask));
+  }
+
+  public TaskType getRandomTaskType() {
+    List<TaskType> taskTypes = new ArrayList();
+    taskTypes.add(TaskType.IMPLEMENTATION);
+    taskTypes.add(TaskType.TEST);
+    return getRandomElementFromList(taskTypes);
+  }
+
+  public boolean noNextTaskAvailable(Challenge currentChallenge, User currentUser) {
+    return !hasNextImplTaskAvailable(currentChallenge, currentUser)
+        && !hasNextTestTaskAvailable(currentChallenge, currentUser);
+  }
+
+  public boolean hasNextTestTaskAvailable(Challenge currentChallenge, User currentUser) {
+    return getRandomTestTask(currentChallenge, currentUser) != null;
+  }
+
+  public boolean hasNextImplTaskAvailable(Challenge currentChallenge, User currentUser) {
+    return getRandomImplTask(currentChallenge, currentUser) != null;
+  }
+
+  private <T> T getRandomElementFromList(List<T> list) {
+    if (list.isEmpty()) {
+      return null;
+    }
+    return list.get(new Random().nextInt(list.size()));
+  }
+
 
 }
