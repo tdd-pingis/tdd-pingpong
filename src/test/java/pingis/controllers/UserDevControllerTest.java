@@ -35,7 +35,7 @@ import pingis.services.UserService;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebMvcTest(UserDevController.class)
 @ContextConfiguration(classes = {UserDevController.class, SecurityDevConfig.class, 
-                                 UserService.class})
+                                 UserService.class, IndexController.class})
 @WebAppConfiguration
 public class UserDevControllerTest {
 
@@ -114,5 +114,20 @@ public class UserDevControllerTest {
     mvc.perform(formLogin().user("user"))
             .andExpect(authenticated().withRoles("USER"))
             .andExpect(status().is3xxRedirection());
+  }
+  
+  @Test
+  public void testGivenPrincipalIsAuthenticatedIndexRedirectsToUser() throws Exception {
+    // Expected outcomes
+    String testUrl = "/";
+    String expectedContent = "Available challenges";
+    String expectedViewName = "redirect:/user";
+    
+    MvcResult result = mvc.perform(get(testUrl).with(securityContext(
+            mockContext.createSecurityContext(testUser))))
+            .andExpect(view().name(expectedViewName))
+            .andReturn();
+    
+    Mockito.verifyNoMoreInteractions(userServiceMock);
   }
 }
