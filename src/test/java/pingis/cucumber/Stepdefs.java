@@ -1,15 +1,16 @@
 package pingis.cucumber;
 
+import static org.junit.Assert.assertTrue;
+
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.Given;
 import cucumber.api.java.en.Then;
 import cucumber.api.java.en.When;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -25,140 +26,139 @@ import org.springframework.test.context.junit4.SpringRunner;
 @SpringBootTest()
 @ContextConfiguration
 public class Stepdefs {
-    
-    @Value("${TMC_TEST_USER_LOGIN:dummy}")
-    private String tmcLogin;
-    @Value("${TMC_TEST_USER_PASSWORD:dummy}")
-    private String tmcPassword;
-    @Value("${CUKE_WAIT_TIME:4}")
-    private int DRIVER_WAIT_TIME;
-    
-    private final int LOAD_WAIT_TIME = 1000;
-    
-    WebDriver driver;
-    String baseUrl;
-    //Maps the names for the elements used in the feature files to
-    //actual ids or addresses that can be used by the WebDriver to locate them
-    Map<String, String> ids;
 
-    @Test
-    public void setupTest() {
-    }
+  @Value("${TMC_TEST_USER_LOGIN:dummy}")
+  private String tmcLogin;
+  @Value("${TMC_TEST_USER_PASSWORD:dummy}")
+  private String tmcPassword;
+  @Value("${CUKE_WAIT_TIME:4}")
+  private static int DRIVER_WAIT_TIME;
 
-    @Before
-    public void setUp() throws Exception {
-        if (driver == null) {
-            driver = new FirefoxDriver();
-            driver.manage().deleteAllCookies();
-            //Waits the specified amount of time if it cannot immediately find a desired element
-            driver.manage().timeouts().implicitlyWait(DRIVER_WAIT_TIME, TimeUnit.SECONDS);
-        }
-        baseUrl = "http://localhost:8080/";
-        driver.get(baseUrl);
+  private static final int LOAD_WAIT_TIME = 1000;
 
-        ids = initializeIds();
-    }
+  WebDriver driver;
+  String baseUrl;
+  //Maps the names for the elements used in the feature files to
+  //actual ids or addresses that can be used by the WebDriver to locate them
+  Map<String, String> ids;
 
-    private WebElement findByName(String name) {
-        return driver.findElement(By.id(ids.get(name)));
-    }
+  @Test
+  public void setupTest() {
+  }
 
-    private boolean exists(String name) {
-        return driver.findElements(By.id(ids.get(name))).size() > 0;
+  @Before
+  public void setUp() throws Exception {
+    if (driver == null) {
+      driver = new FirefoxDriver();
+      driver.manage().deleteAllCookies();
+      //Waits the specified amount of time if it cannot immediately find a desired element
+      driver.manage().timeouts().implicitlyWait(DRIVER_WAIT_TIME, TimeUnit.SECONDS);
     }
+    baseUrl = "http://localhost:8080/";
+    driver.get(baseUrl);
 
-    private boolean isDisplayed(String name) {
-        return findByName(name).isDisplayed();
-    }
+    ids = initializeIds();
+  }
 
-    @When(".*clicks the (.+) button$")
-    public void clicks_the_button(String name) throws InterruptedException {
-        findByName(name).click();
-    }
+  private WebElement findByName(String name) {
+    return driver.findElement(By.id(ids.get(name)));
+  }
 
-    @When(".*clicks the (.+) tab$")
-    public void clicks_the_tab(String name) throws InterruptedException {
-        driver.findElement(By.linkText(name)).click();
-        //Wait for the tab contents to load.
-        //The implicit wait doesn't work as the tab content checking is
-        //currently done by using the page source instead of an actual element
-        Thread.sleep(LOAD_WAIT_TIME);
-    }
+  private boolean exists(String name) {
+    return driver.findElements(By.id(ids.get(name))).size() > 0;
+  }
 
-    @When(".*inputs their username (.+) and password (.+)")
-    public void inputs_username_and_password(String username, String password) throws Throwable {
-        findByName("username field").sendKeys(username);
-        findByName("password field").sendKeys(password);
-    }
+  private boolean isDisplayed(String name) {
+    return findByName(name).isDisplayed();
+  }
 
-    @Then(".*is successfully authenticated$")
-    public void is_successfully_authenticated() throws Throwable {
-        assertTrue(exists("My Account"));
-        assertTrue(isDisplayed("My Account"));
-    }
-    
-    @And(".*is redirected to [^ ]* (.+)")
-    public void is_redirected_to(String page) {
-        assertTrue(driver.getCurrentUrl().equals(baseUrl+ids.get(page)));
-    }
-    
-    @Given(".*is logged in$")
-    public void is_logged_in() throws Throwable {
-        clicks_the_button("Login");
-        inputs_username_and_password("user", "password");
-        clicks_the_button("Log in");
-    }
+  @When(".*clicks the (.+) button$")
+  public void clicks_the_button(String name) throws InterruptedException {
+    findByName(name).click();
+  }
 
-    @Then(".*is successfully signed out$")
-    public void successfully_signed_out() throws Throwable {
-        not_authenticated();
-    }
+  @When(".*clicks the (.+) tab$")
+  public void clicks_the_tab(String name) throws InterruptedException {
+    driver.findElement(By.linkText(name)).click();
+    //Wait for the tab contents to load.
+    //The implicit wait doesn't work as the tab content checking is
+    //currently done by using the page source instead of an actual element
+    Thread.sleep(LOAD_WAIT_TIME);
+  }
 
-    @Then(".*is not authenticated$")
-    public void not_authenticated() throws Throwable {
-        assertTrue(exists("Log in"));
-    }
+  @When(".*inputs their username (.+) and password (.+)")
+  public void inputs_username_and_password(String username, String password) throws Throwable {
+    findByName("username field").sendKeys(username);
+    findByName("password field").sendKeys(password);
+  }
 
-    @And("clicks Sign in")
-    public void clicks_on_sign_in() throws Throwable {
-        driver.findElement(By.name("commit")).click();
-    }
-    
-    @And("^inputs their TMC username and password$")
-    public void inputs_username_and_password() throws Throwable {
-        inputs_username_and_password(tmcLogin, tmcPassword);
-    }
+  @And("^inputs their TMC username and password$")
+  public void inputs_username_and_password() throws Throwable {
+    inputs_username_and_password(tmcLogin, tmcPassword);
+  }
 
-    
-    @Given(".*navigates to the task page at (.+)")
-    public void navigates_to_the_task_page_at(String address) throws Throwable {
-        driver.get(baseUrl+address);
-    }
+  @Then(".*is successfully authenticated$")
+  public void is_successfully_authenticated() throws Throwable {
+    assertTrue(exists("My Account"));
+    assertTrue(isDisplayed("My Account"));
+  }
 
-    @Then(".*the page contains (.+)")
-    public void page_has_the_right_content(String content) throws Throwable {
-        assertTrue(driver.getPageSource().contains(content));
-    }
-    
-    @After
-    public void tearDown() {
-        driver.quit();
-    }
-    
-    
-    private Map<String, String> initializeIds() {
-        Map<String, String> map = new HashMap<>();
+  @And(".*is redirected to [^ ]* (.+)")
+  public void is_redirected_to(String page) {
+    assertTrue(driver.getCurrentUrl().equals(baseUrl + ids.get(page)));
+  }
 
-        map.put("Login", "login-button");
-        map.put("submit", "submit-button");
-        map.put("My Account", "account-button");
-        map.put("Log in", "log-in-button");
-        map.put("Logout", "logout-button");
-        map.put("front page", "");
-        map.put("login error page", "login?error");
-        map.put("username field", "session_login");
-        map.put("password field", "session_password");
+  @Given(".*is logged in$")
+  public void is_logged_in() throws Throwable {
+    clicks_the_button("Login");
+    inputs_username_and_password("user", "password");
+    clicks_the_button("Log in");
+  }
 
-        return map;
-    }
+  @Then(".*is successfully signed out$")
+  public void successfully_signed_out() throws Throwable {
+    not_authenticated();
+  }
+
+  @Then(".*is not authenticated$")
+  public void not_authenticated() throws Throwable {
+    assertTrue(exists("Log in"));
+  }
+
+  @And("clicks Sign in")
+  public void clicks_on_sign_in() throws Throwable {
+    driver.findElement(By.name("commit")).click();
+  }
+
+  @Given(".*navigates to the task page at (.+)")
+  public void navigates_to_the_task_page_at(String address) throws Throwable {
+    driver.get(baseUrl + address);
+  }
+
+  @Then(".*the page contains (.+)")
+  public void page_has_the_right_content(String content) throws Throwable {
+    assertTrue(driver.getPageSource().contains(content));
+  }
+
+  @After
+  public void tearDown() {
+    driver.quit();
+  }
+
+
+  private Map<String, String> initializeIds() {
+    Map<String, String> map = new HashMap<>();
+
+    map.put("Login", "login-button");
+    map.put("submit", "submit-button");
+    map.put("My Account", "account-button");
+    map.put("Log in", "log-in-button");
+    map.put("Logout", "logout-button");
+    map.put("front page", "");
+    map.put("login error page", "login?error");
+    map.put("username field", "session_login");
+    map.put("password field", "session_password");
+
+    return map;
+  }
 }

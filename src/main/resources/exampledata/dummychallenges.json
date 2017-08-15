@@ -44,7 +44,7 @@
                     "codeStub": [
                         "public class Calculator {\n\n",
                         "    public Calculator() {}\n",
-                        "    public void multiply(int a, int b) {\n",
+                        "    public int multiply(int a, int b) {\n",
                         "        //TODO: make this work\n",
                         "        return 0;\n",
                         "    }\n",
@@ -97,7 +97,7 @@
                     "codeStub": [
                         "public class Calculator {\n\n",
                         "    public Calculator() {}\n",
-                        "    public void add(int a, int b) {\n",
+                        "    public int add(int a, int b) {\n",
                         "        //TODO: make this work\n",
                         "        return 0;\n",
                         "    }\n",
@@ -150,7 +150,7 @@
                     "codeStub": [
                         "public class Calculator {\n\n",
                         "    public Calculator() {}\n",
-                        "    public void divide(int a, int b) {\n",
+                        "    public int divide(int a, int b) {\n",
                         "        //TODO: make this work\n",
                         "        return 0;\n",
                         "    }\n",
@@ -203,7 +203,7 @@
                     "codeStub": [
                         "public class Calculator {\n\n",
                         "    public Calculator() {}\n",
-                        "    public void subtract(int a, int b) {\n",
+                        "    public int subtract(int a, int b) {\n",
                         "        //TODO: make this work\n",
                         "        return 0;\n",
                         "    }\n",
@@ -352,7 +352,9 @@
                         "import static org.junit.Assert.*;\n",
                         "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
                         "@Points(\"03-03\")\n",
+
                         "public class Beginner1Test {\n\n",
+                        "    @Test\n",
                         "    public void muumiTest() {\n",
                         "        Beginner1 m = new Beginner1();\n",
                         "        assertTrue(m.containsMuumi(\"Käy muumilaaksoon\"));\n",

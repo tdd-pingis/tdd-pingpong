@@ -11,95 +11,103 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 
 /**
 * Implements Spring Security's OAuth2User and works only as a data transfer object 
-* between Spring Security layer and UserService. This is then extracted in UserService 
+* between Spring Security layer and UserService. Extracted in UserService 
 * and exported into database as a TmcUser.
 * @author  villburn
 */
 public class TmcUserDto implements OAuth2User {
-    
-    @NotNull
-    @NotEmpty
-    public String id;
-    
-    @NotNull
-    @NotEmpty
-    public String username;
-    
-    @NotNull
-    @NotEmpty
-    public String email;
-    
-    @NotNull
-    @NotEmpty
-    public boolean administrator;
-    
-    public TmcUserDto() {}
-    
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        String roles = "USER";
-        if (administrator) {
-            roles += ",ADMIN";
-        }
-        return AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
-    }
 
-    @Override
-    public Map<String, Object> getAttributes() {
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("id", id);
-        attributes.put("username", username);
-        attributes.put("email", email);
-        attributes.put("administrator", administrator);
-        
-        return attributes;
-    }
+  @NotNull
+  @NotEmpty
+  public String id;
+
+  @NotNull
+  @NotEmpty
+  public String username;
+
+  @NotNull
+  @NotEmpty
+  public String email;
+
+  @NotNull
+  @NotEmpty
+  public boolean administrator;
     
-    @Override
-    public String toString() {
-        return "User Details: "
-                + "n\ttype: OAuthUser"
-                + "\n\tid: " + id
-                + "n\tname: " + username 
-                + "\n\tadministrator: " + administrator
-                + "\n\temail: " + email;
-    }
+  public TmcUserDto() {
+  }
 
-    public String getId() {
-        return id;
+  public TmcUserDto(String id, String username, String email, boolean administrator) {
+    this.id = id;
+    this.username = username;
+    this.email = email;
+    this.administrator = administrator;
+  }
+  
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    String roles = "USER";
+    if (administrator) {
+      roles += ",ADMIN";
     }
+    return AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
+  }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+  @Override
+  public Map<String, Object> getAttributes() {
+    Map<String, Object> attributes = new HashMap<>();
+    attributes.put("id", id);
+    attributes.put("username", username);
+    attributes.put("email", email);
+    attributes.put("administrator", administrator);
 
-    @Override
-    public String getName() {
-        return username;
-    }
+    return attributes;
+  }
 
-    public void setName(String name) {
-        this.username = name;
-    }
-    
-    public void setUsername(String name) {
-        this.username = name;
-    }
+  @Override
+  public String toString() {
+    return "User Details: "
+        + "n\ttype: OAuthUser"
+        + "\n\tid: " + id
+        + "n\tname: " + username
+        + "\n\tadministrator: " + administrator
+        + "\n\temail: " + email;
+  }
 
-    public String getEmail() {
-        return email;
-    }
+  public String getId() {
+    return id;
+  }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+  public void setId(String id) {
+    this.id = id;
+  }
 
-    public boolean isAdministrator() {
-        return administrator;
-    }
+  @Override
+  public String getName() {
+    return username;
+  }
 
-    public void setAdministrator(boolean administrator) {
-        this.administrator = administrator;
-    }
-    
+  public void setName(String name) {
+    this.username = name;
+  }
+
+  public void setUsername(String name) {
+    this.username = name;
+  }
+
+  public String getEmail() {
+    return email;
+  }
+
+  public void setEmail(String email) {
+    this.email = email;
+  }
+
+  public boolean isAdministrator() {
+    return administrator;
+  }
+
+  public void setAdministrator(boolean administrator) {
+    this.administrator = administrator;
+  }
+
 }

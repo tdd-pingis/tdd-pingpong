@@ -1,170 +1,175 @@
 package pingis.entities;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import java.util.List;
-import java.util.ArrayList;
-import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.validation.constraints.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Task {
-    // Constraint values
-    public static final int NAME_MIN_LENGTH = 3;
-    public static final int NAME_MAX_LENGTH = 50;
-    public static final int LEVEL_MIN_VALUE = 1;
-    public static final int LEVEL_MAX_VALUE = 200;
-    
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private long id; // unique primary ID
 
-    @NotNull
-    private int index; // sequence number in relation to parent Challenge
+  // Constraint values
+  public static final int NAME_MIN_LENGTH = 3;
+  public static final int NAME_MAX_LENGTH = 50;
+  public static final int LEVEL_MIN_VALUE = 1;
+  public static final int LEVEL_MAX_VALUE = 200;
 
-    @NotNull
-    @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH)
-    private String name;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  private long id; // unique primary ID
 
-    @NotNull
-    private String desc;
-    
-    @NotNull
-    private TaskType type;
+  @NotNull
+  private int index; // sequence number in relation to parent Challenge
 
-    @NotNull
-    private String codeStub;
+  @NotNull
+  @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH)
+  private String name;
 
-    @NotNull
-    @Min(LEVEL_MIN_VALUE)
-    @Max(LEVEL_MAX_VALUE)
-    private int level;
-    private float rating;
+  @NotNull
+  private String desc;
 
-    @NotNull
-    @ManyToOne(fetch=FetchType.LAZY)
-    private Challenge challenge;
+  @NotNull
+  private TaskType type;
 
-    @NotNull
-    @ManyToOne(fetch=FetchType.EAGER)
-    private User author;
+  @NotNull
+  private String codeStub;
 
-    @OneToMany(fetch=FetchType.LAZY, mappedBy="task")
-    private List<TaskInstance> taskInstances;
+  @NotNull
+  @Min(LEVEL_MIN_VALUE)
+  @Max(LEVEL_MAX_VALUE)
+  private int level;
+  private float rating;
 
-    protected Task() {}
-    
-    public Task(int index, TaskType type, User author,
-                String name, String desc, String codeStub, int level, int rating) {
-        this.index = index;
-        this.type = type;
-        this.author = author;
-        this.name = name;
-        this.desc = desc;
-        this.codeStub = codeStub;
-        this.level = level;
-        this.rating = rating;
-        this.taskInstances = new ArrayList<>();
-    }
+  @NotNull
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Challenge challenge;
 
-    public void setAuthor(User author) {
-        this.author = author;
-    }
+  @NotNull
+  @ManyToOne(fetch = FetchType.EAGER)
+  private User author;
 
-    public void addTaskInstance(TaskInstance taskInstance) {
-        this.taskInstances.add(taskInstance);
-    }
+  @OneToMany(fetch = FetchType.LAZY, mappedBy = "task")
+  private List<TaskInstance> taskInstances;
 
-    public User getAuthor() {
-        return this.author;
-    }
+  protected Task() {
+  }
 
-    public long getId() {
-        return this.id;
-    }
+  public Task(int index, TaskType type, User author,
+      String name, String desc, String codeStub, int level, int rating) {
+    this.index = index;
+    this.type = type;
+    this.author = author;
+    this.name = name;
+    this.desc = desc;
+    this.codeStub = codeStub;
+    this.level = level;
+    this.rating = rating;
+    this.taskInstances = new ArrayList<>();
+  }
 
-    public String getCodeStub() {
-        return this.codeStub;
-    }
+  public void setAuthor(User author) {
+    this.author = author;
+  }
 
-    public void setCodeStub(String codeStub) {
-        this.codeStub = codeStub;
-    }
+  public void addTaskInstance(TaskInstance taskInstance) {
+    this.taskInstances.add(taskInstance);
+  }
 
-    public float getRating() {
-        return this.rating;
-    }
+  public User getAuthor() {
+    return this.author;
+  }
 
-    public void setRating(float rating) {
-        this.rating = rating;
-    }
+  public long getId() {
+    return this.id;
+  }
 
-    public Challenge getChallenge() {
-        return this.challenge;
-    }
+  public String getCodeStub() {
+    return this.codeStub;
+  }
 
-    public void setChallenge(Challenge challenge) {
-        this.challenge = challenge;
-    }
+  public void setCodeStub(String codeStub) {
+    this.codeStub = codeStub;
+  }
 
-    public String getDesc() {
-        return this.desc;
-    }
+  public float getRating() {
+    return this.rating;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  public void setRating(float rating) {
+    this.rating = rating;
+  }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
-    }
+  public Challenge getChallenge() {
+    return this.challenge;
+  }
 
-    public String getName() {
-        return this.name;
-    }
+  public void setChallenge(Challenge challenge) {
+    this.challenge = challenge;
+  }
 
-    public int getLevel() {
-        return this.level;
-    }
+  public String getDesc() {
+    return this.desc;
+  }
 
-    public void setLevel(int level) {
-        this.level = level;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public List<TaskInstance> getTaskInstances() {
-        return this.taskInstances;
-    }
+  public void setDesc(String desc) {
+    this.desc = desc;
+  }
 
-    public void setTaskInstances(List<TaskInstance> taskInstances) {
-        this.taskInstances = taskInstances;
-    }
+  public String getName() {
+    return this.name;
+  }
 
-    public int getIndex() {
-        return this.index;
-    }
+  public int getLevel() {
+    return this.level;
+  }
 
-    public void setIndex(int index) {
-        this.index = index;
-    }
+  public void setLevel(int level) {
+    this.level = level;
+  }
 
-    public TaskType getType() {
-        return type;
-    }
+  public List<TaskInstance> getTaskInstances() {
+    return this.taskInstances;
+  }
 
-    public void setType(TaskType type) {
-        this.type = type;
-    }
+  public void setTaskInstances(List<TaskInstance> taskInstances) {
+    this.taskInstances = taskInstances;
+  }
 
-    public void setTypeTest() {
-        this.type = TaskType.TEST;
-    }
+  public int getIndex() {
+    return this.index;
+  }
 
-    public void setTypeImplementation() {
-        this.type = TaskType.IMPLEMENTATION;
-    }
+  public void setIndex(int index) {
+    this.index = index;
+  }
+
+  public TaskType getType() {
+    return type;
+  }
+
+  public void setType(TaskType type) {
+    this.type = type;
+  }
+
+  public void setTypeTest() {
+    this.type = TaskType.TEST;
+  }
+
+  public void setTypeImplementation() {
+    this.type = TaskType.IMPLEMENTATION;
+  }
 
 }
