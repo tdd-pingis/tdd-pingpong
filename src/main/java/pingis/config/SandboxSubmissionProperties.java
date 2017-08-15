@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
  * Created by dwarfcrank on 7/28/17.
  */
 @Configuration
-@ConfigurationProperties(prefix = "sandbox")
+@ConfigurationProperties(prefix = "tmc")
 public class SandboxSubmissionProperties {
 
   private String sandboxUrl;

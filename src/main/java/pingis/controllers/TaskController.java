@@ -111,7 +111,7 @@ public class TaskController {
     Submission submission = submitToTmc(taskInstance, currentChallenge, submissionCode,
         staticCode);
     
-    redirectAttributes.addFlashAttribute("submissionId", submission.getId());
+    redirectAttributes.addFlashAttribute("submissionId", submission.getId().toString());
     redirectAttributes.addFlashAttribute("taskInstance", taskInstance);
     redirectAttributes.addFlashAttribute("challenge", currentChallenge);
 
