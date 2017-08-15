@@ -128,13 +128,17 @@ public class TaskController {
   @RequestMapping("/nextTask/{challengeId}")
   public String nextTask(@PathVariable long challengeId, Model model) {
     Challenge currentChallenge = challengeService.findOne(challengeId);
-    List<Task> tasks = currentChallenge.getTasks();
-    List<Task> testTasks = taskService.getAvailableTestTasks(currentChallenge);
-    MultiValueMap<Task, TaskInstance> implementationTaskInstances =
-        taskService.getAvailableTestTaskInstances(currentChallenge);
+    List<Task> tasks = taskService.filterTasksByUser(
+            currentChallenge.getTasks(), userService.getCurrentUser());
+    List<Task> testTasks = taskService.filterTasksByUser(
+            taskService.getAvailableTasksByType(currentChallenge, TaskType.TEST),
+            userService.getCurrentUser());
+    MultiValueMap<Task, TaskInstance> implementationTasks =
+            taskService.getAvailableTestTaskInstances(currentChallenge,
+                    userService.getCurrentUser());
     model.addAttribute("challenge", currentChallenge);
     model.addAttribute("testTasks", testTasks);
-    model.addAttribute("implementationTaskInstances", implementationTaskInstances);
+    model.addAttribute("implementationTaskInstances", implementationTasks);
     return "nexttask";
   }
 
