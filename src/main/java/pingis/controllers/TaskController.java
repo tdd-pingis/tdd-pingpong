@@ -97,10 +97,6 @@ public class TaskController {
       String staticCode,
       long taskInstanceId,
       RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
-    TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);
-    Task currentTask = taskInstance.getTask();
-
-    Challenge currentChallenge = currentTask.getChallenge();
 
     String[] errors = checkErrors(submissionCode, staticCode);
     if (errors != null) {
@@ -109,9 +105,15 @@ public class TaskController {
       return new RedirectView("/task/{taskInstanceId}");
     }
 
+    TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);
+    Challenge currentChallenge = taskInstance.getTask().getChallenge();
+
     TmcSubmission submission = submitToTmc(taskInstance, currentChallenge, submissionCode,
         staticCode);
-    redirectAttributes.addAttribute("submissionId", submission.getId());
+    
+    redirectAttributes.addFlashAttribute("submissionId", submission.getId());
+    redirectAttributes.addFlashAttribute("taskInstance", taskInstance);
+    redirectAttributes.addFlashAttribute("challenge", currentChallenge);
 
     // Save user's answer from left editor
     taskInstanceService.updateTaskInstanceCode(taskInstanceId, submissionCode);
@@ -120,8 +122,7 @@ public class TaskController {
   }
 
   @RequestMapping("/feedback")
-  public String feedback(Model model, @RequestParam String submissionId) {
-    model.addAttribute("submissionId", submissionId);
+  public String feedback() {
     return "feedback";
   }
 
