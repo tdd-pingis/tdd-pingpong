@@ -12,7 +12,7 @@ import pingis.entities.TaskInstance;
  * Created by dwarfcrank on 7/28/17.
  */
 @Entity
-public class TmcSubmission {
+public class Submission {
 
   @Id
   private UUID id;

@@ -17,8 +17,8 @@ import pingis.entities.TaskType;
 import pingis.entities.sandbox.Logs;
 import pingis.entities.sandbox.ResultMessage;
 import pingis.entities.sandbox.ResultStatus;
+import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.TestOutput;
-import pingis.entities.sandbox.TmcSubmission;
 import pingis.entities.sandbox.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 import pingis.services.TaskInstanceService;
@@ -49,7 +49,7 @@ public class TmcSubmissionController {
       @RequestParam("exit_code") String exitCode) throws IOException {
     logger.debug("Received a response from TMC sandbox");
     UUID submissionId = UUID.fromString(token);
-    TmcSubmission submission = submissionRepository.findOne(submissionId);
+    Submission submission = submissionRepository.findOne(submissionId);
 
     if (submission == null) {
       return new ResponseEntity(HttpStatus.NOT_FOUND);
@@ -73,7 +73,7 @@ public class TmcSubmissionController {
     return new ResponseEntity(HttpStatus.OK);
   }
 
-  private void sendResults(TmcSubmission submission) {
+  private void sendResults(Submission submission) {
     ResultMessage message = createMessage(submission);
     if (message.isSuccess()) {
       taskInstanceService.markAsDone(submission.getTaskInstance());
@@ -83,7 +83,7 @@ public class TmcSubmissionController {
     logger.debug("Sent the TMC sandbox results to /topic/results");
   }
 
-  private ResultMessage createMessage(TmcSubmission submission) {
+  private ResultMessage createMessage(Submission submission) {
     TestOutput top = submission.getTestOutput();
     Logs logs = top.getLogs();
     ResultStatus status = top.getStatus();

@@ -38,7 +38,7 @@ import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
-import pingis.entities.tmc.TmcSubmission;
+import pingis.entities.sandbox.Submission;
 import pingis.services.ChallengeService;
 import pingis.services.EditorService;
 import pingis.services.SubmissionPackagingService;
@@ -91,7 +91,7 @@ public class TaskControllerTest {
   private TaskInstance testTaskInstance;
   private TaskInstance implTaskInstance;
   private User testUser;
-  private TmcSubmission submission;
+  private Submission submission;
 
   @Before
   public void setUp() {
@@ -111,7 +111,7 @@ public class TaskControllerTest {
     testTask.setChallenge(challenge);
     challenge.addTask(implementationTask);
     implementationTask.setChallenge(challenge);
-    submission = new TmcSubmission();
+    submission = new Submission();
     submission.setId(UUID.randomUUID());
     MockitoAnnotations.initMocks(this);
 

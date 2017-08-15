@@ -14,7 +14,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import pingis.config.SubmissionProperties;
-import pingis.entities.sandbox.TmcSubmission;
+import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 
@@ -61,7 +61,7 @@ public class SubmissionSenderService {
     return new HttpEntity<>(map);
   }
 
-  public TmcSubmission sendSubmission(TmcSubmission submission, byte[] packaged) {
+  public Submission sendSubmission(Submission submission, byte[] packaged) {
     submission.setId(UUID.randomUUID());
     submission.setStatus(TmcSubmissionStatus.PENDING);
 

@@ -34,8 +34,8 @@ import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.sandbox.Logs;
 import pingis.entities.sandbox.ResultStatus;
+import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.TestOutput;
-import pingis.entities.sandbox.TmcSubmission;
 import pingis.entities.sandbox.TmcSubmissionStatus;
 import pingis.repositories.TmcSubmissionRepository;
 import pingis.services.TaskInstanceService;
@@ -99,7 +99,7 @@ public class TmcSubmissionControllerTest {
   @Test
   public void doubleSubmitReturnsBadRequest() throws Exception {
     UUID submissionId = UUID.randomUUID();
-    TmcSubmission submission = createSubmission();
+    Submission submission = createSubmission();
     submission.setId(submissionId);
 
     given(submissionRepository.findOne(submissionId))
@@ -111,7 +111,7 @@ public class TmcSubmissionControllerTest {
     performMockRequest(submissionId)
         .andExpect(status().isBadRequest());
 
-    ArgumentCaptor<TmcSubmission> submissionCaptor = ArgumentCaptor.forClass(TmcSubmission.class);
+    ArgumentCaptor<Submission> submissionCaptor = ArgumentCaptor.forClass(Submission.class);
     verify(submissionRepository, times(2)).findOne(submissionId);
     verify(submissionRepository, times(1)).save(submissionCaptor.capture());
     verifyNoMoreInteractions(submissionRepository);
@@ -120,7 +120,7 @@ public class TmcSubmissionControllerTest {
   @Test
   public void returnsNotFoundWithInvalidToken() throws Exception {
     UUID submissionId = UUID.randomUUID();
-    TmcSubmission submission = createSubmission();
+    Submission submission = createSubmission();
     submission.setId(submissionId);
 
     given(submissionRepository.findOne(submissionId))
@@ -136,7 +136,7 @@ public class TmcSubmissionControllerTest {
   @Test
   public void testWithValidToken() throws Exception {
     UUID submissionId = UUID.randomUUID();
-    TmcSubmission submission = createSubmission();
+    Submission submission = createSubmission();
     submission.setId(submissionId);
 
     given(submissionRepository.findOne(submissionId))
@@ -145,18 +145,18 @@ public class TmcSubmissionControllerTest {
     performMockRequest(submissionId)
         .andExpect(status().isOk());
 
-    ArgumentCaptor<TmcSubmission> submissionCaptor = ArgumentCaptor.forClass(TmcSubmission.class);
+    ArgumentCaptor<Submission> submissionCaptor = ArgumentCaptor.forClass(Submission.class);
     verify(submissionRepository, times(1)).findOne(submissionId);
     verify(submissionRepository, times(1)).save(submissionCaptor.capture());
     verifyNoMoreInteractions(submissionRepository);
 
-    TmcSubmission captured = submissionCaptor.getValue();
+    Submission captured = submissionCaptor.getValue();
 
     assertSubmission(captured, submissionId);
   }
 
-  private TmcSubmission createSubmission() {
-    TmcSubmission submission = new TmcSubmission();
+  private Submission createSubmission() {
+    Submission submission = new Submission();
 
     submission.setStatus(TmcSubmissionStatus.PENDING);
 
@@ -166,7 +166,7 @@ public class TmcSubmissionControllerTest {
     return submission;
   }
 
-  private void assertSubmission(TmcSubmission captured, UUID submissionId) {
+  private void assertSubmission(Submission captured, UUID submissionId) {
     assertEquals((int) captured.getExitCode(), 0);
     assertEquals(captured.getStdout(), "test_stdout");
     assertEquals(captured.getStderr(), "test_stderr");

@@ -17,7 +17,7 @@ public class TestOutput {
   private long id;
 
   @OneToOne
-  TmcSubmission tmcSubmission;
+  Submission tmcSubmission;
 
   private ResultStatus status;
 

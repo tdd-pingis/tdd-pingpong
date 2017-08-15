@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
-import pingis.entities.sandbox.TmcSubmission;
+import pingis.entities.sandbox.Submission;
 
 @Entity
 public class TaskInstance {
@@ -29,7 +29,7 @@ public class TaskInstance {
   private float rating;
 
   @OneToOne
-  private TmcSubmission submission;
+  private Submission submission;
 
   @NotNull
   private CodeStatus status;
