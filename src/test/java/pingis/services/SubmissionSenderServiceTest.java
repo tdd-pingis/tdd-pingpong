@@ -29,6 +29,7 @@ import pingis.config.SubmissionProperties;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
 import pingis.repositories.sandbox.SubmissionRepository;
+import pingis.services.sandbox.SubmissionSenderService;
 
 @RunWith(SpringRunner.class)
 @RestClientTest(SubmissionSenderService.class)

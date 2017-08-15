@@ -27,7 +27,7 @@ import pingis.entities.sandbox.Submission;
 import pingis.services.ChallengeService;
 import pingis.services.EditorService;
 import pingis.services.sandbox.SubmissionPackagingService;
-import pingis.services.SubmissionSenderService;
+import pingis.services.sandbox.SubmissionSenderService;
 import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
