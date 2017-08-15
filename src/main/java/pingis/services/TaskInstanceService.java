@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pingis.entities.CodeStatus;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
+import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.TaskRepository;
@@ -28,8 +29,8 @@ public class TaskInstanceService {
     return taskInstanceRepository
         .findByTaskAndUser(
             taskRepository
-                .findByIndexAndChallenge(implTaskInstance.getTask().getIndex() - 1,
-                    implTaskInstance.getTask().getChallenge()),
+                .findByIndexAndChallengeAndType(implTaskInstance.getTask().getIndex(),
+                    implTaskInstance.getTask().getChallenge(), TaskType.TEST),
             userRepository.findOne(0L));
   }
 
@@ -37,8 +38,8 @@ public class TaskInstanceService {
   public TaskInstance getCorrespondingImplTaskInstance(TaskInstance testTaskInstance) {
     return taskInstanceRepository
         .findByTaskAndUser(
-            taskRepository.findByIndexAndChallenge(testTaskInstance.getTask().getIndex() + 1,
-                testTaskInstance.getTask().getChallenge()),
+            taskRepository.findByIndexAndChallengeAndType(testTaskInstance.getTask().getIndex(),
+                testTaskInstance.getTask().getChallenge(), TaskType.IMPLEMENTATION),
             userRepository.findOne(0L));
   }
 

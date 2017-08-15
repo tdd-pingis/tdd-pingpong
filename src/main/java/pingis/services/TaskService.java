@@ -60,9 +60,13 @@ public class TaskService {
   //Relies on the ordering of task types, may not always be the case...
   public Task getCorrespondingTask(Task task) {
     if (task.getType() == TaskType.TEST) {
-      return taskRepository.findByIndexAndChallenge(task.getIndex() + 1, task.getChallenge());
+      return taskRepository.findByIndexAndChallengeAndType(task.getIndex(),
+          task.getChallenge(),
+          TaskType.IMPLEMENTATION);
     } else {
-      return taskRepository.findByIndexAndChallenge(task.getIndex() - 1, task.getChallenge());
+      return taskRepository.findByIndexAndChallengeAndType(task.getIndex(),
+          task.getChallenge(),
+          TaskType.TEST);
     }
   }
 
