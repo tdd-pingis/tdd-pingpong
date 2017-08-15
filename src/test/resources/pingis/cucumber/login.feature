@@ -6,7 +6,7 @@ Scenario Outline: <user> can log in with valid username and password
     And inputs their username <username> and password <password>
     And clicks the Log in button
     Then <user> is successfully authenticated
-    And is redirected to the front page
+    And is redirected to the user page
 
     Examples:
         |user   |username   |password   |
@@ -40,4 +40,4 @@ Scenario: User can authenticate through TMC
     And inputs their TMC username and password
     And clicks Sign in
     Then user is successfully authenticated
-    And is redirected to the front page
+    And is redirected to the user page
