@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConfigurationProperties(prefix = "tmc")
-public class SubmissionProperties {
+public class SandboxSubmissionProperties {
 
   private String sandboxUrl;
   private String notifyUrl;

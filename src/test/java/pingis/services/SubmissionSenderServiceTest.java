@@ -25,16 +25,17 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
-import pingis.config.SubmissionProperties;
-import pingis.entities.tmc.TmcSubmission;
-import pingis.entities.tmc.TmcSubmissionStatus;
-import pingis.repositories.TmcSubmissionRepository;
+import pingis.config.SandboxSubmissionProperties;
+import pingis.entities.sandbox.Submission;
+import pingis.entities.sandbox.SubmissionStatus;
+import pingis.repositories.sandbox.SubmissionRepository;
+import pingis.services.sandbox.SubmissionSenderService;
 
 @RunWith(SpringRunner.class)
 @RestClientTest(SubmissionSenderService.class)
 @TestPropertySource(properties = {"tmc.sandboxUrl=http://localhost:3001",
     "tmc.notifyUrl=http://localhost:1337"})
-@ContextConfiguration(classes = {SubmissionProperties.class, SubmissionSenderService.class})
+@ContextConfiguration(classes = {SandboxSubmissionProperties.class, SubmissionSenderService.class})
 @DirtiesContext
 public class SubmissionSenderServiceTest {
 
@@ -45,7 +46,7 @@ public class SubmissionSenderServiceTest {
   private MockRestServiceServer server;
 
   @MockBean
-  private TmcSubmissionRepository submissionRepository;
+  private SubmissionRepository submissionRepository;
 
   @Test
   public void testSubmit() throws IOException, ArchiveException {
@@ -58,17 +59,17 @@ public class SubmissionSenderServiceTest {
         .andExpect(content().contentTypeCompatibleWith(MediaType.MULTIPART_FORM_DATA))
         .andRespond(withSuccess("{\"status\":\"ok\"}", MediaType.APPLICATION_JSON));
 
-    TmcSubmission submission = new TmcSubmission();
+    Submission submission = new Submission();
     sender.sendSubmission(submission, packageData.getBytes());
 
-    ArgumentCaptor<TmcSubmission> submissionCaptor = ArgumentCaptor.forClass(TmcSubmission.class);
+    ArgumentCaptor<Submission> submissionCaptor = ArgumentCaptor.forClass(Submission.class);
     verify(submissionRepository, times(1)).save(submissionCaptor.capture());
     verifyNoMoreInteractions(submissionRepository);
 
-    TmcSubmission captured = submissionCaptor.getValue();
+    Submission captured = submissionCaptor.getValue();
 
     assertNotNull(submission);
     assertEquals(captured, submission);
-    assertEquals(TmcSubmissionStatus.PENDING, captured.getStatus());
+    assertEquals(SubmissionStatus.PENDING, captured.getStatus());
   }
 }

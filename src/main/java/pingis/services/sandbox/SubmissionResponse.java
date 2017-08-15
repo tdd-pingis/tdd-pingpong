@@ -1,13 +1,13 @@
-package pingis.services;
+package pingis.services.sandbox;
 
-public class TmcSubmissionResponse {
+public class SubmissionResponse {
 
   public static final String OK = "ok";
   public static final String BAD_REQUEST = "bad_request";
 
   private String status;
 
-  public TmcSubmissionResponse() {
+  public SubmissionResponse() {
   }
 
   public String getStatus() {
