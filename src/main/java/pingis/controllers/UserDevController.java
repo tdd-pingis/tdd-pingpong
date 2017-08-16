@@ -65,8 +65,8 @@ public class UserDevController {
             .collect(Collectors.toList());
     
     model.addAttribute("availableChallenges", availableChallenges);
-    model.addAttribute("tasksDoneWithinChallenge", myTasksInChallenges);
-    model.addAttribute("tasksDoneWithinOpenChallenges", myTasksInOpenChallenges);
+    model.addAttribute("myTasksInChallenges", myTasksInChallenges);
+    model.addAttribute("myTasksInOpenChallenges", myTasksInOpenChallenges);
     model.addAttribute("user", user);
 
     return "user";

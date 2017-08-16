@@ -29,7 +29,7 @@
                               <p class="lead">Started challenges</p>
                               
                               <div th:each="challenges : ${myTasksInChallenges}" class="row challengeitem">
-                                    <a th:href="'/nextTask/' + ${challenges.key.id}" th:inline="text">Live! [[${challenges.key.name}]]</a> <p th:inline="text">Progress: [[${#lists.size(challenges.value)}]] / [[${#lists.size(challenges.key.tasks)}]] tasks done </p>
+                                    <a th:href="'/nextTask/' + ${challenges.key.id}" th:inline="text"> [[${challenges.key.name}]]</a> <p th:inline="text">Progress: [[${#lists.size(challenges.value)}]] / [[${#lists.size(challenges.key.tasks)}]] tasks done </p>
                                     <div class="progress">
                                           <div th:with="result=(${#lists.size(challenges.value) * 1.0 / #lists.size(challenges.key.tasks)})" class="progress-bar" role="progressbar" th:attr="aria-valuenow=${result}"
                                                aria-valuemin="0" aria-valuemax="100">
@@ -39,7 +39,7 @@
                         </div>
 
                         <div th:each="challenge : ${myTasksInOpenChallenges}" class="row challengeitem">
-                              <a th:href="'/nextTask/' + ${challenges.key.id}" th:inline="text">[[${challenges.key.name}]]</a> <p th:inline="text">Progress: [[${#lists.size(challenges.value)}]] / [[${#lists.size(challenges.key.tasks)}]] tasks done </p>
+                              <a th:href="'/nextTask/' + ${challenges.key.id}" th:inline="text"><strong>Live!</strong> [[${challenges.key.name}]]</a> <p th:inline="text">Progress: [[${#lists.size(challenges.value)}]] / [[${#lists.size(challenges.key.tasks)}]] tasks done </p>
                               <div class="progress">
                                     <div th:with="result=(${#lists.size(challenge) * 1.0 / #lists.size(challenge.key.tasks)})"  class="progress-bar" role="progressbar" th:attr="aria-valuenow=${result}"
                                          aria-valuemin="0" aria-valuemax="100">
