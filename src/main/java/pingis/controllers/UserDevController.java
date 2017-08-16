@@ -8,15 +8,20 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import pingis.services.ChallengeService;
 import pingis.services.UserService;
 
 @Profile("dev")
 @Controller
 public class UserDevController {
 
+  @Autowired
+  ChallengeService challengeService;
+
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   public String user(Model model, Principal principal) {
     userService.handleUserAuthenticationByName(principal.getName());
+    model.addAttribute("randomChallenge", challengeService.getRandomChallenge());
     return "user";
   }
   
