@@ -1,6 +1,7 @@
 package pingis.services;
 
 import java.util.List;
+import java.util.Random;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pingis.entities.Challenge;
@@ -35,6 +36,11 @@ public class ChallengeService {
     Challenge c = findOne(challengeId);
     challengeRepository.delete(challengeId);
     return c;
+  }
+
+  public Challenge getRandomChallenge() {
+    List<Challenge> challenges = findAll();
+    return challenges.get(new Random().nextInt(challenges.size()));
   }
 
   public boolean contains(Long challengeId) {

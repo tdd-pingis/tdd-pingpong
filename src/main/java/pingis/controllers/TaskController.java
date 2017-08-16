@@ -171,6 +171,40 @@ public class TaskController {
     return null;
   }
 
+  @RequestMapping("/randomTask/{challengeId}")
+  public RedirectView randomTask(@PathVariable long challengeId,
+      RedirectAttributes redirectAttributes) {
+
+    Challenge currentChallenge = challengeService.findOne(challengeId);
+    User currentUser = userService.getCurrentUser();
+
+    if (taskService.noNextTaskAvailable(currentChallenge, currentUser)) {
+      return new RedirectView("/user");
+    }
+
+    Long nextTaskInstanceId;
+    Task nextTask;
+
+    // If the next tasktype is test AND there are test-tasks available
+    // OR
+    // (the next random tasktype is impl, but) there are no impl-tasks left
+    if ((taskService.getRandomTaskType().equals(TaskType.TEST)
+        && taskService.hasNextTestTaskAvailable(currentChallenge, currentUser))
+        || !taskService.hasNextImplTaskAvailable(currentChallenge, currentUser)) {
+      nextTask = taskService.getRandomTestTask(currentChallenge, currentUser);
+      nextTaskInstanceId = 0L;
+    } else {
+      nextTask = taskService.getRandomImplTask(currentChallenge, currentUser);
+      nextTaskInstanceId = taskService.getRandomTaskInstance(currentChallenge,
+          currentUser, nextTask).getId();
+    }
+
+    redirectAttributes.addAttribute("taskId", nextTask.getId());
+    redirectAttributes.addAttribute("testTaskInstanceId", nextTaskInstanceId);
+
+    return new RedirectView("/newTaskInstance");
+  }
+
   // TODO: This should actually be a separate service...
   private Submission submitToTmc(TaskInstance taskInstance, Challenge challenge,
       String submissionCode,

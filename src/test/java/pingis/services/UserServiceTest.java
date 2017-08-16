@@ -26,7 +26,7 @@ import pingis.entities.User;
 import pingis.repositories.UserRepository;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {Application.class})
+@ContextConfiguration(classes = {UserService.class})
 public class UserServiceTest {
 
   private static final int TEST_USER_ID = 1;

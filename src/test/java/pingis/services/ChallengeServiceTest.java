@@ -24,7 +24,7 @@ import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {Application.class})
+@ContextConfiguration(classes = {ChallengeService.class})
 public class ChallengeServiceTest {
 
   @Autowired
