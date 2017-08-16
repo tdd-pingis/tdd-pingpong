@@ -17,11 +17,6 @@ public class UserController {
   @Autowired
   UserService userService;
 
-  @RequestMapping(value = "/login", method = RequestMethod.GET)
-  public String login(Model model) {
-    return "redirect:/oauth2/authorization/code/tmc";
-  }
-
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   public String user(Model model, @AuthenticationPrincipal TmcUserDto user) {
     userService.handleOAuthUserAuthentication(user);

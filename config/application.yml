@@ -10,6 +10,7 @@ spring:
     driverClassName: org.h2.Driver
   profiles:
     default: dev
+    active: oauth
 
 security:
   oauth2:
@@ -17,9 +18,9 @@ security:
       tmc:
         clientAuthenticationMethod: basic
         authorizedGrantType: authorization_code
-        authorizationUri: https://tmc.mooc.fi/oauth/authorize
-        tokenUri: https://tmc.mooc.fi/oauth/token
-        userInfoUri: https://tmc.mooc.fi/api/v8/users/current
+        authorizationUri: http://localhost:8080/oauth/authorize
+        tokenUri: http://localhost:8080/oauth/token
+        userInfoUri: http://localhost:8080/api/v8/users/current
         userNameAttributeName: username
         scopes: public
         clientName: TMC
@@ -28,7 +29,7 @@ security:
 
 tmc:
   sandboxUrl: http://localhost:3001
-  notifyUrl: http://localhost:1337/submission-result
+  notifyUrl: http://localhost:1339/submission-result
 
 logging:
   level:

@@ -37,14 +37,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-        .csrf().ignoringAntMatchers("/websocket/**")
+        .csrf().ignoringAntMatchers("/websocket/**", "/oauth/authorize", "/oauth/token", "/api/v8/users/current")
         .and()
         .authorizeRequests().antMatchers("/css/**", "/webjars/**", "/", "/login", "/logout")
         .permitAll()
-        .anyRequest().authenticated()
         .and()
-        .exceptionHandling()
-        .authenticationEntryPoint(new OAuthAuthenticationEntryPoint());
+        .authorizeRequests().antMatchers("/oauth/authorize", "/oauth/token", "/api/v8/users/current")
+        .permitAll()
+        .anyRequest().authenticated();
 
     oauthLoginConfiguration(http);
     oauth2LogoutConfiguration(http);
@@ -71,15 +71,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     BeanUtils.copyProperties(oauthProperties, clientRegistrationProperties);
 
     return new ClientRegistration.Builder(clientRegistrationProperties).build();
-  }
-
-  class OAuthAuthenticationEntryPoint implements AuthenticationEntryPoint {
-
-    @Override
-    public void commence(HttpServletRequest hsr, HttpServletResponse hsr1,
-        AuthenticationException ae)
-        throws IOException, ServletException {
-      hsr1.sendRedirect("/login");
-    }
   }
 }
