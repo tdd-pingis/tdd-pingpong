@@ -1,6 +1,9 @@
 package pingis.services;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pingis.entities.Challenge;
@@ -125,6 +128,35 @@ public class ChallengeService {
       }
     }
     return null;
+  }
+  
+  public Challenge getRandomLiveChallenge(User user) {
+    List<Challenge> liveChallenges = findAll().stream()
+            .filter(e -> e.isOpen())
+            .filter(e -> e.getSecondPlayer() == null)
+            .filter(e -> e.getAuthor() != user)
+            .collect(Collectors.toList());
+   
+    if (liveChallenges.isEmpty()) {
+      return null;
+    }
+    if (liveChallenges.size() > 1) {
+      return liveChallenges.get(new Random().nextInt(liveChallenges.size()));
+    }
+    return liveChallenges.get(0);
+  }
+
+  public Challenge getParticipatingLiveChallenge() {
+    Optional<Challenge> findFirst = findAll().stream()
+            .filter(e -> e.isOpen())
+            .filter(e -> isParticipating(e))
+            .findFirst();
+    
+    if (findFirst.isPresent()) {
+      return findFirst.get();
+    } else {
+      return null;
+    }
   }
 
 

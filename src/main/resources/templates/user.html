@@ -38,16 +38,6 @@
                               </div>
                         </div>
 
-                        <div th:each="challenge : ${myTasksInOpenChallenges}" class="row challengeitem">
-                              <a th:href="'/nextTask/' + ${challenges.key.id}" th:inline="text"><strong>Live!</strong> [[${challenges.key.name}]]</a> <p th:inline="text">Progress: [[${#lists.size(challenges.value)}]] / [[${#lists.size(challenges.key.tasks)}]] tasks done </p>
-                              <div class="progress">
-                                    <div th:with="result=(${#lists.size(challenge) * 1.0 / #lists.size(challenge.key.tasks)})"  class="progress-bar" role="progressbar" th:attr="aria-valuenow=${result}"
-                                         aria-valuemin="0" aria-valuemax="100">
-                                          <span class="sr-only">[[${pvalue}]] % Complete</span>
-                                    </div>
-                              </div>
-                        </div>
-                        
                         <p class="lead">Open challenges</p>
                         <div class="col-md-6">
                               <div th:each="challenges : ${availableChallenges}" class="row challengeitem">
@@ -60,7 +50,15 @@
                               </div>
                         </div>
                   </div>
-                  <a href="/newchallenge" class="btn btn-primary">New open-ended challenge</a>
+                  <div th:if="${liveChallengeType} == CREATE">
+                        <a href="/createChallenge" class="btn btn-primary">Create New Live Challenge</a>
+                  </div>
+                  <div th:if="${liveChallengeType} == JOIN">
+                        <a th:href="'/playTurn/' + ${liveChallenge.id}" class="btn btn-success">Join Live Challenge</a>
+                  </div>
+                  <div th:if="${liveChallengeType} == CONTINUE">
+                        <a th:href="'/playTurn/' + ${liveChallenge.id}" class="btn btn-info">Continue Live Challenge</a>
+                  </div>
             </div>
 
             

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.logging.Level;
@@ -35,6 +36,10 @@ import pingis.services.UserService;
 @Controller
 public class UserDevController {
   
+  public enum LiveType {
+      CONTINUE, CREATE, JOIN
+  }
+  
   @Autowired
   TaskInstanceService taskInstanceService;
   
@@ -46,17 +51,9 @@ public class UserDevController {
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   public String user(Model model, Principal principal) {
     User user = userService.handleUserAuthenticationByName(principal.getName());
+    LiveType liveType = null;
     
     MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
-    MultiValueMap<Challenge, Task> myTasksInOpenChallenges = new LinkedMultiValueMap<>();
-    
-    user.getTaskInstances().stream()
-            .filter(e -> !e.getChallenge().isOpen())
-            .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
-    
-    user.getTaskInstances().stream()
-            .filter(e -> e.getChallenge().isOpen())
-            .forEach(e -> myTasksInOpenChallenges.add(e.getChallenge(), e.getTask()));
     
     List<Challenge> availableChallenges = challengeService.findAll().stream()
             .filter(e -> !e.isOpen())
@@ -64,9 +61,28 @@ public class UserDevController {
             .filter(e -> !myTasksInChallenges.containsKey(e))
             .collect(Collectors.toList());
     
+    user.getTaskInstances().stream()
+            .filter(e -> !e.getChallenge().isOpen())
+            .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
+    
+    Challenge liveChallenge = challengeService.getParticipatingLiveChallenge();
+    Challenge randomLiveChallenge = challengeService.getRandomLiveChallenge(user);
+    
+    if (liveChallenge == null && randomLiveChallenge == null) {
+      liveType = LiveType.CREATE;
+      model.addAttribute("liveChallengeType", liveType);
+    } else if (liveChallenge == null) {
+      liveType = LiveType.JOIN;
+      liveChallenge = randomLiveChallenge;
+      model.addAttribute("liveChallengeType", liveType);
+    } else {
+      liveType = LiveType.CONTINUE;
+      model.addAttribute("liveChallengeType", liveType);
+    }
+    
     model.addAttribute("availableChallenges", availableChallenges);
     model.addAttribute("myTasksInChallenges", myTasksInChallenges);
-    model.addAttribute("myTasksInOpenChallenges", myTasksInOpenChallenges);
+    model.addAttribute("liveChallenge", liveChallenge);
     model.addAttribute("user", user);
 
     return "user";
