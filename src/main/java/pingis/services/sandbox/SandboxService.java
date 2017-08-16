@@ -116,7 +116,8 @@ public class SandboxService {
     return message;
   }
 
-  public Submission submit(Map<String, byte[]> files, TaskInstance taskInstance) throws IOException, ArchiveException {
+  public Submission submit(Map<String, byte[]> files, TaskInstance taskInstance)
+      throws IOException, ArchiveException {
     logger.debug("Packaging submission files...");
     byte[] content = packagingService.packageSubmission(files);
 

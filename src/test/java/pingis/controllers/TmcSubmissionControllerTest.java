@@ -2,11 +2,9 @@ package pingis.controllers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.verifyNoMoreInteractions;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -21,7 +19,6 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -42,7 +39,6 @@ import pingis.entities.sandbox.ResultStatus;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
 import pingis.entities.sandbox.TestOutput;
-import pingis.repositories.sandbox.SubmissionRepository;
 import pingis.services.TaskInstanceService;
 import pingis.services.sandbox.SandboxService;
 
@@ -119,8 +115,9 @@ public class TmcSubmissionControllerTest {
     performMockRequest(submissionId)
         .andExpect(status().isNotFound());
 
-    verify(sandboxServiceMock, times(2)).updateSubmissionResult(eq(submissionId), anyString(), anyString(),
-        anyString(), anyString(), anyString(), anyString(), anyInt());
+    verify(sandboxServiceMock, times(2))
+        .updateSubmissionResult(eq(submissionId), anyString(), anyString(), anyString(),
+            anyString(), anyString(), anyString(), anyInt());
     verifyNoMoreInteractions(sandboxServiceMock);
   }
 
