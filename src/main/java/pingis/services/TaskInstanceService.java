@@ -64,7 +64,7 @@ public class TaskInstanceService {
     return taskInstanceRepository.save(newTaskInstance);
   }
   
-  public List<TaskInstance> getByUserAndTask(User user, Challenge challenge) {
+  public List<TaskInstance> getByUserAndChallenge(User user, Challenge challenge) {
     List<TaskInstance> taskInstances = new ArrayList<>();
     for (Task task : challenge.getTasks()) {
       taskInstances.add(taskInstanceRepository.findByTaskAndUser(task, user));
@@ -85,5 +85,33 @@ public class TaskInstanceService {
 
   public List<TaskInstance> findAll() {
     return (List<TaskInstance>) taskInstanceRepository.findAll();
+  }
+
+  public List<TaskInstance> getAllByChallenge(Challenge challenge) {
+    List<TaskInstance> taskInstances = new ArrayList();
+    List<TaskInstance> allTaskInstances = (List<TaskInstance>) taskInstanceRepository.findAll();
+    for (TaskInstance current : allTaskInstances) {
+      if (current.getTask().getChallenge().getId() == challenge.getId()) {
+        taskInstances.add(current);
+      }
+    }
+    return taskInstances;
+  }
+
+
+  public int getNumberOfDoneTaskInstancesInChallenge(Challenge challenge) {
+    int count = 0;
+    List<TaskInstance> allTaskInstances = (List<TaskInstance>) taskInstanceRepository.findAll();
+    for (TaskInstance current : allTaskInstances) {
+      if (current.getTask().getChallenge().getId() == challenge.getId()
+          && current.getStatus() == CodeStatus.DONE) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  public TaskInstance getByTaskAndUser(Task task, User user) {
+    return taskInstanceRepository.findByTaskAndUser(task, user);
   }
 }

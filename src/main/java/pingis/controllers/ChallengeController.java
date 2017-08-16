@@ -22,6 +22,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Challenge;
 import pingis.entities.ChallengeType;
 import pingis.entities.Task;
+import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.services.ChallengeService;
@@ -103,4 +104,39 @@ public class ChallengeController {
     redirectAttributes.addAttribute("testTaskInstanceId", 0L);
     return new RedirectView("/newTaskInstance");
   }
+
+  @RequestMapping(value = "/playTurn/{challengeId}")
+  public RedirectView playTurn(Model model, Long challengeId,
+      RedirectAttributes redirectAttributes) {
+    Challenge currentChallenge = challengeService.findOne(challengeId);
+    User currentUser = userService.getCurrentUser();
+    int index = challengeService.getNumberOfTasks(currentChallenge) / 2;
+    if (!challengeService.isParticipating(currentChallenge)) {
+      redirectAttributes.addAttribute("message", "naaaaaughty!");
+      return new RedirectView("/error");
+    }
+    TaskInstance unfinished = challengeService.getUnfinishedTaskInstance(currentChallenge);
+    if (unfinished != null) {
+      redirectAttributes.addAttribute("taskInstanceId", unfinished.getId());
+      return new RedirectView("/task");
+    }
+
+    if (challengeService.isTestTurnInLiveChallenge(currentChallenge)) {
+      return new RedirectView("/newtaskpair");
+    }
+
+    if (challengeService.isImplementationTurnInLiveChallenge(currentChallenge)) {
+      Task implTask = challengeService.getTopmostImplementationTask(currentChallenge, index);
+      Task testTask = challengeService.getTopmostTestTask(currentChallenge, index);
+      redirectAttributes.addAttribute("taskId", implTask.getId());
+      redirectAttributes.addAttribute("testTaskInstanceId",
+          taskInstanceService.getByTaskAndUser(testTask, testTask.getAuthor()).getId());
+      return new RedirectView("/newTaskInstance");
+    }
+
+    return new RedirectView("/user");
+
+  }
+
 }
+

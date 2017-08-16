@@ -48,6 +48,17 @@ public class Challenge {
   @ManyToOne(fetch = FetchType.EAGER)
   private User author;
 
+  public User getSecondPlayer() {
+    return secondPlayer;
+  }
+
+  public void setSecondPlayer(User secondPlayer) {
+    this.secondPlayer = secondPlayer;
+  }
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  private User secondPlayer;
+
   public boolean isOpen() {
     return isOpen;
   }
