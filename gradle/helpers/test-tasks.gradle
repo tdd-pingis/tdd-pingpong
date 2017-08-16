@@ -4,16 +4,9 @@ task unitTest (type: Test) {
     exclude '**/cucumber/**'
 }
 
-task cucumberTest (type: Test) {
+task cucumber (type: Test) {
     systemProperty "spring.profiles.active", "dev"
     systemProperty "cucumber.options", "--tags @dev"
-
-    include '**/cucumber/**'
-}
-
-task cucumberOAuthTest (type: Test) {
-    systemProperty "spring.profiles.active", "oauth"
-    systemProperty "cucumber.options", "--tags @oauth"
 
     include '**/cucumber/**'
 }
@@ -26,12 +19,7 @@ if (System.env.TRAVIS == 'true') {
     }
 
     // If running in Travis, we want build to run the dev Cucumber tests as well
-    test.dependsOn cucumberTest
-
-    // If running in Travis and it is not a pull request, we want to run the OAuth Cucumber tests as well
-    if(System.env.TRAVIS_PULL_REQUEST == 'false') {
-        test.dependsOn cucumberOAuthTest
-    }
+    test.dependsOn cucumber
 } else {
     test {
         exclude '**'
@@ -41,9 +29,7 @@ if (System.env.TRAVIS == 'true') {
 
 // For running all tests during build
 if(System.env.TESTS == 'ALL') {
-  test.dependsOn cucumberTest
-  test.dependsOn cucumberOAuthTest
+  test.dependsOn cucumber
 }
 
-cucumberOAuthTest.mustRunAfter cucumberTest
-cucumberTest.mustRunAfter unitTest
+cucumber.mustRunAfter unitTest

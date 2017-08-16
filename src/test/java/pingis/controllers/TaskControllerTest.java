@@ -32,7 +32,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import pingis.config.SecurityDevConfig;
+import pingis.config.OAuthProperties;
+import pingis.config.SecurityConfig;
 import pingis.entities.Challenge;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
@@ -52,7 +53,7 @@ import pingis.utils.JavaClassGenerator;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(TaskController.class)
-@ContextConfiguration(classes = {TaskController.class, SecurityDevConfig.class})
+@ContextConfiguration(classes = {TaskController.class, SecurityConfig.class, OAuthProperties.class})
 @WebAppConfiguration
 public class TaskControllerTest {
 
