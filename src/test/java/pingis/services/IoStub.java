@@ -9,6 +9,7 @@ public class IoStub implements Io {
       "      {",
       "         \"name\": \"calculator\",",
       "         \"author\": \"modeluser\",",
+      "         \"level\": 1,",
       "         \"desc\": \"Test and implement a simple command line based calculator.\",",
       "         \"tasks\": [",
       "            {",
