@@ -1,4 +1,4 @@
-package pingis.services;
+package pingis.services.sandbox;
 
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
@@ -21,8 +21,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import pingis.config.SandboxSubmissionProperties;
-import pingis.services.sandbox.SubmissionResponse;
-import pingis.services.sandbox.SubmissionSenderService;
 
 @RunWith(SpringRunner.class)
 @RestClientTest(SubmissionSenderService.class)
