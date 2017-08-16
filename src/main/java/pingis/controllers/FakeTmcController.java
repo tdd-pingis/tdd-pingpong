@@ -29,7 +29,7 @@ public class FakeTmcController {
 
   Logger logger = LoggerFactory.getLogger(this.getClass());
 
-  @RequestMapping(value = "/oauth/authorize", method = RequestMethod.GET)
+  @RequestMapping(value = "/fake/authorize", method = RequestMethod.GET)
   public String login(
           @RequestParam("state") String state,
           @RequestParam("redirect_uri") String redirectUri,
@@ -40,10 +40,10 @@ public class FakeTmcController {
 
     model.addAttribute("state", state);
     model.addAttribute("redirectUri", redirectUri);
-    return "login";
+    return "fakelogin";
   }
 
-  @RequestMapping(value = "/oauth/authorize", method = RequestMethod.POST)
+  @RequestMapping(value = "/fake/authorize", method = RequestMethod.POST)
   public String authorize(
           @RequestParam("state") String state,
           @RequestParam("redirectUri") String redirectUri,
@@ -70,7 +70,7 @@ public class FakeTmcController {
     return "redirect:" + redirectPath;
   }
 
-  @RequestMapping(value = "/oauth/token", method = RequestMethod.POST)
+  @RequestMapping(value = "/fake/token", method = RequestMethod.POST)
   public ResponseEntity token(
           @RequestParam("code") String code,
           HttpServletRequest request,
@@ -89,7 +89,7 @@ public class FakeTmcController {
     return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(fakeToken);
   }
 
-  @RequestMapping(value = "/api/v8/users/current", method = RequestMethod.GET)
+  @RequestMapping(value = "/fake/userinfo", method = RequestMethod.GET)
   public ResponseEntity user(
           HttpServletRequest request) {
 

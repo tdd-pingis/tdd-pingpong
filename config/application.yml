@@ -17,9 +17,9 @@ security:
       tmc:
         clientAuthenticationMethod: basic
         authorizedGrantType: authorization_code
-        authorizationUri: http://localhost:8080/oauth/authorize
-        tokenUri: http://localhost:8080/oauth/token
-        userInfoUri: http://localhost:8080/api/v8/users/current
+        authorizationUri: http://localhost:8080/fake/authorize
+        tokenUri: http://localhost:8080/fake/token
+        userInfoUri: http://localhost:8080/fake/userinfo
         userNameAttributeName: username
         scopes: public
         clientName: TMC

@@ -35,11 +35,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http
         .csrf().ignoringAntMatchers(
-                "/websocket/**", "/oauth/authorize", "/oauth/token", "/api/v8/users/current")
+                "/websocket/**",
+                "/fake/authorize", "/fake/token", "/fake/userinfo")
         .and()
         .authorizeRequests().antMatchers(
                 "/css/**", "/webjars/**", "/", "/login", "/logout",
-                "/oauth/authorize", "/oauth/token", "/api/v8/users/current")
+                "/fake/authorize", "/fake/token", "/fake/userinfo")
         .permitAll()
         .anyRequest().authenticated()
         .and()
