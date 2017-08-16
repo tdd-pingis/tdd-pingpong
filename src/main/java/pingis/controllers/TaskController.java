@@ -185,8 +185,12 @@ public class TaskController {
     Long nextTaskInstanceId;
     Task nextTask;
 
-    if (taskService.getRandomTaskType().equals(TaskType.TEST)
-        && taskService.hasNextTestTaskAvailable(currentChallenge, currentUser)) {
+    // If the next tasktype is test AND there are test-tasks available
+    // OR
+    // (the next random tasktype is impl, but) there are no impl-tasks left
+    if ((taskService.getRandomTaskType().equals(TaskType.TEST)
+        && taskService.hasNextTestTaskAvailable(currentChallenge, currentUser))
+        || !taskService.hasNextImplTaskAvailable(currentChallenge, currentUser)) {
       nextTask = taskService.getRandomTestTask(currentChallenge, currentUser);
       nextTaskInstanceId = 0L;
     } else {
