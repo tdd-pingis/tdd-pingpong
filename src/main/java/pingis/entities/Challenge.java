@@ -97,6 +97,10 @@ public class Challenge {
 
   public String toString() {
     String out = this.name + ": " + this.description;
+    out += "\ntype: " + this.type.name();
+    out += "\nlevel: " + this.level;
+    out += "\nauthor: " + this.author.getName();
+    
     return out;
   }
 

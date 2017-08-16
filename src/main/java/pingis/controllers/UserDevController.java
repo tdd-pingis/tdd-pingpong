@@ -2,8 +2,15 @@ package pingis.controllers;
 
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +22,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pingis.entities.Challenge;
+import pingis.entities.ChallengeType;
 import pingis.entities.CodeStatus;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
@@ -39,24 +47,26 @@ public class UserDevController {
   public String user(Model model, Principal principal) {
     User user = userService.handleUserAuthenticationByName(principal.getName());
     
-    MultiValueMap<Challenge, Task> tasksDoneWithinChallenge = new LinkedMultiValueMap<>();
-    MultiValueMap<Challenge, TaskInstance> tasksInProgressWithinChallenge =
-        new LinkedMultiValueMap<>();
-    List<Challenge> newChallengesAvailable = new ArrayList<>();
+    MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
+    MultiValueMap<Challenge, Task> myTasksInOpenChallenges = new LinkedMultiValueMap<>();
     
     user.getTaskInstances().stream()
-            .filter(e -> e.getStatus() == CodeStatus.DONE)
-            .forEach(e -> tasksDoneWithinChallenge.add(e.getChallenge(), e.getTask()));
+            .filter(e -> !e.getChallenge().isOpen())
+            .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
     
     user.getTaskInstances().stream()
-            .filter(e -> e.getStatus() == CodeStatus.IN_PROGRESS)
-            .forEach(e -> tasksInProgressWithinChallenge.add(e.getChallenge(), e));
+            .filter(e -> e.getChallenge().isOpen())
+            .forEach(e -> myTasksInOpenChallenges.add(e.getChallenge(), e.getTask()));
     
-    user.getTaskInstances().stream()
-            .filter(e -> e.getStatus() == CodeStatus.IN_PROGRESS)
-            .forEach(e -> tasksInProgressWithinChallenge.add(e.getChallenge(), e));
+    List<Challenge> availableChallenges = challengeService.findAll().stream()
+            .filter(e -> !e.isOpen())
+            .filter(e -> e.getLevel() <= user.getLevel())
+            .filter(e -> !myTasksInChallenges.containsKey(e))
+            .collect(Collectors.toList());
     
-    model.addAttribute("tasksDoneWithinChallenge", tasksDoneWithinChallenge);
+    model.addAttribute("availableChallenges", availableChallenges);
+    model.addAttribute("tasksDoneWithinChallenge", myTasksInChallenges);
+    model.addAttribute("tasksDoneWithinOpenChallenges", myTasksInOpenChallenges);
     model.addAttribute("user", user);
 
     return "user";

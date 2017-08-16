@@ -1,73 +1,88 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="base :: header"></head>
-<body>
-    <nav th:include="navbar :: navigation"></nav>
+      <head th:include="base :: header"></head>
+      <body>
+            <nav th:include="navbar :: navigation"></nav>
 
-    <div class="container">
+            <div class="container">
 
-        <div class="row">
-            <h4>Dashboard</h4>
-        </div>
-        <div class="row dashboardtopbar"> <!-- top bar -->
-            <div class="col-md-2">
-                <img src="img/tomato.png"/>
-            </div>
-            <div class="col-md-8">
-              <p th:inline="text">Name: [[${user.name}]]</p>
-              <p th:inline="text">Level: [[${user.l evel}]]</p>
-              <p> Rank: Tomato</p>
-            </div>
-            <div class="col-md-2">
-                <canvas id="progresscircle" width="110" height="110"></canvas>
-            </div>
-        </div>
-        <div class="row">
-            <a href="/newchallenge" class="btn btn-primary">New open-ended challenge</a>
-        </div>
-        <div class="row">
-            <div class="col-md-6">
-              
-                <p class="lead">My challenges:</p>
-            </div>
-            <div class="col-md-6">
-              <p class="lead">Available challenges</p>
-            </div>
-        </div>
-      <div class="row">
-        <div th:each="challenge : ${tasksDoneWithinChallenge}" class="col-md-6">
-          <div class="row challengeitem">
-            <a href="/nextTask/${challenge.key.id}">[[${challenge.key.name}]]</a> <p th:inline="text">Progress: [[${#lists.size(challenge.value)}]] / [[${#lists.size(challenge.key.tasks)}]] tasks done></p>
-            <div class="progress">
-              <div th:with="pvalue=1.0 * (${#lists.size(challenge.value)} / ${#lists.size(challenge.key.tasks)})" class="progress-bar" role="progressbar" aria-valuenow="${pvalue}"
-                   aria-valuemin="0" aria-valuemax="100" style="width:70%">
-                <span class="sr-only">[[${pvalue}]] % Complete</span>
-              </div>
+                  <div class="row">
+                        <h4>Dashboard</h4>
+                  </div>
+                  
+                  <div class="row dashboardtopbar"> <!-- top bar -->
+                        <div class="col-md-2">
+                              <img src="img/tomato.png"/>
+                        </div>
+                        <div class="col-md-8">
+                              <p th:inline="text"><strong>Name:</strong> [[${user.name}]]</p>
+                              <p th:inline="text"><strong>Level:</strong> [[${user.level}]]</p>
+                              <p> <strong>Rank: </strong>Tomato</p>  <!-- TODO: support for different ranks -->
+                        </div>
+                        <div class="col-md-2">
+                              <canvas id="progresscircle" width="110" height="110"></canvas>
+                        </div>
+                  </div>
+
+                  <div class="challenge_list row">
+                        <div class="col-md-6">
+                              <p class="lead">Started challenges</p>
+                              
+                              <div th:each="challenges : ${myTasksInChallenges}" class="row challengeitem">
+                                    <a th:href="'/nextTask/' + ${challenges.key.id}" th:inline="text">Live! [[${challenges.key.name}]]</a> <p th:inline="text">Progress: [[${#lists.size(challenges.value)}]] / [[${#lists.size(challenges.key.tasks)}]] tasks done </p>
+                                    <div class="progress">
+                                          <div th:with="result=(${#lists.size(challenges.value) * 1.0 / #lists.size(challenges.key.tasks)})" class="progress-bar" role="progressbar" th:attr="aria-valuenow=${result}"
+                                               aria-valuemin="0" aria-valuemax="100">
+                                          </div>
+                                    </div>
+                              </div>
+                        </div>
+
+                        <div th:each="challenge : ${myTasksInOpenChallenges}" class="row challengeitem">
+                              <a th:href="'/nextTask/' + ${challenges.key.id}" th:inline="text">[[${challenges.key.name}]]</a> <p th:inline="text">Progress: [[${#lists.size(challenges.value)}]] / [[${#lists.size(challenges.key.tasks)}]] tasks done </p>
+                              <div class="progress">
+                                    <div th:with="result=(${#lists.size(challenge) * 1.0 / #lists.size(challenge.key.tasks)})"  class="progress-bar" role="progressbar" th:attr="aria-valuenow=${result}"
+                                         aria-valuemin="0" aria-valuemax="100">
+                                          <span class="sr-only">[[${pvalue}]] % Complete</span>
+                                    </div>
+                              </div>
+                        </div>
+                        
+                        <p class="lead">Open challenges</p>
+                        <div class="col-md-6">
+                              <div th:each="challenges : ${availableChallenges}" class="row challengeitem">
+                                    <a th:href="'/nextTask/' + ${challenges.id}" th:inline="text">[[${challenges.name}]]</a> <p th:inline="text">Progress: Not started </p>
+                                    <div class="progress">
+                                          <div class="progress-bar" role="progressbar" aria-valuenow="0"
+                                               aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                                         </div>
+                                    </div>
+                              </div>
+                        </div>
+                  </div>
+                  <a href="/newchallenge" class="btn btn-primary">New open-ended challenge</a>
             </div>
 
-          </div>
-        </div>
-    </div>
-    </div>
-    <script src="js/ProgressCircle.js" type="text/javascript" charset="utf-8"></script>
-    <script>
-        var myCanvas = document.getElementById('progresscircle');
+            
+            <script src="js/ProgressCircle.js" type="text/javascript" charset="utf-8"></script>
+            <script>
+                  var myCanvas = document.getElementById('progresscircle');
 
-        var circle = new ProgressCircle({
-            canvas: myCanvas,
-            minRadius: 30,
-            arcWidth: 15,
-        }); 
+                  var circle = new ProgressCircle({
+                  canvas: myCanvas,
+                  minRadius: 30,
+                  arcWidth: 15,
+                  }); 
 
-        circle.addEntry({
-            fillColor: 'rgba(255, 0, 0, 0.5)',
-            progressListener: function() {
-                return 0.88; // between 0 and 1
-            },
-            infoListener: function() {return "Points to next level: 88"},
-        });
-        circle.start(33);
-    </script>
-</body>
+                  circle.addEntry({
+                  fillColor: 'rgba(255, 0, 0, 0.5)',
+                  progressListener: function() {
+                  return 0.88; // between 0 and 1
+                  },
+                  infoListener: function() {return "Points to next level: 88"},
+                  });
+                  circle.start(33);
+            </script>
+      </body>
 </html>
 
