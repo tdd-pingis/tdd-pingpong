@@ -130,6 +130,10 @@ public class TaskInstance {
   public List<TaskInstance> getImplementationTaskInstances() {
     return this.implementionTaskInstances;
   }
+  
+  public Challenge getChallenge() {
+    return this.task.getChallenge();
+  }
 
 
 }
