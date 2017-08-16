@@ -23,7 +23,7 @@ import pingis.utils.EditorTabData;
 
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {Application.class})
+@ContextConfiguration(classes = {EditorService.class})
 public class EditorServiceTest {
 
   @Autowired
