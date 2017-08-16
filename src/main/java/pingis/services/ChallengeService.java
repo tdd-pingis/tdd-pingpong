@@ -1,15 +1,27 @@
 package pingis.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pingis.entities.Challenge;
+import pingis.entities.Task;
+import pingis.entities.TaskInstance;
+import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
+import pingis.services.TaskInstanceService;
+import pingis.services.TaskService;
 
 @Service
 public class ChallengeService {
 
   private final ChallengeRepository challengeRepository;
+
+  @Autowired
+  private TaskService taskService;
+
+  @Autowired
+  private TaskInstanceService taskInstanceService;
 
   @Autowired
   public ChallengeService(ChallengeRepository challengeRepo) {
@@ -44,5 +56,11 @@ public class ChallengeService {
   public Challenge findByName(String name) {
     return challengeRepository.findByName(name);
   }
+
+  public int getNumberOfTasks(Challenge challenge) {
+    List<Task> tasks = taskService.findAllByChallenge(challenge);
+    return tasks.size();
+  }
+  
 
 }

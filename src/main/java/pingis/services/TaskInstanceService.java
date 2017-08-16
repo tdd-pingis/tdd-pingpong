@@ -82,4 +82,8 @@ public class TaskInstanceService {
   public TaskInstance save(TaskInstance taskInstance) {
     return taskInstanceRepository.save(taskInstance);
   }
+
+  public List<TaskInstance> findAll() {
+    return (List<TaskInstance>) taskInstanceRepository.findAll();
+  }
 }

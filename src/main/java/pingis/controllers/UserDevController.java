@@ -40,7 +40,8 @@ public class UserDevController {
     User user = userService.handleUserAuthenticationByName(principal.getName());
     
     MultiValueMap<Challenge, Task> tasksDoneWithinChallenge = new LinkedMultiValueMap<>();
-    MultiValueMap<Challenge, TaskInstance> tasksInProgressWithinChallenge = new LinkedMultiValueMap<>();
+    MultiValueMap<Challenge, TaskInstance> tasksInProgressWithinChallenge =
+        new LinkedMultiValueMap<>();
     List<Challenge> newChallengesAvailable = new ArrayList<>();
     
     user.getTaskInstances().stream()

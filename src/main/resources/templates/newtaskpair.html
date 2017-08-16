@@ -7,6 +7,7 @@
     <div class="row">
         <h1>new task pair</h1>
         <form th:action="@{/createTaskPair}" method="post">
+            <input type="hidden" name="challengeId" th:value="${challengeId}"/>
             <div class="row">
             <div class="col-md-6">
                 <label>test task name:</label><br/>

@@ -21,6 +21,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Challenge;
 import pingis.entities.ChallengeType;
+import pingis.entities.Task;
+import pingis.entities.TaskType;
+import pingis.entities.User;
 import pingis.services.ChallengeService;
 import pingis.services.EditorService;
 import pingis.services.TaskInstanceService;
@@ -53,6 +56,8 @@ public class ChallengeController {
     Challenge newChallenge = new Challenge(challengeName,
         userService.getCurrentUser(),
         challengeDesc, challengeType == "PROJECT" ? ChallengeType.PROJECT : ChallengeType.MIXED);
+    newChallenge.setLevel(1);
+    newChallenge = challengeService.save(newChallenge);
     logger.info(newChallenge.toString());
 
     return new RedirectView("/newtaskpair");
@@ -66,10 +71,36 @@ public class ChallengeController {
   @RequestMapping(value = "/createTaskPair", method = RequestMethod.POST)
   public RedirectView createTaskPair(String testTaskName, String implementationTaskName,
       String testTaskDesc, String implementationTaskDesc,
-      String testCodeStub, String implementatinCodeStub,
+      String testCodeStub, String implementationCodeStub,
+      long challengeId,
       RedirectAttributes redirectAttributes) {
     // create and save new tasks, redirect to createtaskinstance
-
-    return new RedirectView("/user");
+    Challenge currentChallenge = challengeService.findOne(challengeId);
+    int numberOfTasks = challengeService.getNumberOfTasks(currentChallenge);
+    int nextIndex = numberOfTasks / 2 + 1;
+    User currentUser = userService.getCurrentUser();
+    Task testTask = new Task(nextIndex,
+        TaskType.TEST,
+        currentUser,
+        testTaskName,
+        testTaskDesc,
+        testCodeStub,
+        1, 1);
+    Task implTask = new Task(nextIndex,
+        TaskType.IMPLEMENTATION,
+        currentUser,
+        implementationTaskName,
+        implementationTaskDesc,
+        implementationCodeStub,
+        1, 1);
+    currentChallenge.addTask(testTask);
+    currentChallenge.addTask(implTask);
+    testTask.setChallenge(currentChallenge);
+    implTask.setChallenge(currentChallenge);
+    taskService.save(testTask);
+    taskService.save(implTask);
+    redirectAttributes.addAttribute("taskId", testTask.getId());
+    redirectAttributes.addAttribute("testTaskInstanceId", 0L);
+    return new RedirectView("/newTaskInstance");
   }
 }

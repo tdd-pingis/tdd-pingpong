@@ -112,4 +112,8 @@ public class TaskService {
     return availableTestTaskInstances;
   }
 
+  public List<Task> findAllByChallenge(Challenge challenge) {
+    return taskRepository.findAllByChallenge(challenge);
+  }
+
 }

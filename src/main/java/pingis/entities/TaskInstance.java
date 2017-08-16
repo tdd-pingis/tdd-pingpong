@@ -48,7 +48,7 @@ public class TaskInstance {
   private TaskInstance testTaskInstance;
 
   @OneToMany
-  private List<TaskInstance> implementionTaskInstances;
+  private List<TaskInstance> implementationTaskInstances;
 
   protected TaskInstance() {
   }
@@ -60,7 +60,7 @@ public class TaskInstance {
     this.status = CodeStatus.IN_PROGRESS;
     this.isExample = false; // by default
     this.rating = 0;
-    this.implementionTaskInstances = new ArrayList();
+    this.implementationTaskInstances = new ArrayList();
   }
 
   public long getId() {
@@ -124,11 +124,11 @@ public class TaskInstance {
   }
 
   public void addImplementionTaskInstance(TaskInstance implementationTaskInstance) {
-    this.implementionTaskInstances.add(implementationTaskInstance);
+    this.implementationTaskInstances.add(implementationTaskInstance);
   }
 
   public List<TaskInstance> getImplementationTaskInstances() {
-    return this.implementionTaskInstances;
+    return this.implementationTaskInstances;
   }
   
   public Challenge getChallenge() {
