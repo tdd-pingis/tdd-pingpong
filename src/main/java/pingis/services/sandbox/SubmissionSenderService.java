@@ -59,13 +59,13 @@ public class SubmissionSenderService {
   }
 
   @Async
-  public CompletableFuture<SubmissionResponse> sendSubmission(Submission submission, byte[] packaged) {
-    logger.debug("Created new submission, id: {}", submission.getId());
+  public CompletableFuture<SubmissionResponse> sendSubmission(UUID submissionId, byte[] packaged) {
+    logger.debug("Created new submission, id: {}", submissionId);
 
     String notifyUrl = sandboxSubmissionProperties.getNotifyUrl();
 
     HttpEntity<MultiValueMap<String, Object>> requestEntity = buildRequestEntity(packaged,
-        submission.getId().toString(), notifyUrl);
+        submissionId.toString(), notifyUrl);
 
     SubmissionResponse response = restTemplate.postForObject("/tasks.json", requestEntity,
         SubmissionResponse.class);

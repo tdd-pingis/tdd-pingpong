@@ -130,7 +130,7 @@ public class SandboxService {
     submissionRepository.save(submission);
 
     senderService
-        .sendSubmission(submission, content)
+        .sendSubmission(submission.getId(), content)
         .exceptionally(exception -> {
           logger.error("Sending submission {} failed: {}", submission.getId(), exception);
           return null;
