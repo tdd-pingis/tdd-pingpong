@@ -25,8 +25,6 @@ public class TaskService {
   private TaskRepository taskRepository;
   @Autowired
   private ChallengeRepository challengeRepository;
-  @Autowired
-  private TaskInstanceRepository taskInstanceRepository;
 
   public Task findTaskInChallenge(Long challengeId, int taskId) {
     // Implement validation here

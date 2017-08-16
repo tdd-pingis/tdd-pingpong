@@ -41,9 +41,6 @@ public class TaskServiceTest {
   @MockBean
   private ChallengeRepository challengeRepositoryMock;
 
-  @MockBean
-  private TaskInstanceRepository taskInstanceRepository;
-
   private User testUser;
   private Challenge testChallenge;
   private List<Task> testTasks;
