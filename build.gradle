@@ -99,11 +99,7 @@ dependencies {
     testCompile 'org.seleniumhq.selenium:selenium-chrome-driver:3.4.0'
 }
 
-bootRun { 
-    if(project.hasProperty('TMC_SECRET')) {
-        environment 'TMC_APP_ID', TMC_APP_ID
-        environment 'TMC_SECRET', TMC_SECRET
-    }
+bootRun {
 	systemProperties System.properties
 
     // Make static classpath resources reloadable when using bootRun
