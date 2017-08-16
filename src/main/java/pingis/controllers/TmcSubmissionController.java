@@ -3,6 +3,7 @@ package pingis.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.UUID;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,16 +40,17 @@ public class TmcSubmissionController {
   // be a simple way to rename fields when doing data binding.
   @PostMapping("/submission-result")
   public ResponseEntity submissionResult(
-      @RequestParam("test_output") String testOutput,
-      @RequestParam String stdout,
-      @RequestParam String stderr,
-      @RequestParam String validations,
-      @RequestParam("vm_log") String vmLog,
-      @RequestParam String token,
-      @RequestParam String status,
-      @RequestParam("exit_code") String exitCode) throws IOException {
+          @RequestParam("test_output") String testOutput,
+          @RequestParam String stdout,
+          @RequestParam String stderr,
+          @RequestParam String validations,
+          @RequestParam("vm_log") String vmLog,
+          @RequestParam String token,
+          @RequestParam String status,
+          @RequestParam("exit_code") String exitCode) throws IOException {
     logger.debug("Received a response from TMC sandbox");
     UUID submissionId = UUID.fromString(token);
+    logger.debug("TOKEN::::" + token);
     Submission submission = submissionRepository.findOne(submissionId);
 
     if (submission == null) {
@@ -69,12 +71,23 @@ public class TmcSubmissionController {
     submission.setValidations(validations);
     submission.setVmLog(vmLog);
     submissionRepository.save(submission);
-    sendResults(submission);
+    
+    TaskType type = submission.getTaskInstance().getTask().getType();
+    new Thread(() -> {
+      try {
+        Thread.sleep(6000);
+        sendResults(submission, type);
+      } catch (InterruptedException ex) {
+        java.util.logging.Logger.getLogger(TmcSubmissionController.class.getName()).log(Level.SEVERE, null, ex);
+      }
+      
+    }).start();
+
     return new ResponseEntity(HttpStatus.OK);
   }
 
-  private void sendResults(Submission submission) {
-    ResultMessage message = createMessage(submission);
+  private void sendResults(Submission submission, TaskType type) {
+    ResultMessage message = createMessage(submission, type);
     if (message.isSuccess()) {
       taskInstanceService.markAsDone(submission.getTaskInstance());
     }
@@ -83,13 +96,12 @@ public class TmcSubmissionController {
     logger.debug("Sent the TMC sandbox results to /topic/results");
   }
 
-  private ResultMessage createMessage(Submission submission) {
+  private ResultMessage createMessage(Submission submission, TaskType type) {
     TestOutput top = submission.getTestOutput();
     Logs logs = top.getLogs();
     ResultStatus status = top.getStatus();
 
     ResultMessage message = new ResultMessage();
-    TaskType type = submission.getTaskInstance().getTask().getType();
     message.setType(type);
     message.setStatus(status);
 
@@ -98,14 +110,14 @@ public class TmcSubmissionController {
     } else if (status == ResultStatus.PASSED) {
       message.setSuccess(type == TaskType.IMPLEMENTATION);
       message.setTests(
-          top.getTestResults().stream()
-              .filter(r -> r.isPassed()).collect(Collectors.toList()));
+              top.getTestResults().stream()
+                      .filter(r -> r.isPassed()).collect(Collectors.toList()));
 
     } else if (status == ResultStatus.TESTS_FAILED) {
       message.setSuccess(type == TaskType.TEST);
       message.setTests(
-          top.getTestResults().stream()
-              .filter(r -> !r.isPassed()).collect(Collectors.toList()));
+              top.getTestResults().stream()
+                      .filter(r -> !r.isPassed()).collect(Collectors.toList()));
     }
 
     return message;
