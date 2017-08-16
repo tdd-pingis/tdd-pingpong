@@ -20,20 +20,25 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import pingis.Application;
 import pingis.entities.Task;
+import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
+import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.TaskRepository;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {Application.class})
+@ContextConfiguration(classes = {TaskService.class})
 public class TaskServiceTest {
 
-  @Autowired
-  private TaskService taskService;
+  @MockBean
+  private TaskInstanceRepository taskInstanceRepository;
 
   @MockBean
   private TaskRepository taskRepositoryMock;
+
+  @Autowired
+  private TaskService taskService;
 
   @MockBean
   private ChallengeRepository challengeRepositoryMock;
