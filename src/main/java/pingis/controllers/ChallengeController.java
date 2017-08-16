@@ -58,9 +58,10 @@ public class ChallengeController {
         userService.getCurrentUser(),
         challengeDesc, challengeType == "PROJECT" ? ChallengeType.PROJECT : ChallengeType.MIXED);
     newChallenge.setLevel(1);
+    newChallenge.setOpen(true);
     newChallenge = challengeService.save(newChallenge);
     logger.info(newChallenge.toString());
-
+    redirectAttributes.addFlashAttribute("challengeId", newChallenge.getId());
     return new RedirectView("/newtaskpair");
   }
 
@@ -122,6 +123,8 @@ public class ChallengeController {
     }
 
     if (challengeService.isTestTurnInLiveChallenge(currentChallenge)) {
+      redirectAttributes.addFlashAttribute("challengeId", currentChallenge.getId());
+
       return new RedirectView("/newtaskpair");
     }
 
