@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package pingis.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,10 +31,10 @@ import pingis.services.sandbox.SubmissionResponse;
 @Controller
 public class FakeSandboxController {
 
-  Logger logger = LoggerFactory.getLogger(this.getClass());
+  private Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
-  SubmissionRepository submissionRepository;
+  private SubmissionRepository submissionRepository;
 
   @RequestMapping("/tasks.json")
   public ResponseEntity tasks(
@@ -84,7 +79,7 @@ public class FakeSandboxController {
     submission.setValidations("");
     submission.setVmLog("");
 
-    //submissionRepository.save(submission);
+    submissionRepository.save(submission);
     return submission;
   }
 
