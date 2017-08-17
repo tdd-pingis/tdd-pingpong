@@ -12,14 +12,11 @@ task cucumber (type: Test) {
 }
 
 if (System.env.TRAVIS == 'true') {
+    // If running in Travis, we to run all the tests withing the test task
     test {
         systemProperty "spring.profiles.active", "dev"
-
-        exclude '**/cucumber/**'
+        systemProperty "cucumber.options", "--tags @dev"
     }
-
-    // If running in Travis, we want build to run the dev Cucumber tests as well
-    test.dependsOn cucumber
 } else {
     test {
         exclude '**'
