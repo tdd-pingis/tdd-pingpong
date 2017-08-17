@@ -1,7 +1,6 @@
 package pingis.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,7 +10,6 @@ import pingis.entities.TmcUserDto;
 import pingis.services.ChallengeService;
 import pingis.services.UserService;
 
-@Profile(value = {"prod", "oauth"})
 @Controller
 public class UserController {
 

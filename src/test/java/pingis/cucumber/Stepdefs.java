@@ -103,9 +103,14 @@ public class Stepdefs {
     assertTrue(isDisplayed("My Account"));
   }
 
-  @And(".*is redirected to [^ ]* (.+)")
-  public void is_redirected_to(String page) {
-    assertTrue(driver.getCurrentUrl().equals(baseUrl + ids.get(page)));
+  @And(".*is redirected to the login page")
+  public void is_redirected_to_login_page() {
+    assertTrue(exists("username field"));
+  }
+
+  @And(".*is redirected to the user page")
+  public void is_redirected_to_user_page() {
+    assertTrue(exists("Dashboard"));
   }
 
   @Given(".*is logged in$")
@@ -122,7 +127,7 @@ public class Stepdefs {
 
   @Then(".*is not authenticated$")
   public void not_authenticated() throws Throwable {
-    assertTrue(exists("Log in"));
+    assertTrue(exists("Login"));
   }
 
   @And("clicks Sign in")
@@ -158,6 +163,7 @@ public class Stepdefs {
     map.put("login error page", "login?error");
     map.put("username field", "session_login");
     map.put("password field", "session_password");
+    map.put("Dashboard", "progresscircle");
 
     return map;
   }

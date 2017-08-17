@@ -17,8 +17,7 @@ def formatResults(res, type) {
 
   def report
   if(type == 'UNIT') report = '/build/reports/tests/unitTest/index.html'
-  if(type == 'CUKE') report = '/build/reports/tests/cucumber/index.html'
-  if(type == 'CUPR') report = '/build/reports/tests/cucumber/index.html'
+  if(type == 'CUKE') report = '/build/reports/tests/cucumberReport/index.html'
 
   return '\n' +
     '========================================================================================================================\n' +

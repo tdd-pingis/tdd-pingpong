@@ -10,7 +10,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import pingis.Application;
 
 @RunWith(Cucumber.class)
-@CucumberOptions(plugin = {"html:build/reports/tests/cucumber"})
+@CucumberOptions(plugin = {"html:build/reports/tests/cucumberReport"})
 public class RunCukesTest {
 
   @ClassRule

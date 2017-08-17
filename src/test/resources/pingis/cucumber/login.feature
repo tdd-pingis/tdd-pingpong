@@ -19,7 +19,7 @@ Scenario Outline: <user> cannot login with an invalid username or password
     And inputs their username <username> and password <password>
     And clicks the Log in button
     Then <user> is not authenticated
-    And is redirected to the login error page
+    And is redirected to the login page
 
     Examples:
         |user   |username   |password   |
@@ -32,12 +32,3 @@ Scenario: User can log out
     And clicks the My Account button
     And clicks the Logout button
     Then user is successfully signed out
-
-
-@oauth
-Scenario: User can authenticate through TMC
-    When user clicks the Login button
-    And inputs their TMC username and password
-    And clicks Sign in
-    Then user is successfully authenticated
-    And is redirected to the user page
