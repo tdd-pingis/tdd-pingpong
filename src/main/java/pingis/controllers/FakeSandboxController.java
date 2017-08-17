@@ -79,7 +79,6 @@ public class FakeSandboxController {
     submission.setValidations("");
     submission.setVmLog("");
 
-    submissionRepository.save(submission);
     return submission;
   }
 
