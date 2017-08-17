@@ -15,15 +15,10 @@ task cucumber (type: Test) {
     include '**/cucumber/**'
 }
 
+// If not running in Travis, we want to use the unit task instead of test
 if (System.env.TRAVIS != 'true') {
-    // If not running in Travis, we want to use the unit task instead of test
-    test {
-        exclude '**'
-    }
+    test { exclude '**' }
     test.dependsOn unit
-} else {
-    //Full logs for Travis
-    test.testLogging.showStandardStreams = true
 }
 
 // For running all tests during build
