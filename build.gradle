@@ -108,17 +108,6 @@ bootRun {
 
 
 // Separates the Unit and Cucumber tests to separate tasks
-// Defines tasks unitTest, and cucumber and clears out the task test
-apply from: 'gradle/helpers/test-tasks.gradle'
-
-apply from: 'gradle/helpers/test-printing.gradle'
-
-// Set the print function to be called after tests
-unitTest { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'UNIT') } } }
-
-//Full debug prints for Travis, custom report prints for local
-if(System.env.TRAVIS == 'true') {
-  cucumber.testLogging.showStandardStreams = true
-} else {
-  cucumber { testLogging { afterSuite { desc, result -> printTestResults(desc,result,'CUKE') } } }
-}
+// Defines tasks unit, and cucumber and clears out the task test
+// Also prints the results and reports
+apply from: 'gradle/helpers/test-config.gradle'
