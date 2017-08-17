@@ -106,8 +106,15 @@ public class ChallengeService {
 
   public boolean isParticipating(Challenge challenge) {
     User currentUser = userService.getCurrentUser();
-    return (currentUser.getId() == challenge.getAuthor().getId()
-        || currentUser.getId() == challenge.getSecondPlayer().getId());
+    if (currentUser.getId() == challenge.getAuthor().getId()) {
+      return true;
+    }
+
+    if (challenge.getSecondPlayer() == null) {
+      return false;
+    }
+
+    return (currentUser.getId() == challenge.getSecondPlayer().getId());
   }
 
   public Task getTopmostImplementationTask(Challenge challenge, int index) {
