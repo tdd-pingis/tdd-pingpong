@@ -56,13 +56,13 @@ public class UserDevController {
     MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
     
     List<Challenge> availableChallenges = challengeService.findAll().stream()
-            .filter(e -> !e.isOpen())
+            .filter(e -> !e.getIsOpen())
             .filter(e -> e.getLevel() <= user.getLevel())
             .filter(e -> !myTasksInChallenges.containsKey(e))
             .collect(Collectors.toList());
     
     user.getTaskInstances().stream()
-            .filter(e -> !e.getChallenge().isOpen())
+            .filter(e -> !e.getChallenge().getIsOpen())
             .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
     
     Challenge liveChallenge = challengeService.getParticipatingLiveChallenge();

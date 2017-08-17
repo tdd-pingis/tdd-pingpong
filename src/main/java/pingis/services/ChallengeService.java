@@ -139,7 +139,7 @@ public class ChallengeService {
   
   public Challenge getRandomLiveChallenge(User user) {
     List<Challenge> liveChallenges = findAll().stream()
-            .filter(e -> e.isOpen())
+            .filter(e -> e.getIsOpen())
             .filter(e -> e.getSecondPlayer() == null)
             .filter(e -> e.getAuthor() != user)
             .collect(Collectors.toList());
@@ -155,7 +155,7 @@ public class ChallengeService {
 
   public Challenge getParticipatingLiveChallenge() {
     Optional<Challenge> findFirst = findAll().stream()
-            .filter(e -> e.isOpen())
+            .filter(e -> e.getIsOpen())
             .filter(e -> isParticipating(e))
             .findFirst();
     

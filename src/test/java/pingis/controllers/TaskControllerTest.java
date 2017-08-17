@@ -48,6 +48,12 @@ import pingis.services.sandbox.SubmissionPackagingService;
 import pingis.services.sandbox.SubmissionSenderService;
 import pingis.utils.EditorTabData;
 import pingis.utils.JavaClassGenerator;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 
 @RunWith(SpringRunner.class)

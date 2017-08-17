@@ -26,37 +26,39 @@
 
                   <div class="challenge_list row">
                         <div class="col-md-6">
-                              <p class="lead">Started challenges</p>
-                              
+                              <div class="row lead">Started challenges</div>
+                              <div th:if="${#maps.isEmpty(myTasksInChallenges)}" >No ongoing solo challenges</div>
                               <div th:each="challenges : ${myTasksInChallenges}" class="row challengeitem">
                                     <a th:href="'/nextTask/' + ${challenges.key.id}" th:inline="text"> [[${challenges.key.name}]]</a> <p th:inline="text">Progress: [[${#lists.size(challenges.value)}]] / [[${#lists.size(challenges.key.tasks)}]] tasks done </p>
                                     <div class="progress">
-                                          <div th:with="result=(${#lists.size(challenges.value) * 1.0 / #lists.size(challenges.key.tasks)})" class="progress-bar" role="progressbar" th:attr="aria-valuenow=${result}"
-                                               aria-valuemin="0" aria-valuemax="100">
+                                          <div th:with="result=${#lists.size(challenges.value) * 1.0 / #lists.size(challenges.key.tasks)}">
+                                                <div class="progress-bar" role="progressbar" th:attr="aria-valuenow=#{result}"
+                                                     aria-valuemin="0" aria-valuemax="100"><p th:inline="text">[[${result}]]</p>
+                                                </div>
                                           </div>
                                     </div>
                               </div>
                         </div>
-
-                        <p class="lead">Open challenges</p>
                         <div class="col-md-6">
+                              <div class="row lead">Open challenges</div>
+                              <div th:if="${availableChallenges.empty}">No open challenges</div>
                               <div th:each="challenges : ${availableChallenges}" class="row challengeitem">
                                     <a th:href="'/nextTask/' + ${challenges.id}" th:inline="text">[[${challenges.name}]]</a> <p th:inline="text">Progress: Not started </p>
                                     <div class="progress">
                                           <div class="progress-bar" role="progressbar" aria-valuenow="0"
                                                aria-valuemin="0" aria-valuemax="100" style="width:0%">
-                                         </div>
+                                          </div>
                                     </div>
                               </div>
                         </div>
                   </div>
-                  <div th:if="${liveChallengeType} == CREATE">
-                        <a href="/createChallenge" class="btn btn-primary">Create New Live Challenge</a>
+                  <div th:if="${liveChallengeType == T(pingis.controllers.UserDevController.LiveType).CREATE}">
+                        <a href="/newchallenge" class="btn btn-primary">Create New Live Challenge</a>
                   </div>
-                  <div th:if="${liveChallengeType} == JOIN">
+                  <div th:if="${liveChallengeType == T(pingis.controllers.UserDevController.LiveType).JOIN}">
                         <a th:href="'/playTurn/' + ${liveChallenge.id}" class="btn btn-success">Join Live Challenge</a>
                   </div>
-                  <div th:if="${liveChallengeType} == CONTINUE">
+                  <div th:if="${liveChallengeType == T(pingis.controllers.UserDevController.LiveType).CONTINUE}">
                         <a th:href="'/playTurn/' + ${liveChallenge.id}" class="btn btn-info">Continue Live Challenge</a>
                   </div>
             </div>

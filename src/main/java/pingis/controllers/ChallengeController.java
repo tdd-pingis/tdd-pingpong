@@ -107,24 +107,39 @@ public class ChallengeController {
   }
 
   @RequestMapping(value = "/playTurn/{challengeId}")
-  public RedirectView playTurn(Model model, Long challengeId,
+  public RedirectView playTurn(Model model, @PathVariable Long challengeId,
       RedirectAttributes redirectAttributes) {
+    
     Challenge currentChallenge = challengeService.findOne(challengeId);
-    User currentUser = userService.getCurrentUser();
+    logger.info("Current Challenge fetched: " + currentChallenge);
+    
     int index = challengeService.getNumberOfTasks(currentChallenge) / 2;
+    logger.info("Highest index of tasks in current challenge: " + index);
+    
     if (!challengeService.isParticipating(currentChallenge)) {
-      redirectAttributes.addAttribute("message", "naaaaaughty!");
-      return new RedirectView("/error");
+      logger.info("Not participating.");
+      
+      if (currentChallenge.getSecondPlayer() == null) {
+        currentChallenge.setSecondPlayer(userService.getCurrentUser());
+      } else {
+        redirectAttributes.addAttribute("message", "naaaaaughty!");
+        return new RedirectView("/error");
+      }
     }
+    
     TaskInstance unfinished = challengeService.getUnfinishedTaskInstance(currentChallenge);
-    if (unfinished != null) {
+    logger.info("Unfinished task inside current challenge fetched: " + unfinished);
+    if (unfinished != null && unfinished.getUser().equals(userService.getCurrentUser())) {
       redirectAttributes.addAttribute("taskInstanceId", unfinished.getId());
-      return new RedirectView("/task");
+      logger.info("Found unfinished taskinstance owned by current user, redirecting to \"/task\"");
+      
+      return new RedirectView("/task/" + unfinished.getId());
     }
 
     if (challengeService.isTestTurnInLiveChallenge(currentChallenge)) {
       redirectAttributes.addFlashAttribute("challengeId", currentChallenge.getId());
-
+      logger.info("Found even number of completed taskinstances, redirecting to \"/newtaskpair\"");
+      
       return new RedirectView("/newtaskpair");
     }
 
@@ -134,9 +149,12 @@ public class ChallengeController {
       redirectAttributes.addAttribute("taskId", implTask.getId());
       redirectAttributes.addAttribute("testTaskInstanceId",
           taskInstanceService.getByTaskAndUser(testTask, testTask.getAuthor()).getId());
+      logger.info("Found uneven number of completed taskinstances, "
+              + "redirecting to \"/newtaskpair\"");
       return new RedirectView("/newTaskInstance");
     }
-
+    
+    logger.info("Not user's turn, redirecting to \"/user\"");
     return new RedirectView("/user");
 
   }
