@@ -15,6 +15,8 @@ task cucumber (type: Test) {
     include '**/cucumber/**'
 }
 
+test.testLogging.showStandardStreams = true
+
 // If not running in Travis, we want to use the unit task instead of test
 if (System.env.TRAVIS != 'true') {
     test { exclude '**' }
