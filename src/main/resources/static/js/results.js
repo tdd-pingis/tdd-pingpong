@@ -64,8 +64,8 @@ function showTestResults(resultMessage) {
 }
 
 function showButtons() {
-  document.getElementById("selectByRandom").style.visibility='visible';
-  document.getElementById("selectFromList").style.visibility='visible';
+  $("#selectByRandom").show();
+  $("#selectFromList").show();
 }
 
 function showSuccess() {
