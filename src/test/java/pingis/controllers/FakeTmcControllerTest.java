@@ -5,8 +5,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import org.junit.Test;
@@ -28,7 +28,7 @@ import pingis.config.SecurityConfig;
  */
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {
-  FakeTmcController.class, SecurityConfig.class, OAuthProperties.class})
+    FakeTmcController.class, SecurityConfig.class, OAuthProperties.class})
 
 @WebAppConfiguration
 @WebMvcTest(FakeTmcController.class)

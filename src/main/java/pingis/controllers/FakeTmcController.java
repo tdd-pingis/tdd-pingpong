@@ -101,7 +101,7 @@ public class FakeTmcController {
 
     String authorization = request.getHeader("Authorization");
     
-    if(authorization == null) {
+    if (authorization == null) {
       logger.debug("Invalid headers");
       
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
