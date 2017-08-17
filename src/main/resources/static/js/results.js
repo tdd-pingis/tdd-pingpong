@@ -57,9 +57,15 @@ function showCompilationError(resultMessage) {
 function showTestResults(resultMessage) {
     if (resultMessage.success) {
         showSuccess();
+        showButtons();
     } else {
         showFailure(resultMessage);
     }
+}
+
+function showButtons() {
+  document.getElementById("selectByRandom").style.visibility='visible';
+  document.getElementById("selectFromList").style.visibility='visible';
 }
 
 function showSuccess() {
