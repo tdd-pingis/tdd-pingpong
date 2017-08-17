@@ -13,11 +13,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import pingis.Application;
 import pingis.config.SecurityDevConfig;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {Application.class, IndexController.class, SecurityDevConfig.class})
+@ContextConfiguration(classes = {IndexController.class, SecurityDevConfig.class})
 @WebAppConfiguration
 @WebMvcTest(IndexController.class)
 public class IndexControllerTest {

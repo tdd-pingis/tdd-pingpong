@@ -28,7 +28,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import pingis.config.SecurityDevConfig;
+import pingis.entities.Challenge;
 import pingis.entities.User;
+import pingis.services.ChallengeService;
 import pingis.services.DataImporter.UserType;
 import pingis.services.UserService;
 
@@ -56,6 +58,9 @@ public class UserDevControllerTest {
   @MockBean
   UserService userServiceMock;
 
+  @MockBean
+  ChallengeService challengeService;
+
   @Before
   public void setUp() {
     mockContext = new WithMockCustomUserSecurityContextFactory();
@@ -71,7 +76,9 @@ public class UserDevControllerTest {
     String expectedUsername = "user";
     String expectedViewName = "user";
     String testUrl = "/user";
+    Challenge randomChallenge = new Challenge("Name", testUser, "Desc");
 
+    when(challengeService.getRandomChallenge()).thenReturn(randomChallenge);
     when(userServiceMock.handleUserAuthenticationByName(Mockito.anyString())).thenReturn(testUser);
 
     MvcResult result = mvc.perform(get(testUrl).with(securityContext(
