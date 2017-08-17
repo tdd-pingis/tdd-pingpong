@@ -154,8 +154,15 @@ public class TaskController {
     return new RedirectView("/task/{taskInstanceId}");
   }
 
+  @RequestMapping("/randomTask")
+  public RedirectView randomTask(RedirectAttributes redirectAttributes) {
+    Challenge randomChallenge = challengeService.getRandomChallenge();
+    redirectAttributes.addAttribute("challengeId", randomChallenge.getId());
+    return new RedirectView("/randomTask/{challengeId}");
+  }
+
   @RequestMapping("/randomTask/{challengeId}")
-  public RedirectView randomTask(@PathVariable long challengeId,
+  public RedirectView randomTaskInChallenge(@PathVariable long challengeId,
       RedirectAttributes redirectAttributes) {
 
     Challenge currentChallenge = challengeService.findOne(challengeId);
