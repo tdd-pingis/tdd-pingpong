@@ -89,11 +89,10 @@ public class TaskController {
 
   @RequestMapping(value = "/task", method = RequestMethod.POST)
   public RedirectView task(String submissionCode,
-      String staticCode,
       long taskInstanceId,
       RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
 
-    String[] errors = checkErrors(submissionCode, staticCode);
+    String[] errors = JavaSyntaxChecker.parseCode(submissionCode);
     if (errors != null) {
       redirectAttributes.addFlashAttribute("errors", errors);
       redirectAttributes.addFlashAttribute("code", submissionCode);
@@ -103,8 +102,7 @@ public class TaskController {
     TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
 
-    Submission submission = submitToTmc(taskInstance, currentChallenge, submissionCode,
-        staticCode);
+    Submission submission = submitToTmc(taskInstance, currentChallenge, submissionCode);
     
     redirectAttributes.addFlashAttribute("submissionId", submission.getId().toString());
     redirectAttributes.addFlashAttribute("taskInstance", taskInstance);
@@ -156,16 +154,6 @@ public class TaskController {
     return new RedirectView("/task/{taskInstanceId}");
   }
 
-  private String[] checkErrors(String submissionCode, String staticCode) {
-    String[] submissionSyntaxErrors = JavaSyntaxChecker.parseCode(submissionCode);
-    String[] staticSyntaxErrors = JavaSyntaxChecker.parseCode(staticCode);
-    if (submissionSyntaxErrors != null || staticSyntaxErrors != null) {
-      String[] errors = ArrayUtils.addAll(submissionSyntaxErrors, staticSyntaxErrors);
-      return errors;
-    }
-    return null;
-  }
-
   @RequestMapping("/randomTask/{challengeId}")
   public RedirectView randomTask(@PathVariable long challengeId,
       RedirectAttributes redirectAttributes) {
@@ -201,11 +189,12 @@ public class TaskController {
   }
 
   private Submission submitToTmc(TaskInstance taskInstance, Challenge challenge,
-      String submissionCode,
-      String staticCode)
+      String submissionCode)
       throws IOException, ArchiveException {
     logger.debug("Submitting to TMC");
     Map<String, byte[]> files = new HashMap<>();
+
+    String staticCode = taskService.getCorrespondingTask(taskInstance.getTask()).getCodeStub();
 
     String implFileName = JavaClassGenerator.generateImplClassFilename(challenge);
     String testFileName = JavaClassGenerator.generateTestClassFilename(challenge);
