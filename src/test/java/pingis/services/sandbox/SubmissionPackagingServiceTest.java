@@ -1,4 +1,4 @@
-package pingis.services;
+package pingis.services.sandbox;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
@@ -21,7 +21,6 @@ import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import pingis.services.sandbox.SubmissionPackagingService;
 
 public class SubmissionPackagingServiceTest {
 

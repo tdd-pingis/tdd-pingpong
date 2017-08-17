@@ -29,8 +29,7 @@ import pingis.services.EditorService;
 import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
-import pingis.services.sandbox.SubmissionPackagingService;
-import pingis.services.sandbox.SubmissionSenderService;
+import pingis.services.sandbox.SandboxService;
 import pingis.utils.EditorTabData;
 import pingis.utils.JavaClassGenerator;
 import pingis.utils.JavaSyntaxChecker;
@@ -53,11 +52,7 @@ public class TaskController {
   UserService userService;
 
   @Autowired
-  private SubmissionPackagingService packagingService;
-
-  @Autowired
-  private SubmissionSenderService senderService;
-
+  private SandboxService sandboxService;
 
   @RequestMapping(value = "/task/{taskInstanceId}", method = RequestMethod.GET)
   public String task(Model model,
@@ -205,13 +200,13 @@ public class TaskController {
     return new RedirectView("/newTaskInstance");
   }
 
-  // TODO: This should actually be a separate service...
   private Submission submitToTmc(TaskInstance taskInstance, Challenge challenge,
       String submissionCode,
       String staticCode)
       throws IOException, ArchiveException {
     logger.debug("Submitting to TMC");
     Map<String, byte[]> files = new HashMap<>();
+
     String implFileName = JavaClassGenerator.generateImplClassFilename(challenge);
     String testFileName = JavaClassGenerator.generateTestClassFilename(challenge);
 
@@ -222,11 +217,8 @@ public class TaskController {
       files.put(implFileName, submissionCode.getBytes());
       files.put(testFileName, staticCode.getBytes());
     }
-    byte[] packaged = packagingService.packageSubmission(files);
-    Submission submission = new Submission();
-    logger.debug("Created the submission");
-    submission.setTaskInstance(taskInstance);
-    return senderService.sendSubmission(submission, packaged);
+
+    return sandboxService.submit(files, taskInstance);
   }
 
 }

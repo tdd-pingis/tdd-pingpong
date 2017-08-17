@@ -16,6 +16,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +45,7 @@ import pingis.services.EditorService;
 import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
+import pingis.services.sandbox.SandboxService;
 import pingis.services.sandbox.SubmissionPackagingService;
 import pingis.services.sandbox.SubmissionSenderService;
 import pingis.utils.EditorTabData;
@@ -62,10 +64,7 @@ public class TaskControllerTest {
   private MockMvc mvc;
 
   @MockBean
-  private SubmissionPackagingService packagingService;
-
-  @MockBean
-  private SubmissionSenderService senderService;
+  private SandboxService sandboxServiceMock;
 
   @MockBean
   private ChallengeService challengeServiceMock;
@@ -175,26 +174,17 @@ public class TaskControllerTest {
     when(challengeServiceMock.findOne(challenge.getId())).thenReturn(challenge);
     when(taskServiceMock.findTaskInChallenge(challenge.getId(), testTask.getIndex()))
         .thenReturn(testTask);
-    when(senderService.sendSubmission(Mockito.any(), Mockito.any())).thenReturn(submission);
+    when(sandboxServiceMock.submit(Mockito.any(), Mockito.any())).thenReturn(submission);
     mvc.perform(post("/task")
         .param("submissionCode", submissionCode)
         .param("staticCode", staticCode)
         .param("taskInstanceId", Long.toString(implTaskInstance.getId())))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrlPattern("/feedback*"));
-    verify(packagingService).packageSubmission(packagingArgCaptor.capture());
-
-    String submissionFileName = JavaClassGenerator.generateImplClassFilename(challenge);
-    String staticFileName = JavaClassGenerator.generateTestClassFilename(challenge);
-
-    Map<String, byte[]> files = packagingArgCaptor.getValue();
-    assertArrayEquals(submissionCode.getBytes(), files.get(submissionFileName));
-    assertArrayEquals(staticCode.getBytes(), files.get(staticFileName));
 
     verify(taskInstanceServiceMock, times(1)).findOne(implTaskInstance.getId());
     verify(taskInstanceServiceMock).updateTaskInstanceCode(implTaskInstance.getId(),
         submissionCode);
-    verifyNoMoreInteractions(packagingService);
     verifyNoMoreInteractions(taskInstanceServiceMock);
     verifyNoMoreInteractions(challengeServiceMock);
     verifyNoMoreInteractions(taskServiceMock);

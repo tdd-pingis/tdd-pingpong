@@ -2,10 +2,13 @@ package pingis.controllers;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.times;
 import static org.mockito.BDDMockito.verify;
 import static org.mockito.BDDMockito.verifyNoMoreInteractions;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -16,7 +19,6 @@ import java.util.UUID;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -37,8 +39,8 @@ import pingis.entities.sandbox.ResultStatus;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
 import pingis.entities.sandbox.TestOutput;
-import pingis.repositories.sandbox.SubmissionRepository;
 import pingis.services.TaskInstanceService;
+import pingis.services.sandbox.SandboxService;
 
 /**
  * Created by dwarfcrank on 7/28/17.
@@ -59,7 +61,7 @@ public class TmcSubmissionControllerTest {
   private MockMvc mvc;
 
   @MockBean
-  private SubmissionRepository submissionRepository;
+  private SandboxService sandboxServiceMock;
 
   @MockBean
   private TaskInstanceService taskInstanceServiceMock;
@@ -97,24 +99,26 @@ public class TmcSubmissionControllerTest {
   }
 
   @Test
-  public void doubleSubmitReturnsBadRequest() throws Exception {
+  public void doubleSubmitReturnsNotFound() throws Exception {
     UUID submissionId = UUID.randomUUID();
     Submission submission = createSubmission();
     submission.setId(submissionId);
 
-    given(submissionRepository.findOne(submissionId))
-        .willReturn(submission);
+    when(sandboxServiceMock.updateSubmissionResult(eq(submissionId), anyString(), anyString(),
+        anyString(), anyString(), anyString(), anyString(), anyInt()))
+        .thenReturn(true)
+        .thenReturn(false);
 
     performMockRequest(submissionId)
         .andExpect(status().isOk());
 
     performMockRequest(submissionId)
-        .andExpect(status().isBadRequest());
+        .andExpect(status().isNotFound());
 
-    ArgumentCaptor<Submission> submissionCaptor = ArgumentCaptor.forClass(Submission.class);
-    verify(submissionRepository, times(2)).findOne(submissionId);
-    verify(submissionRepository, times(1)).save(submissionCaptor.capture());
-    verifyNoMoreInteractions(submissionRepository);
+    verify(sandboxServiceMock, times(2))
+        .updateSubmissionResult(eq(submissionId), anyString(), anyString(), anyString(),
+            anyString(), anyString(), anyString(), anyInt());
+    verifyNoMoreInteractions(sandboxServiceMock);
   }
 
   @Test
@@ -123,14 +127,17 @@ public class TmcSubmissionControllerTest {
     Submission submission = createSubmission();
     submission.setId(submissionId);
 
-    given(submissionRepository.findOne(submissionId))
-        .willReturn(null);
+    when(sandboxServiceMock.updateSubmissionResult(eq(submissionId), anyString(), anyString(),
+        anyString(), anyString(), anyString(), anyString(), anyInt()))
+        .thenReturn(false);
 
     performMockRequest(submissionId)
         .andExpect(status().isNotFound());
 
-    verify(submissionRepository, times(1)).findOne(submissionId);
-    verifyNoMoreInteractions(submissionRepository);
+    verify(sandboxServiceMock).updateSubmissionResult(eq(submissionId), anyString(), anyString(),
+        anyString(), anyString(), anyString(), anyString(), anyInt());
+
+    verifyNoMoreInteractions(sandboxServiceMock);
   }
 
   @Test
@@ -139,20 +146,17 @@ public class TmcSubmissionControllerTest {
     Submission submission = createSubmission();
     submission.setId(submissionId);
 
-    given(submissionRepository.findOne(submissionId))
-        .willReturn(submission);
+    when(sandboxServiceMock.updateSubmissionResult(eq(submissionId), anyString(), anyString(),
+        anyString(), anyString(), anyString(), anyString(), anyInt()))
+        .thenReturn(true);
 
     performMockRequest(submissionId)
         .andExpect(status().isOk());
 
-    ArgumentCaptor<Submission> submissionCaptor = ArgumentCaptor.forClass(Submission.class);
-    verify(submissionRepository, times(1)).findOne(submissionId);
-    verify(submissionRepository, times(1)).save(submissionCaptor.capture());
-    verifyNoMoreInteractions(submissionRepository);
+    verify(sandboxServiceMock).updateSubmissionResult(eq(submissionId), anyString(), anyString(),
+        anyString(), anyString(), anyString(), anyString(), anyInt());
 
-    Submission captured = submissionCaptor.getValue();
-
-    assertSubmission(captured, submissionId);
+    verifyNoMoreInteractions(sandboxServiceMock);
   }
 
   private Submission createSubmission() {

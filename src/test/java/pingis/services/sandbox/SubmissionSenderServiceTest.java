@@ -1,23 +1,18 @@
-package pingis.services;
+package pingis.services.sandbox;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.mockito.BDDMockito.times;
-import static org.mockito.BDDMockito.verify;
-import static org.mockito.BDDMockito.verifyNoMoreInteractions;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
 
-import java.io.IOException;
-import org.apache.commons.compress.archivers.ArchiveException;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.client.RestClientTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.DirtiesContext;
@@ -26,10 +21,6 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.client.MockRestServiceServer;
 import pingis.config.SandboxSubmissionProperties;
-import pingis.entities.sandbox.Submission;
-import pingis.entities.sandbox.SubmissionStatus;
-import pingis.repositories.sandbox.SubmissionRepository;
-import pingis.services.sandbox.SubmissionSenderService;
 
 @RunWith(SpringRunner.class)
 @RestClientTest(SubmissionSenderService.class)
@@ -45,11 +36,9 @@ public class SubmissionSenderServiceTest {
   @Autowired
   private MockRestServiceServer server;
 
-  @MockBean
-  private SubmissionRepository submissionRepository;
-
   @Test
-  public void testSubmit() throws IOException, ArchiveException {
+  public void testSubmit()
+      throws ExecutionException, InterruptedException {
     String packageData = "this_is_a_package";
 
     // This test is *very* limited as Spring doesn't have any easy way to check
@@ -59,17 +48,12 @@ public class SubmissionSenderServiceTest {
         .andExpect(content().contentTypeCompatibleWith(MediaType.MULTIPART_FORM_DATA))
         .andRespond(withSuccess("{\"status\":\"ok\"}", MediaType.APPLICATION_JSON));
 
-    Submission submission = new Submission();
-    sender.sendSubmission(submission, packageData.getBytes());
+    UUID submissionId = UUID.randomUUID();
 
-    ArgumentCaptor<Submission> submissionCaptor = ArgumentCaptor.forClass(Submission.class);
-    verify(submissionRepository, times(1)).save(submissionCaptor.capture());
-    verifyNoMoreInteractions(submissionRepository);
+    CompletableFuture<SubmissionResponse> responseFuture = sender
+        .sendSubmission(submissionId, packageData.getBytes());
+    SubmissionResponse response = responseFuture.get();
 
-    Submission captured = submissionCaptor.getValue();
-
-    assertNotNull(submission);
-    assertEquals(captured, submission);
-    assertEquals(SubmissionStatus.PENDING, captured.getStatus());
+    assertTrue(response.getStatus().equals(SubmissionResponse.OK));
   }
 }
