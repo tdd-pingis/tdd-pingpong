@@ -166,18 +166,42 @@ public class TaskControllerTest {
   }
 
   @Test
-  public void submitTask() throws Exception {
+  public void submitTestTask() throws Exception {
+    String submissionCode = "/* this is a test */";
+
+    when(taskInstanceServiceMock.findOne(testTaskInstance.getId())).thenReturn(testTaskInstance);
+    when(challengeServiceMock.findOne(challenge.getId())).thenReturn(challenge);
+    when(taskServiceMock.findTaskInChallenge(challenge.getId(), implementationTask.getIndex()))
+        .thenReturn(implementationTask);
+    when(taskServiceMock.getCorrespondingTask(testTask)).thenReturn(implementationTask);
+    when(sandboxServiceMock.submit(Mockito.any(), Mockito.any())).thenReturn(submission);
+    mvc.perform(post("/task")
+        .param("submissionCode", submissionCode)
+        .param("taskInstanceId", Long.toString(implTaskInstance.getId())))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrlPattern("/feedback*"));
+
+    verify(taskInstanceServiceMock, times(1)).findOne(testTaskInstance.getId());
+    verify(taskInstanceServiceMock).updateTaskInstanceCode(testTaskInstance.getId(),
+        submissionCode);
+    verify(taskServiceMock).getCorrespondingTask(testTask);
+    verifyNoMoreInteractions(taskInstanceServiceMock);
+    verifyNoMoreInteractions(challengeServiceMock);
+    verifyNoMoreInteractions(taskServiceMock);
+  }
+
+  @Test
+  public void submitImplementationTask() throws Exception {
     String submissionCode = "/* this is an implementation */";
-    String staticCode = "/* this is a test */";
 
     when(taskInstanceServiceMock.findOne(implTaskInstance.getId())).thenReturn(implTaskInstance);
     when(challengeServiceMock.findOne(challenge.getId())).thenReturn(challenge);
     when(taskServiceMock.findTaskInChallenge(challenge.getId(), testTask.getIndex()))
         .thenReturn(testTask);
+    when(taskServiceMock.getCorrespondingTask(implementationTask)).thenReturn(testTask);
     when(sandboxServiceMock.submit(Mockito.any(), Mockito.any())).thenReturn(submission);
     mvc.perform(post("/task")
         .param("submissionCode", submissionCode)
-        .param("staticCode", staticCode)
         .param("taskInstanceId", Long.toString(implTaskInstance.getId())))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrlPattern("/feedback*"));
@@ -185,6 +209,7 @@ public class TaskControllerTest {
     verify(taskInstanceServiceMock, times(1)).findOne(implTaskInstance.getId());
     verify(taskInstanceServiceMock).updateTaskInstanceCode(implTaskInstance.getId(),
         submissionCode);
+    verify(taskServiceMock).getCorrespondingTask(implementationTask);
     verifyNoMoreInteractions(taskInstanceServiceMock);
     verifyNoMoreInteractions(challengeServiceMock);
     verifyNoMoreInteractions(taskServiceMock);
