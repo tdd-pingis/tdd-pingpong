@@ -90,7 +90,7 @@ public class ChallengeService {
     }
     return false;
   }
-
+  
   public boolean isImplementationTurnInLiveChallenge(Challenge challenge) {
     User user = userService.getCurrentUser();
     int side = user.getId() == challenge.getAuthor().getId() ? 0 : 1;

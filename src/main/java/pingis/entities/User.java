@@ -39,6 +39,9 @@ public class User {
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
   private List<Task> authoredTasks;
+  
+  @OneToMany(mappedBy = "secondPlayer")
+  private List<Challenge> participatingLiveChallenge;
 
   public User() {
   }
@@ -61,6 +64,7 @@ public class User {
     this.taskInstances = new ArrayList<>();
     this.authoredChallenges = new ArrayList<>();
     this.authoredTasks = new ArrayList<>();
+    this.participatingLiveChallenge = new ArrayList<>();
   }
 
   public String getName() {
@@ -163,6 +167,18 @@ public class User {
         + "\n\tid: " + getId()
         + "\n\tadmin: " + isAdministrator()
         + "\n\tlevel: " + getLevel();
+  }
+
+  public List<Challenge> getParticipatingLiveChallenge() {
+    return participatingLiveChallenge;
+  }
+
+  public void setParticipatingLiveChallenge(List<Challenge> participatingLiveChallenge) {
+    this.participatingLiveChallenge = participatingLiveChallenge;
+  }
+  
+  public void addParticipatingLiveChallenge(Challenge challenge) {
+    this.participatingLiveChallenge.add(challenge);
   }
 
 }

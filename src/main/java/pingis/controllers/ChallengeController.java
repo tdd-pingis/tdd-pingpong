@@ -121,6 +121,8 @@ public class ChallengeController {
       
       if (currentChallenge.getSecondPlayer() == null) {
         currentChallenge.setSecondPlayer(userService.getCurrentUser());
+        challengeService.save(currentChallenge);
+        redirectAttributes.addAttribute("Current user saved as a participant (second player) to current challenge.");
       } else {
         redirectAttributes.addAttribute("message", "naaaaaughty!");
         return new RedirectView("/error");
