@@ -53,6 +53,7 @@ public class FakeTmcController {
 
     logger.debug("Fake TMC controller received login credentials");
 
+    //TODO: Move the test users to a centralized place from here and DataImporter
     Map<String, String> creds = new HashMap<>();
     creds.put("user", "password");
     creds.put("admin", "password");
@@ -99,10 +100,23 @@ public class FakeTmcController {
     ids.put("impluser", "2");
 
     String authorization = request.getHeader("Authorization");
+    
+    if(authorization == null) {
+      logger.debug("Invalid headers");
+      
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
+    
     String token = authorization.replace("Bearer ", "");
 
     logger.debug(
             "Fake TMC controller received a userinfo request with authorization " + authorization);
+
+    if (!ids.containsKey(token)) {
+      logger.debug("Invalid token");
+      
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+    }
 
     HttpHeaders responseHeaders = new HttpHeaders();
     responseHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
