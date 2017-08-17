@@ -3,6 +3,7 @@ package pingis.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -109,6 +110,45 @@ public class TaskServiceTest {
     boolean deleted = taskService.contains(taskCaptor.getValue().getId());
 
     assertFalse(deleted);
+  }
+
+  @Test
+  public void getCorrespondingTaskForImplementation() {
+    Task implTask = getRandomTask(implTasks);
+
+    taskService.getCorrespondingTask(implTask);
+
+    verify(taskRepositoryMock).findByIndexAndChallengeAndType(implTask.getIndex(),
+        implTask.getChallenge(), TaskType.TEST);
+
+    verifyNoMoreInteractions(taskRepositoryMock);
+  }
+
+  @Test
+  public void getCorrespondingTaskForTest() {
+    Task testTask = getRandomTask(testTasks);
+
+    taskService.getCorrespondingTask(testTask);
+
+    verify(taskRepositoryMock).findByIndexAndChallengeAndType(testTask.getIndex(),
+        testTask.getChallenge(), TaskType.IMPLEMENTATION);
+
+    verifyNoMoreInteractions(taskRepositoryMock);
+  }
+
+  @Test
+  public void getAvailableTasksByType() {
+    List<Task> tasks = taskService.getAvailableTasksByType(testChallenge, TaskType.TEST);
+    assertEquals(testTasks, tasks);
+  }
+
+  @Test
+  public void findTaskInChallenge() {
+    when(challengeRepositoryMock.findOne(testChallenge.getId()))
+        .thenReturn(testChallenge);
+
+    Task task = taskService.findTaskInChallenge(testChallenge.getId(), 3);
+    assertEquals(testTasks.get(3), task);
   }
 
   //TODO: Make more tests for this service.
