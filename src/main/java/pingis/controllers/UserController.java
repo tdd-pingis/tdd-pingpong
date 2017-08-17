@@ -27,7 +27,6 @@ public class UserController {
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   public String user(Model model, @AuthenticationPrincipal TmcUserDto user) {
     userService.handleOAuthUserAuthentication(user);
-    model.addAttribute("randomChallenge", challengeService.getRandomChallenge());
     return "user";
   }
 
