@@ -30,6 +30,7 @@ import pingis.services.EditorService;
 import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
+import pingis.utils.JavaSyntaxChecker;
 
 @Controller
 public class ChallengeController {
@@ -76,6 +77,15 @@ public class ChallengeController {
       String testCodeStub, String implementationCodeStub,
       long challengeId,
       RedirectAttributes redirectAttributes) {
+    
+    String[] errors = JavaSyntaxChecker.checkTaskPairErrors(implementationCodeStub, testCodeStub);
+    if (errors != null) {
+      redirectAttributes.addFlashAttribute("errors", errors);
+      redirectAttributes.addAttribute("challengeId", challengeId);
+      
+      return new RedirectView("/createTaskPair");
+    }
+    
     // create and save new tasks, redirect to createtaskinstance
     Challenge currentChallenge = challengeService.findOne(challengeId);
     int numberOfTasks = challengeService.getNumberOfTasks(currentChallenge);

@@ -88,6 +88,8 @@ public class ChallengeService {
     if (highestIndex == 1) {
       if (numberOfDoneInstances == 0 && user.getId() == challenge.getAuthor().getId()) {
         return true;
+      } else if (numberOfDoneInstances == 2 && user.getId() == challenge.getSecondPlayer().getId()) {
+        return true;
       }
       return false;
     }

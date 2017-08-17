@@ -98,7 +98,7 @@ public class TaskController {
       long taskInstanceId,
       RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
 
-    String[] errors = checkErrors(submissionCode, staticCode);
+    String[] errors = JavaSyntaxChecker.checkTaskPairErrors(submissionCode, staticCode);
     if (errors != null) {
       redirectAttributes.addFlashAttribute("errors", errors);
       redirectAttributes.addFlashAttribute("code", submissionCode);
@@ -161,15 +161,7 @@ public class TaskController {
     return new RedirectView("/task/{taskInstanceId}");
   }
 
-  private String[] checkErrors(String submissionCode, String staticCode) {
-    String[] submissionSyntaxErrors = JavaSyntaxChecker.parseCode(submissionCode);
-    String[] staticSyntaxErrors = JavaSyntaxChecker.parseCode(staticCode);
-    if (submissionSyntaxErrors != null || staticSyntaxErrors != null) {
-      String[] errors = ArrayUtils.addAll(submissionSyntaxErrors, staticSyntaxErrors);
-      return errors;
-    }
-    return null;
-  }
+  
 
   // TODO: This should actually be a separate service...
   private Submission submitToTmc(TaskInstance taskInstance, Challenge challenge,
