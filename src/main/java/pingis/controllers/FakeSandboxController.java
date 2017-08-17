@@ -37,15 +37,15 @@ import pingis.services.sandbox.SubmissionResponse;
 public class FakeSandboxController {
 
   Logger logger = LoggerFactory.getLogger(this.getClass());
-  
+
   @Autowired
   SubmissionRepository submissionRepository;
 
   @RequestMapping("/tasks.json")
   public ResponseEntity tasks(
-      @RequestParam("token") String token) {
+        @RequestParam("token") String token) {
 
-    logger.debug("TOKEN::::::"+token);
+    logger.debug("TOKEN::::::" + token);
 
     RestTemplate restTemplate = new RestTemplate();
 
@@ -53,14 +53,14 @@ public class FakeSandboxController {
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     HttpEntity<MultiValueMap<String, String>> request = buildResponseEntity(
           loadSubmission(token), headers);
-    
+
     restTemplate.postForLocation("http://localhost:8080/submission-result", request, String.class);
 
     SubmissionResponse sr = new SubmissionResponse();
     sr.setStatus("ok");
     return ResponseEntity.status(HttpStatus.OK).body(sr);
   }
-  
+
   //TODO: Actually load, don't generate
   private Submission loadSubmission(String token) {
     Submission submission = submissionRepository.findOne(UUID.fromString(token));
@@ -85,14 +85,13 @@ public class FakeSandboxController {
     submission.setVmLog("");
 
     //submissionRepository.save(submission);
-
     return submission;
   }
-  
+
   private HttpEntity<MultiValueMap<String, String>> buildResponseEntity(
         Submission submission, HttpHeaders headers) {
     MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-    
+
     try {
       map.add("test_output", new ObjectMapper().writeValueAsString(
             submission.getTestOutput()));
@@ -107,7 +106,7 @@ public class FakeSandboxController {
     map.add("token", submission.getId().toString());
     map.add("status", submission.getStatus().toString());
     map.add("exit_code", submission.getExitCode().toString());
-    
+
     return new HttpEntity<>(map, headers);
   }
 }
