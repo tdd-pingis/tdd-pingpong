@@ -80,11 +80,17 @@ public class ChallengeService {
 
   public boolean isTestTurnInLiveChallenge(Challenge challenge) {
     User user = userService.getCurrentUser();
-    int side = user.getId() == challenge.getAuthor().getId() ? 1 : 0;
+    int side = user.getId() == challenge.getAuthor().getId() ? 0 : 1;
     int numberOfTasks = getNumberOfTasks(challenge);
     int highestIndex = numberOfTasks / 2;
     int numberOfDoneInstances =
         taskInstanceService.getNumberOfDoneTaskInstancesInChallenge(challenge);
+    if (highestIndex == 1) {
+      if (numberOfDoneInstances == 0 && user.getId() == challenge.getAuthor().getId()) {
+        return true;
+      }
+      return false;
+    }
     if (numberOfDoneInstances % 2 == 0 && highestIndex % 2 == side) {
       return true;
     }
