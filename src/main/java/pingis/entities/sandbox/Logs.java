@@ -1,5 +1,6 @@
 package pingis.entities.sandbox;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -12,6 +13,7 @@ import javax.persistence.Transient;
  * @author authority
  */
 @Entity
+@JsonIgnoreProperties(value = {"stdoutString", "stderrString"})
 public class Logs {
 
   @Id
