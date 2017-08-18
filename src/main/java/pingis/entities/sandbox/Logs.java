@@ -32,7 +32,7 @@ public class Logs {
   private String stdoutString;
   @Lob
   private String stderrString;
-  
+
   public byte[] getStdout() {
     return stdout;
   }
