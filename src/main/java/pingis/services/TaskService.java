@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -49,6 +50,12 @@ public class TaskService {
     Task t = findOne(taskId);
     taskRepository.deleteById(taskId);
     return t;
+  }
+
+  @Transactional
+  public void addRatingToTask(int userRating, long taskId) {
+    Task taskToRate = taskRepository.findOne(taskId);
+    taskToRate.addRating(userRating);
   }
 
   public boolean contains(Long taskId) {
