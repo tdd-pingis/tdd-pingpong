@@ -1,4 +1,3 @@
-@dev
 Feature: Content check for multiple editor tabs
 
   Scenario Outline: <user> can examine content in multiple editors
