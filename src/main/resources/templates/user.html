@@ -52,13 +52,13 @@
                               </div>
                         </div>
                   </div>
-                  <div th:if="${liveChallengeType == T(pingis.controllers.UserDevController.LiveType).CREATE}">
+                  <div th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CREATE}">
                         <a href="/newchallenge" class="btn btn-primary">Create New Live Challenge</a>
                   </div>
-                  <div th:if="${liveChallengeType == T(pingis.controllers.UserDevController.LiveType).JOIN}">
+                  <div th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).JOIN}">
                         <a th:href="'/playTurn/' + ${liveChallenge.id}" class="btn btn-success">Join Live Challenge</a>
                   </div>
-                  <div th:if="${liveChallengeType == T(pingis.controllers.UserDevController.LiveType).CONTINUE}">
+                  <div th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CONTINUE}">
                         <a th:href="'/playTurn/' + ${liveChallenge.id}" class="btn btn-info">Continue Live Challenge</a>
                   </div>
                   <a href="/randomTask" class="btn btn-success">Give me a random task</a>
