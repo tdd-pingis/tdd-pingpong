@@ -47,7 +47,7 @@ public class FakeSandboxController {
     
     //NOTE: Making STOMP messages persist makes this obsolete
     try {
-      Thread.sleep(500);
+      Thread.sleep(1000);
     } catch (InterruptedException ex) {
       logger.error("Sandbox thread stopped unexpectedly");
     }
