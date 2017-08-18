@@ -23,7 +23,6 @@ import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.TaskRepository;
 import pingis.repositories.UserRepository;
 
-
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {TaskInstanceService.class})
 public class TaskInstanceServiceTest {

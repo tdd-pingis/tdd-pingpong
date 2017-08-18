@@ -33,7 +33,6 @@ import pingis.utils.EditorTabData;
 import pingis.utils.JavaClassGenerator;
 import pingis.utils.JavaSyntaxChecker;
 
-
 @Controller
 public class TaskController {
 
