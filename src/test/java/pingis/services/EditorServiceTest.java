@@ -65,7 +65,7 @@ public class EditorServiceTest {
             testUser, "public void implementation", implementationTask);
     this.returnedTaskInstance = new TaskInstance(testUser, "public void test", testTask);
     passedTaskInstance.setTestTaskInstance(returnedTaskInstance);
-    returnedTaskInstance.addImplementionTaskInstance(passedTaskInstance);
+    returnedTaskInstance.addImplementationTaskInstance(passedTaskInstance);
 
   }
 

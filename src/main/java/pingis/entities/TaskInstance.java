@@ -123,7 +123,7 @@ public class TaskInstance {
     return this.testTaskInstance;
   }
 
-  public void addImplementionTaskInstance(TaskInstance implementationTaskInstance) {
+  public void addImplementationTaskInstance(TaskInstance implementationTaskInstance) {
     this.implementationTaskInstances.add(implementationTaskInstance);
   }
 

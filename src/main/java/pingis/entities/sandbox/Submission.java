@@ -1,5 +1,7 @@
 package pingis.entities.sandbox;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.UUID;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -12,11 +14,14 @@ import pingis.entities.TaskInstance;
  * Created by dwarfcrank on 7/28/17.
  */
 @Entity
+@JsonIgnoreProperties(value = {"taskInstance"})
 public class Submission {
 
   @Id
+  @JsonProperty("token")
   private UUID id;
 
+  @JsonProperty("exit_code")
   private Integer exitCode;
 
   @Lob
@@ -28,12 +33,14 @@ public class Submission {
   private SubmissionStatus status;
 
   @OneToOne(cascade = {CascadeType.ALL})
+  @JsonProperty("test_output")
   private TestOutput testOutput;
 
   @Lob
   private String validations;
 
   @Lob
+  @JsonProperty("vm_log")
   private String vmLog;
 
   @OneToOne
