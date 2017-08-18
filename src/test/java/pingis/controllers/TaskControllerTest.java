@@ -1,7 +1,6 @@
 package pingis.controllers;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertArrayEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -16,7 +15,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,10 +45,7 @@ import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
 import pingis.services.sandbox.SandboxService;
-import pingis.services.sandbox.SubmissionPackagingService;
-import pingis.services.sandbox.SubmissionSenderService;
 import pingis.utils.EditorTabData;
-import pingis.utils.JavaClassGenerator;
 
 
 @RunWith(SpringRunner.class)
