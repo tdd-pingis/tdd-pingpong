@@ -57,15 +57,16 @@ function showCompilationError(resultMessage) {
 function showTestResults(resultMessage) {
     if (resultMessage.success) {
         showSuccess();
-        showButtons();
+        showButtonsAndUserFeedback();
     } else {
         showFailure(resultMessage);
     }
 }
 
-function showButtons() {
-  $("#selectByRandom").show();
-  $("#selectFromList").show();
+function showButtonsAndUserFeedback() {
+    $("#selectByRandom").show();
+    $("#selectFromList").show();
+    $("#userFeedBack").show();
 }
 
 function showSuccess() {

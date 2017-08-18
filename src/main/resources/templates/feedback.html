@@ -27,14 +27,29 @@
                 </div>
             </div>
 
+            <form>
+              <div class="container" id="userFeedBack" style="display: none;margin-top: 3em;">
+                <div class="row">
+                    <h3>Your feedback of the task</h3>
+                </div>
+                <div class="row lead">
+                    <div id="stars" class="starrr" style="margin-bottom: 1em"></div>
+                    <button type="submit" class="btn btn-success" onclick="sendRating(event)">Give feedback</button>
+                </div>
+              </div>
+                <input type="number" style="display: none" id="givenRating"/>
+            </form>
+
             <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
             <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
             <script th:src="@{/js/results.js}"></script>
             <script th:src="@{/js/feedbackStomp.js}"></script>
+            <script th:src="@{/js/starrr.js}"></script>
             <script th:inline="javascript">
             /*<![CDATA[*/
                 //Makes the model attribute usable in external javascript files
                 var submissionId = /*[[${submissionId}]]*/;
+                var taskId = /*[[${taskInstance.task.id}]]*/;
             /*]]>*/
             </script>
         </div>
