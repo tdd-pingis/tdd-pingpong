@@ -1,6 +1,5 @@
 package pingis.utils;
 
-
 public class EditorTabData {
 
   public String title;
