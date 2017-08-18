@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,12 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
+import pingis.entities.TaskType;
+import pingis.entities.sandbox.ResultStatus;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
 import pingis.entities.sandbox.TestOutput;
+import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.sandbox.SubmissionRepository;
 import pingis.services.sandbox.SubmissionResponse;
 
@@ -29,9 +33,13 @@ import pingis.services.sandbox.SubmissionResponse;
  * @author authority
  */
 @Controller
+@Profile("dev")
 public class FakeSandboxController {
 
   private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+  @Autowired
+  private TaskInstanceRepository taskInstanceRepository;
 
   @Autowired
   private SubmissionRepository submissionRepository;
@@ -40,6 +48,11 @@ public class FakeSandboxController {
   public ResponseEntity tasks(
         @RequestParam("token") String token) {
 
+    try {
+      Thread.sleep(2000);
+    } catch (InterruptedException ex) {
+    }
+
     logger.debug("TOKEN::::::" + token);
 
     RestTemplate restTemplate = new RestTemplate();
@@ -47,7 +60,7 @@ public class FakeSandboxController {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
     HttpEntity<MultiValueMap<String, String>> request = buildResponseEntity(
-          loadSubmission(token), headers);
+          generateSubmission(token), headers);
 
     restTemplate.postForLocation("http://localhost:8080/submission-result", request, String.class);
 
@@ -56,17 +69,23 @@ public class FakeSandboxController {
     return ResponseEntity.status(HttpStatus.OK).body(sr);
   }
 
-  //TODO: Actually load, don't generate
-  private Submission loadSubmission(String token) {
+  // TODO: Encapsulate this behaviour in another class
+  private Submission generateSubmission(String token) {
     Submission submission = submissionRepository.findOne(UUID.fromString(token));
+
     submission.setId(UUID.fromString(token));
-    submission.setStatus(SubmissionStatus.FINISHED);
+    submission.setStatus(SubmissionStatus.PENDING);
     submission.setExitCode(0);
     submission.setStderr("");
     submission.setStdout("");
+
+    TaskType type = submission.getTaskInstance().getTask().getType();
+    ResultStatus resultStatus
+          = (type == TaskType.IMPLEMENTATION) ? ResultStatus.PASSED : ResultStatus.TESTS_FAILED;
+
     try {
       submission.setTestOutput(new ObjectMapper().readValue(
-            "{\"status\":\"PASSED\","
+            "{\"status\":\"" + resultStatus + "\","
             + "\"testResults\":[],"
             + "\"logs\":{"
             + "\"stdout\":[0],"
@@ -92,7 +111,6 @@ public class FakeSandboxController {
     } catch (JsonProcessingException ex) {
       logger.debug("POJO deserialization failed");
     }
-
     map.add("stdout", submission.getStdout());
     map.add("stderr", submission.getStderr());
     map.add("validations", submission.getValidations());
