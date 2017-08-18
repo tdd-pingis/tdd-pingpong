@@ -16,7 +16,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import pingis.config.OAuthProperties;
 import pingis.config.SecurityConfig;
 
-
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {
     IndexController.class, SecurityConfig.class, OAuthProperties.class})
