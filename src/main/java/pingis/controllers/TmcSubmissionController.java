@@ -31,8 +31,7 @@ public class TmcSubmissionController {
         @RequestParam("vm_log") String vmLog,
         @RequestParam String token,
         @RequestParam String status,
-        @RequestParam("exit_code") String exitCode
-  ) throws IOException {
+        @RequestParam("exit_code") String exitCode) throws IOException {
     logger.debug("Received a response from TMC sandbox");
 
     UUID submissionId = UUID.fromString(token);
