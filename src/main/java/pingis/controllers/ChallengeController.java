@@ -62,8 +62,7 @@ public class ChallengeController {
     newChallenge.setOpen(true);
     newChallenge = challengeService.save(newChallenge);
     logger.info(newChallenge.toString());
-    redirectAttributes.addFlashAttribute("challengeId", newChallenge.getId());
-    return new RedirectView("/newtaskpair");
+    return new RedirectView("/playTurn/"+newChallenge.getId());
   }
 
   @RequestMapping(value = "/newtaskpair")
@@ -109,11 +108,12 @@ public class ChallengeController {
     currentChallenge.addTask(implTask);
     testTask.setChallenge(currentChallenge);
     implTask.setChallenge(currentChallenge);
+    TaskInstance newTestTaskInstance = taskInstanceService.createEmpty(currentUser, testTask);
     taskService.save(testTask);
     taskService.save(implTask);
     redirectAttributes.addAttribute("taskId", testTask.getId());
     redirectAttributes.addAttribute("testTaskInstanceId", 0L);
-    return new RedirectView("/newTaskInstance");
+    return new RedirectView("/playTurn/"+currentChallenge.getId());
   }
 
   @RequestMapping(value = "/playTurn/{challengeId}")
