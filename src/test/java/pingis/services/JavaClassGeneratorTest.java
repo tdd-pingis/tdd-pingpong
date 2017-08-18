@@ -1,4 +1,3 @@
-
 package pingis.services;
 
 import static org.assertj.core.api.Assertions.assertThat;
