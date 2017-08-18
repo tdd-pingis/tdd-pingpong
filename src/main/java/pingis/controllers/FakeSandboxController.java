@@ -51,6 +51,7 @@ public class FakeSandboxController {
     try {
       Thread.sleep(2000);
     } catch (InterruptedException ex) {
+      logger.error("Thread stopped unexceptedly");
     }
 
     logger.debug("TOKEN::::::" + token);

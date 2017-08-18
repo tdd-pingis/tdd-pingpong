@@ -16,7 +16,8 @@ import org.springframework.stereotype.Service;
 public class MockSubmissionPackagingService implements SubmissionPackagingServiceInterface {
 
   @Override
-  public byte[] packageSubmission(Map<String, byte[]> additionalFiles) throws IOException, ArchiveException {
+  public byte[] packageSubmission(Map<String, byte[]> additionalFiles)
+        throws IOException, ArchiveException {
     return new byte[0];
   }
   
