@@ -20,6 +20,7 @@ public class RunCukesTest {
     @Override
     protected void before() throws Throwable {
       this.app = SpringApplication.run(Application.class);
+      app.getEnvironment().getSystemEnvironment().put("RUNNING_CUCUMBER", "TRUE");
     }
 
     @Override

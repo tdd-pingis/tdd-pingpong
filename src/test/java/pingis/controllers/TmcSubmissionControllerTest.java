@@ -32,7 +32,6 @@ import org.springframework.web.context.WebApplicationContext;
 import pingis.Application;
 import pingis.config.OAuthProperties;
 import pingis.config.SecurityConfig;
-import pingis.config.WebSocketSecurityConfig;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.sandbox.Logs;
@@ -48,8 +47,7 @@ import pingis.services.sandbox.SandboxService;
  */
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes =
-    {Application.class, TmcSubmissionController.class, SecurityConfig.class, OAuthProperties.class,
-        WebSocketSecurityConfig.class})
+    {Application.class, TmcSubmissionController.class, SecurityConfig.class, OAuthProperties.class})
 @DirtiesContext
 @WebAppConfiguration
 @WebMvcTest(TmcSubmissionController.class)
