@@ -18,6 +18,7 @@ import pingis.entities.TaskInstance;
 import pingis.entities.TmcUserDto;
 import pingis.entities.User;
 import pingis.services.ChallengeService;
+import pingis.services.GameplayService;
 import pingis.services.UserService;
 
 @Controller
@@ -32,6 +33,9 @@ public class UserController {
 
   @Autowired
   ChallengeService challengeService;
+
+  @Autowired
+  GameplayService gameplayService;
 
   Logger logger = Logger.getLogger(UserController.class);
 
@@ -48,17 +52,17 @@ public class UserController {
 
     MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
 
+    user.getTaskInstances().stream()
+        .filter(e -> !e.getChallenge().getIsOpen())
+        .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
+
     List<Challenge> availableChallenges = challengeService.findAll().stream()
         .filter(e -> !e.getIsOpen())
         .filter(e -> e.getLevel() <= user.getLevel())
         .filter(e -> !myTasksInChallenges.containsKey(e))
         .collect(Collectors.toList());
 
-    user.getTaskInstances().stream()
-        .filter(e -> !e.getChallenge().getIsOpen())
-        .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
-
-    Challenge liveChallenge = challengeService.getParticipatingLiveChallenge();
+    Challenge liveChallenge = gameplayService.getParticipatingLiveChallenge();
     Challenge randomLiveChallenge = challengeService.getRandomLiveChallenge(user);
 
     if (liveChallenge == null && randomLiveChallenge == null) {

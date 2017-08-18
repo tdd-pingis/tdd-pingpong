@@ -1,22 +1,13 @@
 package pingis.controllers;
 
-import java.io.IOException;
-import java.lang.ProcessBuilder.Redirect;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import org.apache.commons.compress.archivers.ArchiveException;
-import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Challenge;
@@ -26,14 +17,13 @@ import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.services.ChallengeService;
-import pingis.services.EditorService;
+import pingis.services.GameplayService;
 import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
-import pingis.utils.JavaSyntaxChecker;
 
 @Controller
-public class ChallengeController {
+public class LiveChallengeController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
@@ -44,6 +34,8 @@ public class ChallengeController {
   TaskInstanceService taskInstanceService;
   @Autowired
   UserService userService;
+  @Autowired
+  GameplayService gameplayService;
 
   @RequestMapping(value = "/newchallenge")
   public String newChallenge(Model model) {
@@ -87,7 +79,7 @@ public class ChallengeController {
     
     // create and save new tasks, redirect to createtaskinstance
     Challenge currentChallenge = challengeService.findOne(challengeId);
-    int numberOfTasks = challengeService.getNumberOfTasks(currentChallenge);
+    int numberOfTasks = gameplayService.getNumberOfTasks(currentChallenge);
     int nextIndex = numberOfTasks / 2 + 1;
     User currentUser = userService.getCurrentUser();
     Task testTask = new Task(nextIndex,
@@ -123,10 +115,10 @@ public class ChallengeController {
     Challenge currentChallenge = challengeService.findOne(challengeId);
     logger.info("Current Challenge fetched: " + currentChallenge);
     
-    int index = challengeService.getNumberOfTasks(currentChallenge) / 2;
+    int index = gameplayService.getNumberOfTasks(currentChallenge) / 2;
     logger.info("Highest index of tasks in current challenge: " + index);
     
-    if (!challengeService.isParticipating(currentChallenge)) {
+    if (!gameplayService.isParticipating(currentChallenge)) {
       logger.info("Not participating.");
       
       if (currentChallenge.getSecondPlayer() == null) {
@@ -143,7 +135,7 @@ public class ChallengeController {
     TaskInstance unfinished = challengeService.getUnfinishedTaskInstance(currentChallenge);
     logger.info("Unfinished task inside current challenge fetched: " + unfinished);
     if (unfinished != null && unfinished.getUser().equals(userService.getCurrentUser())) {
-      redirectAttributes.addAttribute("taskInstanceId", unfinished.getId());
+      //redirectAttributes.addAttribute("taskInstanceId", unfinished.getId());
       logger.info("Found unfinished taskinstance owned by current user, redirecting to \"/task\"");
       
       return new RedirectView("/task/" + unfinished.getId());
@@ -154,16 +146,20 @@ public class ChallengeController {
       return new RedirectView("/user");
     }
 
-    if (challengeService.isTestTurnInLiveChallenge(currentChallenge)) {
+    if (gameplayService.isTestTurnInLiveChallenge(currentChallenge)) {
       redirectAttributes.addFlashAttribute("challengeId", currentChallenge.getId());
+      redirectAttributes.addFlashAttribute("challenge", currentChallenge);
+      redirectAttributes.addFlashAttribute("minLength", GameplayService.CHALLENGE_MIN_LENGTH);
       logger.info("Found even number of completed taskinstances, redirecting to \"/newtaskpair\"");
       
       return new RedirectView("/newtaskpair");
     }
 
-    if (challengeService.isImplementationTurnInLiveChallenge(currentChallenge)) {
-      Task implTask = challengeService.getTopmostImplementationTask(currentChallenge, index);
-      Task testTask = challengeService.getTopmostTestTask(currentChallenge, index);
+    if (gameplayService.isImplementationTurnInLiveChallenge(currentChallenge)) {
+      Task implTask = gameplayService.getTopmostImplementationTask(currentChallenge, index);
+      logger.info("implementation task: " + implTask.toString());
+      Task testTask = gameplayService.getTopmostTestTask(currentChallenge, index);
+      logger.info("test task: " + testTask.toString());
       redirectAttributes.addAttribute("taskId", implTask.getId());
       redirectAttributes.addAttribute("testTaskInstanceId",
           taskInstanceService.getByTaskAndUser(testTask, testTask.getAuthor()).getId());
@@ -175,6 +171,16 @@ public class ChallengeController {
     logger.info("Not user's turn, redirecting to \"/user\"");
     return new RedirectView("/user");
 
+  }
+
+  @RequestMapping("/closeChallenge/{challengeId}")
+  public RedirectView closeChallenge(@PathVariable Long challengeId,
+      RedirectAttributes redirectAttributes) {
+    Challenge currentChallenge = challengeService.findOne(challengeId);
+    currentChallenge.setOpen(false);
+    challengeService.save(currentChallenge);
+    redirectAttributes.addFlashAttribute("message", "Challenge closed.");
+    return new RedirectView("/user");
   }
 
 }

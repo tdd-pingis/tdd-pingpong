@@ -6,7 +6,7 @@
 <div class="container">
     <div class="row">
         <h1>new task pair</h1>
-        <div class="row" th:text="'Your code has syntax errors:'+${errors}"></div>
+        <div th:if="${errors != null}" class="row" th:text="'Your code has syntax errors:'+${errors}"></div>
         <form th:action="@{/createTaskPair}" method="post">
             <input type="hidden" name="challengeId" th:value="${challengeId}"/>
             <div class="row">
@@ -31,6 +31,9 @@
                 <button type="submit" class="btn btn-primary">Create task pair</button>
             </div>
         </form>
+        <div th:if="${#lists.size(challenge.tasks) >= minLength}">
+          <a th:href="'/closeChallenge/'+${challengeId}"  class="btn btn-primary">Close challenge</a>
+        </div>
     </div>
 </div>
 </body>
