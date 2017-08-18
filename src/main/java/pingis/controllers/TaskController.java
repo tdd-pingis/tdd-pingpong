@@ -146,7 +146,7 @@ public class TaskController {
     if (task.getType() == TaskType.IMPLEMENTATION) {
       TaskInstance testTaskInstance = taskInstanceService.findOne(testTaskInstanceId);
       newTaskInstance.setTestTaskInstance(testTaskInstance);
-      testTaskInstance.addImplementionTaskInstance(newTaskInstance);
+      testTaskInstance.addImplementationTaskInstance(newTaskInstance);
       taskInstanceService.save(newTaskInstance);
       taskInstanceService.save(testTaskInstance);
     }
