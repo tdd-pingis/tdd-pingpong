@@ -31,7 +31,7 @@ public class SandboxService {
   private SubmissionSenderService senderService;
 
   @Autowired
-  private SubmissionPackagingService packagingService;
+  private SubmissionPackagingServiceInterface packagingService;
 
   @Autowired
   private SubmissionRepository submissionRepository;

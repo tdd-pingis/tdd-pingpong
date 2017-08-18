@@ -1,4 +1,8 @@
 spring:
+  http:
+    multipart:
+     max-file-size: 40Mb
+     max-request-size: 40Mb
   h2:
     console:
       enabled: true
@@ -27,8 +31,8 @@ security:
         redirectUri: http://localhost:8080/oauth2/authorize/code/tmc
 
 tmc:
-  sandboxUrl: http://localhost:3001
-  notifyUrl: http://localhost:1337/submission-result
+  sandboxUrl: http://localhost:8080
+  notifyUrl: http://localhost:8080/submission-result
 
 logging:
   level:
