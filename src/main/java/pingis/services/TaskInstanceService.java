@@ -114,4 +114,12 @@ public class TaskInstanceService {
   public TaskInstance getByTaskAndUser(Task task, User user) {
     return taskInstanceRepository.findByTaskAndUser(task, user);
   }
+  
+  public boolean canContinue(TaskInstance taskInstance, User user) {
+    if (taskInstance.getStatus() == CodeStatus.DONE || !taskInstance.getUser().equals(user)) {
+      return false;
+    } 
+    return true;
+  }
+
 }

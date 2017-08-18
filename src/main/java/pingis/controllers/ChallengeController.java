@@ -77,13 +77,13 @@ public class ChallengeController {
       long challengeId,
       RedirectAttributes redirectAttributes) {
     
-    String[] errors = JavaSyntaxChecker.checkTaskPairErrors(implementationCodeStub, testCodeStub);
-    if (errors != null) {
-      redirectAttributes.addFlashAttribute("errors", errors);
-      redirectAttributes.addAttribute("challengeId", challengeId);
-      
-      return new RedirectView("/createTaskPair");
-    }
+//    String[] errors = JavaSyntaxChecker.checkTaskPairErrors(implementationCodeStub, testCodeStub);
+//    if (errors != null) {
+//      redirectAttributes.addFlashAttribute("errors", errors);
+//      redirectAttributes.addAttribute("challengeId", challengeId);
+//      
+//      return new RedirectView("/createTaskPair");
+//    }
     
     // create and save new tasks, redirect to createtaskinstance
     Challenge currentChallenge = challengeService.findOne(challengeId);
@@ -108,9 +108,9 @@ public class ChallengeController {
     currentChallenge.addTask(implTask);
     testTask.setChallenge(currentChallenge);
     implTask.setChallenge(currentChallenge);
-    TaskInstance newTestTaskInstance = taskInstanceService.createEmpty(currentUser, testTask);
     taskService.save(testTask);
     taskService.save(implTask);
+    TaskInstance newTestTaskInstance = taskInstanceService.createEmpty(currentUser, testTask);
     redirectAttributes.addAttribute("taskId", testTask.getId());
     redirectAttributes.addAttribute("testTaskInstanceId", 0L);
     return new RedirectView("/playTurn/"+currentChallenge.getId());
@@ -146,6 +146,9 @@ public class ChallengeController {
       logger.info("Found unfinished taskinstance owned by current user, redirecting to \"/task\"");
       
       return new RedirectView("/task/" + unfinished.getId());
+    } else if (unfinished != null && !unfinished.getUser().equals(userService.getCurrentUser())) {
+      logger.info("Unfinished taskinstance found, but not owned by the current user, redirecting to \"/user\"");
+      return new RedirectView("/user");
     }
 
     if (challengeService.isTestTurnInLiveChallenge(currentChallenge)) {

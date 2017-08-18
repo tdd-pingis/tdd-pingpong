@@ -69,6 +69,10 @@ public class TaskController {
       model.addAttribute("errormessage", "no such task instance");
       return "error";
     }
+    
+    if (!taskInstanceService.canContinue(taskInstance, userService.getCurrentUser())) {
+      return "redirect:/error";
+    }
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
     model.addAttribute("challenge", currentChallenge);
     model.addAttribute("task", taskInstance.getTask());
