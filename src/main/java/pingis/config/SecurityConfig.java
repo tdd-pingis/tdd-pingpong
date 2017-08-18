@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -19,8 +18,6 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.security.web.AuthenticationEntryPoint;
 import pingis.entities.TmcUserDto;
 
-
-@Profile(value = {"prod", "oauth"})
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -37,9 +34,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http
-        .csrf().ignoringAntMatchers("/websocket/**")
+        .csrf().ignoringAntMatchers(
+                "/websocket/**",
+                "/fake/authorize", "/fake/token", "/fake/userinfo")
         .and()
-        .authorizeRequests().antMatchers("/css/**", "/webjars/**", "/", "/login", "/logout")
+        .authorizeRequests().antMatchers(
+                "/css/**", "/webjars/**", "/", "/login", "/logout",
+                "/fake/authorize", "/fake/token", "/fake/userinfo")
         .permitAll()
         .anyRequest().authenticated()
         .and()
@@ -79,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void commence(HttpServletRequest hsr, HttpServletResponse hsr1,
         AuthenticationException ae)
         throws IOException, ServletException {
-      hsr1.sendRedirect("/login");
+      hsr1.sendRedirect("/");
     }
   }
 }

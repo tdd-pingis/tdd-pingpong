@@ -1,0 +1,31 @@
+apply from: 'gradle/helpers/test-printing.gradle'
+
+tasks.withType(Test).all {
+    systemProperty "spring.profiles.active", "dev"
+    systemProperty "cucumber.options", "--tags @dev"
+}
+
+task unit (type: Test) {
+    testLogging { afterSuite { desc, result -> printTestResults(desc,result,'UNIT') } }
+    exclude '**/cucumber/**'
+}
+
+task cucumber (type: Test) {
+    testLogging { afterSuite { desc, result -> printTestResults(desc,result,'CUKE') } }
+    include '**/cucumber/**'
+}
+
+test.testLogging.showStandardStreams = true
+
+// If not running in Travis, we want to use the unit task instead of test
+if (System.env.TRAVIS != 'true') {
+    test { exclude '**' }
+    test.dependsOn unit
+}
+
+// For running all tests during build
+if(System.env.TESTS == 'ALL') {
+  test.dependsOn cucumber
+}
+
+cucumber.mustRunAfter unit
