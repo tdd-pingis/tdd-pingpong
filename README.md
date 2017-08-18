@@ -13,7 +13,7 @@ Testing is an integral part of enterprise software development. The purpose of t
 ### Development
 TDD-PingPong is developed in Java 8 using Spring-boot's Web MVC framework. Dependency management is handled by Gradle. Project is structured following MVC (Model-View-Controller) design structure.  
 
-For more details,[see our Wiki](https://github.com/tdd-pingis/tdd-pingpong/wiki)
+For more details, [see our Wiki](https://github.com/tdd-pingis/tdd-pingpong/wiki)
 
 ### License
 TDD-PingPong is developed under MIT license. 

@@ -29,8 +29,7 @@ import pingis.services.EditorService;
 import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
-import pingis.services.sandbox.SubmissionPackagingService;
-import pingis.services.sandbox.SubmissionSenderService;
+import pingis.services.sandbox.SandboxService;
 import pingis.utils.EditorTabData;
 import pingis.utils.JavaClassGenerator;
 import pingis.utils.JavaSyntaxChecker;
@@ -53,11 +52,7 @@ public class TaskController {
   UserService userService;
 
   @Autowired
-  private SubmissionPackagingService packagingService;
-
-  @Autowired
-  private SubmissionSenderService senderService;
-
+  private SandboxService sandboxService;
 
   @RequestMapping(value = "/task/{taskInstanceId}", method = RequestMethod.GET)
   public String task(Model model,
@@ -98,11 +93,10 @@ public class TaskController {
 
   @RequestMapping(value = "/task", method = RequestMethod.POST)
   public RedirectView task(String submissionCode,
-      String staticCode,
       long taskInstanceId,
       RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
 
-    String[] errors = JavaSyntaxChecker.checkTaskPairErrors(submissionCode, staticCode);
+    String[] errors = JavaSyntaxChecker.parseCode(submissionCode);
     if (errors != null) {
       redirectAttributes.addFlashAttribute("errors", errors);
       redirectAttributes.addFlashAttribute("code", submissionCode);
@@ -112,8 +106,7 @@ public class TaskController {
     TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
 
-    Submission submission = submitToTmc(taskInstance, currentChallenge, submissionCode,
-        staticCode);
+    Submission submission = submitToTmc(taskInstance, currentChallenge, submissionCode);
     
     redirectAttributes.addFlashAttribute("submissionId", submission.getId().toString());
     redirectAttributes.addFlashAttribute("taskInstance", taskInstance);
@@ -165,15 +158,55 @@ public class TaskController {
     return new RedirectView("/task/{taskInstanceId}");
   }
 
-  
+  @RequestMapping("/randomTask")
+  public RedirectView randomTask(RedirectAttributes redirectAttributes) {
+    Challenge randomChallenge = challengeService.getRandomChallenge();
+    redirectAttributes.addAttribute("challengeId", randomChallenge.getId());
+    return new RedirectView("/randomTask/{challengeId}");
+  }
 
-  // TODO: This should actually be a separate service...
+  @RequestMapping("/randomTask/{challengeId}")
+  public RedirectView randomTaskInChallenge(@PathVariable long challengeId,
+      RedirectAttributes redirectAttributes) {
+
+    Challenge currentChallenge = challengeService.findOne(challengeId);
+    User currentUser = userService.getCurrentUser();
+
+    if (taskService.noNextTaskAvailable(currentChallenge, currentUser)) {
+      return new RedirectView("/user");
+    }
+
+    Long nextTaskInstanceId;
+    Task nextTask;
+
+    // If the next tasktype is test AND there are test-tasks available
+    // OR
+    // (the next random tasktype is impl, but) there are no impl-tasks left
+    if ((taskService.getRandomTaskType().equals(TaskType.TEST)
+        && taskService.hasNextTestTaskAvailable(currentChallenge, currentUser))
+        || !taskService.hasNextImplTaskAvailable(currentChallenge, currentUser)) {
+      nextTask = taskService.getRandomTestTask(currentChallenge, currentUser);
+      nextTaskInstanceId = 0L;
+    } else {
+      nextTask = taskService.getRandomImplTask(currentChallenge, currentUser);
+      nextTaskInstanceId = taskService.getRandomTaskInstance(currentChallenge,
+          currentUser, nextTask).getId();
+    }
+
+    redirectAttributes.addAttribute("taskId", nextTask.getId());
+    redirectAttributes.addAttribute("testTaskInstanceId", nextTaskInstanceId);
+
+    return new RedirectView("/newTaskInstance");
+  }
+
   private Submission submitToTmc(TaskInstance taskInstance, Challenge challenge,
-      String submissionCode,
-      String staticCode)
+      String submissionCode)
       throws IOException, ArchiveException {
     logger.debug("Submitting to TMC");
     Map<String, byte[]> files = new HashMap<>();
+
+    String staticCode = taskService.getCorrespondingTask(taskInstance.getTask()).getCodeStub();
+
     String implFileName = JavaClassGenerator.generateImplClassFilename(challenge);
     String testFileName = JavaClassGenerator.generateTestClassFilename(challenge);
 
@@ -184,11 +217,8 @@ public class TaskController {
       files.put(implFileName, submissionCode.getBytes());
       files.put(testFileName, staticCode.getBytes());
     }
-    byte[] packaged = packagingService.packageSubmission(files);
-    Submission submission = new Submission();
-    logger.debug("Created the submission");
-    submission.setTaskInstance(taskInstance);
-    return senderService.sendSubmission(submission, packaged);
+
+    return sandboxService.submit(files, taskInstance);
   }
 
 }

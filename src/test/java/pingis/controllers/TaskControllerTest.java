@@ -1,7 +1,6 @@
 package pingis.controllers;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertArrayEquals;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -32,7 +31,8 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import pingis.config.SecurityDevConfig;
+import pingis.config.OAuthProperties;
+import pingis.config.SecurityConfig;
 import pingis.entities.Challenge;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
@@ -44,21 +44,14 @@ import pingis.services.EditorService;
 import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
-import pingis.services.sandbox.SubmissionPackagingService;
-import pingis.services.sandbox.SubmissionSenderService;
+import pingis.services.sandbox.SandboxService;
 import pingis.utils.EditorTabData;
-import pingis.utils.JavaClassGenerator;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+
 
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(TaskController.class)
-@ContextConfiguration(classes = {TaskController.class, SecurityDevConfig.class})
+@ContextConfiguration(classes = {TaskController.class, SecurityConfig.class, OAuthProperties.class})
 @WebAppConfiguration
 public class TaskControllerTest {
 
@@ -68,10 +61,7 @@ public class TaskControllerTest {
   private MockMvc mvc;
 
   @MockBean
-  private SubmissionPackagingService packagingService;
-
-  @MockBean
-  private SubmissionSenderService senderService;
+  private SandboxService sandboxServiceMock;
 
   @MockBean
   private ChallengeService challengeServiceMock;
@@ -173,34 +163,50 @@ public class TaskControllerTest {
   }
 
   @Test
-  public void submitTask() throws Exception {
+  public void submitTestTask() throws Exception {
+    String submissionCode = "/* this is a test */";
+
+    when(taskInstanceServiceMock.findOne(testTaskInstance.getId())).thenReturn(testTaskInstance);
+    when(challengeServiceMock.findOne(challenge.getId())).thenReturn(challenge);
+    when(taskServiceMock.findTaskInChallenge(challenge.getId(), implementationTask.getIndex()))
+        .thenReturn(implementationTask);
+    when(taskServiceMock.getCorrespondingTask(testTask)).thenReturn(implementationTask);
+    when(sandboxServiceMock.submit(Mockito.any(), Mockito.any())).thenReturn(submission);
+    mvc.perform(post("/task")
+        .param("submissionCode", submissionCode)
+        .param("taskInstanceId", Long.toString(implTaskInstance.getId())))
+        .andExpect(status().is3xxRedirection())
+        .andExpect(redirectedUrlPattern("/feedback*"));
+
+    verify(taskInstanceServiceMock, times(1)).findOne(testTaskInstance.getId());
+    verify(taskInstanceServiceMock).updateTaskInstanceCode(testTaskInstance.getId(),
+        submissionCode);
+    verify(taskServiceMock).getCorrespondingTask(testTask);
+    verifyNoMoreInteractions(taskInstanceServiceMock);
+    verifyNoMoreInteractions(challengeServiceMock);
+    verifyNoMoreInteractions(taskServiceMock);
+  }
+
+  @Test
+  public void submitImplementationTask() throws Exception {
     String submissionCode = "/* this is an implementation */";
-    String staticCode = "/* this is a test */";
 
     when(taskInstanceServiceMock.findOne(implTaskInstance.getId())).thenReturn(implTaskInstance);
     when(challengeServiceMock.findOne(challenge.getId())).thenReturn(challenge);
     when(taskServiceMock.findTaskInChallenge(challenge.getId(), testTask.getIndex()))
         .thenReturn(testTask);
-    when(senderService.sendSubmission(Mockito.any(), Mockito.any())).thenReturn(submission);
+    when(taskServiceMock.getCorrespondingTask(implementationTask)).thenReturn(testTask);
+    when(sandboxServiceMock.submit(Mockito.any(), Mockito.any())).thenReturn(submission);
     mvc.perform(post("/task")
         .param("submissionCode", submissionCode)
-        .param("staticCode", staticCode)
         .param("taskInstanceId", Long.toString(implTaskInstance.getId())))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrlPattern("/feedback*"));
-    verify(packagingService).packageSubmission(packagingArgCaptor.capture());
-
-    String submissionFileName = JavaClassGenerator.generateImplClassFilename(challenge);
-    String staticFileName = JavaClassGenerator.generateTestClassFilename(challenge);
-
-    Map<String, byte[]> files = packagingArgCaptor.getValue();
-    assertArrayEquals(submissionCode.getBytes(), files.get(submissionFileName));
-    assertArrayEquals(staticCode.getBytes(), files.get(staticFileName));
 
     verify(taskInstanceServiceMock, times(1)).findOne(implTaskInstance.getId());
     verify(taskInstanceServiceMock).updateTaskInstanceCode(implTaskInstance.getId(),
         submissionCode);
-    verifyNoMoreInteractions(packagingService);
+    verify(taskServiceMock).getCorrespondingTask(implementationTask);
     verifyNoMoreInteractions(taskInstanceServiceMock);
     verifyNoMoreInteractions(challengeServiceMock);
     verifyNoMoreInteractions(taskServiceMock);

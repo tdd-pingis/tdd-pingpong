@@ -62,7 +62,7 @@ public class ChallengeController {
     newChallenge.setOpen(true);
     newChallenge = challengeService.save(newChallenge);
     logger.info(newChallenge.toString());
-    return new RedirectView("/playTurn/"+newChallenge.getId());
+    return new RedirectView("/playTurn/" + newChallenge.getId());
   }
 
   @RequestMapping(value = "/newtaskpair")
@@ -113,7 +113,7 @@ public class ChallengeController {
     TaskInstance newTestTaskInstance = taskInstanceService.createEmpty(currentUser, testTask);
     redirectAttributes.addAttribute("taskId", testTask.getId());
     redirectAttributes.addAttribute("testTaskInstanceId", 0L);
-    return new RedirectView("/playTurn/"+currentChallenge.getId());
+    return new RedirectView("/playTurn/" + currentChallenge.getId());
   }
 
   @RequestMapping(value = "/playTurn/{challengeId}")
@@ -132,7 +132,8 @@ public class ChallengeController {
       if (currentChallenge.getSecondPlayer() == null) {
         currentChallenge.setSecondPlayer(userService.getCurrentUser());
         challengeService.save(currentChallenge);
-        redirectAttributes.addAttribute("Current user saved as a participant (second player) to current challenge.");
+        redirectAttributes.addAttribute("Current user saved as a participant"
+            + " (second player) to current challenge.");
       } else {
         redirectAttributes.addAttribute("message", "naaaaaughty!");
         return new RedirectView("/error");
@@ -146,8 +147,10 @@ public class ChallengeController {
       logger.info("Found unfinished taskinstance owned by current user, redirecting to \"/task\"");
       
       return new RedirectView("/task/" + unfinished.getId());
-    } else if (unfinished != null && !unfinished.getUser().equals(userService.getCurrentUser())) {
-      logger.info("Unfinished taskinstance found, but not owned by the current user, redirecting to \"/user\"");
+    } else if (unfinished != null
+        && !unfinished.getUser().equals(userService.getCurrentUser())) {
+      logger.info("Unfinished taskinstance found, but not owned by the"
+          + " current user, redirecting to \"/user\"");
       return new RedirectView("/user");
     }
 

@@ -22,6 +22,8 @@
                     <div th:if="${challenge.isOpen}">
                         <a th:href="'playTurn/'+${challenge.id}" class="btn btn-success">Next task</a>
                     </div>
+                    <a th:href="'nextTask/'+${challenge.id}" id="selectFromList" style="display: none" class="btn btn-success">Next task from a list</a>
+                    <a th:href="'randomTask/'+${challenge.id}" id="selectByRandom" style="display: none" class="btn btn-success">Next task by random</a>
                 </div>
             </div>
 
