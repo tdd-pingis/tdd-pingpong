@@ -219,5 +219,3 @@ public class TaskControllerTest {
         .andExpect(content().string(containsString(expectedContent)));
   }
 }
-
-
