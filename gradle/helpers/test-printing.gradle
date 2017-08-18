@@ -1,5 +1,3 @@
-// Functions for test printing
-
 ext.printTestResults = { desc, result, type -> 
   if(!desc.parent) {
     println formatResults(result, type)
@@ -16,9 +14,8 @@ def formatResults(res, type) {
   def stopColor = '[0m' //CLEARS FORMATTING
 
   def report
-  if(type == 'UNIT') report = '/build/reports/tests/unitTest/index.html'
-  if(type == 'CUKE') report = '/build/reports/tests/cucumber/index.html'
-  if(type == 'CUPR') report = '/build/reports/tests/cucumber/index.html'
+  if(type == 'UNIT') report = '/build/reports/tests/unit/index.html'
+  if(type == 'CUKE') report = '/build/reports/tests/cucumberReport/index.html'
 
   return '\n' +
     '========================================================================================================================\n' +

@@ -7,7 +7,9 @@
             <div class="col-md-6">
                 <h1>Login page</h1>
                 <!--/* The form uses Thymeleaf to automatically handle CSRF tokens which Spring Security requires. */-->
-                <form th:action="@{/login}" method="post">
+                <form th:action="@{/fake/authorize}" method="post">
+                    <input name="state" th:value="${state}" type="hidden"/>
+                    <input name="redirectUri" th:value="${redirectUri}" type="hidden"/>
                     <label for="username">Username</label>:
                     <input id="session_login" type="text" name="username" autofocus="autofocus"/> <br/>
                     <label for="password">Password</label>:
