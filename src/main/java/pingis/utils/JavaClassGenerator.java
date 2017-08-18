@@ -1,4 +1,3 @@
-
 package pingis.utils;
 
 import java.util.List;
