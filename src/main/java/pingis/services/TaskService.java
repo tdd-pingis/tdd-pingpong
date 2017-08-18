@@ -15,7 +15,6 @@ import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
-import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.TaskRepository;
 
 @Service
