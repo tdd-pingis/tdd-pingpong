@@ -24,7 +24,6 @@ import pingis.entities.sandbox.ResultStatus;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
 import pingis.entities.sandbox.TestOutput;
-import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.sandbox.SubmissionRepository;
 import pingis.services.sandbox.SubmissionResponse;
 
@@ -37,24 +36,24 @@ import pingis.services.sandbox.SubmissionResponse;
 public class FakeSandboxController {
 
   private Logger logger = LoggerFactory.getLogger(this.getClass());
-
-  @Autowired
-  private TaskInstanceRepository taskInstanceRepository;
-
+  
   @Autowired
   private SubmissionRepository submissionRepository;
 
   @RequestMapping("/tasks.json")
   public ResponseEntity tasks(
-        @RequestParam("token") String token) {
-
+        @RequestParam("token") String token,
+        @RequestParam("notify") String notify) {
+    
+    //NOTE: Making STOMP messages persist makes this obsolete
     try {
-      Thread.sleep(2000);
+      Thread.sleep(500);
     } catch (InterruptedException ex) {
-      logger.error("Thread stopped unexceptedly");
+      logger.error("Sandbox thread stopped unexpectedly");
     }
 
     logger.debug("TOKEN::::::" + token);
+    logger.debug("NOTIFY:::::" + notify);
 
     RestTemplate restTemplate = new RestTemplate();
 
@@ -63,14 +62,14 @@ public class FakeSandboxController {
     HttpEntity<MultiValueMap<String, String>> request = buildResponseEntity(
           generateSubmission(token), headers);
 
-    restTemplate.postForLocation("http://localhost:8080/submission-result", request, String.class);
+    restTemplate.postForLocation(notify, request, String.class);
 
     SubmissionResponse sr = new SubmissionResponse();
     sr.setStatus("ok");
     return ResponseEntity.status(HttpStatus.OK).body(sr);
   }
 
-  // TODO: Encapsulate this behaviour in another class
+  // TODO: Encapsulate this behaviour in a service
   private Submission generateSubmission(String token) {
     Submission submission = submissionRepository.findOne(UUID.fromString(token));
 
