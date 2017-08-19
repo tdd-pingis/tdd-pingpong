@@ -1,8 +1,4 @@
 spring:
-  http:
-    multipart:
-     max-file-size: 40Mb
-     max-request-size: 40Mb
   h2:
     console:
       enabled: true

@@ -16,8 +16,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import pingis.config.SandboxSubmissionProperties;
-import pingis.entities.sandbox.Submission;
-import pingis.repositories.sandbox.SubmissionRepository;
 
 @Service
 public class SubmissionSenderService {

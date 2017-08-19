@@ -1,8 +1,6 @@
-
 package pingis.utils;
 
 import java.util.List;
-import org.apache.tomcat.util.http.fileupload.InvalidFileNameException;
 import pingis.entities.Challenge;
 import pingis.entities.Task;
 
@@ -32,21 +30,21 @@ public class JavaClassGenerator {
   }
 
   public static String generateImplClassFilename(Challenge challenge)
-      throws InvalidFileNameException {
+      throws IllegalArgumentException {
     checkNameLength(challenge.getName());
     return "src/" + challenge.getName().replaceAll("[\\s+]", "") + ".java";
   }
 
   public static String generateTestClassFilename(Challenge challenge)
-      throws InvalidFileNameException {
+      throws IllegalArgumentException {
     checkNameLength(challenge.getName());
     return "test/" + challenge.getName().replaceAll("[\\s+]", "") + "Test.java";
   }
 
-  private static void checkNameLength(String string) throws InvalidFileNameException {
+  private static void checkNameLength(String string) throws IllegalArgumentException {
     if (string.length() > MAX_LINE_LENGTH) {
-      throw new InvalidFileNameException(string,
-          "Given string is too long. max length is " + MAX_LINE_LENGTH);
+      throw new IllegalArgumentException(
+              "Given string is too long. max length is " + MAX_LINE_LENGTH);
     }
   }
 

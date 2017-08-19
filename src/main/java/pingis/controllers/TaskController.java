@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.commons.compress.archivers.ArchiveException;
-import org.apache.commons.lang3.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +32,6 @@ import pingis.services.sandbox.SandboxService;
 import pingis.utils.EditorTabData;
 import pingis.utils.JavaClassGenerator;
 import pingis.utils.JavaSyntaxChecker;
-
 
 @Controller
 public class TaskController {
@@ -146,7 +144,7 @@ public class TaskController {
     if (task.getType() == TaskType.IMPLEMENTATION) {
       TaskInstance testTaskInstance = taskInstanceService.findOne(testTaskInstanceId);
       newTaskInstance.setTestTaskInstance(testTaskInstance);
-      testTaskInstance.addImplementionTaskInstance(newTaskInstance);
+      testTaskInstance.addImplementationTaskInstance(newTaskInstance);
       taskInstanceService.save(newTaskInstance);
       taskInstanceService.save(testTaskInstance);
     }

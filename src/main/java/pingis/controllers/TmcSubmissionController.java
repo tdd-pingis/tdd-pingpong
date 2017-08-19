@@ -24,14 +24,14 @@ public class TmcSubmissionController {
   // be a simple way to rename fields when doing data binding.
   @PostMapping("/submission-result")
   public ResponseEntity submissionResult(
-          @RequestParam("test_output") String testOutput,
-          @RequestParam String stdout,
-          @RequestParam String stderr,
-          @RequestParam String validations,
-          @RequestParam("vm_log") String vmLog,
-          @RequestParam String token,
-          @RequestParam String status,
-          @RequestParam("exit_code") String exitCode) throws IOException {
+      @RequestParam("test_output") String testOutput,
+      @RequestParam String stdout,
+      @RequestParam String stderr,
+      @RequestParam String validations,
+      @RequestParam("vm_log") String vmLog,
+      @RequestParam String token,
+      @RequestParam String status,
+      @RequestParam("exit_code") String exitCode) throws IOException {
     logger.debug("Received a response from TMC sandbox");
 
     UUID submissionId = UUID.fromString(token);

@@ -25,7 +25,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   public void configure(WebSecurity web) throws Exception {
     // The TMC sandbox POSTs its results here and doesn't support authentication, so
     // skip authorization checks etc. for /submission-result.
-    web.ignoring().antMatchers(HttpMethod.POST, "/submission-result");
+    web.ignoring().antMatchers(HttpMethod.POST, "/submission-result", "/tasks.json");
   }
 
   @Autowired

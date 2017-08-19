@@ -2,7 +2,6 @@ apply from: 'gradle/helpers/test-printing.gradle'
 
 tasks.withType(Test).all {
     systemProperty "spring.profiles.active", "dev"
-    systemProperty "cucumber.options", "--tags @dev"
 }
 
 task unit (type: Test) {

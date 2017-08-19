@@ -1,6 +1,5 @@
 package pingis.services;
 
-
 public class IoStub implements Io {
 
   private String[] data = {
