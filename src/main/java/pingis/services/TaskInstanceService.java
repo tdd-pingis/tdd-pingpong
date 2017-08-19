@@ -1,4 +1,3 @@
-
 package pingis.services;
 
 import java.util.ArrayList;

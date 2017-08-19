@@ -47,8 +47,6 @@ import pingis.services.UserService;
 import pingis.services.sandbox.SandboxService;
 import pingis.utils.EditorTabData;
 
-
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(TaskController.class)
 @ContextConfiguration(classes = {TaskController.class, SecurityConfig.class, OAuthProperties.class})
@@ -221,5 +219,3 @@ public class TaskControllerTest {
         .andExpect(content().string(containsString(expectedContent)));
   }
 }
-
-

@@ -1,4 +1,3 @@
-@dev
 Feature: Content check for multiple editor tabs
 
   Scenario Outline: <user> can examine content in multiple editors
@@ -13,5 +12,3 @@ Feature: Content check for multiple editor tabs
       |User   |test/CalculatorTest.java |public void testMultiplication        |task/1        |
       |User   |test/CalculatorTest.java |CalculatorTest                        |task/2        |
       |Admin  |src/Calculator.java      |add                                   |task/3        |
-
-

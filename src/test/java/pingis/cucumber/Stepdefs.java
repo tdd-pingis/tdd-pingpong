@@ -27,13 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 @ContextConfiguration
 public class Stepdefs {
 
-  @Value("${TMC_TEST_USER_LOGIN:dummy}")
-  private String tmcLogin;
-  @Value("${TMC_TEST_USER_PASSWORD:dummy}")
-  private String tmcPassword;
-  @Value("${CUKE_WAIT_TIME:4}")
-  private static int DRIVER_WAIT_TIME;
-
+  private static final int DRIVER_WAIT_TIME = 4;
   private static final int LOAD_WAIT_TIME = 1000;
 
   WebDriver driver;
@@ -90,11 +84,6 @@ public class Stepdefs {
   public void inputs_username_and_password(String username, String password) throws Throwable {
     findByName("username field").sendKeys(username);
     findByName("password field").sendKeys(password);
-  }
-
-  @And("^inputs their TMC username and password$")
-  public void inputs_username_and_password() throws Throwable {
-    inputs_username_and_password(tmcLogin, tmcPassword);
   }
 
   @Then(".*is successfully authenticated$")
