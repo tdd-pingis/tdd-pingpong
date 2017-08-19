@@ -59,6 +59,7 @@ public class LiveChallengeController {
 
   @RequestMapping(value = "/newtaskpair")
   public String newTaskPair(Model model) {
+    // TODO: add checks
     return "newtaskpair";
   }
 
@@ -77,7 +78,6 @@ public class LiveChallengeController {
 //      return new RedirectView("/createTaskPair");
 //    }
     
-    // create and save new tasks, redirect to createtaskinstance
     Challenge currentChallenge = challengeService.findOne(challengeId);
     int numberOfTasks = gameplayService.getNumberOfTasks(currentChallenge);
     int nextIndex = numberOfTasks / 2 + 1;
@@ -127,7 +127,8 @@ public class LiveChallengeController {
         redirectAttributes.addAttribute("Current user saved as a participant"
             + " (second player) to current challenge.");
       } else {
-        redirectAttributes.addAttribute("message", "naaaaaughty!");
+        redirectAttributes.addFlashAttribute("message",
+            "this is not your challenge");
         return new RedirectView("/error");
       }
     }
@@ -164,7 +165,7 @@ public class LiveChallengeController {
       redirectAttributes.addAttribute("testTaskInstanceId",
           taskInstanceService.getByTaskAndUser(testTask, testTask.getAuthor()).getId());
       logger.info("Found uneven number of completed taskinstances, "
-              + "redirecting to \"/newtaskpair\"");
+              + "redirecting to \"/newtaskinstance\"");
       return new RedirectView("/newTaskInstance");
     }
     

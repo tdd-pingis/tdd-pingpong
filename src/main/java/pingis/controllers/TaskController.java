@@ -62,7 +62,8 @@ public class TaskController {
       model.addAttribute("errormessage", "no such task instance");
       return "error";
     }
-    
+
+    // uncommenting these lines will break some cucumber tests
     /*if (!taskInstanceService.canContinue(taskInstance, userService.getCurrentUser())) {
       return "redirect:/error";
     }*/
