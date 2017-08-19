@@ -27,12 +27,12 @@ public class TaskService {
 
   public Task findTaskInChallenge(Long challengeId, int taskId) {
     // Implement validation here
-    return challengeRepository.findOne(challengeId).getTasks().get(taskId);
+    return challengeRepository.findById(challengeId).get().getTasks().get(taskId);
   }
 
   public Task findOne(Long taskId) {
     // Implement validation here
-    return taskRepository.findOne(taskId);
+    return taskRepository.findById(taskId).get();
   }
 
   public Task save(Task newTask) {
@@ -47,12 +47,12 @@ public class TaskService {
   public Task delete(Long taskId) {
     //Implement validation here
     Task t = findOne(taskId);
-    taskRepository.delete(taskId);
+    taskRepository.deleteById(taskId);
     return t;
   }
 
   public boolean contains(Long taskId) {
-    return taskRepository.exists(taskId);
+    return taskRepository.existsById(taskId);
   }
 
   //Relies on the ordering of task types, may not always be the case...

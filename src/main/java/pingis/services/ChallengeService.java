@@ -19,7 +19,7 @@ public class ChallengeService {
 
   public Challenge findOne(Long challengeId) {
     // Implement validation here
-    return challengeRepository.findOne(challengeId);
+    return challengeRepository.findById(challengeId).get();
   }
 
   public Challenge save(Challenge newChallenge) {
@@ -34,7 +34,7 @@ public class ChallengeService {
   public Challenge delete(Long challengeId) {
     //Implement validation here
     Challenge c = findOne(challengeId);
-    challengeRepository.delete(challengeId);
+    challengeRepository.deleteById(challengeId);
     return c;
   }
 
@@ -44,7 +44,7 @@ public class ChallengeService {
   }
 
   public boolean contains(Long challengeId) {
-    return challengeRepository.exists(challengeId);
+    return challengeRepository.existsById(challengeId);
   }
 
   public Challenge findByName(String name) {

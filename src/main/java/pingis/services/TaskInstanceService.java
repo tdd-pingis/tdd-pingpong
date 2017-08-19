@@ -30,7 +30,7 @@ public class TaskInstanceService {
             taskRepository
                 .findByIndexAndChallengeAndType(implTaskInstance.getTask().getIndex(),
                     implTaskInstance.getTask().getChallenge(), TaskType.TEST),
-            userRepository.findOne(0L));
+            userRepository.findById(0L).get());
   }
 
 
@@ -39,17 +39,17 @@ public class TaskInstanceService {
         .findByTaskAndUser(
             taskRepository.findByIndexAndChallengeAndType(testTaskInstance.getTask().getIndex(),
                 testTaskInstance.getTask().getChallenge(), TaskType.IMPLEMENTATION),
-            userRepository.findOne(0L));
+            userRepository.findById(0L).get());
   }
 
   public TaskInstance findOne(long taskInstanceId) {
-    return taskInstanceRepository.findOne(taskInstanceId);
+    return taskInstanceRepository.findById(taskInstanceId).get();
 
   }
 
   @Transactional
   public TaskInstance updateTaskInstanceCode(Long taskInstanceId, String taskInstanceCode) {
-    TaskInstance taskInstanceToUpdate = taskInstanceRepository.findOne(taskInstanceId);
+    TaskInstance taskInstanceToUpdate = taskInstanceRepository.findById(taskInstanceId).get();
     taskInstanceToUpdate.setCode(taskInstanceCode);
     return taskInstanceToUpdate;
   }

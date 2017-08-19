@@ -5,6 +5,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,7 +69,7 @@ public class TaskInstanceServiceTest {
 
   @Test
   public void getCorrespondingTestTaskInstanceTest() {
-    when(userRepositoryMock.findOne(0L)).thenReturn(testUser);
+    when(userRepositoryMock.findById(0L)).thenReturn(Optional.of(testUser));
     when(taskRepositoryMock.findByIndexAndChallengeAndType(implementationTask
         .getIndex(), testChallenge, TaskType.TEST))
         .thenReturn(testTask);
@@ -80,7 +81,7 @@ public class TaskInstanceServiceTest {
 
     assertEquals(result, testTaskInstance);
 
-    verify(userRepositoryMock).findOne(0L);
+    verify(userRepositoryMock).findById(0L);
     verify(taskRepositoryMock)
         .findByIndexAndChallengeAndType(
             implementationTask.getIndex(),
@@ -95,7 +96,7 @@ public class TaskInstanceServiceTest {
 
   @Test
   public void getCorrespondingImplementationTaskInstanceTest() {
-    when(userRepositoryMock.findOne(0L)).thenReturn(testUser);
+    when(userRepositoryMock.findById(0L)).thenReturn(Optional.of(testUser));
     when(taskRepositoryMock.findByIndexAndChallengeAndType(
         testTask.getIndex(),
         testChallenge,
@@ -109,7 +110,7 @@ public class TaskInstanceServiceTest {
 
     assertEquals(result, implementationTaskInstance);
 
-    verify(userRepositoryMock).findOne(0L);
+    verify(userRepositoryMock).findById(0L);
     verify(taskRepositoryMock).findByIndexAndChallengeAndType(
         testTask.getIndex(),
         testChallenge,
@@ -125,12 +126,12 @@ public class TaskInstanceServiceTest {
 
   @Test
   public void testFindOne() {
-    when(taskInstanceRepositoryMock.findOne(testTaskInstance.getId()))
-        .thenReturn(testTaskInstance);
+    when(taskInstanceRepositoryMock.findById(testTaskInstance.getId()))
+        .thenReturn(Optional.of(testTaskInstance));
 
     TaskInstance result = taskInstanceService.findOne(testTaskInstance.getId());
 
-    verify(taskInstanceRepositoryMock).findOne(testTaskInstance.getId());
+    verify(taskInstanceRepositoryMock).findById(testTaskInstance.getId());
     verifyNoMoreInteractions(taskInstanceRepositoryMock);
 
     assertEquals(result, testTaskInstance);
@@ -141,15 +142,15 @@ public class TaskInstanceServiceTest {
   public void testUpdateTaskInstanceCode() {
     assertEquals("thisShouldBeEmpty", testTaskInstance.getCode());
 
-    when(taskInstanceRepositoryMock.findOne(testTaskInstance.getId()))
-        .thenReturn(testTaskInstance);
+    when(taskInstanceRepositoryMock.findById(testTaskInstance.getId()))
+        .thenReturn(Optional.of(testTaskInstance));
 
     String testCode = "Return 1+1;";
 
     TaskInstance result = taskInstanceService
         .updateTaskInstanceCode(testTaskInstance.getId(), testCode);
 
-    verify(taskInstanceRepositoryMock).findOne(testTaskInstance.getId());
+    verify(taskInstanceRepositoryMock).findById(testTaskInstance.getId());
     verifyNoMoreInteractions(taskInstanceRepositoryMock);
 
     assertEquals(testCode, result.getCode());

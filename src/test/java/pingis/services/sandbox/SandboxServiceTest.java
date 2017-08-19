@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import org.junit.Before;
@@ -114,7 +115,7 @@ public class SandboxServiceTest {
 
   @Test
   public void doubleUpdateResult() throws Exception {
-    when(submissionRepository.findOne(submissionId)).thenReturn(submission);
+    when(submissionRepository.findById(submissionId)).thenReturn(Optional.of(submission));
 
     boolean firstResult = updateSubmission(submissionId, ResultStatus.PASSED);
     boolean secondResult = updateSubmission(submissionId, ResultStatus.PASSED);
@@ -124,13 +125,13 @@ public class SandboxServiceTest {
     assertTrue(firstResult);
     assertFalse(secondResult);
 
-    verify(submissionRepository, times(2)).findOne(submissionId);
+    verify(submissionRepository, times(2)).findById(submissionId);
     verifyNoMoreInteractions(submissionRepository);
   }
 
   @Test
   public void successfullyUpdateResult() throws Exception {
-    when(submissionRepository.findOne(submissionId)).thenReturn(submission);
+    when(submissionRepository.findById(submissionId)).thenReturn(Optional.of(submission));
 
     boolean result = updateSubmission(submissionId, ResultStatus.TESTS_FAILED);
 
@@ -139,14 +140,14 @@ public class SandboxServiceTest {
     assertTrue(result);
     checkSubmission(submissionId, submissionArgumentCaptor.getValue());
 
-    verify(submissionRepository).findOne(submissionId);
+    verify(submissionRepository).findById(submissionId);
     verify(taskInstanceService).markAsDone(submission.getTaskInstance());
     verifyNoMoreInteractions(submissionRepository, taskInstanceService);
   }
 
   @Test
   public void updateResultWithCompileFailure() throws Exception {
-    when(submissionRepository.findOne(submissionId)).thenReturn(submission);
+    when(submissionRepository.findById(submissionId)).thenReturn(Optional.of(submission));
 
     boolean result = updateSubmission(submissionId, ResultStatus.COMPILE_FAILED);
 
@@ -155,7 +156,7 @@ public class SandboxServiceTest {
     assertTrue(result);
     checkSubmission(submissionId, submissionArgumentCaptor.getValue());
 
-    verify(submissionRepository).findOne(submissionId);
+    verify(submissionRepository).findById(submissionId);
     verifyNoMoreInteractions(submissionRepository, taskInstanceService);
   }
 
@@ -164,7 +165,7 @@ public class SandboxServiceTest {
     // Tests failing in implementation task == failure
     submission.getTaskInstance().getTask().setType(TaskType.IMPLEMENTATION);
 
-    when(submissionRepository.findOne(submissionId)).thenReturn(submission);
+    when(submissionRepository.findById(submissionId)).thenReturn(Optional.of(submission));
 
     boolean result = updateSubmission(submissionId, ResultStatus.TESTS_FAILED);
 
@@ -173,7 +174,7 @@ public class SandboxServiceTest {
     assertTrue(result);
     checkSubmission(submissionId, submissionArgumentCaptor.getValue());
 
-    verify(submissionRepository).findOne(submissionId);
+    verify(submissionRepository).findById(submissionId);
     verifyNoMoreInteractions(submissionRepository, taskInstanceService);
   }
 

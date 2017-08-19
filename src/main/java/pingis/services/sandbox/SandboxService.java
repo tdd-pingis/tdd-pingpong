@@ -46,7 +46,7 @@ public class SandboxService {
   public boolean updateSubmissionResult(UUID submissionId, String testOutput, String stdout,
       String stderr, String validations, String vmLog, String status, int exitCode)
       throws IOException {
-    Submission submission = submissionRepository.findOne(submissionId);
+    Submission submission = submissionRepository.findById(submissionId).get();
 
     if (submission == null || submission.getStatus() != SubmissionStatus.PENDING) {
       logger.error("Submission {} exists, ignoring duplicate update", submissionId);
