@@ -1,5 +1,6 @@
 package pingis.services;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,8 +44,12 @@ public class TaskInstanceService {
   }
 
   public TaskInstance findOne(long taskInstanceId) {
-    return taskInstanceRepository.findById(taskInstanceId).get();
-
+    Optional<TaskInstance> opt = taskInstanceRepository.findById(taskInstanceId);
+    if (opt.isPresent()) {
+      return opt.get();
+    } else {
+      return null;
+    }
   }
 
   @Transactional

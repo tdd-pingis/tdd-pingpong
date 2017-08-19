@@ -130,6 +130,17 @@ public class SandboxServiceTest {
   }
 
   @Test
+  public void nonExistentUpdateResult() throws Exception {
+    when(submissionRepository.findById(submissionId)).thenReturn(Optional.empty());
+
+    boolean result = updateSubmission(submissionId, null);
+
+    assertFalse(result);
+    verify(submissionRepository, times(1)).findById(submissionId);
+    verifyNoMoreInteractions(submissionRepository);
+  }
+
+  @Test
   public void successfullyUpdateResult() throws Exception {
     when(submissionRepository.findById(submissionId)).thenReturn(Optional.of(submission));
 

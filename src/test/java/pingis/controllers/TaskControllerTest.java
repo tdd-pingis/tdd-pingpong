@@ -210,6 +210,18 @@ public class TaskControllerTest {
     verifyNoMoreInteractions(taskServiceMock);
   }
 
+  @Test
+  public void givenErrorWhenGetNonExistentTask() throws Exception {
+    when(taskInstanceServiceMock.findOne(123))
+        .thenReturn(null);
+    mvc.perform(get("/task/123"))
+        .andExpect(status().isOk())
+        .andExpect(view().name("error"));
+    verify(taskInstanceServiceMock, times(1)).findOne(123);
+    verifyNoMoreInteractions(taskInstanceServiceMock);
+    verifyNoMoreInteractions(editorServiceMock);
+  }
+
   private void performSimpleGetRequestAndFindContent(String uri,
       String viewName,
       String expectedContent) throws Exception {
