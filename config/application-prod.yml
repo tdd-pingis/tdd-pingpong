@@ -12,4 +12,4 @@ security:
         redirectUri: https://pingis.testmycode.io/oauth2/authorize/code/tmc
 
 server:
-use-forward-headers: true
+  use-forward-headers: true
