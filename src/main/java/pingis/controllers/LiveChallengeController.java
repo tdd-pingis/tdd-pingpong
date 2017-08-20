@@ -72,34 +72,19 @@ public class LiveChallengeController {
       RedirectAttributes redirectAttributes) {
     
     Challenge currentChallenge = challengeService.findOne(challengeId);
-    int numberOfTasks = gameplayService.getNumberOfTasks(currentChallenge);
-    int nextIndex = numberOfTasks / 2 + 1;
-    User currentUser = userService.getCurrentUser();
-    Task testTask = new Task(nextIndex,
-        TaskType.TEST,
-        currentUser,
-        testTaskName,
-        testTaskDesc,
-        testCodeStub,
-        1, 1);
-    Task implTask = new Task(nextIndex,
-        TaskType.IMPLEMENTATION,
-        currentUser,
+    Task testTask = gameplayService.generateTaskPairAndTaskInstance(testTaskName,
         implementationTaskName,
+        testTaskDesc,
         implementationTaskDesc,
+        testCodeStub,
         implementationCodeStub,
-        1, 1);
-    currentChallenge.addTask(testTask);
-    currentChallenge.addTask(implTask);
-    testTask.setChallenge(currentChallenge);
-    implTask.setChallenge(currentChallenge);
-    taskService.save(testTask);
-    taskService.save(implTask);
-    TaskInstance newTestTaskInstance = taskInstanceService.createEmpty(currentUser, testTask);
+        currentChallenge);
     redirectAttributes.addAttribute("taskId", testTask.getId());
     redirectAttributes.addAttribute("testTaskInstanceId", 0L);
     return new RedirectView("/playTurn/" + currentChallenge.getId());
   }
+
+
 
   @RequestMapping(value = "/playTurn/{challengeId}")
   public RedirectView playTurn(Model model, @PathVariable Long challengeId,

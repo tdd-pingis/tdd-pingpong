@@ -3,6 +3,7 @@ package pingis.services;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -54,10 +55,12 @@ public class GameplayServiceTest {
   private Task firstImplTask;
   private Task secondTestTask;
   private Task secondImplTask;
+  private ArgumentCaptor<Task> testTaskCaptor;
 
   @Before
   public void setUp() {
     createUserChallengeAndTAsks();
+    testTaskCaptor = ArgumentCaptor.forClass(Task.class);
   }
 
 
@@ -223,7 +226,6 @@ public class GameplayServiceTest {
     assertEquals(secondTestTask.getDesc(),
         gameplayService.getTopmostTestTask(testChallenge).getDesc());
     verify(taskServiceMock).findAllByChallenge(testChallenge);
-    verifyNoMoreInteractions(taskServiceMock);
   }
 
   @Test
@@ -238,5 +240,28 @@ public class GameplayServiceTest {
     verify(userServiceMock).getCurrentUser();
     verifyNoMoreInteractions(challengeServiceMock);
     verifyNoMoreInteractions(userServiceMock);
+  }
+
+  @Test
+  public void testGenerateTasksAndInstance() {
+    List<Task> tasks = new ArrayList();
+    tasks.add(firstTestTask);
+    tasks.add(firstImplTask);
+    tasks.add(secondTestTask);
+    tasks.add(secondImplTask);
+    when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
+    when(userServiceMock.getCurrentUser()).thenReturn(testUser);
+    TaskInstance testTaskInstance = new TaskInstance(testUser, "koodii", firstTestTask);
+    when(taskInstanceServiceMock.createEmpty(any(), any())).thenReturn(testTaskInstance);
+    Task testTask = gameplayService.generateTaskPairAndTaskInstance("testitaski",
+        "toteutustaski",
+        "testikuvaus",
+        "toteutuskuvaus",
+        "testitynkä",
+        "toteutustynkä", testChallenge);
+    verify(taskServiceMock).findAllByChallenge(testChallenge);
+    verify(userServiceMock).getCurrentUser();
+    verify(taskServiceMock, times(2)).save(testTaskCaptor.capture());
+    assertEquals("testikuvaus", testTask.getDesc());
   }
 }

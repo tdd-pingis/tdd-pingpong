@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pingis.entities.Challenge;
 import pingis.entities.Task;
+import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
@@ -113,6 +114,35 @@ public class GameplayService {
     } else {
       return null;
     }
+  }
+
+  public Task generateTaskPairAndTaskInstance(String testTaskName, String implementationTaskName,
+      String testTaskDesc, String implementationTaskDesc, String testCodeStub,
+      String implementationCodeStub, Challenge currentChallenge) {
+    int nextIndex = getNumberOfTasks(currentChallenge) / 2 + 1;
+    User currentUser = userService.getCurrentUser();
+    Task testTask = new Task(nextIndex,
+        TaskType.TEST,
+        currentUser,
+        testTaskName,
+        testTaskDesc,
+        testCodeStub,
+        1, 1);
+    Task implTask = new Task(nextIndex,
+        TaskType.IMPLEMENTATION,
+        currentUser,
+        implementationTaskName,
+        implementationTaskDesc,
+        implementationCodeStub,
+        1, 1);
+    currentChallenge.addTask(testTask);
+    currentChallenge.addTask(implTask);
+    testTask.setChallenge(currentChallenge);
+    implTask.setChallenge(currentChallenge);
+    taskService.save(testTask);
+    taskService.save(implTask);
+    TaskInstance newTestTaskInstance = taskInstanceService.createEmpty(currentUser, testTask);
+    return testTask;
   }
 
 }
