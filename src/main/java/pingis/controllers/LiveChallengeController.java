@@ -127,32 +127,42 @@ public class LiveChallengeController {
     }
 
     if (gameplayService.isTestTurnInLiveChallenge(currentChallenge)) {
-      redirectAttributes.addFlashAttribute("challengeId", currentChallenge.getId());
-      redirectAttributes.addFlashAttribute("challenge", currentChallenge);
-      redirectAttributes.addFlashAttribute("minLength", GameplayService.CHALLENGE_MIN_LENGTH);
-      logger.info("Found even number of completed taskinstances, "
-          + "current user has turn, redirecting to \"/newtaskpair\"");
-      
-      return new RedirectView("/newtaskpair");
+      return playTestTurn(redirectAttributes, currentChallenge);
     }
 
     if (gameplayService.isImplementationTurnInLiveChallenge(currentChallenge)) {
-      Task implTask = gameplayService.getTopmostImplementationTask(currentChallenge);
-      logger.info("implementation task: " + implTask.toString());
-      Task testTask = gameplayService.getTopmostTestTask(currentChallenge);
-      logger.info("test task: " + testTask.toString());
-      redirectAttributes.addAttribute("taskId", implTask.getId());
-      redirectAttributes.addAttribute("testTaskInstanceId",
-          taskInstanceService.getByTaskAndUser(testTask, testTask.getAuthor()).getId());
-      logger.info("Found uneven number of completed taskinstances, "
-          + "current user has turn, "
-              + "redirecting to \"/newtaskinstance\"");
-      return new RedirectView("/newTaskInstance");
+      return playImplementationTurn(redirectAttributes, currentChallenge);
     }
     
     logger.info("Not user's turn, redirecting to \"/user\"");
     return new RedirectView("/user");
 
+  }
+
+  private RedirectView playImplementationTurn(RedirectAttributes redirectAttributes,
+      Challenge currentChallenge) {
+    Task implTask = gameplayService.getTopmostImplementationTask(currentChallenge);
+    logger.info("implementation task: " + implTask.toString());
+    Task testTask = gameplayService.getTopmostTestTask(currentChallenge);
+    logger.info("test task: " + testTask.toString());
+    redirectAttributes.addAttribute("taskId", implTask.getId());
+    redirectAttributes.addAttribute("testTaskInstanceId",
+        taskInstanceService.getByTaskAndUser(testTask, testTask.getAuthor()).getId());
+    logger.info("Found uneven number of completed taskinstances, "
+        + "current user has turn, "
+            + "redirecting to \"/newtaskinstance\"");
+    return new RedirectView("/newTaskInstance");
+  }
+
+  private RedirectView playTestTurn(RedirectAttributes redirectAttributes,
+      Challenge currentChallenge) {
+    redirectAttributes.addFlashAttribute("challengeId", currentChallenge.getId());
+    redirectAttributes.addFlashAttribute("challenge", currentChallenge);
+    redirectAttributes.addFlashAttribute("minLength", GameplayService.CHALLENGE_MIN_LENGTH);
+    logger.info("Found even number of completed taskinstances, "
+        + "current user has turn, redirecting to \"/newtaskpair\"");
+
+    return new RedirectView("/newtaskpair");
   }
 
   @RequestMapping("/closeChallenge/{challengeId}")
