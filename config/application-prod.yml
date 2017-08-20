@@ -6,7 +6,10 @@ security:
   oauth2:
     client:
       tmc:
+        authorizationUri: https://tmc.mooc.fi/oauth/authorize
+        tokenUri: https://tmc.mooc.fi/oauth/token
+        userInfoUri: https://tmc.mooc.fi/api/v8/users/current
         redirectUri: https://pingis.testmycode.io/oauth2/authorize/code/tmc
 
 server:
-  use-forward-headers: true
+use-forward-headers: true
