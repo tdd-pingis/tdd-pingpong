@@ -53,13 +53,14 @@ public class LiveChallengeController {
     newChallenge.setLevel(1);
     newChallenge.setOpen(true);
     newChallenge = challengeService.save(newChallenge);
-    logger.info(newChallenge.toString());
+    logger.info("Created new challenge: " + newChallenge.toString());
     return new RedirectView("/playTurn/" + newChallenge.getId());
   }
 
   @RequestMapping(value = "/newtaskpair")
   public String newTaskPair(Model model) {
     // TODO: add checks
+    logger.info("Displaying new task pair -form.");
     return "newtaskpair";
   }
 
@@ -69,14 +70,6 @@ public class LiveChallengeController {
       String testCodeStub, String implementationCodeStub,
       long challengeId,
       RedirectAttributes redirectAttributes) {
-    
-//    String[] errors = JavaSyntaxChecker.checkTaskPairErrors(implementationCodeStub, testCodeStub);
-//    if (errors != null) {
-//      redirectAttributes.addFlashAttribute("errors", errors);
-//      redirectAttributes.addAttribute("challengeId", challengeId);
-//      
-//      return new RedirectView("/createTaskPair");
-//    }
     
     Challenge currentChallenge = challengeService.findOne(challengeId);
     int numberOfTasks = gameplayService.getNumberOfTasks(currentChallenge);
@@ -124,9 +117,10 @@ public class LiveChallengeController {
       if (currentChallenge.getSecondPlayer() == null) {
         currentChallenge.setSecondPlayer(userService.getCurrentUser());
         challengeService.save(currentChallenge);
-        redirectAttributes.addAttribute("Current user saved as a participant"
+        logger.info("Current user saved as a participant"
             + " (second player) to current challenge.");
       } else {
+        logger.info("Current user not a player in this challenge. Redirecting to /error.");
         redirectAttributes.addFlashAttribute("message",
             "this is not your challenge");
         return new RedirectView("/error");
@@ -135,11 +129,11 @@ public class LiveChallengeController {
     
     TaskInstance unfinished = challengeService.getUnfinishedTaskInstance(currentChallenge);
     logger.info("Unfinished task inside current challenge fetched: " + unfinished);
+
     if (unfinished != null && unfinished.getUser().equals(userService.getCurrentUser())) {
-      //redirectAttributes.addAttribute("taskInstanceId", unfinished.getId());
       logger.info("Found unfinished taskinstance owned by current user, redirecting to \"/task\"");
-      
       return new RedirectView("/task/" + unfinished.getId());
+
     } else if (unfinished != null
         && !unfinished.getUser().equals(userService.getCurrentUser())) {
       logger.info("Unfinished taskinstance found, but not owned by the"
@@ -151,7 +145,8 @@ public class LiveChallengeController {
       redirectAttributes.addFlashAttribute("challengeId", currentChallenge.getId());
       redirectAttributes.addFlashAttribute("challenge", currentChallenge);
       redirectAttributes.addFlashAttribute("minLength", GameplayService.CHALLENGE_MIN_LENGTH);
-      logger.info("Found even number of completed taskinstances, redirecting to \"/newtaskpair\"");
+      logger.info("Found even number of completed taskinstances, "
+          + "current user has turn, redirecting to \"/newtaskpair\"");
       
       return new RedirectView("/newtaskpair");
     }
@@ -165,6 +160,7 @@ public class LiveChallengeController {
       redirectAttributes.addAttribute("testTaskInstanceId",
           taskInstanceService.getByTaskAndUser(testTask, testTask.getAuthor()).getId());
       logger.info("Found uneven number of completed taskinstances, "
+          + "current user has turn, "
               + "redirecting to \"/newtaskinstance\"");
       return new RedirectView("/newTaskInstance");
     }
@@ -178,9 +174,16 @@ public class LiveChallengeController {
   public RedirectView closeChallenge(@PathVariable Long challengeId,
       RedirectAttributes redirectAttributes) {
     Challenge currentChallenge = challengeService.findOne(challengeId);
+    if (!gameplayService.isParticipating(currentChallenge)) {
+      logger.info("User trying to close somebody elses challenge. Redirecting to /error.");
+      redirectAttributes.addFlashAttribute("message", "user not in challenge");
+      return new RedirectView("/error");
+    }
+
     currentChallenge.setOpen(false);
     challengeService.save(currentChallenge);
     redirectAttributes.addFlashAttribute("message", "Challenge closed.");
+    logger.info("Closing challenge: " + currentChallenge.getId());
     return new RedirectView("/user");
   }
 

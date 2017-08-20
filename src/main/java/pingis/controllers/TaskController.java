@@ -63,10 +63,8 @@ public class TaskController {
       return "error";
     }
 
-    // uncommenting these lines will break some cucumber tests
-    /*if (!taskInstanceService.canContinue(taskInstance, userService.getCurrentUser())) {
-      return "redirect:/error";
-    }*/
+    // TODO: check if taskinstance is owned by user, and is not marked as done
+
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
     model.addAttribute("challenge", currentChallenge);
     model.addAttribute("task", taskInstance.getTask());
