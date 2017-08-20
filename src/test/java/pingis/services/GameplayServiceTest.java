@@ -206,7 +206,7 @@ public class GameplayServiceTest {
     tasks.add(secondImplTask);
     when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
     assertEquals(secondImplTask.getDesc(),
-        gameplayService.getTopmostImplementationTask(testChallenge, 2)
+        gameplayService.getTopmostImplementationTask(testChallenge)
             .getDesc());
     verify(taskServiceMock).findAllByChallenge(testChallenge);
     verifyNoMoreInteractions(taskServiceMock);
@@ -221,7 +221,7 @@ public class GameplayServiceTest {
     tasks.add(secondImplTask);
     when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
     assertEquals(secondTestTask.getDesc(),
-        gameplayService.getTopmostTestTask(testChallenge, 2).getDesc());
+        gameplayService.getTopmostTestTask(testChallenge).getDesc());
     verify(taskServiceMock).findAllByChallenge(testChallenge);
     verifyNoMoreInteractions(taskServiceMock);
   }

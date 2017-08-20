@@ -157,9 +157,9 @@ public class LiveChallengeController {
     }
 
     if (gameplayService.isImplementationTurnInLiveChallenge(currentChallenge)) {
-      Task implTask = gameplayService.getTopmostImplementationTask(currentChallenge, index);
+      Task implTask = gameplayService.getTopmostImplementationTask(currentChallenge);
       logger.info("implementation task: " + implTask.toString());
-      Task testTask = gameplayService.getTopmostTestTask(currentChallenge, index);
+      Task testTask = gameplayService.getTopmostTestTask(currentChallenge);
       logger.info("test task: " + testTask.toString());
       redirectAttributes.addAttribute("taskId", implTask.getId());
       redirectAttributes.addAttribute("testTaskInstanceId",

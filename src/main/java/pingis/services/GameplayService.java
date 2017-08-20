@@ -80,8 +80,9 @@ public class GameplayService {
     return (currentUser.getId() == challenge.getSecondPlayer().getId());
   }
 
-  public Task getTopmostImplementationTask(Challenge challenge, int index) {
+  public Task getTopmostImplementationTask(Challenge challenge) {
     List<Task> tasks = taskService.findAllByChallenge(challenge);
+    int index = tasks.size() / 2;
     for (Task task : tasks) {
       if (task.getIndex() == index && task.getType() == TaskType.IMPLEMENTATION) {
         return task;
@@ -90,8 +91,9 @@ public class GameplayService {
     return null;
   }
 
-  public Task getTopmostTestTask(Challenge challenge, int index) {
+  public Task getTopmostTestTask(Challenge challenge) {
     List<Task> tasks = taskService.findAllByChallenge(challenge);
+    int index = tasks.size() / 2;
     for (Task task : tasks) {
       if (task.getIndex() == index && task.getType() == TaskType.TEST) {
         return task;
