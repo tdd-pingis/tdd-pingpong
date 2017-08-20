@@ -22,7 +22,11 @@ public class ChallengeTest {
 
   @Test
   public void testChallengeToString() {
-    assertEquals("Calculator: Calculator description", calculatorChallenge.toString());
+    assertEquals("Calculator: Calculator description\n"
+        + "type: MIXED\n"
+            + "level: 0\n"
+            + "author: ModelUser",
+        calculatorChallenge.toString());
   }
 
 }

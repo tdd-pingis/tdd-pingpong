@@ -41,13 +41,33 @@ public class Challenge {
   private float rating;
   private ChallengeType type;
 
-  @NotEmpty
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "challenge")
   private List<Task> tasks;
 
   @NotNull
   @ManyToOne(fetch = FetchType.EAGER)
   private User author;
+
+  public User getSecondPlayer() {
+    return secondPlayer;
+  }
+
+  public void setSecondPlayer(User secondPlayer) {
+    this.secondPlayer = secondPlayer;
+  }
+
+  @ManyToOne(fetch = FetchType.EAGER)
+  private User secondPlayer;
+
+  public boolean getIsOpen() {
+    return isOpen;
+  }
+
+  public void setOpen(boolean open) {
+    isOpen = open;
+  }
+
+  private boolean isOpen;
 
   protected Challenge() {
   }
@@ -58,6 +78,7 @@ public class Challenge {
     this.type = type;
     this.description = description;
     this.tasks = new ArrayList<>();
+    this.isOpen = false;
   }
 
   public Challenge(String name, User author, String description) {
@@ -87,6 +108,10 @@ public class Challenge {
 
   public String toString() {
     String out = this.name + ": " + this.description;
+    out += "\ntype: " + this.type.name();
+    out += "\nlevel: " + this.level;
+    out += "\nauthor: " + this.author.getName();
+    
     return out;
   }
 

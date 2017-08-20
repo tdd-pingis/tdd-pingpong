@@ -1,8 +1,11 @@
 package pingis.services;
 
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pingis.entities.Challenge;
 import pingis.entities.CodeStatus;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
@@ -59,6 +62,14 @@ public class TaskInstanceService {
     newTaskInstance.setCode(task.getCodeStub());
     return taskInstanceRepository.save(newTaskInstance);
   }
+  
+  public List<TaskInstance> getByUserAndChallenge(User user, Challenge challenge) {
+    List<TaskInstance> taskInstances = new ArrayList<>();
+    for (Task task : challenge.getTasks()) {
+      taskInstances.add(taskInstanceRepository.findByTaskAndUser(task, user));
+    }
+    return taskInstances;
+  }
 
 
   @Transactional
@@ -70,4 +81,44 @@ public class TaskInstanceService {
   public TaskInstance save(TaskInstance taskInstance) {
     return taskInstanceRepository.save(taskInstance);
   }
+
+  public List<TaskInstance> findAll() {
+    return (List<TaskInstance>) taskInstanceRepository.findAll();
+  }
+
+  public List<TaskInstance> getAllByChallenge(Challenge challenge) {
+    List<TaskInstance> taskInstances = new ArrayList();
+    List<TaskInstance> allTaskInstances = (List<TaskInstance>) taskInstanceRepository.findAll();
+    for (TaskInstance current : allTaskInstances) {
+      if (current.getTask().getChallenge().getId() == challenge.getId()) {
+        taskInstances.add(current);
+      }
+    }
+    return taskInstances;
+  }
+
+
+  public int getNumberOfDoneTaskInstancesInChallenge(Challenge challenge) {
+    int count = 0;
+    List<TaskInstance> allTaskInstances = (List<TaskInstance>) taskInstanceRepository.findAll();
+    for (TaskInstance current : allTaskInstances) {
+      if (current.getTask().getChallenge().getId() == challenge.getId()
+          && current.getStatus() == CodeStatus.DONE) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  public TaskInstance getByTaskAndUser(Task task, User user) {
+    return taskInstanceRepository.findByTaskAndUser(task, user);
+  }
+  
+  public boolean canContinue(TaskInstance taskInstance, User user) {
+    if (taskInstance.getStatus() == CodeStatus.DONE || !taskInstance.getUser().equals(user)) {
+      return false;
+    } 
+    return true;
+  }
+
 }
