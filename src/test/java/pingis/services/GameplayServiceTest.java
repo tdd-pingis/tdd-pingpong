@@ -254,14 +254,12 @@ public class GameplayServiceTest {
     TaskInstance testTaskInstance = new TaskInstance(testUser, "koodii", firstTestTask);
     when(taskInstanceServiceMock.createEmpty(any(), any())).thenReturn(testTaskInstance);
     Task testTask = gameplayService.generateTaskPairAndTaskInstance("testitaski",
-        "toteutustaski",
-        "testikuvaus",
-        "toteutuskuvaus",
-        "testitynkä",
+        "toteutustaski", "testikuvaus",
+        "toteutuskuvaus", "testitynkä",
         "toteutustynkä", testChallenge);
-    verify(taskServiceMock).findAllByChallenge(testChallenge);
-    verify(userServiceMock).getCurrentUser();
     verify(taskServiceMock, times(2)).save(testTaskCaptor.capture());
     assertEquals("testikuvaus", testTask.getDesc());
+    verify(taskServiceMock).findAllByChallenge(testChallenge);
+    verify(userServiceMock).getCurrentUser();
   }
 }
