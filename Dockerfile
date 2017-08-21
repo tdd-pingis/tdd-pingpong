@@ -7,7 +7,7 @@ ARG tmcsecret
 VOLUME /tmp
 
 # Add the jar and the properties to the working directory of the container
-COPY build/libs/tdd-pingpong-0.1.0.jar app.jar
+COPY build/libs/tdd-pingpong.jar app.jar
 COPY config config
 COPY tmc-assets tmc-assets
 

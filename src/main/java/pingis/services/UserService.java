@@ -1,6 +1,7 @@
 package pingis.services;
 
 import java.util.List;
+import java.util.Optional;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +24,11 @@ public class UserService {
 
   public User findOne(Long userId) {
     // Implement validation here
-    return userRepository.findOne(userId);
+    Optional<User> opt = userRepository.findById(userId);
+    if (opt.isPresent()) {
+      return opt.get();
+    }
+    return null;
   }
 
   public User save(User user) {
@@ -74,7 +79,7 @@ public class UserService {
   public User deleteById(Long userId) {
     //Implement validation here
     User c = findOne(userId);
-    userRepository.delete(userId);
+    userRepository.deleteById(userId);
     return c;
   }
 
@@ -86,7 +91,7 @@ public class UserService {
   }
 
   public boolean contains(Long userId) {
-    return userRepository.exists(userId);
+    return userRepository.existsById(userId);
   }
 
   public User findByName(String name) {

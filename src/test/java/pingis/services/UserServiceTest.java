@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import org.junit.Before;
 import org.junit.Test;
@@ -157,18 +158,18 @@ public class UserServiceTest {
 
   @Test
   public void testContains() {
-    when(userRepositoryMock.exists(testUser.getId())).thenReturn(true);
+    when(userRepositoryMock.existsById(testUser.getId())).thenReturn(true);
     userService.save(testUser);
 
     boolean contains = userService.contains(testUser.getId());
-    verify(userRepositoryMock).exists(testUser.getId());
+    verify(userRepositoryMock).existsById(testUser.getId());
     assertThat(contains).isTrue();
   }
 
   @Test
   public void testContainsWithTwoUsers() {
-    when(userRepositoryMock.exists(testUser.getId())).thenReturn(true);
-    when(userRepositoryMock.exists(testUser2.getId())).thenReturn(true);
+    when(userRepositoryMock.existsById(testUser.getId())).thenReturn(true);
+    when(userRepositoryMock.existsById(testUser2.getId())).thenReturn(true);
 
     userService.save(testUser);
     userService.save(testUser2);
@@ -176,8 +177,8 @@ public class UserServiceTest {
     boolean contains = userService.contains(testUser.getId());
     boolean contains2 = userService.contains(testUser2.getId());
 
-    verify(userRepositoryMock).exists(testUser.getId());
-    verify(userRepositoryMock).exists(testUser2.getId());
+    verify(userRepositoryMock).existsById(testUser.getId());
+    verify(userRepositoryMock).existsById(testUser2.getId());
     assertThat(contains && contains2).isTrue();
   }
 
@@ -214,13 +215,14 @@ public class UserServiceTest {
     oauthUser1.setName(TEST_USER2_NAME);
     oauthUser1.setId(randomUserIdString);
 
-    when(userRepositoryMock.findOne(Long.parseLong(randomUserIdString))).thenReturn(null);
+    when(userRepositoryMock.findById(Long.parseLong(randomUserIdString)))
+            .thenReturn(Optional.empty());
     when(userRepositoryMock.save(userCaptor.capture())).thenReturn(testUser2);
     User newUser = userService.handleOAuthUserAuthentication(oauthUser1);
 
     ArgumentCaptor<Long> capturedId = ArgumentCaptor.forClass(Long.class);
 
-    verify(userRepositoryMock).findOne(capturedId.capture());
+    verify(userRepositoryMock).findById(capturedId.capture());
     verify(userRepositoryMock, times(1)).save(userCaptor.capture());
 
     assertThat(newUser).isNotNull();
@@ -233,14 +235,14 @@ public class UserServiceTest {
     userService.save(testUser);
     verify(userRepositoryMock).save(userCaptor.capture());
 
-    when(userRepositoryMock.findOne((long) TEST_USER_ID)).thenReturn(testUser);
+    when(userRepositoryMock.findById((long) TEST_USER_ID)).thenReturn(Optional.of(testUser));
 
     TmcUserDto user = generateOauthTestUser();
     User newUser = userService.handleOAuthUserAuthentication(user);
 
     ArgumentCaptor<Long> capturedId = ArgumentCaptor.forClass(Long.class);
 
-    verify(userRepositoryMock).findOne(capturedId.capture());
+    verify(userRepositoryMock).findById(capturedId.capture());
     verify(userRepositoryMock).save(testUser);
     assertThat(newUser).isEqualTo(testUser);
     assertThat(capturedId.getValue()).isEqualTo((long) TEST_USER_ID);

@@ -48,7 +48,6 @@ public class UserController {
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   public String user(Model model, Principal principal) {
     User user = userService.handleUserAuthenticationByName(principal.getName());
-    LiveType liveType = null;
 
     MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
 
@@ -65,16 +64,13 @@ public class UserController {
     Challenge liveChallenge = gameplayService.getParticipatingLiveChallenge();
     Challenge randomLiveChallenge = challengeService.getRandomLiveChallenge(user);
 
+    LiveType liveType = null;
     if (liveChallenge == null && randomLiveChallenge == null) {
-      liveType = LiveType.CREATE;
-      model.addAttribute("liveChallengeType", liveType);
+      model.addAttribute("liveChallengeType", LiveType.CREATE);
     } else if (liveChallenge == null) {
-      liveType = LiveType.JOIN;
-      liveChallenge = randomLiveChallenge;
-      model.addAttribute("liveChallengeType", liveType);
+      model.addAttribute("liveChallengeType", LiveType.JOIN);
     } else {
-      liveType = LiveType.CONTINUE;
-      model.addAttribute("liveChallengeType", liveType);
+      model.addAttribute("liveChallengeType", LiveType.CONTINUE);
     }
 
     model.addAttribute("availableChallenges", availableChallenges);
