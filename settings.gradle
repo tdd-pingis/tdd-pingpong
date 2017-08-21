@@ -16,4 +16,23 @@ include 'api'
 include 'services:webservice'
 */
 
+pluginManagement {
+
+  resolutionStrategy {
+    eachPlugin {
+        def id = getRequested().getId().toString()
+
+        if (id.equals('org.springframework.boot')) {
+            def ver = getRequested().getVersion()
+            useModule(id + ':spring-boot-gradle-plugin:' + ver)
+        }
+    }
+  }
+
+  repositories {
+        gradlePluginPortal()
+        maven { url "https://repo.spring.io/milestone" }
+  }
+}
+
 rootProject.name = 'tdd-pingpong'

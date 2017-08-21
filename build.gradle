@@ -1,25 +1,20 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url "https://repo.spring.io/snapshot" }
         maven { url "https://repo.spring.io/milestone" }
-    }
-    dependencies {
-        classpath 'org.springframework.boot:spring-boot-gradle-plugin:2.0.0.M3'
     }
 }
 
 plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'jacoco'
+    id 'checkstyle'
     id 'com.github.kt3k.coveralls' version '2.8.1'
+    id 'io.spring.dependency-management' version '1.0.3.RELEASE'
+    id 'org.springframework.boot' version '2.0.0.M3'
 }
-
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'jacoco'
-apply plugin: 'checkstyle'
-apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
 
 jar {
     baseName = 'tdd-pingpong'
@@ -38,7 +33,6 @@ targetCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven { url "https://repo.spring.io/snapshot" }
     maven { url "https://repo.spring.io/milestone" }
 }
 
