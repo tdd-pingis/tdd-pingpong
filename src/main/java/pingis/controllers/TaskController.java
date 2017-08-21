@@ -122,9 +122,14 @@ public class TaskController {
     return "feedback";
   }
 
-  @MessageMapping("/rate/{taskId}")
-  public String rateTask(@DestinationVariable Long taskId, Integer rating) {
-    taskService.addRatingToTask(rating, taskId);
+  @MessageMapping("/rate/{taskInstanceId}")
+  public String rateTask(@DestinationVariable Long taskInstanceId, Integer rating) {
+    boolean rated = taskInstanceService.rate(rating, taskInstanceId);
+
+    if (!rated) {
+      return "FAILED";
+    }
+
     return "OK";
   }
 
