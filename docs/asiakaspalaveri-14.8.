@@ -1,0 +1,120 @@
+TDD-pingis asiakaspalaveri 14.8.
+
+Brief:
+* Systeemi antaa vaan seuraavan, ei valita listasta
+* olis hyvä, että voi valita aihepiiriä etusivulta, minkätyyppistä
+* tärkein on että on vain yksi nappi jota painamalla pääsee tekemään
+* pääteema aloitussivulta helposti pääseminen
+* toinen on hyvyyden arviointi, joku kirjoittaa testin avoimessa tehtävässä, pitää pystyä katsomaan onko tässä järkeä
+* pingis livesessio taskiksi
+* a: ois hyvä jos saatas kaikki nämä mutta en vaadi <didnt hear>
+
+
+Muu keskustelu:
+
+
+A: mitäs vuorottelu onnistuuko se enemmällä kuin kahdella ihmisellä?
+
+Me: kyllä sen periaatteessa pitäis pystyä 3 käyttäjän kanssa, nyt on vaan se, että implementaatiosta ei tule uutta testitaskia
+pitäskö tehdä niin, että joku tekee implementaation, joka speksaa seuraavan testin?
+
+A: implementoijan pitäisi kertoa millanen on seuraava testi
+saattaa olla melko paljon pyydetty implementoijalta
+pitäs saada jotenkin toimimaan.
+
+Me: onko se joku speksi, että kirjoita kuvaus tehtävälle testile
+
+A: jos mietitään järkevästi, testin kirjoittajan pitäisi kehittyä intuitio että tämä testit on hyvä, jättäisin testin kirjoittajalle
+avoimempi tehtävä, ei tarkalleen speksata testin sisältöä, "tee hyvä testi", automaattisesti arvioidaan oliko hyvä
+
+Me: siis kirjoitetaan testejä ja toteutuksia
+
+A: halutaan avoin
+
+Me: validointiongelma?
+
+Me: tuliko vastausta slack kysymykseen - kummin päin fiksumpi, pingpongin idis: on vaikka koko challengen ajan pysyy pari, jos rakennatte settiä niin että toinen on testaaja ja toinen implementoija, että toinen tekee testin, toinen implementoi ja tekee testin,
+
+A: nähtiin että on parempi, että molemmat voi harjoitella kumpaakin puollta. se joka kirjoittaa vain koodia, mikä on sen pedagoginen hyöty? testaamisen harjoittelu tärkeämpää
+
+Me: testaaminen vaikeampaa yleensä, oisko erilaiset vaikeusasteet. saman tehtävän implementointi tulee aikasemmin pelipolulla kun sitten testausvaihe, vai miten ois
+
+A: mä en tiedä kannattaako testaamista kamalasti vältellä, jos ajattelet silleen että jos kirjotat implementaation, valmentaako se oikeasti testin kirjoittamiseen? en olis niinkään varma
+toki jos joku kokee, että selaimen koodaaminen on hankalaa, ehkä se vois alottaa sillon, en ehkä välttämättä näe kauheesti hyötyä
+
+Me: jos halutaan vaikeustasot, tehdään käyttäjien kautta, pitää vahtia että laitetaan eri vaikeustasot testeille, jos on käyttäjän arvioimia, niin pystyy katsomaan vaikeustasot, pystyy arpomaan
+
+A: käyttäjän arviointiominaisuus
+
+Me: tehtävän lopuksi määrittää 0-5, oliko vaikea vai helppo vai sopiva
+
+A: tehtävän aikana sillen et onko ylipääsnä hyvä, jos tulee naurettava testi avoimissa, voi sen aikana sanoa että
+sen jälkeen kun on ite tehnyt jotain, kuin vaikea oli sun mielestä?
+
+A: yhtenä kysymyksenä eri aspekteja vaikeudesta. kun tyyliin vaikeus, mielekkyys
+
+Me: mikä ois
+
+A: mietitään nyt pääosin miten saadaan mahdollisimman hyvin käytettävä
+
+Me: liian paljon käyttäjien kiusaaminen koko ajan liian monilla eri kysymyksillä saa turhautumaan
+
+A: ei taida jaksaa tehä
+
+A: voi tula ongelmaksi, jos joku arvioi jutun vaikeutta odotusruudussa "tää on tosi helppo" ja teki kaiken väärin..
+
+A: tuli mieleen kun puhuttiin odotusnäytöstä, tuli resultti että taski ei menny läpi, back-nappi? ois kiva jos olis kiva nappi takas editoriin
+
+Me: itseasiassa en viikon sprinttipohjassa back-nappi
+
+Me: ihan ekassa tehtiin arton kanssa ideoita, jos pystyisi arvioimaan käyttäjän aktiivisen ajan perusteella testin parissa
+
+A: jos kestää tosi kauan, mikä johtopäätös?
+
+Me: joko motivaatio hiipuu, tai hidas ja joutuu hakemaan tietoa
+
+A: jos ei tehdä mitään.. mutta jos joku tekee ilman taukoja mutta kestää tosi pitkään?
+
+Me: jos tehtävä on liian haastava
+
+A: mitä jos on vaan perehtynyt ja tahtoo panostaa
+
+Me: eikö voida tehdä ristiinarviointia jos käyttäjä vertaisst on arvioinut sen lisäksi, että ollut huono työ
+
+A: sitä voi kokeila
+
+A: testin hyvyyestä voi katsoa jotain tyyliin kasvattaako kattavuutta vai ei, miten hyödtllistä oikeasti on, mutta ei kai kauheesti parempia
+
+Me: missä tekoöälyasiantuntijat
+
+Me: data voidaan kerätä, nutta parsiminen jää asiakkaalle
+
+A: teette vaan syvän neuroverkon joak klassifioi onko testi hyvä vai ei :D parikytmiljoonaa examplea, sit oppii ja kaikki tulee täydelliseksi
+
+Me: tai githubista kaikki testiosiot 
+
+A: neuroverkko valmiiksi ensi viikolla
+
+Me:missä vaheessa aloitustesti?
+
+A: sen voi tehdä alussa :D
+
+A: millanen tasotesti tulisi olemaan?
+
+Me: mitä jos käytetään olemassaolevia testejä ja implejä ja syötetään reippaasti vaikeampia tehtäviä
+
+A: ok
+A: vois alkaa aloitustestillä
+A: olis kiva et saisi tehtyä tehtävän rakentamisen, ois tosi jees
+
+Me: uskon että saadaan hyvin aikaan, palikat jo valmiina, rakennetaan pelilogiikkaa
+
+A: cool
+
+Me: jos saa olla toiveikas
+
+---
+
+Next demo: sama paikka sama aika
+
+

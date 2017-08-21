@@ -1,16 +1,32 @@
 package pingis.services;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pingis.entities.Challenge;
+import pingis.entities.CodeStatus;
+import pingis.entities.Task;
+import pingis.entities.TaskInstance;
+import pingis.entities.TaskType;
+import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
 
 @Service
 public class ChallengeService {
 
   private final ChallengeRepository challengeRepository;
+
+  @Autowired
+  private TaskService taskService;
+
+  @Autowired
+  private UserService userService;
+
+  @Autowired
+  private TaskInstanceService taskInstanceService;
 
   @Autowired
   public ChallengeService(ChallengeRepository challengeRepo) {
@@ -50,5 +66,40 @@ public class ChallengeService {
   public Challenge findByName(String name) {
     return challengeRepository.findByName(name);
   }
+
+
+
+  public TaskInstance getUnfinishedTaskInstance(Challenge challenge) {
+    User user = userService.getCurrentUser();
+    List<TaskInstance> taskInstances = taskInstanceService.getAllByChallenge(challenge);
+    for (TaskInstance current : taskInstances) {
+      if (current.getStatus() == CodeStatus.IN_PROGRESS) {
+        return current;
+      }
+    }
+    return null;
+  }
+
+
+
+
+  
+  public Challenge getRandomLiveChallenge(User user) {
+    List<Challenge> liveChallenges = findAll().stream()
+            .filter(e -> e.getIsOpen())
+            .filter(e -> e.getSecondPlayer() == null)
+            .filter(e -> e.getAuthor() != user)
+            .collect(Collectors.toList());
+   
+    if (liveChallenges.isEmpty()) {
+      return null;
+    }
+    if (liveChallenges.size() > 1) {
+      return liveChallenges.get(new Random().nextInt(liveChallenges.size()));
+    }
+    return liveChallenges.get(0);
+  }
+
+
 
 }
