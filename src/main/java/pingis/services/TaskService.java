@@ -52,12 +52,6 @@ public class TaskService {
     return t;
   }
 
-  @Transactional
-  public void addRatingToTask(int userRating, long taskId) {
-    Task taskToRate = taskRepository.findOne(taskId);
-    taskToRate.addRating(userRating);
-  }
-
   public boolean contains(Long taskId) {
     return taskRepository.existsById(taskId);
   }

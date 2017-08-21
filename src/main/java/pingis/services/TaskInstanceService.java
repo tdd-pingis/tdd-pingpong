@@ -25,7 +25,8 @@ public class TaskInstanceService {
   private TaskInstanceRepository taskInstanceRepository;
   @Autowired
   private UserRepository userRepository;
-
+  @Autowired
+  private UserService userService;
 
   public TaskInstance getCorrespondingTestTaskInstance(
       TaskInstance implTaskInstance) {
@@ -76,6 +77,29 @@ public class TaskInstanceService {
     return taskInstances;
   }
 
+  @Transactional
+  public boolean rate(int rating, long taskInstanceId) {
+    Optional<TaskInstance> taskInstanceOpt = taskInstanceRepository.findById(taskInstanceId);
+
+    if (!taskInstanceOpt.isPresent()) {
+      return false;
+    }
+
+    TaskInstance taskInstance = taskInstanceOpt.get();
+
+    if (taskInstance.isRated()
+        || taskInstance.getUser().getId() != userService.getCurrentUser().getId()) {
+      // Task has already been rated or the instance doesn't belong to the current user, ignore.
+      return false;
+    }
+
+    Task task = taskInstance.getTask();
+
+    taskInstance.setRating(rating);
+    task.addRating(rating);
+
+    return true;
+  }
 
   @Transactional
   public TaskInstance markAsDone(TaskInstance taskInstance) {

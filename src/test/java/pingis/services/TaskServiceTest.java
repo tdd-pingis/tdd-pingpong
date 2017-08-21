@@ -151,21 +151,6 @@ public class TaskServiceTest {
     assertEquals(testTasks.get(3), task);
   }
 
-  @Test
-  public void ratingTest() {
-    Task randomTask = implTasks.get(0);
-
-    when(taskRepositoryMock.findOne(randomTask.getId())).thenReturn(randomTask);
-
-    taskService.addRatingToTask(5, randomTask.getId());
-
-    assertEquals(5, randomTask.getAverageRating(), 0.001);
-    assertEquals(1, randomTask.getNumRatings());
-
-    verify(taskRepositoryMock).findOne(randomTask.getId());
-    verifyNoMoreInteractions(taskRepositoryMock);
-  }
-
   //TODO: Make more tests for this service.
 
   private Task getRandomTask(List<Task> list) {
