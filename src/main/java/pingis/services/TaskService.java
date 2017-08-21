@@ -110,6 +110,10 @@ public class TaskService {
     return availableTestTaskInstances;
   }
 
+  public List<Task> findAllByChallenge(Challenge challenge) {
+    return taskRepository.findAllByChallenge(challenge);
+  }
+
   public Task getRandomTestTask(Challenge currentChallenge, User currentUser) {
     List<Task> testTasks = filterTasksByUser(
         getAvailableTasksByType(currentChallenge, TaskType.TEST),
@@ -159,6 +163,5 @@ public class TaskService {
     }
     return list.get(new Random().nextInt(list.size()));
   }
-
 
 }

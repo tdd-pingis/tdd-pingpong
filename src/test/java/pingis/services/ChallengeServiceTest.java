@@ -32,6 +32,15 @@ public class ChallengeServiceTest {
   @MockBean
   private ChallengeRepository challengeRepositoryMock;
 
+  @MockBean
+  private TaskService taskServiceMock;
+
+  @MockBean
+  private UserService userServiceMock;
+
+  @MockBean
+  private TaskInstanceService taskInstanceService;
+
   private User testUser;
   private Challenge testChallenge;
   private ArgumentCaptor<Challenge> challengeCaptor;

@@ -146,6 +146,7 @@ public class DataImporter implements ApplicationRunner {
       Challenge challenge = new Challenge(challengeObject.getString("name"),
           users.get(challengeObject.getString("author")),
           challengeObject.getString("desc"));
+      challenge.setLevel(challengeObject.getInt("level"));
       this.challenges.put(challengeObject.getString("name"), challenge);
 
       for (int j = 0; j < tasks.length(); j++) {

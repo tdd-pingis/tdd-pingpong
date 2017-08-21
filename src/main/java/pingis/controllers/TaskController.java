@@ -62,6 +62,9 @@ public class TaskController {
       model.addAttribute("errormessage", "no such task instance");
       return "error";
     }
+
+    // TODO: check if taskinstance is owned by user, and is not marked as done
+
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
     model.addAttribute("challenge", currentChallenge);
     model.addAttribute("task", taskInstance.getTask());

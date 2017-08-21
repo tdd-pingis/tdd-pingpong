@@ -3,6 +3,7 @@
         {
             "name": "Calculator",
             "author": "modeluser",
+            "level": 1,
             "desc": "Test and implement a simple command line based calculator.",
             "tasks": [
                 {
@@ -221,6 +222,7 @@
         {
             "name": "Beginner1",
             "author": "modeluser",
+            "level": 2,
             "desc": "Easy programming tasks for beginners.",
             "tasks": [
                 {

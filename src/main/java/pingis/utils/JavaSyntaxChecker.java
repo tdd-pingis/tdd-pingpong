@@ -3,6 +3,7 @@ package pingis.utils;
 import com.github.javaparser.JavaParser;
 import com.github.javaparser.ParseProblemException;
 import com.github.javaparser.ast.CompilationUnit;
+import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Helper class for checking the syntax of Java code. Created by dwarfcrank on 7/21/17.
@@ -26,6 +27,16 @@ public class JavaSyntaxChecker {
       ).toArray(String[]::new);
     }
 
+    return null;
+  }
+  
+  public static String[] checkTaskPairErrors(String submissionCode, String staticCode) {
+    String[] submissionSyntaxErrors = parseCode(submissionCode);
+    String[] staticSyntaxErrors = parseCode(staticCode);
+    if (submissionSyntaxErrors != null || staticSyntaxErrors != null) {
+      String[] errors = ArrayUtils.addAll(submissionSyntaxErrors, staticSyntaxErrors);
+      return errors;
+    }
     return null;
   }
 }
