@@ -3,6 +3,7 @@ package pingis.services.sandbox;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.commons.compress.archivers.ArchiveException;
@@ -46,9 +47,16 @@ public class SandboxService {
   public boolean updateSubmissionResult(UUID submissionId, String testOutput, String stdout,
       String stderr, String validations, String vmLog, String status, int exitCode)
       throws IOException {
-    Submission submission = submissionRepository.findOne(submissionId);
+    Optional<Submission> optionalSubmission = submissionRepository.findById(submissionId);
 
-    if (submission == null || submission.getStatus() != SubmissionStatus.PENDING) {
+    if (!optionalSubmission.isPresent()) {
+      logger.error("Submission {} was not found, cannot update", submissionId);
+      return false;
+    }
+
+    Submission submission = optionalSubmission.get();
+
+    if (submission.getStatus() != SubmissionStatus.PENDING) {
       logger.error("Submission {} exists, ignoring duplicate update", submissionId);
       return false;
     }

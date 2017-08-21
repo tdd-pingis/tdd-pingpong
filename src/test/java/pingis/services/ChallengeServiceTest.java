@@ -9,6 +9,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -86,11 +87,13 @@ public class ChallengeServiceTest {
 
     verify(challengeRepositoryMock, times(1)).save(challengeCaptor.capture());
 
+    when(challengeRepositoryMock.findById(testChallenge.getId()))
+            .thenReturn(Optional.of(testChallenge));
     challengeService.delete(challengeCaptor.getValue().getId());
 
-    verify(challengeRepositoryMock, times(1)).delete(challengeCaptor.getValue().getId());
+    verify(challengeRepositoryMock, times(1)).deleteById(challengeCaptor.getValue().getId());
     boolean deleted = challengeService.contains(challengeCaptor.getValue().getId());
-    verify(challengeRepositoryMock, times(1)).exists(challengeCaptor.getValue().getId());
+    verify(challengeRepositoryMock, times(1)).existsById(challengeCaptor.getValue().getId());
     assertFalse(deleted);
   }
 

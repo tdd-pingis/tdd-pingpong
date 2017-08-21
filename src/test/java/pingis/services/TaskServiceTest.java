@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import org.junit.Before;
@@ -68,10 +69,12 @@ public class TaskServiceTest {
   public void simpleSaveAndFindOneTaskTest() {
     Task randomTask = getRandomTask(testTasks);
     taskService.save(randomTask);
+    when(taskRepositoryMock.findById(randomTask.getId())).thenReturn(Optional.of(randomTask));
+
     taskService.findOne(randomTask.getId());
 
     verify(taskRepositoryMock).save(taskCaptor.capture());
-    verify(taskRepositoryMock).findOne(taskCaptor.getValue().getId());
+    verify(taskRepositoryMock).findById(taskCaptor.getValue().getId());
     verifyNoMoreInteractions(taskRepositoryMock);
 
     Task oneTask = taskCaptor.getValue();
@@ -96,12 +99,13 @@ public class TaskServiceTest {
   public void simpleDeleteOneTaskTest() {
     Task randomTask = getRandomTask(testTasks);
     taskService.save(randomTask);
+    when(taskRepositoryMock.findById(randomTask.getId())).thenReturn(Optional.of(randomTask));
 
     verify(taskRepositoryMock).save(taskCaptor.capture());
 
     taskService.delete(taskCaptor.getValue().getId());
 
-    verify(taskRepositoryMock).delete(taskCaptor.getValue().getId());
+    verify(taskRepositoryMock).deleteById(taskCaptor.getValue().getId());
 
     boolean deleted = taskService.contains(taskCaptor.getValue().getId());
 
@@ -140,8 +144,8 @@ public class TaskServiceTest {
 
   @Test
   public void findTaskInChallenge() {
-    when(challengeRepositoryMock.findOne(testChallenge.getId()))
-        .thenReturn(testChallenge);
+    when(challengeRepositoryMock.findById(testChallenge.getId()))
+        .thenReturn(Optional.of(testChallenge));
 
     Task task = taskService.findTaskInChallenge(testChallenge.getId(), 3);
     assertEquals(testTasks.get(3), task);

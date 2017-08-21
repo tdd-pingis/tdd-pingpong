@@ -2,6 +2,7 @@ package pingis.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,7 @@ public class TaskInstanceService {
             taskRepository
                 .findByIndexAndChallengeAndType(implTaskInstance.getTask().getIndex(),
                     implTaskInstance.getTask().getChallenge(), TaskType.TEST),
-            userRepository.findOne(0L));
+            userRepository.findById(0L).get());
   }
 
 
@@ -42,17 +43,21 @@ public class TaskInstanceService {
         .findByTaskAndUser(
             taskRepository.findByIndexAndChallengeAndType(testTaskInstance.getTask().getIndex(),
                 testTaskInstance.getTask().getChallenge(), TaskType.IMPLEMENTATION),
-            userRepository.findOne(0L));
+            userRepository.findById(0L).get());
   }
 
   public TaskInstance findOne(long taskInstanceId) {
-    return taskInstanceRepository.findOne(taskInstanceId);
-
+    Optional<TaskInstance> opt = taskInstanceRepository.findById(taskInstanceId);
+    if (opt.isPresent()) {
+      return opt.get();
+    } else {
+      return null;
+    }
   }
 
   @Transactional
   public TaskInstance updateTaskInstanceCode(Long taskInstanceId, String taskInstanceCode) {
-    TaskInstance taskInstanceToUpdate = taskInstanceRepository.findOne(taskInstanceId);
+    TaskInstance taskInstanceToUpdate = taskInstanceRepository.findById(taskInstanceId).get();
     taskInstanceToUpdate.setCode(taskInstanceCode);
     return taskInstanceToUpdate;
   }

@@ -71,7 +71,7 @@ public class FakeSandboxController {
 
   // TODO: Encapsulate this behaviour in a service
   private Submission generateSubmission(String token) {
-    Submission submission = submissionRepository.findOne(UUID.fromString(token));
+    Submission submission = submissionRepository.findById(UUID.fromString(token)).get();
 
     submission.setId(UUID.fromString(token));
     submission.setStatus(SubmissionStatus.PENDING);
