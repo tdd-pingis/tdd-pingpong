@@ -1,6 +1,8 @@
 package pingis.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
@@ -36,6 +38,9 @@ public class TaskInstanceServiceTest {
   private UserRepository userRepositoryMock;
   @MockBean
   private TaskRepository taskRepositoryMock;
+
+  @MockBean
+  private UserService userServiceMock;
 
   private User testUser;
   private Task testTask;
@@ -160,7 +165,31 @@ public class TaskInstanceServiceTest {
   public void testMarkAsDone() {
     TaskInstance result = taskInstanceService.markAsDone(testTaskInstance);
     assertEquals(CodeStatus.DONE, result.getStatus());
-
   }
 
+  @Test
+  public void testRating() {
+    when(userServiceMock.getCurrentUser()).thenReturn(testUser);
+    when(taskInstanceRepositoryMock.findById(testTaskInstance.getId()))
+        .thenReturn(Optional.of(testTaskInstance));
+
+    boolean rated = taskInstanceService.rate(5, testTaskInstance.getId());
+
+    assertTrue(rated);
+    assertEquals(5.0f, testTaskInstance.getTask().getAverageRating(), Float.MIN_VALUE);
+  }
+
+  @Test
+  public void testDoubleRating() {
+    when(userServiceMock.getCurrentUser()).thenReturn(testUser);
+    when(taskInstanceRepositoryMock.findById(testTaskInstance.getId()))
+        .thenReturn(Optional.of(testTaskInstance));
+
+    boolean rated = taskInstanceService.rate(3, testTaskInstance.getId());
+    boolean rated2 = taskInstanceService.rate(5, testTaskInstance.getId());
+
+    assertTrue(rated);
+    assertFalse(rated2);
+    assertEquals(3.0f, testTaskInstance.getTask().getAverageRating(), Float.MIN_VALUE);
+  }
 }
