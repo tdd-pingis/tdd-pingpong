@@ -30,10 +30,11 @@
                               <div th:if="${#maps.isEmpty(myTasksInChallenges)}" >No ongoing solo challenges</div>
                               <div th:each="challenges : ${myTasksInChallenges}" class="row challengeitem">
                                     <a th:href="'/nextTask/' + ${challenges.key.id}" th:inline="text"> [[${challenges.key.name}]]</a> <p th:inline="text">Progress: [[${#lists.size(challenges.value)}]] / [[${#lists.size(challenges.key.tasks)}]] tasks done </p>
-                                    <div class="progress">
-                                          <div th:with="result=${#lists.size(challenges.value) * 100 / #lists.size(challenges.key.tasks)}">
-                                                <div class="progress-bar" role="progressbar" th:attr="aria-valuenow=${result}"
-                                                     aria-valuemin="0" aria-valuemax="100" style="width:70%">
+                                    <div th:with="result=${#lists.size(challenges.value) * 100 / #lists.size(challenges.key.tasks)}">
+                                          <div class="progress">
+                                                <div class="progress-bar progress-bar-striped active" role="progressbar"
+                                                     aria-valuemin="0" aria-valuemax="100" th:style="${'width:'+result+'%'}">
+                                                      <strong>[[${result}]]%</strong>
                                                 </div>
                                           </div>
                                     </div>
