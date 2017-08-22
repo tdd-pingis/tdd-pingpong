@@ -68,9 +68,7 @@ public class ChallengeService {
   }
 
 
-
   public TaskInstance getUnfinishedTaskInstance(Challenge challenge) {
-    User user = userService.getCurrentUser();
     List<TaskInstance> taskInstances = taskInstanceService.getAllByChallenge(challenge);
     for (TaskInstance current : taskInstances) {
       if (current.getStatus() == CodeStatus.IN_PROGRESS) {
@@ -81,23 +79,17 @@ public class ChallengeService {
   }
 
 
-
-
-  
   public Challenge getRandomLiveChallenge(User user) {
     List<Challenge> liveChallenges = findAll().stream()
-            .filter(e -> e.getIsOpen())
-            .filter(e -> e.getSecondPlayer() == null)
-            .filter(e -> e.getAuthor() != user)
-            .collect(Collectors.toList());
-   
-    if (liveChallenges.isEmpty()) {
+        .filter(e -> e.getIsOpen())
+        .filter(e -> e.getSecondPlayer() == null)
+        .filter(e -> e.getAuthor() != user)
+        .collect(Collectors.toList());
+    if (liveChallenges.size() > 0) {
+      return liveChallenges.get(new Random().nextInt(liveChallenges.size()));
+    } else {
       return null;
     }
-    if (liveChallenges.size() > 1) {
-      return liveChallenges.get(new Random().nextInt(liveChallenges.size()));
-    }
-    return liveChallenges.get(0);
   }
 
 

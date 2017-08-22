@@ -93,7 +93,7 @@ public class TaskInstanceService {
 
   public List<TaskInstance> getAllByChallenge(Challenge challenge) {
     List<TaskInstance> taskInstances = new ArrayList();
-    List<TaskInstance> allTaskInstances = (List<TaskInstance>) taskInstanceRepository.findAll();
+    List<TaskInstance> allTaskInstances = (List<TaskInstance>) findAll();
     for (TaskInstance current : allTaskInstances) {
       if (current.getTask().getChallenge().getId() == challenge.getId()) {
         taskInstances.add(current);
@@ -105,9 +105,9 @@ public class TaskInstanceService {
 
   public int getNumberOfDoneTaskInstancesInChallenge(Challenge challenge) {
     int count = 0;
-    List<TaskInstance> allTaskInstances = (List<TaskInstance>) taskInstanceRepository.findAll();
+    List<TaskInstance> allTaskInstances = (List<TaskInstance>) findAll();
     for (TaskInstance current : allTaskInstances) {
-      if (current.getTask().getChallenge().getId() == challenge.getId()
+      if (current.getChallenge().getId() == challenge.getId()
           && current.getStatus() == CodeStatus.DONE) {
         count++;
       }
