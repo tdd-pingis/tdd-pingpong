@@ -68,6 +68,7 @@ public class UserController {
     if (liveChallenge == null && randomLiveChallenge == null) {
       model.addAttribute("liveChallengeType", LiveType.CREATE);
     } else if (liveChallenge == null) {
+      liveChallenge = randomLiveChallenge;
       model.addAttribute("liveChallengeType", LiveType.JOIN);
     } else {
       model.addAttribute("liveChallengeType", LiveType.CONTINUE);

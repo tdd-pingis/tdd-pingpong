@@ -59,6 +59,8 @@ public class Challenge {
   @ManyToOne(fetch = FetchType.EAGER)
   private User secondPlayer;
 
+  private boolean isOpen;
+
   public boolean getIsOpen() {
     return isOpen;
   }
@@ -66,8 +68,6 @@ public class Challenge {
   public void setOpen(boolean open) {
     isOpen = open;
   }
-
-  private boolean isOpen;
 
   protected Challenge() {
   }

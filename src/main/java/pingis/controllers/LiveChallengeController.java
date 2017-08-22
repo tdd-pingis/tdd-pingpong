@@ -18,6 +18,7 @@ import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.services.ChallengeService;
 import pingis.services.GameplayService;
+import pingis.services.GameplayService.TurnType;
 import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
@@ -92,6 +93,10 @@ public class LiveChallengeController {
     
     Challenge currentChallenge = challengeService.findOne(challengeId);
     logger.info("Current Challenge fetched: " + currentChallenge);
+    if (!currentChallenge.getIsOpen()) {
+      logger.info("Trying to play a closed challenge. Redirecting to /error.");
+      return new RedirectView("/error");
+    }
     
     int index = gameplayService.getNumberOfTasks(currentChallenge) / 2;
     logger.info("Highest index of tasks in current challenge: " + index);
@@ -126,17 +131,16 @@ public class LiveChallengeController {
       return new RedirectView("/user");
     }
 
-    if (gameplayService.isTestTurnInLiveChallenge(currentChallenge)) {
-      return playTestTurn(redirectAttributes, currentChallenge);
-    }
+    TurnType turn = gameplayService.getTurnType(currentChallenge);
 
-    if (gameplayService.isImplementationTurnInLiveChallenge(currentChallenge)) {
+    if (turn == TurnType.IMPLEMENTATION) {
       return playImplementationTurn(redirectAttributes, currentChallenge);
+    } else if (turn == TurnType.TEST) {
+      return playTestTurn(redirectAttributes, currentChallenge);
+    } else {
+      logger.info("Not user's turn, redirecting to \"/user\"");
+      return new RedirectView("/user");
     }
-    
-    logger.info("Not user's turn, redirecting to \"/user\"");
-    return new RedirectView("/user");
-
   }
 
   private RedirectView playImplementationTurn(RedirectAttributes redirectAttributes,
@@ -170,7 +174,7 @@ public class LiveChallengeController {
       RedirectAttributes redirectAttributes) {
     Challenge currentChallenge = challengeService.findOne(challengeId);
     if (!gameplayService.isParticipating(currentChallenge)) {
-      logger.info("User trying to close somebody elses challenge. Redirecting to /error.");
+      logger.info("User trying to close somebody else's challenge. Redirecting to /error.");
       redirectAttributes.addFlashAttribute("message", "user not in challenge");
       return new RedirectView("/error");
     }
