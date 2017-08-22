@@ -17,10 +17,6 @@ public class GameplayService {
 
   private final ChallengeRepository challengeRepository;
 
-  public enum TurnType {
-    TEST, IMPLEMENTATION, NONE;
-  }
-
   public static final int CHALLENGE_MIN_LENGTH = 2;
 
   @Autowired
@@ -70,22 +66,6 @@ public class GameplayService {
       return true;
     }
     return false;
-  }
-
-  public TurnType getTurnType(Challenge challenge) {
-    User user = userService.getCurrentUser();
-    int side = user.getId() == challenge.getAuthor().getId() ? 0 : 1;
-    int numberOfTasks = getNumberOfTasks(challenge);
-    int highestIndex = numberOfTasks / 2;
-    int numberOfDoneInstances =
-        taskInstanceService.getNumberOfDoneTaskInstancesInChallenge(challenge);
-    if (numberOfDoneInstances % 2 == 1 && highestIndex % 2 == side) {
-      return TurnType.IMPLEMENTATION;
-    }
-    if (numberOfDoneInstances % 2 == 0 && highestIndex % 2 == side) {
-      return TurnType.TEST;
-    }
-    return TurnType.NONE;
   }
 
   public boolean isParticipating(Challenge challenge) {
