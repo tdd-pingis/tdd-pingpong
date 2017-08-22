@@ -8,10 +8,12 @@ public class CodeStubBuilder {
   protected final CompilationUnit compilationUnit;
   protected final ClassOrInterfaceDeclaration clazz;
   protected String className;
+  protected String filename;
 
   public CodeStubBuilder(String className) {
     compilationUnit = new CompilationUnit();
     this.className = className;
+    filename = String.format("src/%s.java", className);
 
     clazz = compilationUnit.addClass(className);
   }
@@ -35,7 +37,6 @@ public class CodeStubBuilder {
   }
 
   public CodeStub build() {
-    return new CodeStub(className, String.format("src/%s.java", className),
-        compilationUnit.toString());
+    return new CodeStub(className, filename, compilationUnit.toString());
   }
 }

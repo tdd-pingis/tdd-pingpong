@@ -55,7 +55,8 @@ public class TestStubBuilder extends CodeStubBuilder {
   private void generateTestClass() {
     ClassOrInterfaceDeclaration firstClass = getFirstDeclaredClass();
 
-    this.className = generateTestClassName(firstClass);
+    className = generateTestClassName(firstClass);
+    filename = String.format("test/%s.java", className);
     clazz.setName(className);
 
     // TODO: What value should @Points have?
@@ -72,11 +73,5 @@ public class TestStubBuilder extends CodeStubBuilder {
     compilationUnit.addImport("org.junit.Assert", true, true);
 
     return this;
-  }
-
-  @Override
-  public CodeStub build() {
-    return new CodeStub(className,
-        String.format("test/%s.java", className), super.build().code);
   }
 }
