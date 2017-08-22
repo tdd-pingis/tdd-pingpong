@@ -46,7 +46,8 @@ public class TestStubBuilder extends CodeStubBuilder {
   private void generateTestClass() {
     ClassOrInterfaceDeclaration firstClass = getFirstDeclaredClass();
 
-    clazz.setName(generateTestClassName(firstClass));
+    this.className = generateTestClassName(firstClass);
+    clazz.setName(className);
 
     // TODO: What value should @Points have?
     clazz.addSingleMemberAnnotation("Points", "\"03-03\"");
