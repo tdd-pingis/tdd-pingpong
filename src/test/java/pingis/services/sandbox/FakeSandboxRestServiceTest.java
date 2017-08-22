@@ -39,21 +39,21 @@ import pingis.repositories.sandbox.SubmissionRepository;
 @ContextConfiguration(classes = {FakeSandboxRestService.class})
 @DirtiesContext
 public class FakeSandboxRestServiceTest {
-  
+
   @Autowired
   private FakeSandboxRestService fakeSandboxRestService;
-  
+
   @MockBean
   private SubmissionRepository submissionRepositoryMock;
-  
+
   @Autowired
   private MockRestServiceServer server;
-  
+
   private UUID uuid;
   private String uri;
   private User user;
   private Submission submission;
-  
+
   @Before
   public void setUp() {
     uuid = UUID.randomUUID();
@@ -63,31 +63,31 @@ public class FakeSandboxRestServiceTest {
     submission.setId(uuid);
     submission.setStatus(SubmissionStatus.PENDING);
   }
-  
+
   @Test
   public void resultStatusFailedWhenTestTaskInSubmission() {
     driveTaskTypeExpectationTest(TaskType.TEST, "TESTS_FAILED");
   }
-  
+
   @Test
   public void resultStatusPassedWhenImplementationTaskInSubmission() {
     driveTaskTypeExpectationTest(TaskType.IMPLEMENTATION, "PASSED");
   }
-  
+
   private void driveTaskTypeExpectationTest(TaskType givenTaskType, String expectedContent) {
     Task task = new Task(0, givenTaskType, user, "name", "desc", "codeStub", 0, 0);
     TaskInstance taskInstance = new TaskInstance(user, "code", task);
     submission.setTaskInstance(taskInstance);
-    
+
     when(submissionRepositoryMock.findById(eq(uuid)))
         .thenReturn(Optional.of(submission));
-        
+
     server.expect(requestTo(uri))
         .andExpect(method(HttpMethod.POST))
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_FORM_URLENCODED))
         .andExpect(content().string(containsString(expectedContent)))
         .andRespond(withSuccess());
-    
+
     fakeSandboxRestService.postSubmissionResults(uuid.toString(), uri);
   }
 }

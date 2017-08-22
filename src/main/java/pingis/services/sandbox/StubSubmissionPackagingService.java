@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Profile("dev")
-public class MockSubmissionPackagingService implements SubmissionPackagingServiceInterface {
+public class StubSubmissionPackagingService implements SubmissionPackagingServiceInterface {
 
   @Override
   public byte[] packageSubmission(Map<String, byte[]> additionalFiles)

@@ -1,9 +1,9 @@
 package pingis.controllers;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.UUID;
 import org.junit.Test;
@@ -25,27 +25,27 @@ import pingis.services.sandbox.FakeSandboxRestService;
  */
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {
-  FakeSandboxController.class, SecurityConfig.class, OAuthProperties.class})
+    FakeSandboxController.class, SecurityConfig.class, OAuthProperties.class})
 @WebAppConfiguration
 @WebMvcTest(FakeSandboxController.class)
 public class FakeSandboxControllerTest {
-  
+
   @Autowired
   private MockMvc mvc;
-  
+
   @MockBean
   private FakeSandboxRestService fakeSandboxMock;
-  
+
   @Test
   public void resultStatusFailedWhenTestTaskInSubmission() throws Exception {
     UUID uuid = UUID.randomUUID();
     String url = "localhost";
-    
+
     mvc.perform(post("/tasks.json")
         .param("token", uuid.toString())
         .param("notify", url))
         .andExpect(status().isOk());
-    
+
     verify(fakeSandboxMock).postSubmissionResults(eq(uuid.toString()), eq(url));
   }
 }
