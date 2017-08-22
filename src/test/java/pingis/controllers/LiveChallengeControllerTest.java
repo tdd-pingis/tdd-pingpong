@@ -1,10 +1,16 @@
 package pingis.controllers;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -68,15 +74,18 @@ public class LiveChallengeControllerTest {
 
   @Test
   @WithMockUser
-  public void creatingChallengeRedirectsToPlayTurn() throws Exception {
+  public void creatingChallengeRedirectsToPlayTurn()
+          throws Exception {
+    Long challengeId = 123L;
+
     User user = Mockito.mock(User.class);
-    when(user.getId()).thenReturn(0L);
+    when(user.getId()).thenReturn(10L);
     when(userService.getCurrentUser()).thenReturn(user);
 
     Challenge challenge = Mockito.mock(Challenge.class);
-    when(challengeService.save(any())).thenAnswer(i -> i.getArguments()[0]);
+    when(challengeService.save(any())).thenReturn(challenge);
     when(challenge.toString()).thenReturn("");
-    when(challenge.getId()).thenReturn(1L);
+    when(challenge.getId()).thenReturn(challengeId);
 
     mvc.perform(post("/createChallenge")
             .with(csrf())
@@ -85,7 +94,10 @@ public class LiveChallengeControllerTest {
             .param("challengeType", "PROJECT")
             .param("realm", "realm"))
             .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrlPattern("/playTurn/*"));
+            .andExpect(redirectedUrl("/playTurn/" + challengeId));
+
+    verify(challengeService, times(1))
+            .save(any());
   }
 
   @Test
@@ -93,7 +105,7 @@ public class LiveChallengeControllerTest {
   public void newTaskpairReturnsNewTaskPairView() throws Exception {
     mvc.perform(get("/newtaskpair")
             .flashAttr("challengeId", 0L)
-            .flashAttr("challenge", new Challenge("n", new User(), "d")))
+            .flashAttr("challenge", Mockito.mock(Challenge.class)))
             .andExpect(status().isOk())
             .andExpect(view().name("newtaskpair"));
   }
@@ -101,26 +113,32 @@ public class LiveChallengeControllerTest {
   @Test
   @WithMockUser
   public void createTaskPairRedirectsToPlayTurn() throws Exception {
+    Long challengeId = 345L;
+    Long taskId = 567L;
+
     Challenge challenge = Mockito.mock(Challenge.class);
+    when(challenge.getId()).thenReturn(challengeId);
     when(challengeService.findOne(any()))
             .thenReturn(challenge);
 
     Task task = Mockito.mock(Task.class);
+    when(task.getId()).thenReturn(taskId);
     when(gameplayService.generateTaskPairAndTaskInstance(
             any(), any(), any(), any(), any(), any(), any()))
             .thenReturn(task);
 
     mvc.perform(post("/createTaskPair")
             .with(csrf())
-            .param("testTaskName", "name")
-            .param("implementationTaskname", "name")
-            .param("testTaskDesc", "desc")
-            .param("implementationTaskDesc", "desc")
-            .param("testCodeStub", "stub")
-            .param("implementationCodeStub", "stub")
-            .param("challengeId", "0"))
+            .param("testTaskName", "aa")
+            .param("implementationTaskname", "bb")
+            .param("testTaskDesc", "cc")
+            .param("implementationTaskDesc", "dd")
+            .param("testCodeStub", "ee")
+            .param("implementationCodeStub", "ff")
+            .param("challengeId", "234"))
             .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrlPattern("/playTurn/*"));
+            .andExpect(redirectedUrlPattern("/playTurn/" + challengeId + "?*"))
+            .andExpect(model().attribute("taskId", taskId.toString()));
   }
 
   @Test
@@ -142,6 +160,8 @@ public class LiveChallengeControllerTest {
             .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/error"));
+
+    verifyZeroInteractions(gameplayService);
   }
 
   @Test
@@ -161,16 +181,23 @@ public class LiveChallengeControllerTest {
             .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/error"));
+
+    verify(challengeService, never())
+            .save(any());
   }
 
   @Test
   @WithMockUser
   public void playTurnWithUnfinishedTaskInstanceOwnedByCurrentUserRedirectsToTask()
           throws Exception {
+    Long userId = 723L;
+    Long taskInstanceId = 992L;
+
     User user = Mockito.mock(User.class);
-    when(user.getId()).thenReturn(0L);
+    when(user.getId()).thenReturn(userId);
 
     TaskInstance taskInstance = Mockito.mock(TaskInstance.class);
+    when(taskInstance.getId()).thenReturn(992L);
     when(taskInstance.getUser()).thenReturn(user);
 
     Challenge challenge = Mockito.mock(Challenge.class);
@@ -179,7 +206,7 @@ public class LiveChallengeControllerTest {
 
     Task task = Mockito.mock(Task.class);
     when(task.toString()).thenReturn("");
-    when(task.getId()).thenReturn(0L);
+    when(task.getId()).thenReturn(937L);
     when(task.getAuthor()).thenReturn(user);
 
     when(challengeService.findOne(any())).thenReturn(challenge);
@@ -188,10 +215,13 @@ public class LiveChallengeControllerTest {
     when(challengeService.getUnfinishedTaskInstance(any())).thenReturn(taskInstance);
     when(userService.getCurrentUser()).thenReturn(user);
 
-    mvc.perform(get("/playTurn/0")
+    mvc.perform(get("/playTurn/" + userId)
             .with(csrf()))
             .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/task/0"));
+            .andExpect(redirectedUrl("/task/" + taskInstanceId));
+
+    verify(challengeService, times(1))
+            .save(challenge);
   }
 
   @Test
@@ -199,7 +229,7 @@ public class LiveChallengeControllerTest {
   public void playTurnWithUnfinishedTaskInstanceNotOwnedByCurrentUserRedirectsToUser()
           throws Exception {
     User user = Mockito.mock(User.class);
-    when(user.getId()).thenReturn(0L);
+    when(user.getId()).thenReturn(10L);
 
     TaskInstance taskInstance = Mockito.mock(TaskInstance.class);
     when(taskInstance.getUser()).thenReturn(user);
@@ -218,13 +248,18 @@ public class LiveChallengeControllerTest {
             .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/user"));
+
+    verify(challengeService, times(1))
+            .save(challenge);
+    verify(gameplayService, never())
+            .getTurnType(any());
   }
 
   @Test
   @WithMockUser
   public void playTurnNotOnTheUsersTurnRedirectsToUser() throws Exception {
     User user = Mockito.mock(User.class);
-    when(user.getId()).thenReturn(0L);
+    when(user.getId()).thenReturn(10L);
 
     TaskInstance taskInstance = Mockito.mock(TaskInstance.class);
     when(taskInstance.getUser()).thenReturn(user);
@@ -235,8 +270,7 @@ public class LiveChallengeControllerTest {
 
     when(challengeService.findOne(any())).thenReturn(challenge);
     when(gameplayService.isParticipating(any())).thenReturn(false);
-    when(challengeService.getUnfinishedTaskInstance(any())).thenReturn(taskInstance);
-    when(userService.getCurrentUser()).thenReturn(null);
+    when(challengeService.getUnfinishedTaskInstance(any())).thenReturn(null);
 
     when(gameplayService.getTurnType(any())).thenReturn(TurnType.NONE);
 
@@ -244,15 +278,22 @@ public class LiveChallengeControllerTest {
             .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/user"));
+
+    verify(gameplayService, times(1))
+            .getTurnType(any());
   }
 
   @Test
   @WithMockUser
   public void playTurnOnImplementationTurnRedirectsToNewTaskInstance() throws Exception {
+    Long taskId = 444L;
+    Long taskInstanceId = 313L;
+
     User user = Mockito.mock(User.class);
-    when(user.getId()).thenReturn(0L);
+    when(user.getId()).thenReturn(10L);
 
     TaskInstance taskInstance = Mockito.mock(TaskInstance.class);
+    when(taskInstance.getId()).thenReturn(taskInstanceId);
     when(taskInstance.getUser()).thenReturn(user);
 
     Challenge challenge = Mockito.mock(Challenge.class);
@@ -261,7 +302,7 @@ public class LiveChallengeControllerTest {
 
     Task task = Mockito.mock(Task.class);
     when(task.toString()).thenReturn("");
-    when(task.getId()).thenReturn(0L);
+    when(task.getId()).thenReturn(taskId);
     when(task.getAuthor()).thenReturn(user);
 
     when(challengeService.findOne(any())).thenReturn(challenge);
@@ -276,12 +317,17 @@ public class LiveChallengeControllerTest {
     mvc.perform(get("/playTurn/0")
             .with(csrf()))
             .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrlPattern("/newTaskInstance*"));
+            .andExpect(redirectedUrlPattern("/newTaskInstance?*"))
+            .andExpect(model().attribute("taskId", taskId.toString()))
+            .andExpect(model().attribute("testTaskInstanceId", taskInstanceId.toString()));
   }
 
   @Test
   @WithMockUser
   public void playTurnOnTestTurnRedirectsToNewTaskInstance() throws Exception {
+    Long taskId = 0L;
+    Long challengeId = 877L;
+
     User user = Mockito.mock(User.class);
     when(user.getId()).thenReturn(0L);
 
@@ -289,12 +335,13 @@ public class LiveChallengeControllerTest {
     when(taskInstance.getUser()).thenReturn(user);
 
     Challenge challenge = Mockito.mock(Challenge.class);
+    when(challenge.getId()).thenReturn(challengeId);
     when(challenge.getIsOpen()).thenReturn(true);
     when(challenge.getSecondPlayer()).thenReturn(null);
 
     Task task = Mockito.mock(Task.class);
     when(task.toString()).thenReturn("");
-    when(task.getId()).thenReturn(0L);
+    when(task.getId()).thenReturn(taskId);
     when(task.getAuthor()).thenReturn(user);
 
     when(challengeService.findOne(any())).thenReturn(challenge);
@@ -306,10 +353,12 @@ public class LiveChallengeControllerTest {
     when(gameplayService.getTopmostTestTask(any())).thenReturn(task);
     when(taskInstanceService.getByTaskAndUser(any(), any())).thenReturn(taskInstance);
 
-    mvc.perform(get("/playTurn/0")
+    mvc.perform(get("/playTurn/" + taskId)
             .with(csrf()))
             .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/newtaskpair"));
+            .andExpect(redirectedUrl("/newtaskpair"))
+            .andExpect(flash().attribute("challengeId", challengeId))
+            .andExpect(flash().attributeExists("challenge"));
   }
 
   @Test
@@ -321,13 +370,16 @@ public class LiveChallengeControllerTest {
             .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/error"));
+
+    verify(challengeService, never())
+            .save(any());
   }
 
   @Test
   @WithMockUser
   public void closingChallengeOwnedByCurrentUserRedirectsToUser() throws Exception {
     Challenge challenge = Mockito.mock(Challenge.class);
-    when(challenge.getId()).thenReturn(0L);
+    when(challenge.getId()).thenReturn(20L);
 
     when(challengeService.findOne(any())).thenReturn(challenge);
     when(gameplayService.isParticipating(any())).thenReturn(true);
@@ -336,6 +388,9 @@ public class LiveChallengeControllerTest {
             .with(csrf()))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/user"));
+
+    verify(challengeService, times(1))
+            .save(challenge);
   }
 
 }
