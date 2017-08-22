@@ -22,27 +22,33 @@ public class CodeStubBuilderTest {
 
   @Test
   public void testEmpty() {
-    String code = new CodeStubBuilder("EmptyClass").build();
+    CodeStub stub = new CodeStubBuilder("EmptyClass").build();
 
-    assertEquals(EMPTY_CLASS, code);
+    assertEquals(EMPTY_CLASS, stub.code);
+    assertEquals("src/EmptyClass.java", stub.filename);
+    assertEquals("EmptyClass", stub.className);
   }
 
   @Test
   public void testWithImports() {
-    String code = new CodeStubBuilder("ImportClass")
+    CodeStub stub = new CodeStubBuilder("ImportClass")
         .withImport("foo.bar.baz")
         .withImport("heh.ebin")
         .build();
 
-    assertEquals(IMPORT_CLASS, code);
+    assertEquals(IMPORT_CLASS, stub.code);
+    assertEquals("src/ImportClass.java", stub.filename);
+    assertEquals("ImportClass", stub.className);
   }
 
   @Test
   public void testWithComment() {
-    String code = new CodeStubBuilder("CommentClass")
+    CodeStub stub = new CodeStubBuilder("CommentClass")
         .withBodyComment("TODO: add methods here")
         .build();
 
-    assertEquals(COMMENT_CLASS, code);
+    assertEquals(COMMENT_CLASS, stub.code);
+    assertEquals("src/CommentClass.java", stub.filename);
+    assertEquals("CommentClass", stub.className);
   }
 }

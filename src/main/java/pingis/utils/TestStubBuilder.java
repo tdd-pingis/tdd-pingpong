@@ -64,7 +64,9 @@ public class TestStubBuilder extends CodeStubBuilder {
     return this;
   }
 
-  public String build() {
-    return compilationUnit.toString();
+  @Override
+  public CodeStub build() {
+    return new CodeStub(className,
+        String.format("test/%s.java", className), super.build().code);
   }
 }

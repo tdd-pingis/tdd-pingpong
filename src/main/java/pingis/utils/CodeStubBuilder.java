@@ -34,7 +34,8 @@ public class CodeStubBuilder {
     return this;
   }
 
-  public String build() {
-    return compilationUnit.toString();
+  public CodeStub build() {
+    return new CodeStub(className, String.format("src/%s.java", className),
+        compilationUnit.toString());
   }
 }

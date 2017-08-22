@@ -30,11 +30,13 @@ public class TestStubBuilderTest {
 
   @Test
   public void testMethod() {
-    String code = new TestStubBuilder(SINGLE_METHOD_CLASS)
+    CodeStub stub = new TestStubBuilder(SINGLE_METHOD_CLASS)
         .withTestImports()
         .build();
 
-    assertEquals(SINGLE_METHOD_CLASS_EXPECTED, code);
+    assertEquals(SINGLE_METHOD_CLASS_EXPECTED, stub.code);
+    assertEquals("TestMeTest", stub.className);
+    assertEquals("test/TestMeTest.java", stub.filename);
   }
 
 }
