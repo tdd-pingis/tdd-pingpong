@@ -98,11 +98,8 @@ dependencies {
 }
 
 bootRun {
-	systemProperties System.properties
-
-    // Make static classpath resources reloadable when using bootRun
-    // Removed in Spring Boot 2?
-    //addResources = true
+    systemProperties System.properties
+    sourceResources sourceSets.main
 }
 
 
