@@ -46,32 +46,6 @@ public class GameplayService {
     return tasks.size();
   }
 
-  public boolean isTestTurnInLiveChallenge(Challenge challenge) {
-    User user = userService.getCurrentUser();
-    int side = user.getId() == challenge.getAuthor().getId() ? 0 : 1;
-    int numberOfTasks = getNumberOfTasks(challenge);
-    int highestIndex = numberOfTasks / 2;
-    int numberOfDoneInstances =
-        taskInstanceService.getNumberOfDoneTaskInstancesInChallenge(challenge);
-    if (numberOfDoneInstances % 2 == 0 && highestIndex % 2 == side) {
-      return true;
-    }
-    return false;
-  }
-
-  public boolean isImplementationTurnInLiveChallenge(Challenge challenge) {
-    User user = userService.getCurrentUser();
-    int side = user.getId() == challenge.getAuthor().getId() ? 0 : 1;
-    int numberOfTasks = getNumberOfTasks(challenge);
-    int highestIndex = numberOfTasks / 2;
-    int numberOfDoneInstances =
-        taskInstanceService.getNumberOfDoneTaskInstancesInChallenge(challenge);
-    if (numberOfDoneInstances % 2 == 1 && highestIndex % 2 == side) {
-      return true;
-    }
-    return false;
-  }
-
   public TurnType getTurnType(Challenge challenge) {
     User user = userService.getCurrentUser();
     int side = user.getId() == challenge.getAuthor().getId() ? 0 : 1;
