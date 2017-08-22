@@ -8,10 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Challenge;
 import pingis.entities.ChallengeType;
+import pingis.entities.CodeStatus;
+import pingis.entities.Realm;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
@@ -80,6 +83,11 @@ public class LiveChallengeController {
         testCodeStub,
         implementationCodeStub,
         currentChallenge);
+
+    if (currentChallenge.getType() == ChallengeType.ARCADE) {
+      redirectAttributes.addAttribute("realm", currentChallenge.getRealm().toString());
+      return new RedirectView("/playArcade");
+    }
     redirectAttributes.addAttribute("taskId", testTask.getId());
     redirectAttributes.addAttribute("testTaskInstanceId", 0L);
     return new RedirectView("/playTurn/" + currentChallenge.getId());
@@ -184,6 +192,87 @@ public class LiveChallengeController {
     redirectAttributes.addFlashAttribute("message", "Challenge closed.");
     logger.info("Closing challenge: " + currentChallenge.getId());
     return new RedirectView("/user");
+  }
+
+  @RequestMapping("/newArcadeChallenge")
+  public String newArcadeChallenge(Model model) {
+    return "newarcadechallenge";
+  }
+
+  @RequestMapping(value = "/createArcadeChallenge", method = RequestMethod.POST)
+  public RedirectView createArcadeChallenge(RedirectAttributes redirectAttributes,
+      String challengeName,
+      String challengeDesc,
+      String realm,
+      int level) {
+
+    Challenge arcadeChallenge = new Challenge(
+        challengeName,
+        userService.getCurrentUser(),
+        challengeDesc,
+        ChallengeType.ARCADE);
+    logger.info("Created new arcade challenge: " + arcadeChallenge.toString());
+    if (realm == "BEGINNER") {
+      arcadeChallenge.setRealm(Realm.BEGINNER);
+      logger.info("Realm: BEGINNER");
+    } else if (realm == "OBJECTORIENTED") {
+      arcadeChallenge.setRealm(Realm.OBJECTORIENTED);
+      logger.info("Realm: OBJECTORIENTED");
+    } else if (realm == "DATASTRUCTURES") {
+      arcadeChallenge.setRealm(Realm.DATASTRUCTURES);
+      logger.info("Realm: DATASTRUCTURES");
+    } else {
+      logger.info("Realm " + realm + " does not exist. Redirecting to /error.");
+      return new RedirectView("/error");
+    }
+    arcadeChallenge.setOpen(true);
+    arcadeChallenge.setLevel(level);
+    challengeService.save(arcadeChallenge);
+    return new RedirectView("/user");
+  }
+
+  @RequestMapping(value = "/playArcade")
+  public RedirectView playArcade(RedirectAttributes redirectAttributes,
+      @RequestParam String realm) {
+    logger.info("playArcade method entered");
+    User player = userService.getCurrentUser();
+    if (player.getMostRecentArcadeInstance() != null && player.getMostRecentArcadeInstance().getStatus() == CodeStatus.IN_PROGRESS) {
+      logger.info("Found unfinished taskinstance, redirecting to /task.");
+      redirectAttributes.addFlashAttribute("taskInstanceId", player.getMostRecentArcadeInstance().getId());
+      return new RedirectView("/task/" + player.getMostRecentArcadeInstance().getId());
+    }
+    Realm currentRealm = Realm.getRealm(realm);
+    logger.info("Trying to get realm: " + realm);
+
+    if (currentRealm == null) {
+      logger.info("Realm " + realm + " does not exist. Redirecting to /error.");
+      return new RedirectView("/error");
+    }
+
+    Challenge challenge = gameplayService.getArcadeChallenge(currentRealm);
+    if (player.getMostRecentArcadeInstance() == null
+        || player.getMostRecentArcadeInstance().getTask().getType() == TaskType.IMPLEMENTATION) {
+      if (player.getMostRecentArcadeInstance() == null) {
+        logger.info("most recent task instance: null");
+      } else {
+        logger.info("most recent task instance: "
+            + player.getMostRecentArcadeInstance().toString());
+      }
+      redirectAttributes.addFlashAttribute("challengeId", challenge.getId());
+      redirectAttributes.addFlashAttribute("challenge", challenge);
+      redirectAttributes.addFlashAttribute("minLength", Integer.MAX_VALUE);
+      logger.info("User has test turn. Redirecting to /newtaskpair.");
+      return new RedirectView("/newtaskpair");
+    } else {
+      Task implTask = gameplayService.getRandomImplementationTask(challenge);
+      Task testTask = taskService.getCorrespondingTask(implTask);
+      redirectAttributes.addAttribute("taskId", implTask.getId());
+      redirectAttributes.addAttribute("testTaskInstanceId",
+          taskInstanceService.getByTaskAndUser(testTask, testTask.getAuthor()).getId());
+      logger.info("User has implementation turn. Redirecting to /newTaskInstance");
+      return new RedirectView("/newTaskInstance");
+    }
+
   }
 
 }

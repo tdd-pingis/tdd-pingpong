@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Challenge;
+import pingis.entities.ChallengeType;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
@@ -85,6 +86,7 @@ public class TaskController {
     if (model.containsAttribute("code")) {
       model.addAttribute("submissionCodeStub", model.asMap().get("code"));
     }
+    logger.info("entering editor view");
     return "task";
   }
 
@@ -92,14 +94,13 @@ public class TaskController {
   public RedirectView task(String submissionCode,
       long taskInstanceId,
       RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
-
+    logger.info("submitting");
     String[] errors = JavaSyntaxChecker.parseCode(submissionCode);
     if (errors != null) {
       redirectAttributes.addFlashAttribute("errors", errors);
       redirectAttributes.addFlashAttribute("code", submissionCode);
-      return new RedirectView("/task/{taskInstanceId}");
+      return new RedirectView("/task/" + taskInstanceId);
     }
-
     TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
 
@@ -123,6 +124,9 @@ public class TaskController {
   @RequestMapping("/nextTask/{challengeId}")
   public String nextTask(@PathVariable long challengeId, Model model) {
     Challenge currentChallenge = challengeService.findOne(challengeId);
+    if (currentChallenge.getType() == ChallengeType.ARCADE) {
+      return "redirect:/playArcade/?realm="+currentChallenge.getRealm().toString();
+    }
     List<Task> tasks = taskService.filterTasksByUser(
             currentChallenge.getTasks(), userService.getCurrentUser());
     List<Task> testTasks = taskService.filterTasksByUser(
@@ -152,6 +156,10 @@ public class TaskController {
       taskInstanceService.save(testTaskInstance);
     }
     redirectAttributes.addAttribute("taskInstanceId", newTaskInstance.getId());
+    if (newTaskInstance.getTask().getChallenge().getType() == ChallengeType.ARCADE) {
+      user.setMostRecentArcadeInstance(newTaskInstance);
+      userService.save(user);
+    }
     return new RedirectView("/task/{taskInstanceId}");
   }
 

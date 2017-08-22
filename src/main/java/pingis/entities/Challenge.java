@@ -41,6 +41,9 @@ public class Challenge {
   private float rating;
   private ChallengeType type;
 
+
+  private Realm realm;
+
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "challenge")
   private List<Task> tasks;
 
@@ -169,6 +172,14 @@ public class Challenge {
 
   public void setTasks(List<Task> tasks) {
     this.tasks = tasks;
+  }
+
+  public Realm getRealm() {
+    return realm;
+  }
+
+  public void setRealm(Realm realm) {
+    this.realm = realm;
   }
 
 }
