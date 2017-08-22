@@ -236,9 +236,11 @@ public class LiveChallengeController {
       @RequestParam String realm) {
     logger.info("playArcade method entered");
     User player = userService.getCurrentUser();
-    if (player.getMostRecentArcadeInstance() != null && player.getMostRecentArcadeInstance().getStatus() == CodeStatus.IN_PROGRESS) {
+    if (player.getMostRecentArcadeInstance() != null
+        && player.getMostRecentArcadeInstance().getStatus() == CodeStatus.IN_PROGRESS) {
       logger.info("Found unfinished taskinstance, redirecting to /task.");
-      redirectAttributes.addFlashAttribute("taskInstanceId", player.getMostRecentArcadeInstance().getId());
+      redirectAttributes.addFlashAttribute("taskInstanceId",
+          player.getMostRecentArcadeInstance().getId());
       return new RedirectView("/task/" + player.getMostRecentArcadeInstance().getId());
     }
     Realm currentRealm = Realm.getRealm(realm);

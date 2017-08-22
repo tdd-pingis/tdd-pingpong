@@ -138,7 +138,7 @@ public class TaskController {
   public String nextTask(@PathVariable long challengeId, Model model) {
     Challenge currentChallenge = challengeService.findOne(challengeId);
     if (currentChallenge.getType() == ChallengeType.ARCADE) {
-      return "redirect:/playArcade/?realm="+currentChallenge.getRealm().toString();
+      return "redirect:/playArcade/?realm=" + currentChallenge.getRealm().toString();
     }
     List<Task> tasks = taskService.filterTasksByUser(
             currentChallenge.getTasks(), userService.getCurrentUser());
