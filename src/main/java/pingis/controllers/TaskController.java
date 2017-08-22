@@ -8,6 +8,8 @@ import org.apache.commons.compress.archivers.ArchiveException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
+import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
@@ -119,6 +121,17 @@ public class TaskController {
   @RequestMapping("/feedback")
   public String feedback() {
     return "feedback";
+  }
+
+  @MessageMapping("/rate/{taskInstanceId}")
+  public String rateTask(@DestinationVariable Long taskInstanceId, Integer rating) {
+    boolean rated = taskInstanceService.rate(rating, taskInstanceId);
+
+    if (!rated) {
+      return "FAILED";
+    }
+
+    return "OK";
   }
 
   @RequestMapping("/nextTask/{challengeId}")

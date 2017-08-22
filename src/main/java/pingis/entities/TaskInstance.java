@@ -25,8 +25,9 @@ public class TaskInstance {
   @Lob
   private String code;
 
-  // TODO: Decide scaling of rating, then set @DecimalMin and @DecimalMax constraints here
-  private float rating;
+  // TODO: Ratings range from 1 to 5, with 0 meaning "hasn't been rated yet."
+  // Need to decide on a better representation for this.
+  private int rating;
 
   @OneToOne
   private Submission submission;
@@ -78,11 +79,15 @@ public class TaskInstance {
     this.code = code;
   }
 
-  public float getRating() {
+  public boolean isRated() {
+    return rating != 0;
+  }
+
+  public int getRating() {
     return rating;
   }
 
-  public void setRating(float rating) {
+  public void setRating(int rating) {
     this.rating = rating;
   }
 

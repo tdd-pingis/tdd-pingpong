@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url "https://repo.spring.io/snapshot" }
         maven { url "https://repo.spring.io/milestone" }
     }
     dependencies {
@@ -10,16 +9,16 @@ buildscript {
 }
 
 plugins {
+    id 'java'
+    id 'eclipse'
+    id 'idea'
+    id 'jacoco'
+    id 'checkstyle'
     id 'com.github.kt3k.coveralls' version '2.8.1'
+    id 'io.spring.dependency-management' version '1.0.3.RELEASE'
 }
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'idea'
-apply plugin: 'jacoco'
-apply plugin: 'checkstyle'
 apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
 
 jar {
     baseName = 'tdd-pingpong'
@@ -33,40 +32,31 @@ jacocoTestReport {
     }
 }
 
-repositories {
-    mavenCentral()
-    maven { url "https://repo.spring.io/snapshot" }
-    maven { url "https://repo.spring.io/milestone" }
-}
-
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+repositories {
+    mavenCentral()
+    maven { url "https://repo.spring.io/milestone" }
+}
+
+configurations {
+    compile.exclude module: 'spring-boot-starter-tomcat'
+}
+
 dependencies {
-    // tag::undertow[]
-    compile('org.springframework.boot:spring-boot-starter-web') {
-        exclude module: 'spring-boot-starter-tomcat'
-    }
+    compile 'org.springframework.boot:spring-boot-starter-web'
     compile 'org.springframework.boot:spring-boot-starter-undertow'
-    // end::undertow[]
-    // tag::actuator[]
     compile 'org.springframework.boot:spring-boot-starter-actuator'
-    // end::actuator[]
-    compile('org.springframework.boot:spring-boot-starter-thymeleaf'){
-        exclude module: 'spring-boot-starter-tomcat'
-    }
-    compile('org.springframework.boot:spring-boot-starter-data-jpa'){
-        exclude module: 'tomcat-jdbc'
-    }
+    compile 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-devtools'
 
     //Spring Messaging
-    compile("org.springframework.boot:spring-boot-starter-websocket") {
-        exclude module: 'spring-boot-starter-tomcat'
-    }
-    compile("org.webjars:webjars-locator")
-    compile("org.webjars:sockjs-client:1.0.2")
-    compile("org.webjars:stomp-websocket:2.3.3")
+    compile 'org.springframework.boot:spring-boot-starter-websocket'
+    compile 'org.webjars:webjars-locator'
+    compile 'org.webjars:sockjs-client:1.0.2'
+    compile 'org.webjars:stomp-websocket:2.3.3'
 
     //Spring Security
     compile 'io.projectreactor:reactor-core:3.0.7.RELEASE'
@@ -77,9 +67,7 @@ dependencies {
     compile 'org.springframework.security:spring-security-oauth2-client'
     compile 'org.springframework.security:spring-security-messaging'
     compile 'org.springframework.security:spring-security-test'
-    compile('org.springframework.boot:spring-boot-starter-webflux') {
-        exclude module: 'spring-boot-starter-reactor-netty'
-    }
+    compile 'org.springframework.boot:spring-boot-starter-webflux'
     compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.2.RELEASE'
 
     compile 'com.h2database:h2'
@@ -110,11 +98,8 @@ dependencies {
 }
 
 bootRun {
-	systemProperties System.properties
-
-    // Make static classpath resources reloadable when using bootRun
-    // Removed in Spring Boot 2?
-    //addResources = true
+    systemProperties System.properties
+    sourceResources sourceSets.main
 }
 
 

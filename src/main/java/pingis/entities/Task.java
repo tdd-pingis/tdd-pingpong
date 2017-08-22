@@ -50,6 +50,8 @@ public class Task {
   @Max(LEVEL_MAX_VALUE)
   private int level;
   private float rating;
+  private int numRatings;
+  private int totalRating;
 
   @NotNull
   @ManyToOne(fetch = FetchType.LAZY)
@@ -75,6 +77,9 @@ public class Task {
     this.codeStub = codeStub;
     this.level = level;
     this.rating = rating;
+    this.numRatings = 0;
+    this.totalRating = 0;
+
     this.taskInstances = new ArrayList<>();
   }
 
@@ -174,4 +179,20 @@ public class Task {
     this.type = TaskType.IMPLEMENTATION;
   }
 
+  public int getNumRatings() {
+    return numRatings;
+  }
+
+  public void setNumRatings(int numRatings) {
+    this.numRatings = numRatings;
+  }
+
+  public void addRating(int userRating) {
+    this.numRatings++;
+    this.totalRating += userRating;
+  }
+
+  public float getAverageRating() {
+    return (float) totalRating / (float) numRatings;
+  }
 }
