@@ -5,9 +5,9 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.comments.LineComment;
 
 public class CodeStubBuilder {
-  private CompilationUnit compilationUnit;
-  private ClassOrInterfaceDeclaration clazz;
-  private String className;
+  protected CompilationUnit compilationUnit;
+  protected ClassOrInterfaceDeclaration clazz;
+  protected String className;
 
   public CodeStubBuilder(String className) {
     compilationUnit = new CompilationUnit();
