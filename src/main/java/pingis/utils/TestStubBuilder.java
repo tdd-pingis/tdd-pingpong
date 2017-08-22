@@ -5,10 +5,11 @@ import com.github.javaparser.ast.CompilationUnit;
 import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
+import com.github.javaparser.ast.nodeTypes.modifiers.NodeWithPublicModifier;
 
 public class TestStubBuilder extends CodeStubBuilder {
 
-  private CompilationUnit targetCompilationUnit;
+  private final CompilationUnit targetCompilationUnit;
 
   public TestStubBuilder(String code) {
     // Need to supply a fake class name here, because we don't yet know the actual
@@ -53,7 +54,7 @@ public class TestStubBuilder extends CodeStubBuilder {
     clazz.addSingleMemberAnnotation("Points", "\"03-03\"");
 
     firstClass.getMethods().stream()
-        .filter(method -> method.isPublic())
+        .filter(NodeWithPublicModifier::isPublic)
         .forEach(method -> addTestMethod(clazz, method));
   }
 
