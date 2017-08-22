@@ -7,6 +7,7 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -32,10 +33,16 @@ public class FakeSandboxRestService {
 
   private Logger logger = LoggerFactory.getLogger(this.getClass());
   
-  private RestTemplate restTemplate = new RestTemplate();
+  private RestTemplate restTemplate;
 
-  @Autowired
   private SubmissionRepository submissionRepository;
+  
+  @Autowired
+  public FakeSandboxRestService(RestTemplateBuilder restTemplateBuilder,
+      SubmissionRepository submissionRepository) {
+    this.submissionRepository = submissionRepository;
+    this.restTemplate = restTemplateBuilder.build();
+  }
 
   public void postSubmissionResults(String token, String notify) {
     HttpHeaders headers = new HttpHeaders();
