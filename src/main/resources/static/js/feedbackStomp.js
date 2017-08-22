@@ -20,3 +20,10 @@ function connectStomp(csrf) {
         stompClient.subscribe('/topic/results/' + submissionId, showResults);
     });
 }
+
+function sendRating(event) {
+    const rating = document.getElementById("givenRating").value | 0; // cast to number
+    stompClient.send(`/rate/${taskInstanceId}`, {}, rating);
+
+    event.preventDefault();
+}
