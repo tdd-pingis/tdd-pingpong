@@ -26,7 +26,6 @@ import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
-import pingis.services.GameplayService.TurnType;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {GameplayService.class})
@@ -114,7 +113,27 @@ public class GameplayServiceTest {
   }
 
   @Test
-  public void testGetTurnTypeWhenTesting() {
+  public void testIsTestTurnInLiveChallengeWhenIsNotTurn() {
+    testChallenge.addTask(firstTestTask);
+    testChallenge.addTask(firstImplTask);
+    List<Task> tasks = new ArrayList();
+    tasks.add(firstTestTask);
+    tasks.add(firstImplTask);
+    when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
+    when(userServiceMock.getCurrentUser()).thenReturn(testUser);
+    when(taskInstanceServiceMock.getNumberOfDoneTaskInstancesInChallenge(testChallenge))
+        .thenReturn(1);
+    assertFalse(gameplayService.isTestTurnInLiveChallenge(testChallenge));
+    verify(taskServiceMock).findAllByChallenge(testChallenge);
+    verify(userServiceMock).getCurrentUser();
+    verify(taskInstanceServiceMock).getNumberOfDoneTaskInstancesInChallenge(testChallenge);
+    verifyNoMoreInteractions(taskServiceMock);
+    verifyNoMoreInteractions(userServiceMock);
+    verifyNoMoreInteractions(taskInstanceServiceMock);
+  }
+
+  @Test
+  public void testIsTestTurnInLiveChallengeWhenIsTurn() {
     testChallenge.addTask(firstTestTask);
     testChallenge.addTask(firstImplTask);
     testChallenge.addTask(secondTestTask);
@@ -128,7 +147,7 @@ public class GameplayServiceTest {
     when(userServiceMock.getCurrentUser()).thenReturn(testUser);
     when(taskInstanceServiceMock.getNumberOfDoneTaskInstancesInChallenge(testChallenge))
         .thenReturn(4);
-    assertEquals(TurnType.TEST, gameplayService.getTurnType(testChallenge));
+    assertTrue(gameplayService.isTestTurnInLiveChallenge(testChallenge));
     verify(taskServiceMock).findAllByChallenge(testChallenge);
     verify(userServiceMock).getCurrentUser();
     verify(taskInstanceServiceMock).getNumberOfDoneTaskInstancesInChallenge(testChallenge);
@@ -138,7 +157,7 @@ public class GameplayServiceTest {
   }
 
   @Test
-  public void testGetTurnTypeWhenImplementing() {
+  public void testIsImplementationTurnWhenIsTurn() {
     testChallenge.addTask(firstTestTask);
     testChallenge.addTask(firstImplTask);
     List<Task> tasks = new ArrayList();
@@ -150,7 +169,7 @@ public class GameplayServiceTest {
     when(userServiceMock.getCurrentUser()).thenReturn(testUser);
     when(taskInstanceServiceMock.getNumberOfDoneTaskInstancesInChallenge(testChallenge))
         .thenReturn(3);
-    assertEquals(TurnType.IMPLEMENTATION, gameplayService.getTurnType(testChallenge));
+    assertTrue(gameplayService.isImplementationTurnInLiveChallenge(testChallenge));
     verify(taskServiceMock).findAllByChallenge(testChallenge);
     verify(userServiceMock).getCurrentUser();
     verify(taskInstanceServiceMock).getNumberOfDoneTaskInstancesInChallenge(testChallenge);
@@ -160,17 +179,19 @@ public class GameplayServiceTest {
   }
 
   @Test
-  public void testGetTurnTypeWhenIsNotTurn() {
+  public void testIsImplementationTurnWhenIsNotTurn() {
     testChallenge.addTask(firstTestTask);
     testChallenge.addTask(firstImplTask);
     List<Task> tasks = new ArrayList();
     tasks.add(firstTestTask);
     tasks.add(firstImplTask);
+    tasks.add(secondTestTask);
+    tasks.add(secondImplTask);
     when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
     when(userServiceMock.getCurrentUser()).thenReturn(testUser);
     when(taskInstanceServiceMock.getNumberOfDoneTaskInstancesInChallenge(testChallenge))
-        .thenReturn(3);
-    assertEquals(TurnType.NONE, gameplayService.getTurnType(testChallenge));
+        .thenReturn(4);
+    assertFalse(gameplayService.isImplementationTurnInLiveChallenge(testChallenge));
     verify(taskServiceMock).findAllByChallenge(testChallenge);
     verify(userServiceMock).getCurrentUser();
     verify(taskInstanceServiceMock).getNumberOfDoneTaskInstancesInChallenge(testChallenge);
