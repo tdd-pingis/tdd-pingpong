@@ -11,6 +11,14 @@ public class TestStubBuilder extends CodeStubBuilder {
 
   private final CompilationUnit targetCompilationUnit;
 
+  public TestStubBuilder(CodeStubBuilder other) {
+    super("__PLACEHOLDER__");
+
+    targetCompilationUnit = other.compilationUnit;
+
+    generateTestClass();
+  }
+
   public TestStubBuilder(String code) {
     // Need to supply a fake class name here, because we don't yet know the actual
     // name of the class.

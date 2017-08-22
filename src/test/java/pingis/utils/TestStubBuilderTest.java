@@ -26,6 +26,11 @@ public class TestStubBuilderTest {
           + "    }\n"
           + "}\n";
 
+  private static final String FROM_OTHER_BUILDER_EXPECTED =
+      "@Points(\"03-03\")\n"
+          + "public class TestMeTest {\n"
+          + "}\n";
+
   // TODO: More test cases
 
   @Test
@@ -35,6 +40,17 @@ public class TestStubBuilderTest {
         .build();
 
     assertEquals(SINGLE_METHOD_CLASS_EXPECTED, stub.code);
+    assertEquals("TestMeTest", stub.className);
+    assertEquals("test/TestMeTest.java", stub.filename);
+  }
+
+  @Test
+  public void testFromStubBuilder() {
+    CodeStubBuilder stubBuilder = new CodeStubBuilder("TestMe");
+    CodeStub stub = new TestStubBuilder(stubBuilder)
+        .build();
+
+    assertEquals(FROM_OTHER_BUILDER_EXPECTED, stub.code);
     assertEquals("TestMeTest", stub.className);
     assertEquals("test/TestMeTest.java", stub.filename);
   }
