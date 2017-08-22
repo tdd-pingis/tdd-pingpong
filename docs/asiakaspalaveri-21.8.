@@ -1,0 +1,6 @@
+Virhe descriptioneissa, challengien/taskien nimissä? paluutoiminnallisuus, jotta voi korjata typot yms.
+Indikaatio toisen taskin muuttumattomuudesta, so. testitaskin tekijä ei voi koskea toteutustaskiin.
+UX parannuksia, ei vaihtoehtoa jatkaa challengea kun ei ole oma vuoro
+Näytä kääntäjävirheet, eivät tällä hetkellä toimi
+Hae ImplTaskin tekijälle code stubien sijaan TestTaskiin tehty koodi
+Tehtävien taskien todellinen maksimimäärä on vain puolet taskien määrästä
