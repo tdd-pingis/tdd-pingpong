@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Challenge;
 import pingis.entities.ChallengeType;
+import pingis.entities.CodeStatus;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
@@ -236,6 +237,19 @@ public class TaskController {
     files.put(isTest ? implStub.filename : testStub.filename, staticCode.getBytes());
 
     return sandboxService.submit(files, taskInstance);
+  }
+
+  @RequestMapping("/skip/{taskInstanceId}")
+  public RedirectView skip(RedirectAttributes redirectAttributes,
+      @PathVariable long taskInstanceId) {
+    TaskInstance skippedTaskInstance = taskInstanceService.findOne(taskInstanceId);
+    Challenge currentChallenge = skippedTaskInstance.getChallenge();
+    if (currentChallenge.getType() == ChallengeType.ARCADE || !currentChallenge.getIsOpen()) {
+      skippedTaskInstance.setStatus(CodeStatus.DROPPED);
+      taskInstanceService.save(skippedTaskInstance);
+      return new RedirectView("/nextTask/" + currentChallenge.getId());
+    }
+    return new RedirectView("/error");
   }
 
 }

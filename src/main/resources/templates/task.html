@@ -57,7 +57,10 @@
                     <button type="submit" class="btn btn-primary" onclick="clicked(event)">Submit</button>
                 </div>
             </form>
-        </div>
+            <div th:if="${(challenge.type == T(pingis.entities.ChallengeType).ARCADE && task.type == T(pingis.entities.TaskType).IMPLEMENTATION)
+             || (challenge.type != T(pingis.entities.ChallengeType).ARCADE && !challenge.isOpen)}">
+               <a class="btn btn-primary" th:href="'/skip/'+${taskInstanceId}">Skip task</a>
+            </div>
 
         <script th:src="@{/webjars/ace-builds/src-min-noconflict/ace.js}" type="text/javascript"  charset="utf-8"></script>
         <script th:src="@{/js/aceEditorSettings.js}" type="text/javascript"  charset="utf-8"></script>
