@@ -243,10 +243,10 @@ public class TaskController {
   public RedirectView skip(RedirectAttributes redirectAttributes,
       @PathVariable long taskInstanceId) {
     TaskInstance skippedTaskInstance = taskInstanceService.findOne(taskInstanceId);
-    skippedTaskInstance.setStatus(CodeStatus.DROPPED);
-    taskInstanceService.save(skippedTaskInstance);
     Challenge currentChallenge = skippedTaskInstance.getChallenge();
     if (currentChallenge.getType() == ChallengeType.ARCADE || !currentChallenge.getIsOpen()) {
+      skippedTaskInstance.setStatus(CodeStatus.DROPPED);
+      taskInstanceService.save(skippedTaskInstance);
       return new RedirectView("/nextTask/" + currentChallenge.getId());
     }
     return new RedirectView("/error");
