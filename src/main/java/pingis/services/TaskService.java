@@ -42,7 +42,7 @@ public class TaskService {
   }
 
   public List<Task> findAll() {
-    return (List) taskRepository.findAll();
+    return (List<Task>) taskRepository.findAll();
   }
 
   public Task delete(Long taskId) {
@@ -97,7 +97,7 @@ public class TaskService {
   //TODOL refactoring
   public MultiValueMap<Task, TaskInstance> getAvailableTestTaskInstances(
           Challenge challenge, User user) {
-    MultiValueMap<Task, TaskInstance> availableTestTaskInstances = new LinkedMultiValueMap();
+    MultiValueMap<Task, TaskInstance> availableTestTaskInstances = new LinkedMultiValueMap<>();
     List<Task> implTasks = getAvailableTasksByType(challenge, TaskType.IMPLEMENTATION);
     for (Task task : implTasks) {
       Task testTask = getCorrespondingTask(task);
@@ -139,7 +139,7 @@ public class TaskService {
   }
 
   public TaskType getRandomTaskType() {
-    List<TaskType> taskTypes = new ArrayList();
+    List<TaskType> taskTypes = new ArrayList<>();
     taskTypes.add(TaskType.IMPLEMENTATION);
     taskTypes.add(TaskType.TEST);
     return getRandomElementFromList(taskTypes);

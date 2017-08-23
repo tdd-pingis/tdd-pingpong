@@ -33,10 +33,10 @@ public class DataImporter implements ApplicationRunner {
   private TaskRepository taskRepository;
   private UserService userService;
   private TaskInstanceRepository taskInstanceRepository;
-  private HashMap<String, User> users = new LinkedHashMap();
-  private HashMap<String, Challenge> challenges = new HashMap();
-  private ArrayList<Task> tasks = new ArrayList();
-  private ArrayList<TaskInstance> taskInstances = new ArrayList();
+  private HashMap<String, User> users = new LinkedHashMap<>();
+  private HashMap<String, Challenge> challenges = new HashMap<>();
+  private ArrayList<Task> tasks = new ArrayList<>();
+  private ArrayList<TaskInstance> taskInstances = new ArrayList<>();
 
   public enum UserType {
     TMC_MODEL_USER("admin", 0, true),

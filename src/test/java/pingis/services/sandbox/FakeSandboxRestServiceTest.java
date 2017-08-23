@@ -1,7 +1,7 @@
 package pingis.services.sandbox;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.content;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;

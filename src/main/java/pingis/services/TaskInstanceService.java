@@ -116,7 +116,7 @@ public class TaskInstanceService {
   }
 
   public List<TaskInstance> getAllByChallenge(Challenge challenge) {
-    List<TaskInstance> taskInstances = new ArrayList();
+    List<TaskInstance> taskInstances = new ArrayList<>();
     List<TaskInstance> allTaskInstances = findAll();
     for (TaskInstance current : allTaskInstances) {
       if (current.getTask().getChallenge().getId() == challenge.getId()) {

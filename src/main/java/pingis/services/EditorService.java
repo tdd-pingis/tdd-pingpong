@@ -36,7 +36,7 @@ public class EditorService {
 
   private Map<String, EditorTabData> generateTestTaskTabs(TaskInstance taskInstance,
           Challenge currentChallenge) {
-    Map<String, EditorTabData> tabData = new LinkedHashMap();
+    Map<String, EditorTabData> tabData = new LinkedHashMap<>();
 
     CodeStubBuilder stubBuilder = new CodeStubBuilder(currentChallenge.getName());
     CodeStub implStub = stubBuilder.build();
@@ -52,7 +52,7 @@ public class EditorService {
 
   private Map<String, EditorTabData> generateImplTaskTabs(TaskInstance taskInstance,
       Challenge currentChallenge) {
-    Map<String, EditorTabData> tabData = new LinkedHashMap();
+    Map<String, EditorTabData> tabData = new LinkedHashMap<>();
     TaskInstance testTaskInstance = taskInstance.getTestTaskinstance();
     if (testTaskInstance == null) {
       // DataImporter does not set testTaskInstances. If null, use the old
