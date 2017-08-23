@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import pingis.entities.Challenge;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
+import pingis.utils.CodeStub;
+import pingis.utils.CodeStubBuilder;
 import pingis.utils.EditorTabData;
-import pingis.utils.JavaClassGenerator;
+import pingis.utils.TestStubBuilder;
 
 @Service
 public class EditorService {
@@ -35,14 +37,16 @@ public class EditorService {
   private Map<String, EditorTabData> generateTestTaskTabs(TaskInstance taskInstance,
           Challenge currentChallenge) {
     Map<String, EditorTabData> tabData = new LinkedHashMap();
-    EditorTabData tab1 = new EditorTabData(
-            JavaClassGenerator.generateTestClassFilename(currentChallenge),
-            taskInstance.getCode());
-    EditorTabData tab2 = new EditorTabData(
-            JavaClassGenerator.generateImplClassFilename(currentChallenge),
+
+    CodeStubBuilder stubBuilder = new CodeStubBuilder(currentChallenge.getName());
+    CodeStub implStub = stubBuilder.build();
+    CodeStub testStub = new TestStubBuilder(stubBuilder).build();
+
+    EditorTabData testTab = new EditorTabData(testStub.filename, taskInstance.getCode());
+    EditorTabData implTab = new EditorTabData(implStub.filename,
             taskService.getCorrespondingTask(taskInstance.getTask()).getCodeStub());
-    tabData.put("editor1", tab1);
-    tabData.put("editor2", tab2);
+    tabData.put("editor1", testTab);
+    tabData.put("editor2", implTab);
     return tabData;
   }
 
@@ -57,13 +61,16 @@ public class EditorService {
           = taskInstanceService.getCorrespondingTestTaskInstance(
           taskInstance);
     }
-    EditorTabData tab2 = new EditorTabData(
-        "Implement code here",
+
+    CodeStubBuilder stubBuilder = new CodeStubBuilder(currentChallenge.getName());
+    CodeStub implStub = stubBuilder.build();
+    CodeStub testStub = new TestStubBuilder(stubBuilder).build();
+
+    EditorTabData implTab = new EditorTabData(implStub.filename,
         taskInstance.getTask().getCodeStub());
-    EditorTabData tab1 = new EditorTabData("Test to fulfill",
-        testTaskInstance.getCode());
-    tabData.put("editor2", tab1);
-    tabData.put("editor1", tab2);
+    EditorTabData testTab = new EditorTabData(testStub.filename, testTaskInstance.getCode());
+    tabData.put("editor2", testTab);
+    tabData.put("editor1", implTab);
     return tabData;
   }
 
