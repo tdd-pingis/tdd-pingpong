@@ -317,3 +317,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SO
     window.ProgressCircle = ProgressCircle;
 
 })(window, document);
+
+$( document ).ready(function() {
+  var myCanvas = document.getElementById('progresscircle');
+
+  var circle = new ProgressCircle({
+    canvas: myCanvas,
+    minRadius: 30,
+    arcWidth: 15,
+  });
+
+  circle.addEntry({
+    fillColor: 'rgba(255, 0, 0, 0.5)',
+    progressListener: function() {
+      return 0.88; // between 0 and 1
+    },
+    infoListener: function() {return "Points to next level: 88"},
+  });
+  circle.start(33);
+});
