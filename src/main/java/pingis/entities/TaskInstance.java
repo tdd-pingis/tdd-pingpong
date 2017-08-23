@@ -51,6 +51,9 @@ public class TaskInstance {
   @OneToMany
   private List<TaskInstance> implementationTaskInstances;
 
+  @OneToOne(mappedBy = "mostRecentArcadeInstance")
+  private User mostRecent;
+
   protected TaskInstance() {
   }
 

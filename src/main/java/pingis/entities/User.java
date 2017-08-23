@@ -10,6 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -41,7 +42,11 @@ public class User {
   private List<Task> authoredTasks;
   
   @OneToMany(mappedBy = "secondPlayer")
-  private List<Challenge> participatingLiveChallenge;
+  private List<Challenge> participatingLiveChallenges;
+
+
+  @OneToOne
+  private TaskInstance mostRecentArcadeInstance;
 
   public User() {
   }
@@ -64,7 +69,7 @@ public class User {
     this.taskInstances = new ArrayList<>();
     this.authoredChallenges = new ArrayList<>();
     this.authoredTasks = new ArrayList<>();
-    this.participatingLiveChallenge = new ArrayList<>();
+    this.participatingLiveChallenges = new ArrayList<>();
   }
 
   public String getName() {
@@ -169,16 +174,24 @@ public class User {
         + "\n\tlevel: " + getLevel();
   }
 
-  public List<Challenge> getParticipatingLiveChallenge() {
-    return participatingLiveChallenge;
+  public List<Challenge> getParticipatingLiveChallenges() {
+    return participatingLiveChallenges;
   }
 
-  public void setParticipatingLiveChallenge(List<Challenge> participatingLiveChallenge) {
-    this.participatingLiveChallenge = participatingLiveChallenge;
+  public void setParticipatingLiveChallenges(List<Challenge> participatingLiveChallenges) {
+    this.participatingLiveChallenges = participatingLiveChallenges;
   }
   
   public void addParticipatingLiveChallenge(Challenge challenge) {
-    this.participatingLiveChallenge.add(challenge);
+    this.participatingLiveChallenges.add(challenge);
+  }
+
+  public TaskInstance getMostRecentArcadeInstance() {
+    return mostRecentArcadeInstance;
+  }
+
+  public void setMostRecentArcadeInstance(TaskInstance mostRecentArcadeInstance) {
+    this.mostRecentArcadeInstance = mostRecentArcadeInstance;
   }
 
 }
