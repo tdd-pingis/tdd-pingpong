@@ -2,9 +2,13 @@ package pingis.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pingis.entities.Challenge;
+import pingis.entities.ChallengeType;
+import pingis.entities.Realm;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
@@ -136,7 +140,22 @@ public class GameplayService {
     taskService.save(testTask);
     taskService.save(implTask);
     TaskInstance newTestTaskInstance = taskInstanceService.createEmpty(currentUser, testTask);
+    if (currentChallenge.getType() == ChallengeType.ARCADE) {
+      currentUser.setMostRecentArcadeInstance(newTestTaskInstance);
+      userService.save(currentUser);
+    }
     return testTask;
+  }
+
+  public Challenge getArcadeChallenge(Realm realm) {
+    return challengeRepository.findByTypeAndRealm(ChallengeType.ARCADE, realm);
+  }
+
+  public Task getRandomImplementationTask(Challenge challenge) {
+    List<Task> tasks = taskService.findAllByChallenge(challenge);
+    List<Task> implTasks = tasks.stream()
+        .filter(e -> e.getType() == TaskType.IMPLEMENTATION).collect(Collectors.toList());
+    return implTasks.get(new Random().nextInt(implTasks.size()));
   }
 
 }
