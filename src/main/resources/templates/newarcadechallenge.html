@@ -11,12 +11,9 @@
             <input type="text" name="challengeName" size="50"/><br />
             <label>challenge description</label><br />
             <textarea rows="10" cols="80" name="challengeDesc"></textarea><br />
-            <label>Challenge type:</label>
             <label>Realm:</label>
             <select name="realm">
-                <option value="BEGINNER">Beginner</option>
-                <option value="OBJECTORIENTED">Object-oriented</option>
-                <option value="DATASTRUCTURES">Data structires</option>
+                <option th:each="realm: ${T(pingis.entities.Realm).values()}" th:value="${realm.name()}" th:text="${realm.name()}"></option>
             </select><br />
             <button type="submit" class="btn btn-primary">Create challenge</button>
         </form>

@@ -169,7 +169,7 @@ public class TaskController {
       taskInstanceService.save(testTaskInstance);
     }
     redirectAttributes.addAttribute("taskInstanceId", newTaskInstance.getId());
-    if (newTaskInstance.getTask().getChallenge().getType() == ChallengeType.ARCADE) {
+    if (newTaskInstance.getChallenge().getType() == ChallengeType.ARCADE) {
       user.setMostRecentArcadeInstance(newTaskInstance);
       userService.save(user);
     }

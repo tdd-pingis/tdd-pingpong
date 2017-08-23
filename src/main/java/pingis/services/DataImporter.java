@@ -146,8 +146,8 @@ public class DataImporter implements ApplicationRunner {
       Challenge challenge = new Challenge(challengeObject.getString("name"),
           users.get(challengeObject.getString("author")),
           challengeObject.getString("desc"));
-      challenge.setType(ChallengeType.getType(challengeObject.getString("type")));
-      challenge.setRealm(Realm.getRealm(challengeObject.getString("realm")));
+      challenge.setType(ChallengeType.valueOf(challengeObject.getString("type").toUpperCase()));
+      challenge.setRealm(Realm.valueOf(challengeObject.getString("realm").toUpperCase()));
       challenge.setLevel(challengeObject.getInt("level"));
       JSONArray tasks = challengeObject.getJSONArray("tasks");
       this.challenges.put(challengeObject.getString("name"), challenge);

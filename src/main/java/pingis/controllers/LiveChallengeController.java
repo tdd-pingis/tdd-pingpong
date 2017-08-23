@@ -212,17 +212,11 @@ public class LiveChallengeController {
         challengeDesc,
         ChallengeType.ARCADE);
     logger.info("Created new arcade challenge: " + arcadeChallenge.toString());
-    if (realm == "BEGINNER") {
-      arcadeChallenge.setRealm(Realm.BEGINNER);
-      logger.info("Realm: BEGINNER");
-    } else if (realm == "OBJECTORIENTED") {
-      arcadeChallenge.setRealm(Realm.OBJECTORIENTED);
-      logger.info("Realm: OBJECTORIENTED");
-    } else if (realm == "DATASTRUCTURES") {
-      arcadeChallenge.setRealm(Realm.DATASTRUCTURES);
-      logger.info("Realm: DATASTRUCTURES");
-    } else {
-      logger.info("Realm " + realm + " does not exist. Redirecting to /error.");
+
+    try {
+      arcadeChallenge.setRealm(Realm.valueOf(realm.toUpperCase()));
+    } catch (Exception e) {
+      logger.info("Realm {} does not exist. Redirecting to /error.", realm);
       return new RedirectView("/error");
     }
     arcadeChallenge.setOpen(true);
@@ -243,23 +237,20 @@ public class LiveChallengeController {
           player.getMostRecentArcadeInstance().getId());
       return new RedirectView("/task/" + player.getMostRecentArcadeInstance().getId());
     }
-    Realm currentRealm = Realm.getRealm(realm);
-    logger.info("Trying to get realm: " + realm);
+    Realm currentRealm = Realm.valueOf(realm.toUpperCase());
+    logger.info("Trying to get realm: {}", realm);
 
     if (currentRealm == null) {
-      logger.info("Realm " + realm + " does not exist. Redirecting to /error.");
+      logger.info("Realm {} does not exist. Redirecting to /error.", realm);
       return new RedirectView("/error");
     }
 
     Challenge challenge = gameplayService.getArcadeChallenge(currentRealm);
+
     if (player.getMostRecentArcadeInstance() == null
         || player.getMostRecentArcadeInstance().getTask().getType() == TaskType.IMPLEMENTATION) {
-      if (player.getMostRecentArcadeInstance() == null) {
-        logger.info("most recent task instance: null");
-      } else {
-        logger.info("most recent task instance: "
-            + player.getMostRecentArcadeInstance().toString());
-      }
+      logger.info("most recent task instance: {}",
+          player.getMostRecentArcadeInstance());
       redirectAttributes.addFlashAttribute("challengeId", challenge.getId());
       redirectAttributes.addFlashAttribute("challenge", challenge);
       redirectAttributes.addFlashAttribute("minLength", Integer.MAX_VALUE);

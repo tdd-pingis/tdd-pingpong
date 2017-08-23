@@ -358,7 +358,6 @@
                         "import static org.junit.Assert.*;\n",
                         "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
                         "@Points(\"03-03\")\n",
-
                         "public class Beginner1Test {\n\n",
                         "    @Test\n",
                         "    public void muumiTest() {\n",
