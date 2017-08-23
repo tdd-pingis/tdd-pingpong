@@ -41,8 +41,8 @@
                             <h3 class="panel-title" th:text="${submissionTabFileName}"></h3>
                         </div>
                         <div class="panel-body">
-                            <div id="submission-editor" style="height: 300px" class="editortab" th:text="${submissionCodeStub}"></div>
-                            <textarea name="submissionCode" id="submission-code" style="display: none;"
+                            <div id="submission-editor"class="editortab" th:text="${submissionCodeStub}"></div>
+                            <textarea class="submissioncode" name="submissionCode" id="submission-code"
                                       th:text="${submissionCodeStub}"></textarea>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                             <h3 class="panel-title" th:text="${staticTabFileName}"></h3>
                         </div>
                         <div class="panel-body">
-                            <div id="static-editor" style="height: 300px" class="editortab" th:text="${staticCode}"></div>
+                            <div id="static-editor" class="editortab" th:text="${staticCode}"></div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary" onclick="clicked(event)">Submit</button>
@@ -62,29 +62,6 @@
                <a class="btn btn-primary" th:href="'/skip/'+${taskInstanceId}">Skip task</a>
             </div>
 
-        <script type="text/javascript" th:src="@{/webjars/ace-builds/src-min-noconflict/ace.js}" charset="utf-8"></script>
-
-        <script>
-            function createEditor(editorId, textareaId) {
-                let editor = ace.edit(editorId);
-                let textarea = document.getElementById(textareaId);
-
-                editor.setTheme("ace/theme/monokai");
-                editor.getSession().setMode("ace/mode/java");
-                editor.getSession().on("change", () => {
-                    textarea.value = editor.getSession().getValue();
-                });
-                return editor;
-            }
-
-            createEditor("submission-editor", "submission-code");
-            staticEditor = createEditor("static-editor", "static-code");
-            staticEditor.setReadOnly(true);
-            function clicked(e) {
-                if (!confirm("Are you ready to submit?")) {
-                    e.preventDefault();
-                }
-            }
-        </script>
-    </body>
+        <script th:src="@{/webjars/ace-builds/src-min-noconflict/ace.js}" type="text/javascript"  charset="utf-8"></script>
+        <script th:src="@{/js/aceEditorSettings.js}" type="text/javascript"  charset="utf-8"></script>
 </html>
