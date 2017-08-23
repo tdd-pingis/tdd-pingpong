@@ -104,13 +104,11 @@ bootRun {
 
 // Add checks for unchecked/unsafe operations and use of deprecated stuff
 compileJava {
-    options.compilerArgs << "-Xlint:unchecked"
-    options.compilerArgs << "-Xlint:deprecation"
+    options.compilerArgs << "-Xlint"
 }
 
 compileTestJava {
-    options.compilerArgs << "-Xlint:unchecked"
-    options.compilerArgs << "-Xlint:deprecation"
+    options.compilerArgs << "-Xlint"
 }
 
 // Separates the Unit and Cucumber tests to separate tasks
