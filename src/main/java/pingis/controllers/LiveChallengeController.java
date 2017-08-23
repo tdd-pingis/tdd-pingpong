@@ -237,13 +237,17 @@ public class LiveChallengeController {
           player.getMostRecentArcadeInstance().getId());
       return new RedirectView("/task/" + player.getMostRecentArcadeInstance().getId());
     }
-    Realm currentRealm = Realm.valueOf(realm.toUpperCase());
-    logger.info("Trying to get realm: {}", realm);
 
-    if (currentRealm == null) {
+    Realm currentRealm = null;
+
+    try {
+      logger.info("Trying to get realm: {}", realm);
+      currentRealm = Realm.valueOf(realm.toUpperCase());
+    } catch (Exception e) {
       logger.info("Realm {} does not exist. Redirecting to /error.", realm);
       return new RedirectView("/error");
     }
+
 
     Challenge challenge = gameplayService.getArcadeChallenge(currentRealm);
 
