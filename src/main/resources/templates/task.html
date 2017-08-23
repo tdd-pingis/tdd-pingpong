@@ -41,8 +41,8 @@
                             <h3 class="panel-title" th:text="${submissionTabFileName}"></h3>
                         </div>
                         <div class="panel-body">
-                            <div id="submission-editor" style="height: 300px" class="editortab" th:text="${submissionCodeStub}"></div>
-                            <textarea name="submissionCode" id="submission-code" style="display: none;"
+                            <div id="submission-editor"class="editortab" th:text="${submissionCodeStub}"></div>
+                            <textarea class="submissioncode" name="submissionCode" id="submission-code"
                                       th:text="${submissionCodeStub}"></textarea>
                         </div>
                     </div>
@@ -51,7 +51,7 @@
                             <h3 class="panel-title" th:text="${staticTabFileName}"></h3>
                         </div>
                         <div class="panel-body">
-                            <div id="static-editor" style="height: 300px" class="editortab" th:text="${staticCode}"></div>
+                            <div id="static-editor" class="editortab" th:text="${staticCode}"></div>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary" onclick="clicked(event)">Submit</button>
