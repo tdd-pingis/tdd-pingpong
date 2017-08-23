@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Challenge;
+import pingis.entities.ChallengeType;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
@@ -31,9 +32,11 @@ import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
 import pingis.services.sandbox.SandboxService;
+import pingis.utils.CodeStub;
+import pingis.utils.CodeStubBuilder;
 import pingis.utils.EditorTabData;
-import pingis.utils.JavaClassGenerator;
 import pingis.utils.JavaSyntaxChecker;
+import pingis.utils.TestStubBuilder;
 
 @Controller
 public class TaskController {
@@ -71,22 +74,23 @@ public class TaskController {
     model.addAttribute("challenge", currentChallenge);
     model.addAttribute("task", taskInstance.getTask());
     model.addAttribute("taskInstanceId", taskInstanceId);
-    Map<String, EditorTabData> editorContents = editorService.generateEditorContents(taskInstance);
-    model.addAttribute("submissionCodeStub", editorContents.get("editor1").code);
-    model.addAttribute("staticCode", editorContents.get("editor2").code);
-    String implFileName = JavaClassGenerator.generateImplClassFilename(currentChallenge);
-    String testFileName = JavaClassGenerator.generateTestClassFilename(currentChallenge);
 
-    if (taskInstance.getTask().getType() == TaskType.TEST) {
-      model.addAttribute("submissionTabFileName", testFileName);
-      model.addAttribute("staticTabFileName", implFileName);
-    } else {
-      model.addAttribute("submissionTabFileName", implFileName);
-      model.addAttribute("staticTabFileName", testFileName);
-    }
+    Map<String, EditorTabData> editorContents = editorService.generateEditorContents(taskInstance);
+    EditorTabData tab1 = editorContents.get("editor1");
+    EditorTabData tab2 = editorContents.get("editor2");
+
+    model.addAttribute("submissionCodeStub", tab1.code);
+    model.addAttribute("staticCode", tab2.code);
+
+    boolean isTest = taskInstance.getTask().getType() == TaskType.TEST;
+
+    model.addAttribute("submissionTabFileName", isTest ? tab1.title : tab2.title);
+    model.addAttribute("staticTabFileName", isTest ? tab2.title : tab1.title);
+
     if (model.containsAttribute("code")) {
       model.addAttribute("submissionCodeStub", model.asMap().get("code"));
     }
+    logger.info("entering editor view");
     return "task";
   }
 
@@ -94,14 +98,13 @@ public class TaskController {
   public RedirectView task(String submissionCode,
       long taskInstanceId,
       RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
-
+    logger.info("submitting");
     String[] errors = JavaSyntaxChecker.parseCode(submissionCode);
     if (errors != null) {
       redirectAttributes.addFlashAttribute("errors", errors);
       redirectAttributes.addFlashAttribute("code", submissionCode);
-      return new RedirectView("/task/{taskInstanceId}");
+      return new RedirectView("/task/" + taskInstanceId);
     }
-
     TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
 
@@ -136,6 +139,9 @@ public class TaskController {
   @RequestMapping("/nextTask/{challengeId}")
   public String nextTask(@PathVariable long challengeId, Model model) {
     Challenge currentChallenge = challengeService.findOne(challengeId);
+    if (currentChallenge.getType() == ChallengeType.ARCADE) {
+      return "redirect:/playArcade/?realm=" + currentChallenge.getRealm().toString();
+    }
     List<Task> tasks = taskService.filterTasksByUser(
             currentChallenge.getTasks(), userService.getCurrentUser());
     List<Task> testTasks = taskService.filterTasksByUser(
@@ -165,6 +171,10 @@ public class TaskController {
       taskInstanceService.save(testTaskInstance);
     }
     redirectAttributes.addAttribute("taskInstanceId", newTaskInstance.getId());
+    if (newTaskInstance.getChallenge().getType() == ChallengeType.ARCADE) {
+      user.setMostRecentArcadeInstance(newTaskInstance);
+      userService.save(user);
+    }
     return new RedirectView("/task/{taskInstanceId}");
   }
 
@@ -217,16 +227,13 @@ public class TaskController {
 
     String staticCode = taskService.getCorrespondingTask(taskInstance.getTask()).getCodeStub();
 
-    String implFileName = JavaClassGenerator.generateImplClassFilename(challenge);
-    String testFileName = JavaClassGenerator.generateTestClassFilename(challenge);
+    CodeStubBuilder stubBuilder = new CodeStubBuilder(challenge.getName());
+    CodeStub implStub = stubBuilder.build();
+    CodeStub testStub = new TestStubBuilder(stubBuilder).build();
 
-    if (taskInstance.getTask().getType() == TaskType.TEST) {
-      files.put(testFileName, submissionCode.getBytes());
-      files.put(implFileName, staticCode.getBytes());
-    } else {
-      files.put(implFileName, submissionCode.getBytes());
-      files.put(testFileName, staticCode.getBytes());
-    }
+    boolean isTest = taskInstance.getTask().getType() == TaskType.TEST;
+    files.put(isTest ? testStub.filename : implStub.filename, submissionCode.getBytes());
+    files.put(isTest ? implStub.filename : testStub.filename, staticCode.getBytes());
 
     return sandboxService.submit(files, taskInstance);
   }

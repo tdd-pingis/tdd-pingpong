@@ -1,29 +1,56 @@
 .editortab {
-    
+  height: 300px
 }
 
 .dashboardtopbar {
 }
 
 .dashboardsidebar {
-    border-style: groove;
-    border-radius: 8px;
-    padding: 4px;
+  border-style: groove;
+  border-radius: 8px;
+  padding: 4px;
 }
 
 .challengeitem {
- border-style: groove;
- border-radius: 8px;
- padding: 4px;
- 
+  border-style: groove;
+  border-radius: 8px;
+  padding: 4px;
+
 }
 
 .contentcontainer {
-    padding: 30px;
+  padding: 30px;
 }
 
 .navbarpadding {
-    padding: 30px;
+  padding: 30px;
 }
 
-#stars { color: #ee8b2d;}
+.empty-progress-bar {
+  width: 0%;
+}
+
+.submissioncode {
+  display: none;
+}
+
+.feedback-container {
+  display: none;
+  margin-top: 3em;
+}
+
+.nexttask {
+  display: none;
+}
+
+.givenrating {
+  display: none;
+}
+
+.starrr {
+  margin-bottom: 1em;
+}
+
+#stars {
+  color: #ee8b2d;
+}

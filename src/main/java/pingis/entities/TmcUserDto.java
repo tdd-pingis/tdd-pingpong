@@ -16,6 +16,8 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 * @author  villburn
 */
 public class TmcUserDto implements OAuth2User {
+  // Silence -Xlint:serial
+  private static final long serialVersionUID = 42L;
 
   @NotNull
   @NotEmpty

@@ -9,6 +9,6 @@ Feature: Content check for multiple editor tabs
     Examples:
 
       |user   |tab_name                 |content                               |page           |
-      |User   |test/CalculatorTest.java |public void testMultiplication        |task/17        |
-      |User   |test/CalculatorTest.java |CalculatorTest                        |task/17        |
-      |Admin  |src/Calculator.java      |add                                   |task/20        |
+      |User   |test/CalculatorTest.java |public void testMultiplication        |task/24        |
+      |User   |test/CalculatorTest.java |CalculatorTest                        |task/25        |
+      |Admin  |src/Calculator.java      |add                                   |task/26        |

@@ -26,7 +26,7 @@ public class FakeSandboxController {
   private FakeSandboxRestService fakeSandboxRestService;
   
   @RequestMapping("/tasks.json")
-  public ResponseEntity tasks(
+  public ResponseEntity<SubmissionResponse> tasks(
         @RequestParam("token") String token,
         @RequestParam("notify") String notify) {
     

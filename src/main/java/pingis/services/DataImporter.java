@@ -12,7 +12,9 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import pingis.entities.Challenge;
+import pingis.entities.ChallengeType;
 import pingis.entities.CodeStatus;
+import pingis.entities.Realm;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
@@ -33,10 +35,10 @@ public class DataImporter implements ApplicationRunner {
   private TaskRepository taskRepository;
   private UserService userService;
   private TaskInstanceRepository taskInstanceRepository;
-  private HashMap<String, User> users = new LinkedHashMap();
-  private HashMap<String, Challenge> challenges = new HashMap();
-  private ArrayList<Task> tasks = new ArrayList();
-  private ArrayList<TaskInstance> taskInstances = new ArrayList();
+  private HashMap<String, User> users = new LinkedHashMap<>();
+  private HashMap<String, Challenge> challenges = new HashMap<>();
+  private ArrayList<Task> tasks = new ArrayList<>();
+  private ArrayList<TaskInstance> taskInstances = new ArrayList<>();
 
   public enum UserType {
     TMC_MODEL_USER("admin", 0, true),
@@ -141,14 +143,14 @@ public class DataImporter implements ApplicationRunner {
 
     for (int i = 0; i < challenges.length(); i++) {
       JSONObject challengeObject = challenges.getJSONObject(i);
-      JSONArray tasks = challengeObject.getJSONArray("tasks");
-
       Challenge challenge = new Challenge(challengeObject.getString("name"),
           users.get(challengeObject.getString("author")),
           challengeObject.getString("desc"));
+      challenge.setType(ChallengeType.valueOf(challengeObject.getString("type").toUpperCase()));
+      challenge.setRealm(Realm.valueOf(challengeObject.getString("realm").toUpperCase()));
       challenge.setLevel(challengeObject.getInt("level"));
+      JSONArray tasks = challengeObject.getJSONArray("tasks");
       this.challenges.put(challengeObject.getString("name"), challenge);
-
       for (int j = 0; j < tasks.length(); j++) {
         generateChallengeContent(tasks, j, challengeObject, challenge);
       }

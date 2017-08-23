@@ -51,6 +51,9 @@ public class TaskInstance {
   @OneToMany
   private List<TaskInstance> implementationTaskInstances;
 
+  @OneToOne(mappedBy = "mostRecentArcadeInstance")
+  private User mostRecent;
+
   protected TaskInstance() {
   }
 
@@ -61,7 +64,7 @@ public class TaskInstance {
     this.status = CodeStatus.IN_PROGRESS;
     this.isExample = false; // by default
     this.rating = 0;
-    this.implementationTaskInstances = new ArrayList();
+    this.implementationTaskInstances = new ArrayList<>();
   }
 
   public long getId() {

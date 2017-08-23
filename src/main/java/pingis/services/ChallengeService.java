@@ -44,7 +44,7 @@ public class ChallengeService {
   }
 
   public List<Challenge> findAll() {
-    return (List) challengeRepository.findAll();
+    return (List<Challenge>) challengeRepository.findAll();
   }
 
   public Challenge delete(Long challengeId) {
