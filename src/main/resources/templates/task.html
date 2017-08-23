@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head th:include="base :: header"></head>
-    <body onload="connect()">
+    <body onload="connect()" id='next-task-page'> 
         <nav th:include="navbar :: navigation"></nav>
 
         <div class="container">
@@ -54,7 +54,7 @@
                     </div>
                     <div class="row">
                       <div class="col-md-1">
-                        <button id="submit-button" type="submit" class="btn btn-primary" onclick="clicked(event)">Submit</button>
+                        <button id="submit-button" type="submit" class="btn btn-primary" onclick="clicked(event)>Submit</button>
                       </div>
                       <div class="col-md-1" th:if="${(challenge.type == T(pingis.entities.ChallengeType).ARCADE && task.type == T(pingis.entities.TaskType).IMPLEMENTATION)
                        || (challenge.type != T(pingis.entities.ChallengeType).ARCADE && !challenge.isOpen)}">

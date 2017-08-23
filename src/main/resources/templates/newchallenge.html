@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">d
 <head th:include="base :: header"></head>
 <body>
 <nav th:include="navbar :: navigation"></nav>
@@ -8,11 +8,11 @@
     <div class="row">
         <form th:action="@{/createChallenge}" method="post">
             <label>Challenge name:</label><br />
-            <input type="text" name="challengeName" size="50" placeholder="The name of the challenge eg. Calculator"/><br />
+            <input type="text" name="challengeName" size="50" id="challenge_name" placeholder="The name of the challenge eg. Calculator"/><br />
             <label>Challenge description</label><br />
-            <textarea rows="10" cols="80" name="challengeDesc" placeholder="The description for the challenge, eg. 'Test and implement a simple command line based calculator.'"></textarea><br />
+            <textarea rows="10" cols="80" name="challengeDesc" id="challenge_desc" placeholder="The description for the challenge, eg. 'Test and implement a simple command line based calculator.'"></textarea><br />
             <label>Challenge type:</label>
-            <select name="challengeType">
+            <select name="challengeType" id="challenge_type_select">
                 <option value="PROJECT">Project</option>
                 <option value="MIXED">Mixed</option>
             </select>
@@ -30,7 +30,7 @@
             <a data-toggle="tooltip" data-placement="right" title="The realm of a challenge defines the challenge's theme">
                 <span class="glyphicon glyphicon-question-sign"/></a>
             <br />
-            <button type="submit" class="btn btn-primary">Create challenge</button>
+            <button type="submit" class="btn btn-primary" id="submit-button">Create challenge</button>
         </form>
     </div>
     <script type="text/javascript" th:src="@{/js/hints.js}" charset="utf-8"></script>

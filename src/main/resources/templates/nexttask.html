@@ -8,8 +8,8 @@
     <div class="container">
         <h4>Test tasks:</h4>
         <ul>
-            <li th:each="testtask: ${testTasks}">
-                <a th:href="'/newTaskInstance?taskId='+${testtask.id}+'&amp;testTaskInstanceId=0'"><span th:text="${testtask.name}"/></a>
+            <li th:each="testtask, iterStat : ${testTasks}">
+                <a th:href="'/newTaskInstance?taskId='+${testtask.id}+'&amp;testTaskInstanceId=0'" th:attr="id='test-task-'+${iterStat.count}"><span th:text="${testtask.name}"/></a>
             </li>
         </ul>
         <h4>Implementation tasks:</h4>
