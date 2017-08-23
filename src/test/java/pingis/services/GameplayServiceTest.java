@@ -3,7 +3,7 @@ package pingis.services;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -104,7 +104,7 @@ public class GameplayServiceTest {
   public void testGetNumberOfTasks() {
     testChallenge.addTask(firstTestTask);
     testChallenge.addTask(firstImplTask);
-    List<Task> tasks = new ArrayList();
+    List<Task> tasks = new ArrayList<>();
     tasks.add(firstTestTask);
     tasks.add(firstImplTask);
     when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
@@ -119,7 +119,7 @@ public class GameplayServiceTest {
     testChallenge.addTask(firstImplTask);
     testChallenge.addTask(secondTestTask);
     testChallenge.addTask(secondImplTask);
-    List<Task> tasks = new ArrayList();
+    List<Task> tasks = new ArrayList<>();
     tasks.add(firstTestTask);
     tasks.add(firstImplTask);
     tasks.add(secondTestTask);
@@ -141,7 +141,7 @@ public class GameplayServiceTest {
   public void testGetTurnTypeWhenImplementing() {
     testChallenge.addTask(firstTestTask);
     testChallenge.addTask(firstImplTask);
-    List<Task> tasks = new ArrayList();
+    List<Task> tasks = new ArrayList<>();
     tasks.add(firstTestTask);
     tasks.add(firstImplTask);
     tasks.add(secondTestTask);
@@ -163,7 +163,7 @@ public class GameplayServiceTest {
   public void testGetTurnTypeWhenIsNotTurn() {
     testChallenge.addTask(firstTestTask);
     testChallenge.addTask(firstImplTask);
-    List<Task> tasks = new ArrayList();
+    List<Task> tasks = new ArrayList<>();
     tasks.add(firstTestTask);
     tasks.add(firstImplTask);
     when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
@@ -181,7 +181,7 @@ public class GameplayServiceTest {
 
   @Test
   public void testGetTopmostImplementationTask() {
-    List<Task> tasks = new ArrayList();
+    List<Task> tasks = new ArrayList<>();
     tasks.add(firstTestTask);
     tasks.add(firstImplTask);
     tasks.add(secondTestTask);
@@ -196,7 +196,7 @@ public class GameplayServiceTest {
 
   @Test
   public void testGetTopmostTestTask() {
-    List<Task> tasks = new ArrayList();
+    List<Task> tasks = new ArrayList<>();
     tasks.add(firstTestTask);
     tasks.add(firstImplTask);
     tasks.add(secondTestTask);
@@ -209,7 +209,7 @@ public class GameplayServiceTest {
 
   @Test
   public void testGetParticipatingLiveChallenge() {
-    List<Challenge> challenges = new ArrayList();
+    List<Challenge> challenges = new ArrayList<>();
     challenges.add(testChallenge);
     when(challengeServiceMock.findAll()).thenReturn(challenges);
     when(userServiceMock.getCurrentUser()).thenReturn(testUser);
@@ -223,7 +223,7 @@ public class GameplayServiceTest {
 
   @Test
   public void testGenerateTasksAndInstance() {
-    List<Task> tasks = new ArrayList();
+    List<Task> tasks = new ArrayList<>();
     tasks.add(firstTestTask);
     tasks.add(firstImplTask);
     tasks.add(secondTestTask);

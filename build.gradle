@@ -102,6 +102,16 @@ bootRun {
     sourceResources sourceSets.main
 }
 
+// Add checks for unchecked/unsafe operations and use of deprecated stuff
+compileJava {
+    options.compilerArgs << "-Xlint:unchecked"
+    options.compilerArgs << "-Xlint:deprecation"
+}
+
+compileTestJava {
+    options.compilerArgs << "-Xlint:unchecked"
+    options.compilerArgs << "-Xlint:deprecation"
+}
 
 // Separates the Unit and Cucumber tests to separate tasks
 // Defines tasks unit, and cucumber and clears out the task test

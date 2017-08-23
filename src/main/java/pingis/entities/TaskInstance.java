@@ -64,7 +64,7 @@ public class TaskInstance {
     this.status = CodeStatus.IN_PROGRESS;
     this.isExample = false; // by default
     this.rating = 0;
-    this.implementationTaskInstances = new ArrayList();
+    this.implementationTaskInstances = new ArrayList<>();
   }
 
   public long getId() {
