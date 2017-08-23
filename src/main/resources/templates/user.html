@@ -65,25 +65,7 @@
                   <a href="/randomTask" class="btn btn-success">Give me a random task</a>
                 </div>
 
-            
-            <script src="js/ProgressCircle.js" type="text/javascript" charset="utf-8"></script>
-            <script>
-                  var myCanvas = document.getElementById('progresscircle');
+            <script th:src="@{/js/progressCircle.js}" type="text/javascript" charset="utf-8"></script>
 
-                  var circle = new ProgressCircle({
-                  canvas: myCanvas,
-                  minRadius: 30,
-                  arcWidth: 15,
-                  }); 
-
-                  circle.addEntry({
-                  fillColor: 'rgba(255, 0, 0, 0.5)',
-                  progressListener: function() {
-                  return 0.88; // between 0 and 1
-                  },
-                  infoListener: function() {return "Points to next level: 88"},
-                  });
-                  circle.start(33);
-            </script>
       </body>
 </html>

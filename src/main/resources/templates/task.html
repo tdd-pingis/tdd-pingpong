@@ -59,29 +59,6 @@
             </form>
         </div>
 
-        <script type="text/javascript" th:src="@{/webjars/ace-builds/src-min-noconflict/ace.js}" charset="utf-8"></script>
-
-        <script>
-            function createEditor(editorId, textareaId) {
-                let editor = ace.edit(editorId);
-                let textarea = document.getElementById(textareaId);
-
-                editor.setTheme("ace/theme/monokai");
-                editor.getSession().setMode("ace/mode/java");
-                editor.getSession().on("change", () => {
-                    textarea.value = editor.getSession().getValue();
-                });
-                return editor;
-            }
-
-            createEditor("submission-editor", "submission-code");
-            staticEditor = createEditor("static-editor", "static-code");
-            staticEditor.setReadOnly(true);
-            function clicked(e) {
-                if (!confirm("Are you ready to submit?")) {
-                    e.preventDefault();
-                }
-            }
-        </script>
-    </body>
+        <script th:src="@{/webjars/ace-builds/src-min-noconflict/ace.js}" type="text/javascript"  charset="utf-8"></script>
+        <script th:src="@{/js/aceEditorSettings.js}" type="text/javascript"  charset="utf-8"></script>
 </html>
