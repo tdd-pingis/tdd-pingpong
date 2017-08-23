@@ -72,7 +72,7 @@ public class FakeTmcController {
   }
 
   @RequestMapping(value = "/fake/token", method = RequestMethod.POST)
-  public ResponseEntity token(
+  public ResponseEntity<FakeToken> token(
           @RequestParam("code") String code,
           HttpServletRequest request,
           HttpServletResponse response) {
@@ -91,7 +91,7 @@ public class FakeTmcController {
   }
 
   @RequestMapping(value = "/fake/userinfo", method = RequestMethod.GET)
-  public ResponseEntity user(
+  public ResponseEntity<FakeUser> user(
           HttpServletRequest request) {
 
     Map<String, String> ids = new HashMap<>();

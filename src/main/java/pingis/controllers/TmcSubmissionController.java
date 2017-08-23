@@ -23,7 +23,7 @@ public class TmcSubmissionController {
   // These request parameters are specified separately because there doesn't seem to
   // be a simple way to rename fields when doing data binding.
   @PostMapping("/submission-result")
-  public ResponseEntity submissionResult(
+  public ResponseEntity<?> submissionResult(
       @RequestParam("test_output") String testOutput,
       @RequestParam String stdout,
       @RequestParam String stderr,
@@ -41,9 +41,9 @@ public class TmcSubmissionController {
         stderr, validations, vmLog, status, exitCodeValue);
 
     if (!updated) {
-      return new ResponseEntity(HttpStatus.NOT_FOUND);
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
-    return new ResponseEntity(HttpStatus.OK);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }
