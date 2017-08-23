@@ -252,7 +252,8 @@ public class LiveChallengeController {
     Challenge challenge = gameplayService.getArcadeChallenge(currentRealm);
 
     if (player.getMostRecentArcadeInstance() == null
-        || player.getMostRecentArcadeInstance().getTask().getType() == TaskType.IMPLEMENTATION) {
+        || (player.getMostRecentArcadeInstance().getTask().getType() == TaskType.IMPLEMENTATION)
+        && player.getMostRecentArcadeInstance().getStatus() != CodeStatus.DROPPED) {
       logger.info("most recent task instance: {}",
           player.getMostRecentArcadeInstance());
       redirectAttributes.addFlashAttribute("challengeId", challenge.getId());
