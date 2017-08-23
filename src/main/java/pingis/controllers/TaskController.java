@@ -32,9 +32,11 @@ import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
 import pingis.services.sandbox.SandboxService;
+import pingis.utils.CodeStub;
+import pingis.utils.CodeStubBuilder;
 import pingis.utils.EditorTabData;
-import pingis.utils.JavaClassGenerator;
 import pingis.utils.JavaSyntaxChecker;
+import pingis.utils.TestStubBuilder;
 
 @Controller
 public class TaskController {
@@ -72,19 +74,19 @@ public class TaskController {
     model.addAttribute("challenge", currentChallenge);
     model.addAttribute("task", taskInstance.getTask());
     model.addAttribute("taskInstanceId", taskInstanceId);
-    Map<String, EditorTabData> editorContents = editorService.generateEditorContents(taskInstance);
-    model.addAttribute("submissionCodeStub", editorContents.get("editor1").code);
-    model.addAttribute("staticCode", editorContents.get("editor2").code);
-    String implFileName = JavaClassGenerator.generateImplClassFilename(currentChallenge);
-    String testFileName = JavaClassGenerator.generateTestClassFilename(currentChallenge);
 
-    if (taskInstance.getTask().getType() == TaskType.TEST) {
-      model.addAttribute("submissionTabFileName", testFileName);
-      model.addAttribute("staticTabFileName", implFileName);
-    } else {
-      model.addAttribute("submissionTabFileName", implFileName);
-      model.addAttribute("staticTabFileName", testFileName);
-    }
+    Map<String, EditorTabData> editorContents = editorService.generateEditorContents(taskInstance);
+    EditorTabData tab1 = editorContents.get("editor1");
+    EditorTabData tab2 = editorContents.get("editor2");
+
+    model.addAttribute("submissionCodeStub", tab1.code);
+    model.addAttribute("staticCode", tab2.code);
+
+    boolean isTest = taskInstance.getTask().getType() == TaskType.TEST;
+
+    model.addAttribute("submissionTabFileName", isTest ? tab1.title : tab2.title);
+    model.addAttribute("staticTabFileName", isTest ? tab2.title : tab1.title);
+
     if (model.containsAttribute("code")) {
       model.addAttribute("submissionCodeStub", model.asMap().get("code"));
     }
@@ -225,16 +227,13 @@ public class TaskController {
 
     String staticCode = taskService.getCorrespondingTask(taskInstance.getTask()).getCodeStub();
 
-    String implFileName = JavaClassGenerator.generateImplClassFilename(challenge);
-    String testFileName = JavaClassGenerator.generateTestClassFilename(challenge);
+    CodeStubBuilder stubBuilder = new CodeStubBuilder(challenge.getName());
+    CodeStub implStub = stubBuilder.build();
+    CodeStub testStub = new TestStubBuilder(stubBuilder).build();
 
-    if (taskInstance.getTask().getType() == TaskType.TEST) {
-      files.put(testFileName, submissionCode.getBytes());
-      files.put(implFileName, staticCode.getBytes());
-    } else {
-      files.put(implFileName, submissionCode.getBytes());
-      files.put(testFileName, staticCode.getBytes());
-    }
+    boolean isTest = taskInstance.getTask().getType() == TaskType.TEST;
+    files.put(isTest ? testStub.filename : implStub.filename, submissionCode.getBytes());
+    files.put(isTest ? implStub.filename : testStub.filename, staticCode.getBytes());
 
     return sandboxService.submit(files, taskInstance);
   }
