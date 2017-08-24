@@ -36,8 +36,8 @@ import pingis.services.DataImporter;
 @ContextConfiguration
 public class Stepdefs {
           
-  private static final int DRIVER_WAIT_TIME = 12;
-  private static final int LOAD_WAIT_TIME = 1000;
+  private static final int DRIVER_WAIT_TIME = 8;
+  private static final int LOAD_WAIT_TIME = 1300;
   private static final String baseUrl = "http://localhost:8080/";
 
   WebDriver driver;
