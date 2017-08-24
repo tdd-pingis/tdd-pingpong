@@ -46,6 +46,7 @@
                             <div id="static-editor" class="editortab" th:text="${staticCode}"></div>
                         </div>
                     </div>
+                    <div class="row">
                       <div class="col-md-1">
                         <button id="submit-button" type="submit" class="btn btn-primary" onclick="clicked(event)">Submit</button>
                       </div>
@@ -53,6 +54,7 @@
                        || (challenge.type != T(pingis.entities.ChallengeType).ARCADE && !challenge.isOpen)}">
                          <a class="btn btn-primary" th:href="'/skip/'+${taskInstanceId}">Skip task</a>
                       </div>
+                    </div>
                 </div>
             </form>
             <div id="errors" />
