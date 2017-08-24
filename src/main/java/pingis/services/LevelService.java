@@ -1,44 +1,44 @@
 package pingis.services;
 
 
-import java.util.Map;
-import java.util.LinkedHashMap;
-
 import org.springframework.stereotype.Service;
 
 
 @Service
 public class LevelService {
 
-  private Map<Integer, Integer> levels;
-  private final int baseMinimum = 1000;
+  private int[] scoreLimits;
+  private final int levels = 100;
+  private final int firstLevel = 1000;
   private final float coefficient = 1.2f;
 
   public LevelService() {
-    levels = new LinkedHashMap();
+    scoreLimits = new int[levels];
     generateLevels();
   }
 
-  public void generateLevels() {
-    this.levels.put(0,0);
-    for (int i = 1; i < 100; i++) {
-      int nextLevel = (int)(baseMinimum * Math.pow(this.coefficient, i-1));
-      this.levels.put(nextLevel, i);
+  private void generateLevels() {
+    scoreLimits[0] = 0;
+    for (int i = 1; i < levels; i++) {
+      int nextLevel = (int)(firstLevel * Math.pow(this.coefficient, i-1));
+      this.scoreLimits[i] = nextLevel;
     }
   }
 
   public int getLevel(int score) {
-    int previous = 0;
-    for (Integer limit : this.levels.keySet()) {
-      if (score < limit) {
-        return levels.get(previous);
+    for (int i = 0; i < levels+1; i++) {
+      if (score < scoreLimits[i]) {
+        return scoreLimits[i - 1];
       }
-      else previous = limit;
     }
-    return 100;
+    return levels;
   }
 
+  public Rank getRank(int level) {
+    return null;
+  }
   public int getPoints(int difficulty) {
     // TODO: figure this out
+    return 0;
   }
 }
