@@ -7,26 +7,33 @@
     <h1>New challenge</h1>
     <div class="row">
         <form th:action="@{/createChallenge}" method="post">
-            <label>challenge name:</label><br />
-            <input type="text" name="challengeName" size="50"/><br />
-            <label>challenge description</label><br />
-            <textarea rows="10" cols="80" name="challengeDesc"></textarea><br />
+            <label>Challenge name:</label><br />
+            <input type="text" name="challengeName" size="50" placeholder="The name of the challenge eg. Calculator"/><br />
+            <label>Challenge description</label><br />
+            <textarea rows="10" cols="80" name="challengeDesc" placeholder="The description for the challenge, eg. 'Test and implement a simple command line based calculator.'"></textarea><br />
             <label>Challenge type:</label>
             <select name="challengeType">
                 <option value="PROJECT">Project</option>
                 <option value="MIXED">Mixed</option>
-            </select><br />
+            </select>
+            <a data-toggle="tooltip" data-placement="right" title="In project challenges, the tasks are related to each other, while mixed challenges may contain unrelated tasks">
+                <span class="glyphicon glyphicon-question-sign"/></a>
+            <br />
             <label>Realm:</label>
             <select name="realm">
                 <option value="BEGINNER">Beginner</option>
-                <option value="DATASTRUCTURES">Data structires</option>
+                <option value="DATASTRUCTURES">Data structures</option>
                 <option value="ALGORITHMS">Algorithms</option>
                 <option value="RECURSION">Recursion</option>
                 <option value="AI">Artificial intelligence</option>
-            </select><br />
+            </select>
+            <a data-toggle="tooltip" data-placement="right" title="The realm of a challenge defines the challenge's theme">
+                <span class="glyphicon glyphicon-question-sign"/></a>
+            <br />
             <button type="submit" class="btn btn-primary">Create challenge</button>
         </form>
     </div>
+    <script type="text/javascript" th:src="@{/js/hints.js}" charset="utf-8"></script>
 </div>
 </body>
 </html>
