@@ -23,6 +23,12 @@
                 <li>
                     <a data-toggle="tab" th:text="${staticTabFileName}" href="#test">Placeholder editors</a>
                 </li>
+                <li>
+                    <a data-toggle="tooltip" data-placement="right" th:title="${'To complete this ' + #strings.toLowerCase(task.type)
+                    + ' task, follow the assignment and write the code in the FIRST tab.'
+                    + ' Please refer to the uneditable code in the second tab.'}">
+                        <span class="glyphicon glyphicon-question-sign"/></a>
+                </li>
             </ul>
 
             <form method="post" th:action="@{/task}">

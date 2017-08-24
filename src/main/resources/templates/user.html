@@ -51,20 +51,23 @@
                         </div>
                   </div>
                   <div th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CREATE}">
-                        <a href="/newchallenge" class="btn btn-primary">Create New Live Challenge</a>
+                        <a href="/newchallenge" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Create New Live Challenge</a>
                   </div>
                   <div th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).JOIN}">
-                        <a th:href="'/playTurn/' + ${liveChallenge.id}" class="btn btn-success">Join Live Challenge</a>
+                        <a th:href="'/playTurn/' + ${liveChallenge.id}" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Join Live Challenge</a>
                   </div>
                   <div th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CONTINUE}">
-                        <a th:href="'/playTurn/' + ${liveChallenge.id}" class="btn btn-info">Continue Live Challenge</a>
+                        <a th:href="'/playTurn/' + ${liveChallenge.id}" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="Continue your turn-based game against a real opponent">Continue Live Challenge</a>
                   </div>
-                  <a href="/randomTask" class="btn btn-success">Give me a random task</a>
+
+                  <a href="/randomTask" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a random Task from a random Challenge">Give me a random task</a>
                   <a href="/newArcadeChallenge" class="btn btn-primary">Create new arcade challenge</a>
                   <a href="/playArcade?realm=BEGINNER" class="btn btn-primary">Play arcade challenge</a>
+
                 </div>
 
             <script th:src="@{/js/progressCircle.js}" type="text/javascript" charset="utf-8"></script>
+            <script th:src="@{/js/hints.js}" type="text/javascript" charset="utf-8"></script>
 
       </body>
 </html>
