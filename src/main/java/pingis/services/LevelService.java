@@ -20,13 +20,13 @@ public class LevelService {
   private void generateLevels() {
     scoreLimits[0] = 0;
     for (int i = 1; i < levels; i++) {
-      int nextLevel = (int)(firstLevel * Math.pow(this.coefficient, i-1));
+      int nextLevel = (int)(firstLevel * Math.pow(this.coefficient, i - 1));
       this.scoreLimits[i] = nextLevel;
     }
   }
 
   public int getLevel(int score) {
-    for (int i = 0; i < levels+1; i++) {
+    for (int i = 0; i < levels + 1; i++) {
       if (score < scoreLimits[i]) {
         return scoreLimits[i - 1];
       }
@@ -37,6 +37,7 @@ public class LevelService {
   public Rank getRank(int level) {
     return null;
   }
+
   public int getPoints(int difficulty) {
     // TODO: figure this out
     return 0;
