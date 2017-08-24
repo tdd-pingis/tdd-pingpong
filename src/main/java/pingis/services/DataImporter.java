@@ -19,10 +19,12 @@ import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
+import pingis.entities.sandbox.Submission;
 import pingis.repositories.ChallengeRepository;
 import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.TaskRepository;
 import pingis.repositories.UserRepository;
+import pingis.repositories.sandbox.SubmissionRepository;
 
 @Component
 public class DataImporter {
@@ -35,6 +37,7 @@ public class DataImporter {
   private ChallengeRepository challengeRepository;
   private TaskRepository taskRepository;
   private UserRepository userRepository;
+  private SubmissionRepository submissionRepository;
   private TaskInstanceRepository taskInstanceRepository;
   private HashMap<String, User> users = new LinkedHashMap<>();
   private HashMap<String, Challenge> challenges = new HashMap<>();
@@ -70,13 +73,18 @@ public class DataImporter {
   }
 
   @Autowired
-  public DataImporter(ChallengeRepository challengeRepository, TaskRepository taskRepository,
-      UserRepository userRepository,
-      TaskInstanceRepository taskInstanceRepository) throws Exception {
+  public DataImporter(ChallengeRepository challengeRepository, 
+                      TaskRepository taskRepository,
+                      UserRepository userRepository,
+                      TaskInstanceRepository taskInstanceRepository, 
+                      SubmissionRepository submissionRepository1) 
+                      throws Exception {
+    
     this.challengeRepository = challengeRepository;
     this.taskRepository = taskRepository;
     this.userRepository = userRepository;
     this.taskInstanceRepository = taskInstanceRepository;
+    this.submissionRepository = submissionRepository1;
     initializeDatabase();
   }
 
@@ -97,6 +105,7 @@ public class DataImporter {
     challenges.clear();
     users.clear();
     
+    submissionRepository.deleteAll();
     taskInstanceRepository.deleteAll();
     taskRepository.deleteAll();
     challengeRepository.deleteAll();
