@@ -46,11 +46,15 @@ public class Stepdefs {
   DataImporter dataImporter;
   
   // Maps the names for the elements and contents used in the feature files to
-  // actual ids or contents that can be used by the WebDriver to locate them
-  MultiValueMap<String, String>ids;
+  // actual ids or contents; can be used by the WebDriver in order to locate them in the page
+  // Note: You can add multiple values under one key, this works nicely for checking that multiple
+  // elements exist at the same page simultaneously (@Then-steps), however when searching for 
+  // on action elements (@When-steps), searches for the first of the list (adviceable to use only
+  // one value for @When-steps) - villburn
+  MultiValueMap<String, String> ids;
   
-  Map<String, String> testUrls;
-  Map<String, String> inputs;
+  Map<String, String> testUrls; // In order to verify that urls are correct
+  Map<String, String> inputs;   // Contains dummy inputs made by the WebDriver 
   
   @Test
   public void setupTest() {
@@ -95,13 +99,14 @@ public class Stepdefs {
   
   @When(".*clicks the (.+) button$")
   public void clicks_the_button(String name) throws InterruptedException {
-    
-    // special case for live-challenge: user cannot re-join a challenge where he is author
+    // check special case, user should not be able to re-join his own challenge: 
+    // -> somewhat bad design, here for convenience
+    // TODO: refactor
     if (name.equals("join live challenge") && !exists(name)) { 
       assertTrue(exists("create live challenge") || exists("continue live challenge"));
-    } else { 
-      findElementByName(name).click(); 
-    } 
+    } else {
+      findElementByName(name).click();
+    }
   }
   
   @When(".*clicks the (.+) tab$")
@@ -217,7 +222,7 @@ public class Stepdefs {
   }
   
   @Then(".*the (.+) is shown")
-  public void page_is_shown(String page) {
+  public void page_is_shown(String page) throws InterruptedException {
     String currentUrl = driver.getCurrentUrl();
     String message = "wrong url, found: " + driver.getCurrentUrl() 
                    + ",  \n expected to contain " + testUrls.get(page);
@@ -242,11 +247,11 @@ public class Stepdefs {
     waitForFeedbackSuccessMessage();
   }
 
-  private void waitForFeedbackSuccessMessage() {
-    WebElement myDynamicElement = (new WebDriverWait(driver, 10))
-    .until(ExpectedConditions.presenceOfElementLocated(By.id("results-panel")));
+  private void waitForFeedbackSuccessMessage() throws InterruptedException {
+    WebElement myDynamicElement = (new WebDriverWait(driver, 12))
+            .until(ExpectedConditions.presenceOfElementLocated(By.id("results-panel")));
   }
-  
+
   @And("page (.+) the (.+) input by (.+)")
   public void page_contains_the_code_input_by(String contains, String codeType, String user) {
     boolean isContains = contains.equals("contains"); 
@@ -272,7 +277,7 @@ public class Stepdefs {
   
   public void checkAlert() {
     try {
-      Thread.sleep(LOAD_WAIT_TIME);
+      Thread.sleep(LOAD_WAIT_TIME * 2);
       Alert alert = driver.switchTo().alert();
       alert.accept();
     } catch (Exception e) {
@@ -301,8 +306,8 @@ public class Stepdefs {
     map.add("Calculator challenge", "open-challenge-Calculator");
     map.add("challenge name", "challenge_name");
     map.add("challenge description", "challenge_desc");
-    map.add("continue live challenge", "continue_live_challenge");
-    map.add("create live challenge", "create_live_challenge");
+    map.add("continue live challenge", "continue-live-challenge");
+    map.add("create live challenge", "create-live-challenge");
     map.add("Dashboard", "progresscircle");
     map.add("editor page", "Level:");
     map.add("feedback page", "results");
@@ -313,7 +318,7 @@ public class Stepdefs {
     map.add("implementation task codestub", "impl-task-code-stub");
     map.add("implementation task name", "impl-task-name-input");
     map.add("implementation task description", "impl-task-desc-input");
-    map.add("join live challenge", "join_live_challenge");
+    map.add("join live challenge", "join-live-challenge");
     map.add("Login", "login-button");
     map.add("login error page", "login?error");
     map.add("Log in", "log-in-button");
@@ -338,7 +343,8 @@ public class Stepdefs {
     map.add("user page", "Dashboard");
     map.add("username field", "session_login");
 
-    map.add("implementation code input by User", inputs.get("first implementation task codestub").substring(0, 15));
+    map.add("implementation code input by User", inputs.get("first implementation task codestub")
+                                                                             .substring(0, 15));
     map.add("test code input by User", inputs.get("first test task codestub").substring(0, 15));
     return map;
   }
@@ -384,6 +390,20 @@ public class Stepdefs {
                                             +  "public void testAddition() {\n"
                                             +  "Calculator calc = new Calculator();\n"
                                             +  "assertEquals(5, calc.add(3,2));\n");
+    initInputs.put("first User implementation task code", "public class Calculator {\n\n"
+                                            +  "public void add(int x, int y) {\n"
+                                            +  "return x+y;\n"
+                                            +  ""); 
+    initInputs.put("first Admin test task code", 
+                                               "import org.junit.Test;\n"
+                                            +  "import static org.junit.Assert.*;\n"
+                                            +  "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n"
+                                            +  "@Points(\"03-03\")\n"
+                                            +  "public class CalculatorTest {\n\n"
+                                            +  "@Test\n"
+                                            +  "public void testAddition() {\n"
+                                            +  "Calculator calc = new Calculator();\n"
+                                            +  "assertEquals(5, calc.add(3,2));\n");
     
     initInputs.put("second test task name", "test multiplication");
     initInputs.put("second test task description", "test method multiply(int x, int y)");
@@ -399,6 +419,21 @@ public class Stepdefs {
                                             +  "\n"
                                             +  "\n"); 
     initInputs.put("second Admin test task code", 
+                                               "import org.junit.Test;\n"
+                                            +  "import static org.junit.Assert.*;\n"
+                                            +  "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n"
+                                            +  "@Points(\"03-03\")\n"
+                                            +  "public class CalculatorTest {\n\n"
+                                            +  "@Test\n"
+                                            +  "public void testMultiplication() {\n"
+                                            +  "Calculator calc = new Calculator();\n"
+                                            +  "assertEquals(6, calc.multiply(3,2));\n");
+    initInputs.put("second Admin implementation task code", "public class Calculator {\n\n"
+                                            +  "public void multiply(int x, int y) {\n"
+                                            +  "return x*y;\n"
+                                            +  "\n"
+                                            +  "\n"); 
+    initInputs.put("second User test task code", 
                                                "import org.junit.Test;\n"
                                             +  "import static org.junit.Assert.*;\n"
                                             +  "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n"

@@ -1,4 +1,3 @@
-@dev
 Feature: Participate in Live Challenge
 
   Scenario Outline: <user> can successfully create live-challenge and submit his first code to test task
@@ -27,7 +26,7 @@ Feature: Participate in Live Challenge
       |User   |implement next task page           |
       |Admin  |implement next task page           |
 
-
+  
   Scenario Outline: <user2> can successfully join an open live challenge
     Given <user1> is logged in
     And <user1> has successfully submitted new challenge with first task pair
