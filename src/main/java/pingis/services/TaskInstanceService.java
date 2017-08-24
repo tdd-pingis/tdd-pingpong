@@ -3,6 +3,8 @@ package pingis.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -149,5 +151,16 @@ public class TaskInstanceService {
     } 
     return true;
   }
+
+  public TaskInstance getRandomTaskInstance(Task task) {
+    User user = userService.getCurrentUser();
+    List<TaskInstance> instances = taskInstanceRepository.findByTask(task);
+    List<TaskInstance> viableInstances = instances.stream()
+        .filter(i -> !i.getUser().equals(user))
+        .filter(i -> i.getStatus() == CodeStatus.DONE)
+        .collect(Collectors.toList());
+    return viableInstances.get(new Random().nextInt(viableInstances.size()));
+  }
+
 
 }

@@ -122,7 +122,7 @@ public class TaskController {
   }
 
   @RequestMapping("/feedback")
-  public String feedback() {
+  public String feedback(Model model) {
     return "feedback";
   }
 
@@ -157,7 +157,7 @@ public class TaskController {
     return "nexttask";
   }
 
-  @RequestMapping("/newTaskInstance")
+  //@RequestMapping("/newTaskInstance")
   public RedirectView newTaskInstance(@RequestParam long taskId,
       @RequestParam long testTaskInstanceId,
       RedirectAttributes redirectAttributes) {
