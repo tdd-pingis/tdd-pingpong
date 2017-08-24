@@ -11,18 +11,18 @@
             <input type="hidden" name="challengeId" th:value="${challengeId}"/>
             <div class="row">
             <div class="col-md-6">
-                <label>test task name:</label><br/>
-                <input type="text" name="testTaskName" size="80"/><br/>
+                <label>Test task name:</label><br/>
+                <input type="text" name="testTaskName" size="80" placeholder="Eg. 'Test multiplication'"/><br/>
                 <label>Test task description:</label><br/>
-                <textarea name="testTaskDesc" rows="10" cols="80"></textarea><br/>
+                <textarea name="testTaskDesc" rows="10" cols="80" placeholder="Eg. 'Write a JUnit test case that tests the multiplication method for two integers.&#10;Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
                 <label>Code stub:</label><br/>
                 <textarea name="testCodeStub" rows="10" cols="80"></textarea><br/>
             </div>
             <div class="col-md-6">
-                <label>implementation task name:</label><br/>
-                <input type="text" name="implementationTaskName" size="80"/><br/>
+                <label>Implementation task name:</label><br/>
+                <input type="text" name="implementationTaskName" size="80" placeholder="Eg. 'Make multiplication test pass'"/><br/>
                 <label>Implementation task description:</label><br/>
-                <textarea name="implementationTaskDesc" rows="10" cols="80"></textarea><br/>
+                <textarea name="implementationTaskDesc" rows="10" cols="80" placeholder="Eg. 'Write code that makes the given test pass.&#10;Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
                 <label>Code stub:</label><br/>
                 <textarea name="implementationCodeStub" rows="10" cols="80"></textarea><br/>
             </div>

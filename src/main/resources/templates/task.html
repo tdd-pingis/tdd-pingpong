@@ -24,12 +24,18 @@
                     </li>
                 </ul>
             </div>
-            <ul class="nav nav-tabs">        
+            <ul class="nav nav-tabs">
                 <li class="active">
                     <a data-toggle="tab" th:text="${submissionTabFileName}" href="#implementation">Placeholder editors</a>
                 </li>
                 <li>
                     <a data-toggle="tab" th:text="${staticTabFileName}" href="#test">Placeholder editors</a>
+                </li>
+                <li>
+                    <a data-toggle="tooltip" data-placement="right" th:title="${'To complete this ' + #strings.toLowerCase(task.type)
+                    + ' task, follow the assignment and write the code in the FIRST tab.'
+                    + ' Please refer to the uneditable code in the second tab.'}">
+                        <span class="glyphicon glyphicon-question-sign"/></a>
                 </li>
             </ul>
 
@@ -57,11 +63,14 @@
                     <button type="submit" class="btn btn-primary" onclick="clicked(event)">Submit</button>
                 </div>
             </form>
+
             <div th:if="${(challenge.type == T(pingis.entities.ChallengeType).ARCADE && task.type == T(pingis.entities.TaskType).IMPLEMENTATION)
              || (challenge.type != T(pingis.entities.ChallengeType).ARCADE && !challenge.isOpen)}">
                <a class="btn btn-primary" th:href="'/skip/'+${taskInstanceId}">Skip task</a>
             </div>
 
-        <script th:src="@{/webjars/ace-builds/src-min-noconflict/ace.js}" type="text/javascript"  charset="utf-8"></script>
-        <script th:src="@{/js/aceEditorSettings.js}" type="text/javascript"  charset="utf-8"></script>
+            <script th:src="@{/webjars/ace-builds/src-min-noconflict/ace.js}" type="text/javascript"  charset="utf-8"></script>
+            <script th:src="@{/js/aceEditorSettings.js}" type="text/javascript"  charset="utf-8"></script>
+            <script th:src="@{/js/hints.js}" type="text/javascript"  charset="utf-8"></script>
+
 </html>
