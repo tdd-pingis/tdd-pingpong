@@ -35,9 +35,10 @@ import pingis.services.DataImporter;
 @SpringBootTest()
 @ContextConfiguration
 public class Stepdefs {
-          
-  private static final int DRIVER_WAIT_TIME = 8;
-  private static final int LOAD_WAIT_TIME = 1300;
+  
+  // Reduce for local usage, following values ensure smooth operation in Travis
+  private static final int DRIVER_WAIT_TIME = 8;  // Tested travis value = 8, local = 4
+  private static final int LOAD_WAIT_TIME = 1300; // Tested travis value = 1300, local = 1000
   private static final String baseUrl = "http://localhost:8080/";
 
   WebDriver driver;
