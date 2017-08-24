@@ -19,6 +19,32 @@ public class JavaSyntaxCheckerTest {
   }
 
   @Test
+  public void testMultipleErrors() {
+    final String code = "public class TestClass {"
+        + "public void broken1() {"
+        + "x y z;"
+        + "}"
+        + "public void broken2() {"
+        + "hurr(\"durr\""
+        + "}"
+        + "}";
+
+    String[] errors = JavaSyntaxChecker.parseCode(code);
+
+    final String[] expected = new String[]{
+        "(line 1,col 50) Parse error. Found  \"z\" <IDENTIFIER>, expected one of  "
+            + "\",\" \";\" \"=\" \"@\" \"[\"",
+        "(line 1,col 83) Parse error. Found \"}\", expected one of  \"!=\" \"%\" \"%=\" "
+            + "\"&\" \"&&\" \"&=\" \")\" \"*\" \"*=\" \"+\" \"+=\" \",\" \"-\" \"-=\" "
+            + "\"->\" \"/\" \"/=\" \"::\" \"<\" \"<<=\" \"<=\" \"=\" \"==\" \">\" \">=\" "
+            + "\">>=\" \">>>=\" \"?\" \"^\" \"^=\" \"instanceof\" \"|\" \"|=\" \"||\"",
+        "(line 1,col 90) Parse error. Found <EOF>, expected \"}\""
+    };
+
+    assertArrayEquals(expected, errors);
+  }
+
+  @Test
   public void testInvalidClassDeclaration() {
     final String code = "public class Broken {";
     final String[] expected = new String[]{

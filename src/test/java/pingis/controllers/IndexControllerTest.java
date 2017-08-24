@@ -1,8 +1,6 @@
 package pingis.controllers;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Test;
@@ -29,12 +27,7 @@ public class IndexControllerTest {
 
   @Test
   public void simpleIndexTest() throws Exception {
-    performSimpleGetReguest("/", "<h1><strong>TDD-pingpong</strong> frontpage.</h1>");
-  }
-
-  private void performSimpleGetReguest(String uri, String content) throws Exception {
-    mvc.perform(get(uri))
-        .andExpect(status().isOk())
-        .andExpect(content().string(containsString(content)));
+    mvc.perform(get("/"))
+        .andExpect(status().isOk());
   }
 }
