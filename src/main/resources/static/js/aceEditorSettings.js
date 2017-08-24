@@ -10,7 +10,7 @@ function createEditor(editorId, textareaId) {
   return editor;
 }
 
-createEditor("submission-editor", "submission-code");
+window.submissionEditor = createEditor("submission-editor", "submission-code");
 staticEditor = createEditor("static-editor", "static-code");
 staticEditor.setReadOnly(true);
 
