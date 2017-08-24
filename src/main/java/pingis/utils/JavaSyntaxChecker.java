@@ -1,7 +1,9 @@
 package pingis.utils;
 
 import com.github.javaparser.JavaParser;
-import com.github.javaparser.ParseProblemException;
+import com.github.javaparser.ParseResult;
+import com.github.javaparser.ParseStart;
+import com.github.javaparser.Providers;
 import com.github.javaparser.ast.CompilationUnit;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -19,17 +21,18 @@ public class JavaSyntaxChecker {
    * correct.
    */
   public static String[] parseCode(String code) {
-    try {
-      CompilationUnit cu = JavaParser.parse(code);
-    } catch (ParseProblemException parseProblems) {
-      return parseProblems.getProblems().stream().map((prob) ->
-          prob.getVerboseMessage()
-      ).toArray(String[]::new);
+    ParseResult<CompilationUnit> parseResult = new JavaParser().parse(ParseStart.COMPILATION_UNIT,
+        Providers.provider(code));
+
+    if (parseResult.isSuccessful()) {
+      return null;
     }
 
-    return null;
+    return parseResult.getProblems().stream().map((prob) ->
+        prob.getVerboseMessage()
+    ).toArray(String[]::new);
   }
-  
+
   public static String[] checkTaskPairErrors(String submissionCode, String staticCode) {
     String[] submissionSyntaxErrors = parseCode(submissionCode);
     String[] staticSyntaxErrors = parseCode(staticCode);
