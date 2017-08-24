@@ -51,6 +51,8 @@
   margin-bottom: 1em;
 }
 
-#stars {
-  color: #ee8b2d;
+.tooltip {
+  width: 350px;
 }
+
+#stars { color: #ee8b2d;}
