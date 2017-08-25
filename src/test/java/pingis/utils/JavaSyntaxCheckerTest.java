@@ -1,8 +1,11 @@
 package pingis.utils;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import java.util.List;
+import java.util.Optional;
 import org.junit.Test;
 
 /**
@@ -14,8 +17,8 @@ public class JavaSyntaxCheckerTest {
   public void testValidClassDeclaration() {
     final String code = "public class TestClass { }";
 
-    String[] errors = JavaSyntaxChecker.parseCode(code);
-    assertNull(errors);
+    Optional<List<SyntaxError>> errors = JavaSyntaxChecker.getSyntaxErrors(code);
+    assertFalse(errors.isPresent());
   }
 
   @Test
@@ -29,36 +32,36 @@ public class JavaSyntaxCheckerTest {
         + "}"
         + "}";
 
-    String[] errors = JavaSyntaxChecker.parseCode(code);
+    Optional<List<SyntaxError>> errorsOpt = JavaSyntaxChecker.getSyntaxErrors(code);
+    assertTrue(errorsOpt.isPresent());
 
-    final String[] expected = new String[]{
-        "(line 1,col 50) Parse error. Found  \"z\" <IDENTIFIER>, expected one of  "
-            + "\",\" \";\" \"=\" \"@\" \"[\"",
-        "(line 1,col 83) Parse error. Found \"}\", expected one of  \"!=\" \"%\" \"%=\" "
-            + "\"&\" \"&&\" \"&=\" \")\" \"*\" \"*=\" \"+\" \"+=\" \",\" \"-\" \"-=\" "
-            + "\"->\" \"/\" \"/=\" \"::\" \"<\" \"<<=\" \"<=\" \"=\" \"==\" \">\" \">=\" "
-            + "\">>=\" \">>>=\" \"?\" \"^\" \"^=\" \"instanceof\" \"|\" \"|=\" \"||\"",
-        "(line 1,col 90) Parse error. Found <EOF>, expected \"}\""
-    };
+    final int[] expectedRows = new int[] { 0, 0, 0 };
+    final int[] expectedColumns = new int[] { 50, 83, 90 };
 
-    assertArrayEquals(expected, errors);
+    List<SyntaxError> errors = errorsOpt.get();
+    assertEquals(3, errors.size());
+
+    for (int i = 0; i < errors.size(); i++) {
+      SyntaxError error = errors.get(i);
+
+      assertEquals(expectedRows[i], error.row);
+      assertEquals(expectedColumns[i], error.column);
+      assertTrue(error.text.startsWith("Parse error"));
+    }
   }
 
   @Test
   public void testInvalidClassDeclaration() {
     final String code = "public class Broken {";
-    final String[] expected = new String[]{
-        "(line 1,col 21) Parse error. Found <EOF>, expected one of  \";\" \"<\" \"@\" \"abstract\" "
-            + "\"boolean\" \"byte\" \"char\" \"class\" \"default\" \"double\" \"enum\" \"exports\" "
-            + "\"final\" \"float\" \"int\" \"interface\" \"long\" \"module\" \"native\" \"open\" "
-            + "\"opens\" \"private\" \"protected\" \"provides\" \"public\" \"requires\" \"short\" "
-            + "\"static\" \"strictfp\" \"synchronized\" \"to\""
-            + " \"transient\" \"transitive\" \"uses\" "
-            + "\"void\" \"volatile\" \"with\" \"{\" \"}\" <IDENTIFIER>"
-    };
 
-    String[] errors = JavaSyntaxChecker.parseCode(code);
+    Optional<List<SyntaxError>> errorsOpt = JavaSyntaxChecker.getSyntaxErrors(code);
+    assertTrue(errorsOpt.isPresent());
 
-    assertArrayEquals(expected, errors);
+    List<SyntaxError> errors = errorsOpt.get();
+    assertEquals(1, errors.size());
+
+    assertEquals(0, errors.get(0).row);
+    assertEquals(21, errors.get(0).column);
+    assertTrue(errors.get(0).text.startsWith("Parse error"));
   }
 }
