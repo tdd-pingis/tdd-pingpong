@@ -163,6 +163,7 @@ public class TaskInstanceServiceTest {
 
   @Test
   public void testMarkAsDone() {
+    when(userServiceMock.getCurrentUser()).thenReturn(testUser);
     TaskInstance result = taskInstanceService.markAsDone(testTaskInstance);
     assertEquals(CodeStatus.DONE, result.getStatus());
   }

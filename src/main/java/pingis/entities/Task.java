@@ -195,4 +195,9 @@ public class Task {
   public float getAverageRating() {
     return (float) totalRating / (float) numRatings;
   }
+
+  public int getPoints() {
+    // TODO: add some logic here
+    return 10;
+  }
 }

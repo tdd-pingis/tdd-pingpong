@@ -73,7 +73,7 @@ public class UserServiceTest {
 
     assertThat(oneUser.getName()).isEqualTo(testUser.getName());
     assertThat(oneUser.getId()).isEqualTo(testUser.getId());
-    assertThat(oneUser.getLevel()).isEqualTo(testUser.getLevel());
+    assertThat(oneUser.getPoints()).isEqualTo(testUser.getPoints());
   }
 
   @Test
@@ -201,7 +201,7 @@ public class UserServiceTest {
     verify(userRepositoryMock).save(userCaptor.capture());
     assertThat(userCaptor.getValue().getName()).isEqualTo(user.getName());
     assertThat(userCaptor.getValue().getId()).isEqualTo(Long.parseLong(user.getId()));
-    assertThat(userCaptor.getValue().getLevel()).isEqualTo(1);
+    assertThat(userCaptor.getValue().getPoints()).isEqualTo(1);
     assertThat(userCaptor.getValue().isAdministrator()).isEqualTo(user.isAdministrator());
   }
 

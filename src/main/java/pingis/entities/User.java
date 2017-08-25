@@ -30,7 +30,7 @@ public class User {
   @NotNull
   @Min(LEVEL_MIN_VALUE)
   @Max(LEVEL_MAX_VALUE)
-  private int level;
+  private int points;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
   private List<TaskInstance> taskInstances;
@@ -57,14 +57,14 @@ public class User {
     this(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE, name, LEVEL_MIN_VALUE);
   }
 
-  public User(long id, String name, int level) {
-    this(id, name, level, false);
+  public User(long id, String name, int points) {
+    this(id, name, points, false);
   }
 
-  public User(long id, String name, int level, boolean isAdministrator) {
+  public User(long id, String name, int points, boolean isAdministrator) {
     this.id = id;
     this.name = name;
-    this.level = level;
+    this.points = points;
     this.administrator = isAdministrator;
     this.taskInstances = new ArrayList<>();
     this.authoredChallenges = new ArrayList<>();
@@ -84,8 +84,8 @@ public class User {
     this.id = id;
   }
 
-  public int getLevel() {
-    return level;
+  public int getPoints() {
+    return points;
   }
 
   public void setName(String name) {
@@ -104,8 +104,12 @@ public class User {
     this.administrator = administrator;
   }
 
-  public void setLevel(int level) {
-    this.level = level;
+  public void setPoints(int points) {
+    this.points = points;
+  }
+
+  public void addPoints(int points) {
+    this.points += points;
   }
 
   public void setTaskInstances(List<TaskInstance> taskInstances) {
@@ -171,7 +175,7 @@ public class User {
         + "\n\tname: " + getName()
         + "\n\tid: " + getId()
         + "\n\tadmin: " + isAdministrator()
-        + "\n\tlevel: " + getLevel();
+        + "\n\tpoints: " + getPoints();
   }
 
   public List<Challenge> getParticipatingLiveChallenges() {
