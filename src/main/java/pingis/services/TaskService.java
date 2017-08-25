@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Challenge;
+import pingis.entities.ChallengeType;
 import pingis.entities.CodeStatus;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
@@ -25,6 +28,10 @@ public class TaskService {
   private TaskRepository taskRepository;
   @Autowired
   private ChallengeRepository challengeRepository;
+  @Autowired
+  private TaskInstanceService taskInstanceService;
+  @Autowired
+  private UserService userService;
 
   public Task findTaskInChallenge(Long challengeId, int taskId) {
     // Implement validation here
@@ -164,5 +171,61 @@ public class TaskService {
     }
     return list.get(new Random().nextInt(list.size()));
   }
+
+  public List<Task> findAllByChallengeAndIndex(Challenge challenge, int index) {
+    return taskRepository.findAllByChallengeAndIndex(challenge, index);
+  }
+
+  public Task findByChallengeAndTypeAndIndex(Challenge challenge, TaskType type, int index) {
+    return taskRepository.findByChallengeAndTypeAndIndex(challenge, type, index);
+  }
+
+  //
+  public Task nextPracticeTask(Challenge challenge) {
+    int highestIndex = findAllByChallenge(challenge).size() / 2;
+    Task previous = null;
+    for (int i = 1; i <= highestIndex; i++) {
+      Task testTask = findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, i);
+      Task implTask = findByChallengeAndTypeAndIndex(challenge, TaskType.IMPLEMENTATION, i);
+      TaskInstance testTaskInstance =
+          taskInstanceService.getByTaskAndUser(testTask, userService.getCurrentUser());
+      TaskInstance implTaskInstance =
+          taskInstanceService.getByTaskAndUser(implTask, userService.getCurrentUser());
+      if (testTaskInstance == null && implTaskInstance == null) {
+        if (previous == null) {
+          return new Random().nextInt(1) == 0 ? testTask : implTask;
+        }
+        if (previous.getType() == TaskType.TEST) {
+          return implTask;
+        }
+        return testTask;
+      }
+      if (testTaskInstance != null) {
+        previous = testTask;
+        continue;
+      }
+      previous = implTask;
+    }
+    return null;
+  }
+/*
+  public RedirectView newTaskInstance(Task task,
+      TaskInstance testTaskInstance,
+      RedirectAttributes redirectAttributes) {
+    User user = userService.getCurrentUser();
+    TaskInstance newTaskInstance = taskInstanceService.createEmpty(user, task);
+    if (task.getType() == TaskType.IMPLEMENTATION) {
+      newTaskInstance.setTestTaskInstance(testTaskInstance);
+      testTaskInstance.addImplementationTaskInstance(newTaskInstance);
+      taskInstanceService.save(newTaskInstance);
+      taskInstanceService.save(testTaskInstance);
+    }
+    redirectAttributes.addAttribute("taskInstanceId", newTaskInstance.getId());
+    if (newTaskInstance.getChallenge().getType() == ChallengeType.ARCADE) {
+      user.setMostRecentArcadeInstance(newTaskInstance);
+      userService.save(user);
+    }
+    return new RedirectView("/task/" + newTaskInstance.getId());
+  }*/
 
 }

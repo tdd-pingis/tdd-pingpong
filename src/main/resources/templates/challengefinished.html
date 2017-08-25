@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="base :: header"></head>
+<body>
+<nav th:include="navbar :: navigation"></nav>
+<div class="row">
+  <div class="lead">Congratulations!</div>
+  <div th:text="'You have finished challenge' + ${challenge.name} + '!'"></div>
+  <a href="/user" class="btn btn-primary">Back to dashboard</a>
+</div>
+</body>
+</html>

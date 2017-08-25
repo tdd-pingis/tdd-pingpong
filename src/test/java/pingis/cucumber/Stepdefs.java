@@ -235,6 +235,7 @@ public class Stepdefs {
   public void has_successfully_submitted_new_challenge_with_first_task_pair(String user)
                                                 throws InterruptedException, Throwable {
     creates_new_live_challenge();
+    clicks_the_button("start challenge");
     inputs_and_submits_live_challenge_description();
     inputs_and_submits_new_task_pair("first");
   }
@@ -266,7 +267,7 @@ public class Stepdefs {
   @When("(.+) inputs and submits (.+) code to (.+) task pair")
   public void inputs_and_submits_code_to_editor(String user, String codetype, String howMany)
                                                 throws InterruptedException {
-      input_to_editor(inputs.get(howMany + " " + user + " " + codetype + " task code"));
+    input_to_editor(inputs.get(howMany + " " + user + " " + codetype + " task code"));
     clicks_the_button("submit");
     checkAlert();
   }
@@ -344,6 +345,7 @@ public class Stepdefs {
     map.add("user page", "user");
     map.add("user page", "Dashboard");
     map.add("username field", "session_login");
+    map.add("start challenge", "start-challenge-button");
     map.add("implementation code input by User", inputs.get("first implementation task codestub")
         .substring(0, 15));
     map.add("test code input by User", inputs.get("first test task codestub")

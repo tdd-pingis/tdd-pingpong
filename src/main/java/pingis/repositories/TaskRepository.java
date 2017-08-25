@@ -15,4 +15,8 @@ public interface TaskRepository extends CrudRepository<Task, Long> {
 
   Task findByIndexAndChallengeAndType(int index, Challenge challenge, TaskType type);
 
+  List<Task> findAllByChallengeAndIndex(Challenge challenge, int index);
+
+  Task findByChallengeAndTypeAndIndex(Challenge challenge, TaskType type, int index);
+
 }
