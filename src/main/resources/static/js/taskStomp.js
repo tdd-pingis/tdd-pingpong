@@ -29,7 +29,7 @@ window.submissionEditor.getSession().on("change", () => {
 
 function sendCode() {
   $("#submit-button").attr("disabled", false);
-  const code = $("#submission-code").val(); // cast to number
+  const code = $("#submission-code").val();
   stompClient.send(`/javaparser/${taskInstanceId}`, {}, code);
 }
 
