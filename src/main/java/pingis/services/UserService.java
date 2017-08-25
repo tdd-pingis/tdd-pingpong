@@ -15,7 +15,7 @@ public class UserService {
 
   private final int numberOfLevels = 100;
   private final int pointsForFirstLevel = 1000;
-  private final float base = 1.2f;
+  private final float base = 1.1f;
 
   private final UserRepository userRepository;
   private final Logger logger = Logger.getLogger(UserService.class);
@@ -114,6 +114,12 @@ public class UserService {
     }
     return numberOfLevels;
   }
+
+  /*public int getLevel(int points) {
+    int log1 = (int)Math.floor(Math.log(points)/Math.log(base));
+    int log2 = (int)Math.floor(Math.log(pointsForFirstLevel)/Math.log(base));
+    return log1 - log2 + 1;
+  }*/
 
   public int levelOfCurrentUser() {
     return getLevel(getCurrentUser().getPoints());

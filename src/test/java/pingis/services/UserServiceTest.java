@@ -278,4 +278,12 @@ public class UserServiceTest {
     assertThat(newUser.getId()).isExactlyInstanceOf(Long.class);
   }
 
+  @Test
+  public void testGetLevel() {
+    assertEquals(1, userService.getLevel(1000));
+    assertEquals(2, userService.getLevel(1100));
+    assertEquals(3, userService.getLevel(1210));
+    assertEquals(100, userService.getLevel(Integer.MAX_VALUE));
+  }
+
 }
