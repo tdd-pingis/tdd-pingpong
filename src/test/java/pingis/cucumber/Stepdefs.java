@@ -102,14 +102,7 @@ public class Stepdefs {
 
   @When(".*clicks the (.+) button$")
   public void clicks_the_button(String name) throws InterruptedException {
-    // check special case, user should not be able to re-join his own challenge:
-    // -> somewhat bad design, here for convenience
-    // TODO: refactor
-    if (name.equals("join live challenge") && !exists(name)) {
-      assertTrue(exists("create live challenge") || exists("continue live challenge"));
-    } else {
-      findElementByName(name).click();
-    }
+    findElementByName(name).click();
   }
 
   @When(".*clicks the (.+) tab$")
@@ -160,6 +153,11 @@ public class Stepdefs {
   public void inputs_username_and_password(String username, String password) throws Throwable {
     findElementByName("username field").sendKeys(username);
     findElementByName("password field").sendKeys(password);
+  }
+
+  @Then("the (.+) button is not shown")
+  public void button_is_not_shown(String name) {
+    assertFalse(exists(name));
   }
 
   @Then(".*is successfully authenticated$")

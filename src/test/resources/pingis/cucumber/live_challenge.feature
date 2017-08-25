@@ -31,14 +31,12 @@ Feature: Participate in Live Challenge
     And page contains the test code input by User
 
 
-  Scenario: User can successfully join an open live challenge
+  Scenario: User cannot immediately join his own live challenge
     Given User is logged in
     And User has successfully submitted new challenge with first task pair
     And User has successfully submitted test code for first task pair
     When User wants to join in Live challenge
-    And User clicks the join live challenge button
-    Then the user page is shown
-    And page does not contain the test code input by User
+    Then the join live challenge button is not shown
 
 
   Scenario:  After Admin has successfully joined live challenge and submitted implementation code for first task pair, he can continue by creating new task pair
