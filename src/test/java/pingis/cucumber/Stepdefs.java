@@ -199,16 +199,16 @@ public class Stepdefs {
     driver.findElement(By.name("commit")).click();
   }
 
-  @And("(.+) wants to (.+) Live challenge")
-  public void wants_to_add_verb_here_live_challenge(String user, String verb) throws Throwable {
-    if (verb.equals("participate in")) {
-      clicks_the_button("create live challenge");
+  @And(".*creates a new Live challenge")
+  public void creates_new_live_challenge() throws Throwable {
+    clicks_the_button("create live challenge");
+  }
 
-    } else if (verb.equals("join in") || verb.equals("continue")) {
-      beginNewSession();
-      navigateToBaseUrl();
-      is_logged_in(user);
-    }
+  @And("(.+) wants to .+ Live challenge")
+  public void wants_to_add_verb_here_live_challenge(String user) throws Throwable {
+    beginNewSession();
+    navigateToBaseUrl();
+    is_logged_in(user);
   }
 
   @Given(".*has chosen to embark on a new challenge")
@@ -235,7 +235,7 @@ public class Stepdefs {
   @And("(.+) has successfully submitted new challenge with first task pair")
   public void has_successfully_submitted_new_challenge_with_first_task_pair(String user)
                                                 throws InterruptedException, Throwable {
-    wants_to_add_verb_here_live_challenge(user, "participate in");
+    creates_new_live_challenge();
     inputs_and_submits_live_challenge_description();
     inputs_and_submits_new_task_pair("first");
   }
@@ -253,10 +253,9 @@ public class Stepdefs {
             .until(ExpectedConditions.presenceOfElementLocated(By.id("results-panel")));
   }
 
-  @And("page (.+) the (.+) input by (.+)")
-  public void page_contains_the_code_input_by(String contains, String codeType, String user) {
-    boolean isContains = contains.equals("contains");
-    assertEquals(isContains, isDisplayed(codeType + " input by " + user));
+  @And("page contains the (.+) input by (.+)")
+  public void page_contains_the_code_input_by(String codeType, String user) {
+    assertTrue(isDisplayed(codeType + " input by " + user));
   }
 
   @When("(.+) inputs and submits (.+) code to (.+) task pair")

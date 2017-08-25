@@ -15,7 +15,7 @@ Feature: Participate in Live Challenge
 
   Scenario: User can successfully create the first pair of tests for live challenge
     Given User is logged in
-    And User wants to participate in Live challenge
+    And User creates a new Live challenge
     And User inputs and submits the challenge description
     When User inputs and submits data for first task pair
     Then the implement next task page is shown
