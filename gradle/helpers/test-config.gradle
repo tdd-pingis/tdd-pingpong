@@ -27,4 +27,10 @@ if(System.env.TESTS == 'ALL') {
   test.dependsOn cucumber
 }
 
+// For running tests with stdout
+if(System.env.STDOUT == 'ON') {
+    unit.testLogging.showStandardStreams = true
+    cucumber.testLogging.showStandardStreams = true
+}
+
 cucumber.mustRunAfter unit
