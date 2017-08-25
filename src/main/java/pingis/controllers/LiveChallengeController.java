@@ -20,6 +20,7 @@ import pingis.entities.CodeStatus;
 import pingis.entities.Realm;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
+import pingis.entities.TaskPair;
 import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.services.ChallengeService;
@@ -51,7 +52,8 @@ public class LiveChallengeController {
   }
 
   @RequestMapping(value = "/createChallenge", method = RequestMethod.POST)
-  public String createChallenge(@Valid @ModelAttribute Challenge challenge, BindingResult bindingResult) {
+  public String createChallenge(@Valid @ModelAttribute Challenge challenge,
+      BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
     if (bindingResult.hasErrors()) {
       return "/newchallenge";
@@ -62,39 +64,47 @@ public class LiveChallengeController {
     challenge.setOpen(true);
     challenge = challengeService.save(challenge);
     logger.info("Created new challenge: " + challenge.toString());
-    return "redirect:/playTurn/" + challenge.getId();
+    redirectAttributes.addFlashAttribute("challengeId", challenge.getId());
+    return "redirect:/newtaskpair";
   }
 
   @RequestMapping(value = "/newtaskpair")
-  public String newTaskPair(Model model) {
+  public String newTaskPair(@ModelAttribute TaskPair taskpair) {
     // TODO: add checks
     logger.info("Displaying new task pair -form.");
     return "newtaskpair";
   }
 
   @RequestMapping(value = "/createTaskPair", method = RequestMethod.POST)
-  public RedirectView createTaskPair(String testTaskName, String implementationTaskName,
-      String testTaskDesc, String implementationTaskDesc,
-      String testCodeStub, String implementationCodeStub,
-      long challengeId,
-      RedirectAttributes redirectAttributes) {
-    
+  public String createTaskPair(Long challengeId, @Valid @ModelAttribute TaskPair taskpair,
+      BindingResult bindingResult,
+      RedirectAttributes redirectAttributes,
+      Model model) {
+
+    if (bindingResult.hasErrors()) {
+      logger.info("New TaskPair -form had errors");
+      model.addAttribute("challengeId", challengeId);
+      return "/newtaskpair";
+    }
+
+    logger.info("New TaskPair -form had no errors! :)");
+
     Challenge currentChallenge = challengeService.findOne(challengeId);
-    Task testTask = gameplayService.generateTaskPairAndTaskInstance(testTaskName,
-        implementationTaskName,
-        testTaskDesc,
-        implementationTaskDesc,
-        testCodeStub,
-        implementationCodeStub,
+    Task testTask = gameplayService.generateTaskPairAndTaskInstance(taskpair.getTestTaskName(),
+        taskpair.getImplementationTaskName(),
+        taskpair.getTestTaskDesc(),
+        taskpair.getImplementationTaskDesc(),
+        taskpair.getTestCodeStub(),
+        taskpair.getImplementationCodeStub(),
         currentChallenge);
 
     if (currentChallenge.getType() == ChallengeType.ARCADE) {
       redirectAttributes.addAttribute("realm", currentChallenge.getRealm().toString());
-      return new RedirectView("/playArcade");
+      return "redirect:/playArcade";
     }
     redirectAttributes.addAttribute("taskId", testTask.getId());
     redirectAttributes.addAttribute("testTaskInstanceId", 0L);
-    return new RedirectView("/playTurn/" + currentChallenge.getId());
+    return "redirect:/playTurn/" + currentChallenge.getId();
   }
 
 
