@@ -49,6 +49,13 @@ public class LiveChallengeController {
     return "newchallenge";
   }
 
+  @RequestMapping("/startChallenge/{challengeId}")
+  public String startChallenge(Model model, @PathVariable long challengeId) {
+    Challenge challenge = challengeService.findOne(challengeId);
+    model.addAttribute("challenge", challenge);
+    return "startchallenge";
+  }
+
   @RequestMapping(value = "/createChallenge", method = RequestMethod.POST)
   public RedirectView createChallenge(String challengeName, String challengeDesc,
       String challengeType, String realm, RedirectAttributes redirectAttributes) {
@@ -174,7 +181,8 @@ public class LiveChallengeController {
       return new RedirectView("/error");
     }
     Challenge challenge = gameplayService.getArcadeChallenge(currentRealm);
-    if (player.getMostRecentArcadeInstance() != null && !(player.getMostRecentArcadeInstance().getChallenge().getRealm() == currentRealm)) {
+    if (player.getMostRecentArcadeInstance() != null
+        && !(player.getMostRecentArcadeInstance().getChallenge().getRealm() == currentRealm)) {
       List<TaskInstance> instances = taskInstanceService.getAllByChallenge(challenge);
       Optional<TaskInstance> unfinished = instances.stream()
           .filter(i -> i.getUser().equals(player))
@@ -312,7 +320,7 @@ public class LiveChallengeController {
     Task nextTask = taskService.nextPracticeTask(challenge);
     if (nextTask == null) {
       // all challenges done. wohoo.
-      return new RedirectView("/user");
+      return new RedirectView("/challengeFinished/" + challenge.getId());
     }
     if (nextTask.getType() == TaskType.TEST) {
       return newTaskInstance(nextTask, null, redirectAttributes);
@@ -339,5 +347,13 @@ public class LiveChallengeController {
     }
     return new RedirectView("/task/" + newTaskInstance.getId());
   }
+
+  @RequestMapping("/challengeFinished/{challengeId}")
+  public String challengeFinished(Model model, @PathVariable long challengeId) {
+    Challenge challenge = challengeService.findOne(challengeId);
+    model.addAttribute("challenge", challenge);
+    return "challengefinished";
+  }
+
 }
 

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="base :: header"></head>
+<body>
+<nav th:include="navbar :: navigation"></nav>
+<div class="container">
+  <div class="lead" th:text="'Challenge: '+${challenge.name}"/></h1>
+  <div class="row">
+    <div th:text="${challenge.description}"></div>
+    <div th:text="'Difficulty level '+${challenge.level}"></div>
+    <a th:href="'/playChallenge/' + ${challenge.id}" class="btn btn-primary">Begin</a>
+  </div>
+</div>
+</body>
+</html>

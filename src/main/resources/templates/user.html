@@ -40,10 +40,10 @@
                               </div>
                         </div>
                         <div class="col-md-6">
-                              <div class="row lead">Open challenges</div>
+                              <div class="row lead">Available challenges</div>
                               <div th:if="${availableChallenges.empty}">No open challenges</div>
                               <div th:each="challenge : ${availableChallenges}" class="row challengeitem">
-                                    <a th:href="'/playChallenge/' + ${challenge.id}" th:inline="text">[[${challenge.name}]]</a> <p th:inline="text">Progress: Not started </p>
+                                    <a th:href="'/startChallenge/' + ${challenge.id}" th:inline="text">[[${challenge.name}]]</a> <p th:inline="text">Progress: Not started </p>
                                     <div class="progress">
                                           <div class="empty-progress-bar" role="progressbar"></div>
                                     </div>
