@@ -29,7 +29,7 @@
                               <div class="row lead">Started challenges</div>
                               <div th:if="${#maps.isEmpty(myTasksInChallenges)}" >No ongoing solo challenges</div>
                               <div th:each="challenges : ${myTasksInChallenges}" class="row challengeitem">
-                                    <a th:href="'/nextTask/' + ${challenges.key.id}" th:inline="text"> [[${challenges.key.name}]]</a> <p th:inline="text">Progress: [[${#lists.size(challenges.value)}]] / [[${#lists.size(challenges.key.tasks)}]] tasks done </p>
+                                    <a th:href="'/playChallenge/' + ${challenges.key.id}" th:inline="text"> [[${challenges.key.name}]]</a> <p th:inline="text">Progress: [[${#lists.size(challenges.value)}]] / [[${#lists.size(challenges.key.tasks)}]] tasks done </p>
                                     <div th:with="result=${#lists.size(challenges.value) * 100 / #lists.size(challenges.key.tasks)}">
                                           <div class="progress">
                                                 <div class="progress-bar progress-bar-striped active" role="progressbar" th:style="${'width:'+result+'%'}">
@@ -42,8 +42,8 @@
                         <div class="col-md-6">
                               <div class="row lead">Open challenges</div>
                               <div th:if="${availableChallenges.empty}">No open challenges</div>
-                              <div th:each="challenges : ${availableChallenges}" class="row challengeitem">
-                                    <a th:href="'/nextTask/' + ${challenges.id}" th:inline="text">[[${challenges.name}]]</a> <p th:inline="text">Progress: Not started </p>
+                              <div th:each="challenge : ${availableChallenges}" class="row challengeitem">
+                                    <a th:href="'/playChallenge/' + ${challenge.id}" th:inline="text">[[${challenge.name}]]</a> <p th:inline="text">Progress: Not started </p>
                                     <div class="progress">
                                           <div class="empty-progress-bar" role="progressbar"></div>
                                     </div>
@@ -54,10 +54,10 @@
                         <a href="/newchallenge" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Create New Live Challenge</a>
                   </div>
                   <div th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).JOIN}">
-                        <a th:href="'/playTurn/' + ${liveChallenge.id}" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Join Live Challenge</a>
+                        <a th:href="'/playChallenge/' + ${liveChallenge.id}" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Join Live Challenge</a>
                   </div>
                   <div th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CONTINUE}">
-                        <a th:href="'/playTurn/' + ${liveChallenge.id}" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="Continue your turn-based game against a real opponent">Continue Live Challenge</a>
+                        <a th:href="'/playChallenge/' + ${liveChallenge.id}" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="Continue your turn-based game against a real opponent">Continue Live Challenge</a>
                   </div>
 
                   <a href="/randomTask" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a random Task from a random Challenge">Give me a random task</a>

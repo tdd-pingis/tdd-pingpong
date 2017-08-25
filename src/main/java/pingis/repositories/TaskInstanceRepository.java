@@ -1,7 +1,8 @@
 package pingis.repositories;
 
-import org.springframework.data.repository.CrudRepository;
 import java.util.List;
+
+import org.springframework.data.repository.CrudRepository;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.User;

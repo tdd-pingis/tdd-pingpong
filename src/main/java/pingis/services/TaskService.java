@@ -187,8 +187,10 @@ public class TaskService {
     for (int i = 1; i <= highestIndex; i++) {
       Task testTask = findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, i);
       Task implTask = findByChallengeAndTypeAndIndex(challenge, TaskType.IMPLEMENTATION, i);
-      TaskInstance testTaskInstance = taskInstanceService.getByTaskAndUser(testTask, userService.getCurrentUser());
-      TaskInstance implTaskInstance = taskInstanceService.getByTaskAndUser(implTask, userService.getCurrentUser());
+      TaskInstance testTaskInstance =
+          taskInstanceService.getByTaskAndUser(testTask, userService.getCurrentUser());
+      TaskInstance implTaskInstance =
+          taskInstanceService.getByTaskAndUser(implTask, userService.getCurrentUser());
       if (testTaskInstance == null && implTaskInstance == null) {
         if (previous == null) {
           return new Random().nextInt(1) == 0 ? testTask : implTask;
@@ -206,7 +208,7 @@ public class TaskService {
     }
     return null;
   }
-
+/*
   public RedirectView newTaskInstance(Task task,
       TaskInstance testTaskInstance,
       RedirectAttributes redirectAttributes) {
@@ -224,6 +226,6 @@ public class TaskService {
       userService.save(user);
     }
     return new RedirectView("/task/" + newTaskInstance.getId());
-  }
+  }*/
 
 }

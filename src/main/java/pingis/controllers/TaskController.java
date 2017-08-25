@@ -137,7 +137,7 @@ public class TaskController {
     return "OK";
   }
 
-  @RequestMapping("/nextTask/{challengeId}")
+  /*@RequestMapping("/nextTask/{challengeId}")
   public String nextTask(@PathVariable long challengeId, Model model) {
     Challenge currentChallenge = challengeService.findOne(challengeId);
     if (currentChallenge.getType() == ChallengeType.ARCADE) {
@@ -177,7 +177,7 @@ public class TaskController {
       userService.save(user);
     }
     return new RedirectView("/task/{taskInstanceId}");
-  }
+  }*/
 
   @RequestMapping("/randomTask")
   public RedirectView randomTask(RedirectAttributes redirectAttributes) {
