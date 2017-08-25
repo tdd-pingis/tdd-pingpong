@@ -5,26 +5,37 @@
 <nav th:include="navbar :: navigation"></nav>
 <div class="container">
     <div class="row">
-        <h1>new task pair</h1>
-        <div th:if="${errors != null}" class="row" th:text="'Your code has syntax errors:'+${errors}"></div>
-        <form th:action="@{/createTaskPair}" method="post">
-            <input type="hidden" name="challengeId" th:value="${challengeId}"/>
+        <h1>New task pair</h1>
+        <form action="#" th:action="@{/createTaskPair}" th:object="${taskPair}" method="post">
+            <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
+                <p>Please fill the form correctly:</p>
+                <ul>
+                    <li th:each="error : ${#fields.allDetailedErrors()}">
+                        <span th:text="${error}"></span>
+                    </li>
+                </ul>
+            </div>
+            <input type="hidden" id="challengeId" name="challengeId" th:value="${challenge.id}"/>
             <div class="row">
             <div class="col-md-6">
                 <label>Test task name:</label><br/>
-                <input type="text" name="testTaskName" size="80" placeholder="Eg. 'Test multiplication'"/><br/>
+                <input type="text" th:field="*{testTaskName}" size="80" placeholder="Eg. 'Test multiplication'"/><br/>
+
                 <label>Test task description:</label><br/>
-                <textarea name="testTaskDesc" rows="10" cols="80" placeholder="Eg. 'Write a JUnit test case that tests the multiplication method for two integers.&#10;Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
+                <textarea name="testTaskDesc" th:field="*{testTaskDesc}" rows="10" cols="80" placeholder="Eg. 'Write a JUnit test case that tests the multiplication method for two integers.&#10;Method should take two integers as arguments and return the product of those as an integer'"/><br/>
+
                 <label>Code stub:</label><br/>
-                <textarea name="testCodeStub" rows="10" cols="80"></textarea><br/>
+                <textarea name="testCodeStub" th:field="*{testCodeStub}" rows="10" cols="80"/><br/>
             </div>
             <div class="col-md-6">
                 <label>Implementation task name:</label><br/>
-                <input type="text" name="implementationTaskName" size="80" placeholder="Eg. 'Make multiplication test pass'"/><br/>
+                <input type="text" th:field="*{implementationTaskName}" size="80"/><br/>
+
                 <label>Implementation task description:</label><br/>
-                <textarea name="implementationTaskDesc" rows="10" cols="80" placeholder="Eg. 'Write code that makes the given test pass.&#10;Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
+                <textarea name="implementationTaskDesc" th:field="*{implementationTaskDesc}" rows="10" cols="80" placeholder="Eg. 'Make multiplication test pass'"/><br/>
+
                 <label>Code stub:</label><br/>
-                <textarea name="implementationCodeStub" rows="10" cols="80"></textarea><br/>
+                <textarea name="implementationCodeStub" th:field="*{implementationCodeStub}" rows="10" cols="80" placeholder="Eg. 'Write code that makes the given test pass.&#10;Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
             </div>
             </div>
             <div class="row">
@@ -32,7 +43,7 @@
             </div>
         </form>
         <div th:if="${#lists.size(challenge.tasks) >= minLength}">
-          <a th:href="'/closeChallenge/'+${challengeId}"  class="btn btn-primary">Close challenge</a>
+            <a th:href="'/closeChallenge/'+${challengeId}"  class="btn btn-primary">Close challenge</a>
         </div>
     </div>
 </div>

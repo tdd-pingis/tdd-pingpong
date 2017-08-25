@@ -18,8 +18,10 @@
           </div>
             <label>Challenge name:</label><br />
             <input type="text" name=challengeName th:field="*{name}" size="50" placeholder="The name of the challenge eg. Calculator"/><br />
+
             <label>Challenge description</label><br />
             <textarea rows="10" cols="80" name="challengeDesc" th:field="*{description}" size="50" placeholder="The description for the challenge, eg. 'Test and implement a simple command line based calculator.'"></textarea><br />
+
             <label>Type:</label>
             <select name="challengeType" th:field="*{type}">
                 <option value="PROJECT">Project</option>
