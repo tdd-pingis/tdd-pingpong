@@ -28,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import pingis.entities.Challenge;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
+import pingis.entities.TaskPair;
 import pingis.entities.User;
 import pingis.services.ChallengeService;
 import pingis.services.GameplayService;
@@ -61,7 +62,8 @@ public class LiveChallengeControllerTest {
   @Test
   @WithMockUser
   public void newChallengeReturnsOk() throws Exception {
-    mvc.perform(get("/newchallenge"))
+    mvc.perform(get("/newchallenge")
+            .flashAttr("challenge", Mockito.mock(Challenge.class)))
             .andExpect(status().isOk());
   }
 
@@ -87,14 +89,13 @@ public class LiveChallengeControllerTest {
     when(challenge.toString()).thenReturn("");
     when(challenge.getId()).thenReturn(challengeId);
 
+    Challenge challengeFromForm = new Challenge("validName", user, "validDesc");
+
     mvc.perform(post("/createChallenge")
             .with(csrf())
-            .param("challengeName", "name")
-            .param("challengeDesc", "desc")
-            .param("challengeType", "PROJECT")
-            .param("realm", "realm"))
+            .flashAttr("challenge", challengeFromForm))
             .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/playTurn/" + challengeId));
+            .andExpect(redirectedUrl("/newtaskpair"));
 
     verify(challengeService, times(1))
             .save(any());
@@ -127,15 +128,12 @@ public class LiveChallengeControllerTest {
             any(), any(), any(), any(), any(), any(), any()))
             .thenReturn(task);
 
+    TaskPair taskPairFromForm = new TaskPair("validName", "validName", "validDesc",
+        "validDesc", "validCodeStub", "validCodeStub");
+
     mvc.perform(post("/createTaskPair")
             .with(csrf())
-            .param("testTaskName", "aa")
-            .param("implementationTaskname", "bb")
-            .param("testTaskDesc", "cc")
-            .param("implementationTaskDesc", "dd")
-            .param("testCodeStub", "ee")
-            .param("implementationCodeStub", "ff")
-            .param("challengeId", "234"))
+            .flashAttr("taskPair", taskPairFromForm))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrlPattern("/playTurn/" + challengeId + "?*"))
             .andExpect(model().attribute("taskId", taskId.toString()));

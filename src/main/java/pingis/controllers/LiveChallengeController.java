@@ -1,5 +1,6 @@
 package pingis.controllers;
 
+import java.util.ArrayList;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,9 +63,11 @@ public class LiveChallengeController {
     challenge.setAuthor(userService.getCurrentUser());
     challenge.setLevel(1);
     challenge.setOpen(true);
+    challenge.setTasks(new ArrayList<Task>());
     challenge = challengeService.save(challenge);
     logger.info("Created new challenge: " + challenge.toString());
-    redirectAttributes.addFlashAttribute("challengeId", challenge.getId());
+    redirectAttributes.addFlashAttribute("challenge", challenge);
+    redirectAttributes.addFlashAttribute("minLength", GameplayService.CHALLENGE_MIN_LENGTH);
     return "redirect:/newtaskpair";
   }
 
@@ -83,7 +86,8 @@ public class LiveChallengeController {
 
     if (bindingResult.hasErrors()) {
       logger.info("New TaskPair -form had errors");
-      model.addAttribute("challengeId", challengeId);
+      model.addAttribute("challenge", challengeService.findOne(challengeId));
+      model.addAttribute("minLength", GameplayService.CHALLENGE_MIN_LENGTH);
       return "/newtaskpair";
     }
 
