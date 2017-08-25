@@ -28,8 +28,6 @@ public class User {
   public boolean administrator;
 
   @NotNull
-  @Min(LEVEL_MIN_VALUE)
-  @Max(LEVEL_MAX_VALUE)
   private int points;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
