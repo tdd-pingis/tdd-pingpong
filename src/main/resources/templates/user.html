@@ -8,7 +8,7 @@
                   <div class="row">
                         <h4>Dashboard</h4>
                   </div>
-                  
+
                   <div class="row dashboardtopbar"> <!-- top bar -->
                         <div class="col-md-2">
                               <img src="img/tomato.png"/>
@@ -37,27 +37,27 @@
                                                 </div>
                                           </div>
                                     </div>
-                              </div>      
+                              </div>
                         </div>
                         <div class="col-md-6">
                               <div class="row lead">Open challenges</div>
                               <div th:if="${availableChallenges.empty}">No open challenges</div>
                               <div th:each="challenges : ${availableChallenges}" class="row challengeitem">
-                                    <a th:href="'/nextTask/' + ${challenges.id}" th:attr="id='open-challenge-'+${challenges.name}" th:inline="text">[[${challenges.name}]]</a> <p th:inline="text">Progress: Not started </p>
+                                    <a th:href="'/nextTask/' + ${challenges.id}" th:id="'open-challenge-'+${challenges.name}" th:inline="text">[[${challenges.name}]]</a> <p th:inline="text">Progress: Not started </p>
                                     <div class="progress">
                                           <div class="empty-progress-bar" role="progressbar"></div>
                                     </div>
                               </div>
                         </div>
                   </div>
-                  <div th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CONTINUE}">
-                        <a th:href="'/playTurn/' + ${liveChallenge.id}" id="continue-live-challenge" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="Continue your turn-based game against a real opponent">Continue Live Challenge</a>
-                  </div>
                   <div th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CREATE}">
                         <a href="/newchallenge" id="create-live-challenge" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Create New Live Challenge</a>
                   </div>
                   <div th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).JOIN}" >
                         <a th:href="'/playTurn/' + ${liveChallenge.id}" id="join-live-challenge" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Join Live Challenge</a>
+                  </div>
+                  <div th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CONTINUE}">
+                        <a th:href="'/playTurn/' + ${liveChallenge.id}" id="continue-live-challenge" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="Continue your turn-based game against a real opponent">Continue Live Challenge</a>
                   </div>
 
                   <a href="/randomTask" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a random Task from a random Challenge">Give me a random task</a>

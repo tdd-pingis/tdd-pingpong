@@ -73,13 +73,13 @@ public class DataImporter {
   }
 
   @Autowired
-  public DataImporter(ChallengeRepository challengeRepository, 
+  public DataImporter(ChallengeRepository challengeRepository,
                       TaskRepository taskRepository,
                       UserRepository userRepository,
-                      TaskInstanceRepository taskInstanceRepository, 
-                      SubmissionRepository submissionRepository1) 
+                      TaskInstanceRepository taskInstanceRepository,
+                      SubmissionRepository submissionRepository1)
                       throws Exception {
-    
+
     this.challengeRepository = challengeRepository;
     this.taskRepository = taskRepository;
     this.userRepository = userRepository;
@@ -104,7 +104,7 @@ public class DataImporter {
     tasks.clear();
     challenges.clear();
     users.clear();
-    
+
     submissionRepository.deleteAll();
     taskInstanceRepository.deleteAll();
     taskRepository.deleteAll();
@@ -274,7 +274,7 @@ public class DataImporter {
     for (Task t : this.tasks) {
       taskRepository.save(t);
     }
-    
+
     for (TaskInstance i : this.taskInstances) {
       taskInstanceRepository.save(i);
     }
