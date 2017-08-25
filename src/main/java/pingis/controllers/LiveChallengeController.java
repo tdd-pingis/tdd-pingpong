@@ -1,6 +1,5 @@
 package pingis.controllers;
 
-
 import java.util.ArrayList;
 import javax.validation.Valid;
 import org.slf4j.Logger;
