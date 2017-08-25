@@ -13,69 +13,56 @@ Feature: Participate in Live Challenge
       |Admin        |implement next task page   |empty         |
 
 
-  Scenario Outline: <user> can successfully create the first pair of tests for live challenge
-    Given <user> is logged in
-    And <user> wants to participate in Live challenge
-    And <user> inputs and submits the challenge description
-    When <user> inputs and submits data for first task pair
-    Then the <page> is shown
-
-    Examples:
-
-      |user   |page                               |
-      |User   |implement next task page           |
-      |Admin  |implement next task page           |
+  Scenario: User can successfully create the first pair of tests for live challenge
+    Given User is logged in
+    And User wants to participate in Live challenge
+    And User inputs and submits the challenge description
+    When User inputs and submits data for first task pair
+    Then the implement next task page is shown
 
 
-  Scenario Outline: <user2> can successfully join an open live challenge
-    Given <user1> is logged in
-    And <user1> has successfully submitted new challenge with first task pair
-    And <user1> has successfully submitted test code for first task pair
-    When <user2> wants to join in Live challenge
-    And <user2> clicks the join live challenge button
-    Then the <page> is shown
-    And page <contains> the test code input by <user1>
-
-    Examples:
-
-      |user1      |user2   |contains          |page                             |
-      |User       |Admin   |contains          |implement next task page         |
-      |User       |User    |does not contain  |user page                        |
+  Scenario: Admin can successfully join an open live challenge
+    Given User is logged in
+    And User has successfully submitted new challenge with first task pair
+    And User has successfully submitted test code for first task pair
+    When Admin wants to join in Live challenge
+    And Admin clicks the join live challenge button
+    Then the implement next task page is shown
+    And page contains the test code input by User
 
 
-  Scenario Outline: After <user2> has successfully joined live challenge and submitted implementation code for first task pair, he can continue by creating new task pair
-    Given <user1> is logged in
-    And <user1> has successfully submitted new challenge with first task pair
-    And <user1> has successfully submitted test code for first task pair
-    And <user1> clicks the next task button
-    And <user2> wants to join in Live challenge
-    And <user2> clicks the join live challenge button
-    And <user2> has successfully submitted implementation code for first task pair
-    When <user2> clicks the next task button
-    Then the <page> is shown
-
-    Examples:
-
-      |user1      |user2         |page              |
-      |User       |Admin         |new task pair     |
+  Scenario: User can successfully join an open live challenge
+    Given User is logged in
+    And User has successfully submitted new challenge with first task pair
+    And User has successfully submitted test code for first task pair
+    When User wants to join in Live challenge
+    And User clicks the join live challenge button
+    Then the user page is shown
+    And page does not contain the test code input by User
 
 
-  Scenario Outline: <user1> can successfully continue a live challenge started by him/her
-    Given <user1> is logged in
-    And <user1> has successfully submitted new challenge with first task pair
-    And <user1> has successfully submitted test code for first task pair
-    And <user2> wants to join in Live challenge
-    And <user2> clicks the join live challenge button
-    And <user2> has successfully submitted implementation code for first task pair
-    When <user2> clicks the next task button
-    And <user2> inputs and submits data for second task pair
-    And <user2> has successfully submitted test code for second task pair
-    And <user1> wants to continue Live challenge
-    And <user1> clicks the continue live challenge button
-    Then the <page> is shown
-    And page contains the implementation code input by <user1>
+  Scenario:  After Admin has successfully joined live challenge and submitted implementation code for first task pair, he can continue by creating new task pair
+    Given User is logged in
+    And User has successfully submitted new challenge with first task pair
+    And User has successfully submitted test code for first task pair
+    And User clicks the next task button
+    And Admin wants to join in Live challenge
+    And Admin clicks the join live challenge button
+    And Admin has successfully submitted implementation code for first task pair
+    When Admin clicks the next task button
+    Then the new task pair is shown
 
-    Examples:
-
-      |user1      |user2         |page                       |
-      |User       |Admin         |implement next task page   |
+  Scenario: User can successfully continue a live challenge started by him/her
+    Given User is logged in
+    And User has successfully submitted new challenge with first task pair
+    And User has successfully submitted test code for first task pair
+    And Admin wants to join in Live challenge
+    And Admin clicks the join live challenge button
+    And Admin has successfully submitted implementation code for first task pair
+    When Admin clicks the next task button
+    And Admin inputs and submits data for second task pair
+    And Admin has successfully submitted test code for second task pair
+    And User wants to continue Live challenge
+    And User clicks the continue live challenge button
+    Then the implement next task page is shown
+    And page contains the implementation code input by User
