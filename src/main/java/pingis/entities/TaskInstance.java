@@ -143,5 +143,8 @@ public class TaskInstance {
     return this.task.getChallenge();
   }
 
+  public int getPoints() {
+    return 10;
+  }
 
 }
