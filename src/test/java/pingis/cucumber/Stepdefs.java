@@ -214,7 +214,7 @@ public class Stepdefs {
   @Given(".*has chosen to embark on a new challenge")
   public void starts_a_new_challenge() throws Throwable {
     findElementByName("Calculator challenge").click();
-    findElementByName("Test task multiply").click();
+    clicks_the_button("start challenge");
   }
 
   @Then(".*the page contains (.+)")
@@ -235,7 +235,6 @@ public class Stepdefs {
   public void has_successfully_submitted_new_challenge_with_first_task_pair(String user)
                                                 throws InterruptedException, Throwable {
     creates_new_live_challenge();
-    clicks_the_button("start challenge");
     inputs_and_submits_live_challenge_description();
     inputs_and_submits_new_task_pair("first");
   }
