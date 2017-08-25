@@ -1,10 +1,13 @@
 package pingis.controllers;
 
+import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,23 +45,24 @@ public class LiveChallengeController {
   GameplayService gameplayService;
 
   @RequestMapping(value = "/newchallenge")
-  public String newChallenge(Model model) {
+  public String newChallenge(@ModelAttribute Challenge challenge) {
 
     return "newchallenge";
   }
 
   @RequestMapping(value = "/createChallenge", method = RequestMethod.POST)
-  public RedirectView createChallenge(String challengeName, String challengeDesc,
-      String challengeType, String realm, RedirectAttributes redirectAttributes) {
+  public String createChallenge(@Valid @ModelAttribute Challenge challenge, BindingResult bindingResult) {
 
-    Challenge newChallenge = new Challenge(challengeName,
-        userService.getCurrentUser(),
-        challengeDesc, challengeType == "PROJECT" ? ChallengeType.PROJECT : ChallengeType.MIXED);
-    newChallenge.setLevel(1);
-    newChallenge.setOpen(true);
-    newChallenge = challengeService.save(newChallenge);
-    logger.info("Created new challenge: " + newChallenge.toString());
-    return new RedirectView("/playTurn/" + newChallenge.getId());
+    if (bindingResult.hasErrors()) {
+      return "/newchallenge";
+    }
+
+    challenge.setAuthor(userService.getCurrentUser());
+    challenge.setLevel(1);
+    challenge.setOpen(true);
+    challenge = challengeService.save(challenge);
+    logger.info("Created new challenge: " + challenge.toString());
+    return "redirect:/playTurn/" + challenge.getId();
   }
 
   @RequestMapping(value = "/newtaskpair")

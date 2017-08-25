@@ -1,5 +1,7 @@
 package pingis.entities;
 
+import static pingis.entities.Task.DESC_MAX_LENGTH;
+import static pingis.entities.Task.DESC_MIN_LENGTH;
 import static pingis.entities.Task.LEVEL_MAX_VALUE;
 import static pingis.entities.Task.LEVEL_MIN_VALUE;
 import static pingis.entities.Task.NAME_MAX_LENGTH;
@@ -27,11 +29,12 @@ public class Challenge {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
-  @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH)
   @NotNull
+  @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH)
   private String name;
 
   @NotNull
+  @Size(min = DESC_MIN_LENGTH, max = DESC_MAX_LENGTH)
   private String description;
 
   @NotNull
@@ -47,7 +50,6 @@ public class Challenge {
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "challenge")
   private List<Task> tasks;
 
-  @NotNull
   @ManyToOne(fetch = FetchType.EAGER)
   private User author;
 
@@ -75,13 +77,18 @@ public class Challenge {
   protected Challenge() {
   }
 
-  public Challenge(String name, User author, String description, ChallengeType type) {
+  public Challenge(String name, String description, ChallengeType type) {
     this.name = name;
-    this.author = author;
-    this.type = type;
     this.description = description;
+    this.type = type;
     this.tasks = new ArrayList<>();
     this.isOpen = false;
+    this.level = 0;
+  }
+
+  public Challenge(String name, User author, String description, ChallengeType type) {
+    this(name, description, type);
+    this.author = author;
   }
 
   public Challenge(String name, User author, String description) {
