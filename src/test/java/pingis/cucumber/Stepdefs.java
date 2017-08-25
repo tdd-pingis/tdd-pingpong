@@ -224,7 +224,6 @@ public class Stepdefs {
 
   @Then(".*the (.+) is shown")
   public void page_is_shown(String page) throws InterruptedException {
-    String currentUrl = driver.getCurrentUrl();
     String message = "wrong url, found: " + driver.getCurrentUrl()
                    + ",  \n expected to contain " + testUrls.get(page);
 
@@ -258,13 +257,16 @@ public class Stepdefs {
     assertTrue(isDisplayed(codeType + " input by " + user));
   }
 
+  @When(".*inputs nothing and submits the task pair")
+  public void inputs_nothing_and_submits_task_pair() throws Exception {
+    clicks_the_button("submit");
+    checkAlert();
+  }
+
   @When("(.+) inputs and submits (.+) code to (.+) task pair")
   public void inputs_and_submits_code_to_editor(String user, String codetype, String howMany)
                                                 throws InterruptedException {
-    if (!codetype.equals("empty")) {
       input_to_editor(inputs.get(howMany + " " + user + " " + codetype + " task code"));
-    }
-
     clicks_the_button("submit");
     checkAlert();
   }

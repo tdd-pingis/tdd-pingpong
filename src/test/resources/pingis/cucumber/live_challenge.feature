@@ -1,17 +1,16 @@
-Feature: Participate in Live Challenge
+Feature: Live Challenge
 
-  Scenario Outline: <user> can successfully create live-challenge and submit his first code to test task
-    Given <user> is logged in
-    And <user> has successfully submitted new challenge with first task pair
-    When <user> inputs and submits <code-type> code
-    Then the <page> is shown
+  Scenario: User can successfully create live-challenge and submit his first code to test task
+    Given User is logged in
+    And User has successfully submitted new challenge with first task pair
+    When User inputs and submits test code
+    Then the feedback page is shown
 
-    Examples:
-
-      |user         |page                       |code-type     |
-      |User         |feedback page              |test          |
-      |Admin        |implement next task page   |empty         |
-
+  Scenario: User cannot submit an empty task
+    Given User is logged in
+    And User has successfully submitted new challenge with first task pair
+    When User inputs nothing and submits the task pair
+    Then the implement next task page is shown
 
   Scenario: User can successfully create the first pair of tests for live challenge
     Given User is logged in
