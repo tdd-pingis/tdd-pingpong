@@ -28,18 +28,18 @@ window.submissionEditor.getSession().on("change", () => {
 });
 
 function sendCode() {
-  $("#errors").empty();
   $("#submit-button").attr("disabled", false);
-  const code = $("#submission-code").val(); // cast to number
+  const code = $("#submission-code").val();
   stompClient.send(`/javaparser/${taskInstanceId}`, {}, code);
 }
 
 function showErrors(message) {
-  if (message.body) {
-    const errors = JSON.parse(message.body);
-    $("#submit-button").attr("disabled", true);
-    for (const error of errors) {
-      $("#errors").append($("<div>").text(error).addClass("alert alert-warning"));
-    }
+  if (!message.body) {
+    return;
   }
+
+  const errors = JSON.parse(message.body);
+
+  $("#submit-button").attr("disabled", (errors.length > 0));
+  window.submissionEditor.getSession().setAnnotations(errors);
 }

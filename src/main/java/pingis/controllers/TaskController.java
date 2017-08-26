@@ -88,9 +88,6 @@ public class TaskController {
     model.addAttribute("submissionTabFileName", isTest ? tab1.title : tab2.title);
     model.addAttribute("staticTabFileName", isTest ? tab2.title : tab1.title);
 
-    if (model.containsAttribute("code")) {
-      model.addAttribute("submissionCodeStub", model.asMap().get("code"));
-    }
     logger.info("entering editor view");
     return "task";
   }
@@ -100,14 +97,7 @@ public class TaskController {
       long taskInstanceId,
       RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
     logger.info("submitting");
-    String[] errors = JavaSyntaxChecker.parseCode(submissionCode);
-    if (errors != null) {
-      redirectAttributes.addFlashAttribute("taskInstanceId", taskInstanceId);
-      redirectAttributes.addFlashAttribute("errors", errors);
-      redirectAttributes.addFlashAttribute("code", submissionCode);
-      
-      return new RedirectView("/task/" + taskInstanceId);
-    }
+
     TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
 
