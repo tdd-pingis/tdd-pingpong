@@ -19,12 +19,15 @@ import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
+import pingis.entities.sandbox.Submission;
 import pingis.repositories.ChallengeRepository;
 import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.TaskRepository;
+import pingis.repositories.UserRepository;
+import pingis.repositories.sandbox.SubmissionRepository;
 
 @Component
-public class DataImporter implements ApplicationRunner {
+public class DataImporter {
 
   private static final int TMC_USER_LEVEL = 100;
   private static final int TEST_USER_LEVEL = 5;
@@ -33,7 +36,8 @@ public class DataImporter implements ApplicationRunner {
   private String jsonString;
   private ChallengeRepository challengeRepository;
   private TaskRepository taskRepository;
-  private UserService userService;
+  private UserRepository userRepository;
+  private SubmissionRepository submissionRepository;
   private TaskInstanceRepository taskInstanceRepository;
   private HashMap<String, User> users = new LinkedHashMap<>();
   private HashMap<String, Challenge> challenges = new HashMap<>();
@@ -69,24 +73,43 @@ public class DataImporter implements ApplicationRunner {
   }
 
   @Autowired
-  public DataImporter(ChallengeRepository challengeRepository, TaskRepository taskRepository,
-      UserService userService,
-      TaskInstanceRepository taskInstanceRepository) {
+  public DataImporter(ChallengeRepository challengeRepository,
+                      TaskRepository taskRepository,
+                      UserRepository userRepository,
+                      TaskInstanceRepository taskInstanceRepository,
+                      SubmissionRepository submissionRepository1)
+                      throws Exception {
+
     this.challengeRepository = challengeRepository;
     this.taskRepository = taskRepository;
-    this.userService = userService;
+    this.userRepository = userRepository;
     this.taskInstanceRepository = taskInstanceRepository;
+    this.submissionRepository = submissionRepository1;
+    initializeDatabase();
   }
 
   protected DataImporter() {
   }
 
-  public void run(ApplicationArguments args) throws Exception {
+  public void initializeDatabase() throws Exception {
     Io io = new DataloaderIo();
     readData(io);
     generateUsers();
     generateEntities();
     populateDatabase();
+  }
+
+  public void dropDatabase() {
+    taskInstances.clear();
+    tasks.clear();
+    challenges.clear();
+    users.clear();
+
+    submissionRepository.deleteAll();
+    taskInstanceRepository.deleteAll();
+    taskRepository.deleteAll();
+    challengeRepository.deleteAll();
+    userRepository.deleteAll();
   }
 
   public void readData(Io io) {
@@ -241,7 +264,7 @@ public class DataImporter implements ApplicationRunner {
 
   public void populateDatabase() {
     for (User user : this.users.values()) {
-      userService.save(user);
+      userRepository.save(user);
     }
 
     for (String name : this.challenges.keySet()) {
@@ -255,8 +278,8 @@ public class DataImporter implements ApplicationRunner {
     for (TaskInstance i : this.taskInstances) {
       taskInstanceRepository.save(i);
     }
-  }
 
+  }
 
   private void printDatabase() {
     // For debugging-purposes

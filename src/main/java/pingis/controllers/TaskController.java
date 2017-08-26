@@ -102,8 +102,10 @@ public class TaskController {
     logger.info("submitting");
     String[] errors = JavaSyntaxChecker.parseCode(submissionCode);
     if (errors != null) {
+      redirectAttributes.addFlashAttribute("taskInstanceId", taskInstanceId);
       redirectAttributes.addFlashAttribute("errors", errors);
       redirectAttributes.addFlashAttribute("code", submissionCode);
+      
       return new RedirectView("/task/" + taskInstanceId);
     }
     TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);

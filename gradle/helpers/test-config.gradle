@@ -12,6 +12,10 @@ task unit (type: Test) {
 task cucumber (type: Test) {
     testLogging { afterSuite { desc, result -> printTestResults(desc,result,'CUKE') } }
     include '**/cucumber/**'
+
+    // Use for debugging specific Cucumber tests
+    // Add the @debug tag above a feature or scenario you want to test
+    //systemProperty "cucumber.options", "--tags @debug"
 }
 
 test.testLogging.showStandardStreams = true
