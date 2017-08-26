@@ -36,6 +36,7 @@ import pingis.services.sandbox.SandboxService;
 import pingis.utils.CodeStub;
 import pingis.utils.CodeStubBuilder;
 import pingis.utils.EditorTabData;
+import pingis.utils.JavaSyntaxChecker;
 import pingis.utils.TestStubBuilder;
 
 @Controller
@@ -68,7 +69,9 @@ public class TaskController {
       return "error";
     }
 
-    // TODO: check if taskinstance is owned by user, and is not marked as done
+    if (!taskInstanceService.canPlayOrSkip(taskInstance)) {
+      return "redirect:/error";
+    }
 
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
     model.addAttribute("challenge", currentChallenge);
@@ -126,48 +129,6 @@ public class TaskController {
     }
 
     return "OK";
-  }
-
-  @RequestMapping("/nextTask/{challengeId}")
-  public String nextTask(@PathVariable long challengeId, Model model) {
-    Challenge currentChallenge = challengeService.findOne(challengeId);
-    if (currentChallenge.getType() == ChallengeType.ARCADE) {
-      return "redirect:/playArcade/?realm=" + currentChallenge.getRealm().toString();
-    }
-    List<Task> tasks = taskService.filterTasksByUser(
-            currentChallenge.getTasks(), userService.getCurrentUser());
-    List<Task> testTasks = taskService.filterTasksByUser(
-            taskService.getAvailableTasksByType(currentChallenge, TaskType.TEST),
-            userService.getCurrentUser());
-    MultiValueMap<Task, TaskInstance> implementationTasks =
-            taskService.getAvailableTestTaskInstances(currentChallenge,
-                    userService.getCurrentUser());
-    model.addAttribute("challenge", currentChallenge);
-    model.addAttribute("testTasks", testTasks);
-    model.addAttribute("implementationTaskInstances", implementationTasks);
-    return "nexttask";
-  }
-
-  @RequestMapping("/newTaskInstance")
-  public RedirectView newTaskInstance(@RequestParam long taskId,
-      @RequestParam long testTaskInstanceId,
-      RedirectAttributes redirectAttributes) {
-    Task task = taskService.findOne(taskId);
-    User user = userService.getCurrentUser();
-    TaskInstance newTaskInstance = taskInstanceService.createEmpty(user, task);
-    if (task.getType() == TaskType.IMPLEMENTATION) {
-      TaskInstance testTaskInstance = taskInstanceService.findOne(testTaskInstanceId);
-      newTaskInstance.setTestTaskInstance(testTaskInstance);
-      testTaskInstance.addImplementationTaskInstance(newTaskInstance);
-      taskInstanceService.save(newTaskInstance);
-      taskInstanceService.save(testTaskInstance);
-    }
-    redirectAttributes.addAttribute("taskInstanceId", newTaskInstance.getId());
-    if (newTaskInstance.getChallenge().getType() == ChallengeType.ARCADE) {
-      user.setMostRecentArcadeInstance(newTaskInstance);
-      userService.save(user);
-    }
-    return new RedirectView("/task/{taskInstanceId}");
   }
 
   @RequestMapping("/randomTask")
@@ -234,6 +195,9 @@ public class TaskController {
   public RedirectView skip(RedirectAttributes redirectAttributes,
       @PathVariable long taskInstanceId) {
     TaskInstance skippedTaskInstance = taskInstanceService.findOne(taskInstanceId);
+    if (!taskInstanceService.canPlayOrSkip(skippedTaskInstance)) {
+      return new RedirectView("/error");
+    }
     Challenge currentChallenge = skippedTaskInstance.getChallenge();
     if (currentChallenge.getType() == ChallengeType.ARCADE || !currentChallenge.getIsOpen()) {
       skippedTaskInstance.setStatus(CodeStatus.DROPPED);

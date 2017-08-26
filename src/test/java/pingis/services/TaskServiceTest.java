@@ -37,11 +37,17 @@ public class TaskServiceTest {
   @MockBean
   private TaskRepository taskRepositoryMock;
 
+  @MockBean
+  private TaskInstanceService taskInstanceServiceMock;
+
   @Autowired
   private TaskService taskService;
 
   @MockBean
   private ChallengeRepository challengeRepositoryMock;
+
+  @MockBean
+  private UserService userServiceMock;
 
   private User testUser;
   private Challenge testChallenge;

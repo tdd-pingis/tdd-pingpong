@@ -4,12 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Challenge;
+import pingis.entities.ChallengeType;
 import pingis.entities.CodeStatus;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
@@ -25,6 +28,10 @@ public class TaskService {
   private TaskRepository taskRepository;
   @Autowired
   private ChallengeRepository challengeRepository;
+  @Autowired
+  private TaskInstanceService taskInstanceService;
+  @Autowired
+  private UserService userService;
 
   public Task findTaskInChallenge(Long challengeId, int taskId) {
     // Implement validation here
@@ -165,4 +172,32 @@ public class TaskService {
     return list.get(new Random().nextInt(list.size()));
   }
 
+  public List<Task> findAllByChallengeAndIndex(Challenge challenge, int index) {
+    return taskRepository.findAllByChallengeAndIndex(challenge, index);
+  }
+
+  public Task findByChallengeAndTypeAndIndex(Challenge challenge, TaskType type, int index) {
+    return taskRepository.findByChallengeAndTypeAndIndex(challenge, type, index);
+  }
+
+  public Task nextPracticeTask(Challenge challenge) {
+    int highestIndex = findAllByChallenge(challenge).size() / 2;
+    User player = userService.getCurrentUser();
+    List<TaskInstance> instances = taskInstanceService.getByUserAndChallenge(player, challenge);
+    if (instances.size() == highestIndex) {
+      return null;
+    }
+    if (instances.size() == 0) {
+      return new Random().nextInt(2) == 0
+          ? findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, 1)
+          : findByChallengeAndTypeAndIndex(challenge, TaskType.IMPLEMENTATION, 1);
+    }
+    Task testTask = findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, instances.size());
+    if (taskInstanceService.getByTaskAndUser(testTask, player) != null) {
+      return findByChallengeAndTypeAndIndex(challenge, TaskType.IMPLEMENTATION,
+          instances.size() + 1);
+    } else {
+      return findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, instances.size() + 1);
+    }
+  }
 }

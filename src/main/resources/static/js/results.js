@@ -9,7 +9,7 @@ function showResults(response) {
     } else if (status === 'PASSED' || status === 'TESTS_FAILED') {
         showTestResults(resultMessage);
     } else {
-        $("#panel")
+        $("#results-panel")
                 .addClass("alert alert-warning")
                 .text("Something happened: " + status);
     }
@@ -21,9 +21,9 @@ function makeResultsPanel() {
             $("<div>")
             .addClass("col-md-6"));
     results.append($("<div>")
-            .attr("id", "panel"));
+            .attr("id", "results-panel"));
 
-    var panel = $("#panel");
+    var panel = $("#results-panel");
     panel.append(
             $("<div>")
             .attr("id", "panel-heading")
@@ -43,7 +43,7 @@ function showCompilationError(resultMessage) {
     lines = lines.filter(line => line.includes("[javac] "))
             .map(line => line.replace("[javac] ", ""));
 
-    $("#panel").addClass("panel panel-warning");
+    $("#results-panel").addClass("panel panel-warning");
     $("#panel-heading")
             .text("Oh no! Your submission did not compile!");
     var panelBody = $("#panel-body");
@@ -70,13 +70,13 @@ function showButtonsAndUserFeedback() {
 }
 
 function showSuccess() {
-    $("#panel").addClass("panel panel-success");
+    $("#results-panel").addClass("panel panel-success");
     $("#panel-heading").text("Task cleared!");
     $("#panel-body").text("Well done! Head onto the next task!");
 }
 
 function showFailure(resultMessage) {
-    $("#panel").addClass("panel panel-danger");
+    $("#results-panel").addClass("panel panel-danger");
     var panelHeading = $("#panel-heading");
 
     if (resultMessage.type === 'TEST') {

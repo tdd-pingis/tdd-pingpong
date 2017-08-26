@@ -3,6 +3,8 @@ package pingis.services;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +44,8 @@ public class TaskInstanceService {
   public TaskInstance getCorrespondingImplTaskInstance(TaskInstance testTaskInstance) {
     return taskInstanceRepository
         .findByTaskAndUser(
-            taskRepository.findByIndexAndChallengeAndType(testTaskInstance.getTask().getIndex(),
+            taskRepository.findByIndexAndChallengeAndType(testTaskInstance.getTask()
+                    .getIndex(),
                 testTaskInstance.getTask().getChallenge(), TaskType.IMPLEMENTATION),
             userRepository.findById(0L).get());
   }
@@ -68,11 +71,14 @@ public class TaskInstanceService {
     newTaskInstance.setCode(task.getCodeStub());
     return taskInstanceRepository.save(newTaskInstance);
   }
-  
+
   public List<TaskInstance> getByUserAndChallenge(User user, Challenge challenge) {
     List<TaskInstance> taskInstances = new ArrayList<>();
     for (Task task : challenge.getTasks()) {
-      taskInstances.add(taskInstanceRepository.findByTaskAndUser(task, user));
+      TaskInstance current = taskInstanceRepository.findByTaskAndUser(task, user);
+      if (current != null) {
+        taskInstances.add(current);
+      }
     }
     return taskInstances;
   }
@@ -142,12 +148,40 @@ public class TaskInstanceService {
   public TaskInstance getByTaskAndUser(Task task, User user) {
     return taskInstanceRepository.findByTaskAndUser(task, user);
   }
-  
+
   public boolean canContinue(TaskInstance taskInstance, User user) {
     if (taskInstance.getStatus() == CodeStatus.DONE || !taskInstance.getUser().equals(user)) {
       return false;
-    } 
+    }
     return true;
   }
 
+  public TaskInstance getRandomTaskInstance(Task task) {
+    User user = userService.getCurrentUser();
+    List<TaskInstance> instances = taskInstanceRepository.findByTask(task);
+    List<TaskInstance> viableInstances = instances.stream()
+        .filter(i -> !i.getUser().equals(user))
+        .filter(i -> i.getStatus() == CodeStatus.DONE)
+        .collect(Collectors.toList());
+    return viableInstances.get(new Random().nextInt(viableInstances.size()));
+  }
+
+  public TaskInstance getUnfinishedInstance(Challenge challenge, User player) {
+    Optional<TaskInstance> unfinished = getAllByChallenge(challenge).stream()
+        .filter(i -> i.getUser().equals(player))
+        .filter(i -> i.getStatus() == CodeStatus.IN_PROGRESS)
+        .findFirst();
+    if (unfinished.isPresent()) {
+      return unfinished.get();
+    }
+    return null;
+  }
+
+  public boolean canPlayOrSkip(TaskInstance taskInstance) {
+    if (!taskInstance.getUser().equals(userService.getCurrentUser())
+        || taskInstance.getStatus() != CodeStatus.IN_PROGRESS) {
+      return false;
+    }
+    return true;
+  }
 }
