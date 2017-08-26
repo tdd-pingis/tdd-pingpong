@@ -44,10 +44,6 @@ public class User {
   @OneToMany(mappedBy = "secondPlayer")
   private List<Challenge> participatingLiveChallenges;
 
-
-  @OneToOne
-  private TaskInstance mostRecentArcadeInstance;
-
   public User() {
   }
 
@@ -184,14 +180,6 @@ public class User {
   
   public void addParticipatingLiveChallenge(Challenge challenge) {
     this.participatingLiveChallenges.add(challenge);
-  }
-
-  public TaskInstance getMostRecentArcadeInstance() {
-    return mostRecentArcadeInstance;
-  }
-
-  public void setMostRecentArcadeInstance(TaskInstance mostRecentArcadeInstance) {
-    this.mostRecentArcadeInstance = mostRecentArcadeInstance;
   }
 
 }
