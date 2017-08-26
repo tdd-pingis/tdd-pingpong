@@ -307,8 +307,8 @@ public class LiveChallengeController {
     User player = userService.getCurrentUser();
     logger.info("User: " + player.getName());
 
-    if (challenge.getAuthor().equals(player) ||
-        (challenge.getSecondPlayer() != null
+    if (challenge.getAuthor().equals(player)
+        || (challenge.getSecondPlayer() != null
             && challenge.getSecondPlayer().equals(player))) {
       redirectAttributes.addFlashAttribute("message", "Cannot re-do your own live challenge");
       return new RedirectView("/error");
