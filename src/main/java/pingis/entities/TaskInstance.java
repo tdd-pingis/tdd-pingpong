@@ -143,5 +143,7 @@ public class TaskInstance {
     return this.task.getChallenge();
   }
 
-
+  public Realm getRealm() {
+    return getChallenge().getRealm();
+  }
 }

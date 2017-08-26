@@ -44,7 +44,8 @@ public class TaskInstanceService {
   public TaskInstance getCorrespondingImplTaskInstance(TaskInstance testTaskInstance) {
     return taskInstanceRepository
         .findByTaskAndUser(
-            taskRepository.findByIndexAndChallengeAndType(testTaskInstance.getTask().getIndex(),
+            taskRepository.findByIndexAndChallengeAndType(testTaskInstance.getTask()
+                    .getIndex(),
                 testTaskInstance.getTask().getChallenge(), TaskType.IMPLEMENTATION),
             userRepository.findById(0L).get());
   }
@@ -70,11 +71,14 @@ public class TaskInstanceService {
     newTaskInstance.setCode(task.getCodeStub());
     return taskInstanceRepository.save(newTaskInstance);
   }
-  
+
   public List<TaskInstance> getByUserAndChallenge(User user, Challenge challenge) {
     List<TaskInstance> taskInstances = new ArrayList<>();
     for (Task task : challenge.getTasks()) {
-      taskInstances.add(taskInstanceRepository.findByTaskAndUser(task, user));
+      TaskInstance current = taskInstanceRepository.findByTaskAndUser(task, user);
+      if (current != null) {
+        taskInstances.add(current);
+      }
     }
     return taskInstances;
   }
@@ -144,11 +148,11 @@ public class TaskInstanceService {
   public TaskInstance getByTaskAndUser(Task task, User user) {
     return taskInstanceRepository.findByTaskAndUser(task, user);
   }
-  
+
   public boolean canContinue(TaskInstance taskInstance, User user) {
     if (taskInstance.getStatus() == CodeStatus.DONE || !taskInstance.getUser().equals(user)) {
       return false;
-    } 
+    }
     return true;
   }
 
@@ -162,5 +166,22 @@ public class TaskInstanceService {
     return viableInstances.get(new Random().nextInt(viableInstances.size()));
   }
 
+  public TaskInstance getUnfinishedInstance(Challenge challenge, User player) {
+    Optional<TaskInstance> unfinished = getAllByChallenge(challenge).stream()
+        .filter(i -> i.getUser().equals(player))
+        .filter(i -> i.getStatus() == CodeStatus.IN_PROGRESS)
+        .findFirst();
+    if (unfinished.isPresent()) {
+      return unfinished.get();
+    }
+    return null;
+  }
 
+  public boolean canPlayOrSkip(TaskInstance taskInstance) {
+    if (!taskInstance.getUser().equals(userService.getCurrentUser())
+        || taskInstance.getStatus() != CodeStatus.IN_PROGRESS) {
+      return false;
+    }
+    return true;
+  }
 }

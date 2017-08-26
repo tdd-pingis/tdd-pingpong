@@ -182,17 +182,9 @@ public class LiveChallengeController {
     }
     Challenge challenge = gameplayService.getArcadeChallenge(currentRealm);
     if (player.getMostRecentArcadeInstance() != null
-        && !(player.getMostRecentArcadeInstance().getChallenge().getRealm() == currentRealm)) {
-      List<TaskInstance> instances = taskInstanceService.getAllByChallenge(challenge);
-      Optional<TaskInstance> unfinished = instances.stream()
-          .filter(i -> i.getUser().equals(player))
-          .filter(i -> i.getStatus() == CodeStatus.IN_PROGRESS)
-          .findFirst();
-      if (unfinished.isPresent()) {
-        player.setMostRecentArcadeInstance(unfinished.get());
-      } else {
-        player.setMostRecentArcadeInstance(null);
-      }
+        && !(player.getMostRecentArcadeInstance().getRealm() == currentRealm)) {
+      player.setMostRecentArcadeInstance(
+              taskInstanceService.getUnfinishedInstance(challenge, player));
     }
     return playArcade(redirectAttributes, challenge);
   }
@@ -307,21 +299,16 @@ public class LiveChallengeController {
     User player = userService.getCurrentUser();
     logger.info("User: " + player.getName());
 
-    if (challenge.getAuthor().equals(player)
-        || (challenge.getSecondPlayer() != null
-            && challenge.getSecondPlayer().equals(player))) {
+    if (challengeService.isOwnChallenge(challenge, player)) {
       redirectAttributes.addFlashAttribute("message", "Cannot re-do your own live challenge");
       return new RedirectView("/error");
     }
 
-    Optional<TaskInstance> unfinished = player.getTaskInstances().stream()
-        .filter(e -> e.getChallenge().equals(challenge))
-        .filter(e -> e.getStatus() == CodeStatus.IN_PROGRESS)
-        .findFirst();
+    TaskInstance unfinished = taskInstanceService.getUnfinishedInstance(challenge, player);
 
-    if (unfinished.isPresent()) {
+    if (unfinished != null) {
       logger.info("Found unfinished instance. Redirecting to /task.");
-      return new RedirectView("/task/" + unfinished.get().getId());
+      return new RedirectView("/task/" + unfinished.getId());
     }
 
     Task nextTask = taskService.nextPracticeTask(challenge);
@@ -330,9 +317,12 @@ public class LiveChallengeController {
       return new RedirectView("/challengeFinished/" + challenge.getId());
     }
     if (nextTask.getType() == TaskType.TEST) {
+      logger.info("playing test task");
       return newTaskInstance(nextTask, null, redirectAttributes);
     }
-    TaskInstance testTaskInstance = taskInstanceService.getRandomTaskInstance(nextTask);
+    logger.info("playing implementation task");
+    TaskInstance testTaskInstance =
+        taskInstanceService.getRandomTaskInstance(taskService.getCorrespondingTask(nextTask));
     return newTaskInstance(nextTask, testTaskInstance, redirectAttributes);
   }
 

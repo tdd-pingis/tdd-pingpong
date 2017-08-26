@@ -2,9 +2,6 @@ package pingis.controllers;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -12,15 +9,11 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrlPattern;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import org.junit.Before;
@@ -38,13 +31,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 import pingis.config.OAuthProperties;
 import pingis.config.SecurityConfig;
 import pingis.entities.Challenge;
-import pingis.entities.ChallengeType;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
@@ -130,12 +120,14 @@ public class TaskControllerTest {
   public void givenTaskWhenGetTestTask() throws Exception {
     when(taskInstanceServiceMock.findOne(testTaskInstance.getId()))
         .thenReturn(testTaskInstance);
+    when(taskInstanceServiceMock.canPlayOrSkip(any())).thenReturn(true);
     Map<String, EditorTabData> tabData = this
         .generateTabData(implTaskInstance, testTaskInstance);
     when(editorServiceMock.generateEditorContents(testTaskInstance)).thenReturn(tabData);
     String uri = "/task/" + testTaskInstance.getId();
     performSimpleGetRequestAndFindContent(uri, "task", testTask.getCodeStub());
     verify(taskInstanceServiceMock, times(1)).findOne(testTaskInstance.getId());
+    verify(taskInstanceServiceMock).canPlayOrSkip(any());
     verify(editorServiceMock, times(1))
         .generateEditorContents(testTaskInstance);
     verifyNoMoreInteractions(taskInstanceServiceMock);
@@ -148,11 +140,14 @@ public class TaskControllerTest {
 
     when(taskInstanceServiceMock.findOne(implTaskInstance.getId()))
         .thenReturn(implTaskInstance);
+    when(taskInstanceServiceMock.canPlayOrSkip(any())).thenReturn(true);
+
     Map<String, EditorTabData> tabData = generateTabData(implTaskInstance, testTaskInstance);
     when(editorServiceMock.generateEditorContents(implTaskInstance)).thenReturn(tabData);
     String uri = "/task/" + implTaskInstance.getId();
     performSimpleGetRequestAndFindContent(uri, "task", implementationTask.getCodeStub());
     verify(taskInstanceServiceMock, times(1)).findOne(implTaskInstance.getId());
+    verify(taskInstanceServiceMock).canPlayOrSkip(any());
     verify(editorServiceMock, times(1))
         .generateEditorContents(implTaskInstance);
     verifyNoMoreInteractions(taskInstanceServiceMock);

@@ -180,33 +180,24 @@ public class TaskService {
     return taskRepository.findByChallengeAndTypeAndIndex(challenge, type, index);
   }
 
-  //
   public Task nextPracticeTask(Challenge challenge) {
     int highestIndex = findAllByChallenge(challenge).size() / 2;
-    Task previous = null;
-    for (int i = 1; i <= highestIndex; i++) {
-      Task testTask = findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, i);
-      Task implTask = findByChallengeAndTypeAndIndex(challenge, TaskType.IMPLEMENTATION, i);
-      TaskInstance testTaskInstance =
-          taskInstanceService.getByTaskAndUser(testTask, userService.getCurrentUser());
-      TaskInstance implTaskInstance =
-          taskInstanceService.getByTaskAndUser(implTask, userService.getCurrentUser());
-      if (testTaskInstance == null && implTaskInstance == null) {
-        if (previous == null) {
-          return new Random().nextInt(1) == 0 ? testTask : implTask;
-        }
-        if (previous.getType() == TaskType.TEST) {
-          return implTask;
-        }
-        return testTask;
-      }
-      if (testTaskInstance != null) {
-        previous = testTask;
-        continue;
-      }
-      previous = implTask;
+    User player = userService.getCurrentUser();
+    List<TaskInstance> instances = taskInstanceService.getByUserAndChallenge(player, challenge);
+    if (instances.size() == highestIndex) {
+      return null;
     }
-    return null;
+    if (instances.size() == 0) {
+      return new Random().nextInt(2) == 0
+          ? findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, 1)
+          : findByChallengeAndTypeAndIndex(challenge, TaskType.IMPLEMENTATION, 1);
+    }
+    Task testTask = findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, instances.size());
+    if (taskInstanceService.getByTaskAndUser(testTask, player) != null) {
+      return findByChallengeAndTypeAndIndex(challenge, TaskType.IMPLEMENTATION,
+          instances.size() + 1);
+    } else {
+      return findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, instances.size() + 1);
+    }
   }
-
 }

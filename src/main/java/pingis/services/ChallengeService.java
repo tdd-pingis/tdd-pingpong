@@ -92,8 +92,9 @@ public class ChallengeService {
     }
   }
 
-
-
-
-
+  public boolean isOwnChallenge(Challenge challenge, User player) {
+    return challenge.getAuthor().equals(player)
+            || (challenge.getSecondPlayer() != null
+            && challenge.getSecondPlayer().equals(player));
+  }
 }

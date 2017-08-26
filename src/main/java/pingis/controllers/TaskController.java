@@ -69,7 +69,9 @@ public class TaskController {
       return "error";
     }
 
-    // TODO: check if taskinstance is owned by user, and is not marked as done
+    if (!taskInstanceService.canPlayOrSkip(taskInstance)) {
+      return "redirect:/error";
+    }
 
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
     model.addAttribute("challenge", currentChallenge);
@@ -114,7 +116,7 @@ public class TaskController {
   }
 
   @RequestMapping("/feedback")
-  public String feedback(Model model) {
+  public String feedback() {
     return "feedback";
   }
 
@@ -193,6 +195,9 @@ public class TaskController {
   public RedirectView skip(RedirectAttributes redirectAttributes,
       @PathVariable long taskInstanceId) {
     TaskInstance skippedTaskInstance = taskInstanceService.findOne(taskInstanceId);
+    if (!taskInstanceService.canPlayOrSkip(skippedTaskInstance)) {
+      return new RedirectView("/error");
+    }
     Challenge currentChallenge = skippedTaskInstance.getChallenge();
     if (currentChallenge.getType() == ChallengeType.ARCADE || !currentChallenge.getIsOpen()) {
       skippedTaskInstance.setStatus(CodeStatus.DROPPED);
