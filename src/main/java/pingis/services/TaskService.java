@@ -208,24 +208,5 @@ public class TaskService {
     }
     return null;
   }
-/*
-  public RedirectView newTaskInstance(Task task,
-      TaskInstance testTaskInstance,
-      RedirectAttributes redirectAttributes) {
-    User user = userService.getCurrentUser();
-    TaskInstance newTaskInstance = taskInstanceService.createEmpty(user, task);
-    if (task.getType() == TaskType.IMPLEMENTATION) {
-      newTaskInstance.setTestTaskInstance(testTaskInstance);
-      testTaskInstance.addImplementationTaskInstance(newTaskInstance);
-      taskInstanceService.save(newTaskInstance);
-      taskInstanceService.save(testTaskInstance);
-    }
-    redirectAttributes.addAttribute("taskInstanceId", newTaskInstance.getId());
-    if (newTaskInstance.getChallenge().getType() == ChallengeType.ARCADE) {
-      user.setMostRecentArcadeInstance(newTaskInstance);
-      userService.save(user);
-    }
-    return new RedirectView("/task/" + newTaskInstance.getId());
-  }*/
 
 }
