@@ -202,7 +202,7 @@ public class TaskController {
     if (currentChallenge.getType() == ChallengeType.ARCADE || !currentChallenge.getIsOpen()) {
       skippedTaskInstance.setStatus(CodeStatus.DROPPED);
       taskInstanceService.save(skippedTaskInstance);
-      return new RedirectView("/nextTask/" + currentChallenge.getId());
+      return new RedirectView("/playChallenge/" + currentChallenge.getId());
     }
     return new RedirectView("/error");
   }

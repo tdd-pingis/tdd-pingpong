@@ -27,6 +27,8 @@ import pingis.services.GameplayService.TurnType;
 import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
+import pingis.utils.CodeStubBuilder;
+import pingis.utils.TestStubBuilder;
 
 @Controller
 public class LiveChallengeController {
@@ -85,21 +87,17 @@ public class LiveChallengeController {
       RedirectAttributes redirectAttributes) {
     
     Challenge currentChallenge = challengeService.findOne(challengeId);
-    Task testTask = gameplayService.generateTaskPairAndTaskInstance(testTaskName,
+    String implStub = new CodeStubBuilder(currentChallenge.getName()).build().code;
+    String testStub = new TestStubBuilder(implStub).withTestImports().build().code;
+
+    gameplayService.generateTaskPairAndTaskInstance(testTaskName,
         implementationTaskName,
         testTaskDesc,
         implementationTaskDesc,
-        testCodeStub,
-        implementationCodeStub,
+        testStub,
+        implStub,
         currentChallenge);
-
-    if (currentChallenge.getType() == ChallengeType.ARCADE) {
-      redirectAttributes.addAttribute("realm", currentChallenge.getRealm().toString());
-      return playArcade(redirectAttributes, currentChallenge);
-    }
-    redirectAttributes.addAttribute("taskId", testTask.getId());
-    redirectAttributes.addAttribute("testTaskInstanceId", 0L);
-    return playLive(currentChallenge, redirectAttributes);
+    return playChallenge(redirectAttributes, challengeId);
   }
 
   @RequestMapping("/playChallenge/{challengeId}")
@@ -110,6 +108,13 @@ public class LiveChallengeController {
       redirectAttributes.addFlashAttribute("message", "challenge not found");
       return new RedirectView("/error");
     }
+    User player = userService.getCurrentUser();
+    TaskInstance unfinished =  taskInstanceService.getUnfinishedInstance(currentChallenge, player);
+    if (unfinished != null) {
+      logger.info("Found unfinished instance. Redirecting to /task.");
+      return new RedirectView("/task/" + unfinished.getId());
+    }
+
     if (currentChallenge.getType() == ChallengeType.ARCADE) {
       return playArcade(redirectAttributes, currentChallenge);
     } else if (currentChallenge.getIsOpen()) {
@@ -181,11 +186,6 @@ public class LiveChallengeController {
       return new RedirectView("/error");
     }
     Challenge challenge = gameplayService.getArcadeChallenge(currentRealm);
-    if (player.getMostRecentArcadeInstance() != null
-        && !(player.getMostRecentArcadeInstance().getRealm() == currentRealm)) {
-      player.setMostRecentArcadeInstance(
-              taskInstanceService.getUnfinishedInstance(challenge, player));
-    }
     return playArcade(redirectAttributes, challenge);
   }
 
@@ -212,16 +212,10 @@ public class LiveChallengeController {
     }
     
     TaskInstance unfinished = challengeService.getUnfinishedTaskInstance(currentChallenge);
-    logger.info("Unfinished task inside current challenge fetched: " + unfinished);
-
-    if (unfinished != null && unfinished.getUser().equals(userService.getCurrentUser())) {
-      logger.info("Found unfinished taskinstance owned by current user, redirecting to \"/task\"");
-      return new RedirectView("/task/" + unfinished.getId());
-
-    } else if (unfinished != null
+    if (unfinished != null
         && !unfinished.getUser().equals(userService.getCurrentUser())) {
       logger.info("Unfinished taskinstance found, but not owned by the"
-          + " current user, redirecting to \"/user\"");
+          + " current user. Not user's turn yet, redirecting to \"/user\"");
       return new RedirectView("/user");
     }
 
@@ -265,19 +259,8 @@ public class LiveChallengeController {
   private RedirectView playArcade(RedirectAttributes redirectAttributes, Challenge challenge) {
     logger.info("playArcade method entered");
     User player = userService.getCurrentUser();
-    if (player.getMostRecentArcadeInstance() != null
-        && player.getMostRecentArcadeInstance().getStatus() == CodeStatus.IN_PROGRESS) {
-      logger.info("Found unfinished taskinstance, redirecting to /task.");
-      redirectAttributes.addFlashAttribute("taskInstanceId",
-          player.getMostRecentArcadeInstance().getId());
-      return new RedirectView("/task/" + player.getMostRecentArcadeInstance().getId());
-    }
 
-    if (player.getMostRecentArcadeInstance() == null
-        || (player.getMostRecentArcadeInstance().getTask().getType() == TaskType.IMPLEMENTATION)
-        && player.getMostRecentArcadeInstance().getStatus() != CodeStatus.DROPPED) {
-      logger.info("most recent task instance: {}",
-          player.getMostRecentArcadeInstance());
+    if (taskInstanceService.getNumberOfDoneTaskInstancesInChallenge(challenge) % 2 == 0) {
       redirectAttributes.addFlashAttribute("challengeId", challenge.getId());
       redirectAttributes.addFlashAttribute("challenge", challenge);
       redirectAttributes.addFlashAttribute("minLength", Integer.MAX_VALUE);
@@ -304,16 +287,9 @@ public class LiveChallengeController {
       return new RedirectView("/error");
     }
 
-    TaskInstance unfinished = taskInstanceService.getUnfinishedInstance(challenge, player);
-
-    if (unfinished != null) {
-      logger.info("Found unfinished instance. Redirecting to /task.");
-      return new RedirectView("/task/" + unfinished.getId());
-    }
-
     Task nextTask = taskService.nextPracticeTask(challenge);
     if (nextTask == null) {
-      // all challenges done. wohoo.
+      // all tasks done. wohoo.
       return new RedirectView("/challengeFinished/" + challenge.getId());
     }
     if (nextTask.getType() == TaskType.TEST) {
@@ -336,11 +312,6 @@ public class LiveChallengeController {
       testTaskInstance.addImplementationTaskInstance(newTaskInstance);
       taskInstanceService.save(newTaskInstance);
       taskInstanceService.save(testTaskInstance);
-    }
-    redirectAttributes.addAttribute("taskInstanceId", newTaskInstance.getId());
-    if (newTaskInstance.getChallenge().getType() == ChallengeType.ARCADE) {
-      user.setMostRecentArcadeInstance(newTaskInstance);
-      userService.save(user);
     }
     return new RedirectView("/task/" + newTaskInstance.getId());
   }
