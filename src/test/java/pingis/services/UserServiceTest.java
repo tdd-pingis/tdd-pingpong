@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import pingis.entities.Task;
 import pingis.entities.TmcUserDto;
 import pingis.entities.User;
 import pingis.repositories.UserRepository;
@@ -285,6 +286,6 @@ public class UserServiceTest {
     assertEquals(1, userService.getLevel(1400));
     assertEquals(2, userService.getLevel(2100));
     assertEquals(20, userService.getLevel(20010));
-    assertEquals(UserService.numberOfLevels, userService.getLevel(Integer.MAX_VALUE));
+    assertEquals(Task.LEVEL_MAX_VALUE, userService.getLevel(Integer.MAX_VALUE));
   }
 }

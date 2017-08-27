@@ -1,5 +1,7 @@
 package pingis.services;
 
+import static pingis.entities.Task.LEVEL_MAX_VALUE;
+
 import java.util.List;
 import java.util.Optional;
 import org.apache.log4j.Logger;
@@ -12,10 +14,6 @@ import pingis.repositories.UserRepository;
 
 @Service
 public class UserService {
-
-  public static final int numberOfLevels = 100;
-  private final int pointsForFirstLevel = 1000;
-  private final float base = 1.2f;
 
   private final UserRepository userRepository;
   private final Logger logger = Logger.getLogger(UserService.class);
@@ -107,7 +105,7 @@ public class UserService {
   }
 
   public int getLevel(int score) {
-    return Math.min(score / 1000, numberOfLevels);
+    return Math.min(score / 1000, LEVEL_MAX_VALUE);
   }
 
   public int levelOfCurrentUser() {
