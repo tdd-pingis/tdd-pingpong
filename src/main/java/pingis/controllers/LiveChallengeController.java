@@ -27,6 +27,8 @@ import pingis.services.GameplayService.TurnType;
 import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
+import pingis.utils.CodeStubBuilder;
+import pingis.utils.TestStubBuilder;
 
 @Controller
 public class LiveChallengeController {
@@ -85,12 +87,15 @@ public class LiveChallengeController {
       RedirectAttributes redirectAttributes) {
     
     Challenge currentChallenge = challengeService.findOne(challengeId);
+    String implStub = new CodeStubBuilder("MyImplememtationClass").build().code;
+    String testStub = new TestStubBuilder(implStub).withTestImports().build().code;
+
     gameplayService.generateTaskPairAndTaskInstance(testTaskName,
         implementationTaskName,
         testTaskDesc,
         implementationTaskDesc,
-        testCodeStub,
-        implementationCodeStub,
+        testStub,
+        implStub,
         currentChallenge);
     return playChallenge(redirectAttributes, challengeId);
   }
@@ -284,7 +289,7 @@ public class LiveChallengeController {
 
     Task nextTask = taskService.nextPracticeTask(challenge);
     if (nextTask == null) {
-      // all challenges done. wohoo.
+      // all tasks done. wohoo.
       return new RedirectView("/challengeFinished/" + challenge.getId());
     }
     if (nextTask.getType() == TaskType.TEST) {
