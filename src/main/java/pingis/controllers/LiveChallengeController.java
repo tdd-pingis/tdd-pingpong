@@ -87,7 +87,7 @@ public class LiveChallengeController {
       RedirectAttributes redirectAttributes) {
     
     Challenge currentChallenge = challengeService.findOne(challengeId);
-    String implStub = new CodeStubBuilder("MyImplememtationClass").build().code;
+    String implStub = new CodeStubBuilder(currentChallenge.getName()).build().code;
     String testStub = new TestStubBuilder(implStub).withTestImports().build().code;
 
     gameplayService.generateTaskPairAndTaskInstance(testTaskName,
