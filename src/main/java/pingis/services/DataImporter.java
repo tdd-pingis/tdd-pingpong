@@ -29,9 +29,9 @@ import pingis.repositories.sandbox.SubmissionRepository;
 @Component
 public class DataImporter {
 
-  private static final int TMC_USER_LEVEL = 100;
-  private static final int TEST_USER_LEVEL = 5;
-  private static final int IMPLEMENTATION_USER_LEVEL = 1;
+  private static final int TMC_USER_LEVEL = 100000;
+  private static final int TEST_USER_LEVEL = 5000;
+  private static final int IMPLEMENTATION_USER_LEVEL = 1000;
 
   private String jsonString;
   private ChallengeRepository challengeRepository;
