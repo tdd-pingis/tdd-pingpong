@@ -13,6 +13,10 @@ import pingis.repositories.UserRepository;
 @Service
 public class UserService {
 
+  private final int numberOfLevels = 100;
+  private final int pointsForFirstLevel = 1000;
+  private final float base = 1.2f;
+
   private final UserRepository userRepository;
   private final Logger logger = Logger.getLogger(UserService.class);
 
@@ -100,5 +104,18 @@ public class UserService {
 
   public User getCurrentUser() {
     return findByName(SecurityContextHolder.getContext().getAuthentication().getName());
+  }
+
+  public int getLevel(int score) {
+    for (int i = 1; i <= numberOfLevels; i++) {
+      if (score < (int)(pointsForFirstLevel * Math.pow(this.base, i - 1))) {
+        return i - 1;
+      }
+    }
+    return numberOfLevels;
+  }
+
+  public int levelOfCurrentUser() {
+    return getLevel(getCurrentUser().getPoints());
   }
 }
