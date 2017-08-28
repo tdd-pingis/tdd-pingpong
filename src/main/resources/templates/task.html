@@ -6,12 +6,17 @@
    <body onload="connect()">
       <nav th:include="navbar :: navigation"></nav>
       <div class="divider task-topmost-div" >
-         <div class="row task-topbar-challenge-info"> <!-- top bar -->
+         <div class="row task-topbar-challenge-info" th:unless="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}"> <!-- top bar -->
             <h1>Challenge: </h1><h2 th:inline="text"> [[${challenge.name}]]</h2>
             <p th:inline="text" class="lead dashboard-user-name"><strong>Task number: 5/12</strong></p>
             <p class="lead dashboard-user-name"><strong>Rank: </strong></p>  <!-- TODO: support for different ranks -->
          </div>
+         <div class="row task-topbar-challenge-info" th:if="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}">
+            <h1>Arcade challenge </h1><h2 th:inline="text">[[${challenge.realm}]]</h2>
+            <p class="lead dashboard-user-name"><strong>Rank: </strong>Super Guru!</p>
+         </div>
       </div>
+
       <div class="container task-container">
          <div class="row">
             <div class="col-md-4">
