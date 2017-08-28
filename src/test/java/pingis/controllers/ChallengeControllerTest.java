@@ -122,12 +122,9 @@ public class ChallengeControllerTest {
     when(taskInstanceService.getUnfinishedInstance(any(), any())).thenReturn(taskInstance);
     mvc.perform(post("/createTaskPair")
             .with(csrf())
-            .param("testTaskName", "aaa")
-            .param("implementationTaskname", "bbb")
-            .param("testTaskDesc", "ccc")
-            .param("implementationTaskDesc", "ddd")
-            .param("testCodeStub", "eee")
-            .param("implementationCodeStub", "fff")
+            .param("taskName", "aaa")
+            .param("className", "bbb")
+            .param("taskDesc", "ccc")
             .param("challengeId", "234"))
             .andExpect(status().is3xxRedirection())
             .andExpect(redirectedUrl("/task/" + taskInstanceId));
