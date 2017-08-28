@@ -3,13 +3,13 @@
          <!-- Navbar content -->
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-               <a href="/" ><img alt="CodePong" class="logo" th:src="@{/img/logo.svg}"/></a> 
+               <a href="/" ><img alt="CodePong" class="logo" th:src="@{/img/logo.svg}"/></a>
                <ul class="nav navbar-right">
                   <li sec:authorize="isAuthenticated()" class="Account">
-                     <a id="account-button" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                     <a id="account-button" href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" role="button"
                         aria-haspopup="true" aria-expanded="false">My Account<span class="caret"></span></a>
                      <ul class="dropdown-menu">
-                        <li><a th:href="@{/user}">Dashboard</a></li> 
+                        <li><a th:href="@{/user}">Dashboard</a></li>
                         <li role="separator" class="divider"></li>
                         <li>
                            <form action="#" th:action="@{/logout}" method="post">
@@ -24,4 +24,4 @@
                </ul>
             </div><!-- /.navbar-collapse -->
       </nav>
-</div>      
+</div>

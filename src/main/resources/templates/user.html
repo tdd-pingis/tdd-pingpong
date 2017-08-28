@@ -17,10 +17,10 @@
                   </div>
                </div>
                <div class="col-md-5">
-                  <h4 th:inline="text" class="header dashboardtopbar-stats">Challenges completed: [[${user.level}]]</h4>
+                  <h4 th:inline="text" class="header dashboardtopbar-stats">Challenges completed: [[${userLevel}]]</h4>
                </div>
                <div class="col-md-3">
-                  <h4 th:inline="text" class="header dashboardtopbar-stats">Level: [[${user.level}]]</h4>
+                  <h4 th:inline="text" class="header dashboardtopbar-stats">Level: [[${userLevel}]]</h4>
                </div>
                <div th:each="error : ${errors}" class="alert alert-warning">
                   <div class="row"><p class="error-message">[[${error}]]></p></div> <!-- Show error messages -->
@@ -32,13 +32,13 @@
 
       <div class="container dashboard-bottom-div">
          <ul class="nav nav-tabs"> <!--  tab -->
-            <li class="active"><a data-toggle="tab" href="#home">Arcade</a></li>
-            <li><a data-toggle="tab" href="#menu1">Practice</a></li>
-            <li><a data-toggle="tab" href="#menu2">History</a></li>
+            <li class="active"><a data-toggle="tab" href="#arcade-tab">Arcade</a></li>
+            <li><a data-toggle="tab" href="#practice-tab">Practice</a></li>
+            <li><a data-toggle="tab" href="#history-tab">History</a></li>
          </ul>
 
          <!-- Arcade tab -->
-         <div class="container challenge-container">
+         <div id="arcade-tab" class="container challenge-container tab-pane fade in active">
             <div th:if="${message != null}" th:text="${message}"></div> <!-- still needed? there is new error box which supports multiple error-messages -->
             <div class="challenge_list row">
                <div class="col-md-6">
@@ -73,12 +73,18 @@
          </div>
 
          <!-- Practice challenges tab -->
-         <a th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CREATE}" href="/newchallenge" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Create New Live Challenge</a>
-         <a th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).JOIN}" th:href="'/playChallenge/' + ${liveChallenge.id}" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Join Live Challenge</a>
-         <a th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CONTINUE}" th:href="'/playChallenge/' + ${liveChallenge.id}" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="Continue your turn-based game against a real opponent">Continue Live Challenge</a>
-         <a href="/randomTask" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a random Task from a random Challenge">Give me a random task</a>
-         <a href="/newArcadeChallenge" class="btn btn-primary">Create new arcade challenge</a>
-         <a href="/playArcade?realm=BEGINNER" class="btn btn-primary">Play arcade challenge</a>
+         <div id="practice-tab" class="tab-pane fade">
+          <a th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CREATE}" href="/newchallenge" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Create New Live Challenge</a>
+          <a th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).JOIN}" th:href="'/playChallenge/' + ${liveChallenge.id}" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Join Live Challenge</a>
+          <a th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CONTINUE}" th:href="'/playChallenge/' + ${liveChallenge.id}" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="Continue your turn-based game against a real opponent">Continue Live Challenge</a>
+          <a href="/randomTask" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a random Task from a random Challenge">Give me a random task</a>
+          <a href="/newArcadeChallenge" class="btn btn-primary">Create new arcade challenge</a>
+          <a href="/playArcade?realm=BEGINNER" class="btn btn-primary">Play arcade challenge</a>
+         </div>
+
+         <div id="history-tab" class="tab-pane fade">
+           <!-- TODO: add history -->
+         </div>
       </div>
 
       <script th:src="@{/js/progressCircle.js}" type="text/javascript" charset="utf-8"></script>

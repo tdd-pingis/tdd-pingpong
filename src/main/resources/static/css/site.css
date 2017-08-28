@@ -19,7 +19,7 @@ h2 {
   margin-bottom: 13px;
   text-shadow: 0px 3px 7px -1px rgba(0,0,0,0.84);
   opacity: 0.7;
-} 
+}
 
 .btn-primary {
   color: #fff;
@@ -96,7 +96,7 @@ h2 {
 .challengeitem {
   border-radius: 3px;
   height: 140px;
-  margin-top: 10px; 
+  margin-top: 10px;
   margin-bottom: 10px;
   margin-left: auto;
   margin-right: auto;
@@ -121,7 +121,7 @@ h2 {
   background-color: #424439;
   color: #424439;
 }
-  
+
 .dashboardtopbar {
   width: fit-content;
   min-width: 800px;
@@ -167,11 +167,11 @@ h2 {
 }
 
 .frontpage-topbar {
-  background: linear-gradient(-30deg, #2AC3EB, #005EAE);  
+  background: linear-gradient(-30deg, #2AC3EB, #005EAE);
   height: 33vw;
   position: relative;
 }
-  
+
 .logo {
   padding-bottom: 12px;
   height: 50px;
@@ -257,3 +257,7 @@ h2 {
 }
 
 #stars { color: #ee8b2d;}
+
+.dropdown-toggle:hover {
+  color: black;
+}
