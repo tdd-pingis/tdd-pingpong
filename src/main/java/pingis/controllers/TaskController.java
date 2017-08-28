@@ -81,16 +81,16 @@ public class TaskController {
     model.addAttribute("taskInstanceId", taskInstanceId);
 
     Map<String, EditorTabData> editorContents = editorService.generateEditorContents(taskInstance);
-    EditorTabData tab1 = editorContents.get("editor1");
-    EditorTabData tab2 = editorContents.get("editor2");
-
-    model.addAttribute("submissionCodeStub", tab1.code);
-    model.addAttribute("staticCode", tab2.code);
 
     boolean isTest = taskInstance.getTask().getType() == TaskType.TEST;
+    EditorTabData submissionTab = editorContents.get(isTest ? "editor1" : "editor2");
+    EditorTabData staticTab = editorContents.get(isTest ? "editor2" : "editor1");
 
-    model.addAttribute("submissionTabFileName", isTest ? tab1.title : tab2.title);
-    model.addAttribute("staticTabFileName", isTest ? tab2.title : tab1.title);
+    model.addAttribute("submissionCodeStub", submissionTab.code);
+    model.addAttribute("submissionTabFileName", submissionTab.title);
+
+    model.addAttribute("staticCode", staticTab.code);
+    model.addAttribute("staticTabFileName", staticTab.title);
 
     logger.debug("entering editor view");
     return "task";
