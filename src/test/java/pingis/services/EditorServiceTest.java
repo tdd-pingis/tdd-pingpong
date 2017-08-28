@@ -73,7 +73,7 @@ public class EditorServiceTest {
     when(taskServiceMock.getCorrespondingTask(returnedTaskInstance.getTask()))
             .thenReturn(implementationTask);
     Map<String, EditorTabData> result = editorService.generateEditorContents(returnedTaskInstance);
-    assertEquals(result.get("editor1").code, "public void test");
+    assertEquals(result.get("test").code, "public void test");
     verify(taskServiceMock).getCorrespondingTask(returnedTaskInstance.getTask());
     verifyNoMoreInteractions(taskServiceMock);
   }
@@ -82,8 +82,8 @@ public class EditorServiceTest {
   public void testEditorServiceWithImplementationTask() {
     Map<String, EditorTabData> result = this.editorService
             .generateEditorContents(passedTaskInstance);
-    assertEquals(result.get("editor2").code, "public void test");
-    assertEquals(result.get("editor1").code, "public void implementation");
+    assertEquals(result.get("test").code, "public void test");
+    assertEquals(result.get("impl").code, "public void implementation");
   }
 
 }

@@ -24,54 +24,35 @@ public class EditorService {
   }
 
   public Map<String, EditorTabData> generateEditorContents(TaskInstance taskInstance) {
-    Map<String, EditorTabData> tabData;
-    Challenge currentChallenge = taskInstance.getTask().getChallenge();
-    if (taskInstance.getTask().getType().equals(TaskType.TEST)) {
-      tabData = this.generateTestTaskTabs(taskInstance, currentChallenge);
+    Map<String, EditorTabData> tabData = new LinkedHashMap<>();
+
+    CodeStubBuilder stubBuilder = new CodeStubBuilder(taskInstance.getChallenge().getName());
+    CodeStub implStub = stubBuilder.build();
+    CodeStub testStub = new TestStubBuilder(stubBuilder).build();
+
+    String implCode;
+    String testCode;
+
+    if (taskInstance.getTask().getType() == TaskType.IMPLEMENTATION) {
+      TaskInstance testTaskInstance = taskInstance.getTestTaskinstance();
+
+      if (testTaskInstance == null) {
+        // DataImporter does not set testTaskInstances. If null, use the old
+        // method that gets the test by modeluser
+        testTaskInstance = taskInstanceService.getCorrespondingTestTaskInstance(
+            taskInstance);
+      }
+
+      implCode = taskInstance.getTask().getCodeStub();
+      testCode = testTaskInstance.getCode();
     } else {
-      tabData = this.generateImplTaskTabs(taskInstance, currentChallenge);
-    }
-    return tabData;
-  }
-
-  private Map<String, EditorTabData> generateTestTaskTabs(TaskInstance taskInstance,
-          Challenge currentChallenge) {
-    Map<String, EditorTabData> tabData = new LinkedHashMap<>();
-
-    CodeStubBuilder stubBuilder = new CodeStubBuilder(currentChallenge.getName());
-    CodeStub implStub = stubBuilder.build();
-    CodeStub testStub = new TestStubBuilder(stubBuilder).build();
-
-    EditorTabData testTab = new EditorTabData(testStub.filename, taskInstance.getCode());
-    EditorTabData implTab = new EditorTabData(implStub.filename,
-            taskService.getCorrespondingTask(taskInstance.getTask()).getCodeStub());
-    tabData.put("editor1", testTab);
-    tabData.put("editor2", implTab);
-    return tabData;
-  }
-
-  private Map<String, EditorTabData> generateImplTaskTabs(TaskInstance taskInstance,
-      Challenge currentChallenge) {
-    Map<String, EditorTabData> tabData = new LinkedHashMap<>();
-    TaskInstance testTaskInstance = taskInstance.getTestTaskinstance();
-    if (testTaskInstance == null) {
-      // DataImporter does not set testTaskInstances. If null, use the old
-      // method that gets the test by modeluser
-      testTaskInstance
-          = taskInstanceService.getCorrespondingTestTaskInstance(
-          taskInstance);
+      implCode = taskService.getCorrespondingTask(taskInstance.getTask()).getCodeStub();
+      testCode = taskInstance.getCode();
     }
 
-    CodeStubBuilder stubBuilder = new CodeStubBuilder(currentChallenge.getName());
-    CodeStub implStub = stubBuilder.build();
-    CodeStub testStub = new TestStubBuilder(stubBuilder).build();
+    tabData.put("test", new EditorTabData(testStub.filename, testCode));
+    tabData.put("impl", new EditorTabData(implStub.filename, implCode));
 
-    EditorTabData implTab = new EditorTabData(implStub.filename,
-        taskInstance.getTask().getCodeStub());
-    EditorTabData testTab = new EditorTabData(testStub.filename, testTaskInstance.getCode());
-    tabData.put("editor2", testTab);
-    tabData.put("editor1", implTab);
     return tabData;
   }
-
 }

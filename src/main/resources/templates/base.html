@@ -3,7 +3,7 @@
 <head th:fragment="header">
     <link href="https://fonts.googleapis.com/css?family=Exo+2" rel="stylesheet">
     <meta charset="UTF-8" />
-    <title>index</title>
+    <title th:include=":: #pageTitle">index</title>
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
     <link rel="stylesheet" th:href="@{/css/site.css}" />
     <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
