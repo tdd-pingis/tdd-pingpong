@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import pingis.entities.Task;
 import pingis.entities.TmcUserDto;
 import pingis.entities.User;
 import pingis.repositories.UserRepository;
@@ -73,7 +74,7 @@ public class UserServiceTest {
 
     assertThat(oneUser.getName()).isEqualTo(testUser.getName());
     assertThat(oneUser.getId()).isEqualTo(testUser.getId());
-    assertThat(oneUser.getLevel()).isEqualTo(testUser.getLevel());
+    assertThat(oneUser.getPoints()).isEqualTo(testUser.getPoints());
   }
 
   @Test
@@ -201,7 +202,7 @@ public class UserServiceTest {
     verify(userRepositoryMock).save(userCaptor.capture());
     assertThat(userCaptor.getValue().getName()).isEqualTo(user.getName());
     assertThat(userCaptor.getValue().getId()).isEqualTo(Long.parseLong(user.getId()));
-    assertThat(userCaptor.getValue().getLevel()).isEqualTo(1);
+    assertThat(userCaptor.getValue().getPoints()).isEqualTo(1);
     assertThat(userCaptor.getValue().isAdministrator()).isEqualTo(user.isAdministrator());
   }
 
@@ -278,4 +279,12 @@ public class UserServiceTest {
     assertThat(newUser.getId()).isExactlyInstanceOf(Long.class);
   }
 
+  public void testLevels() {
+    assertEquals(0, userService.getLevel(500));
+    assertEquals(1, userService.getLevel(1000));
+    assertEquals(1, userService.getLevel(1400));
+    assertEquals(2, userService.getLevel(2100));
+    assertEquals(20, userService.getLevel(20010));
+    assertEquals(Task.LEVEL_MAX_VALUE, userService.getLevel(Integer.MAX_VALUE));
+  }
 }

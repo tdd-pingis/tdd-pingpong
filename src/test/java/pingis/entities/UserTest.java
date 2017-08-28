@@ -28,9 +28,9 @@ public class UserTest {
   }
 
   @Test
-  public void testUserLevel() {
-    final double level = 0.001;
-    assertEquals(1, normalUser.getLevel(), level);
+  public void testUserPoints() {
+    final double precision  = 0.001;
+    assertEquals(1, normalUser.getPoints(), precision);
   }
 
   @Test

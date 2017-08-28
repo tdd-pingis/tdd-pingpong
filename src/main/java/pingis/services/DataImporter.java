@@ -8,8 +8,6 @@ import java.util.Random;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.stereotype.Component;
 import pingis.entities.Challenge;
 import pingis.entities.ChallengeType;
@@ -19,7 +17,6 @@ import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
-import pingis.entities.sandbox.Submission;
 import pingis.repositories.ChallengeRepository;
 import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.TaskRepository;
@@ -29,9 +26,8 @@ import pingis.repositories.sandbox.SubmissionRepository;
 @Component
 public class DataImporter {
 
-  private static final int TMC_USER_LEVEL = 100;
-  private static final int TEST_USER_LEVEL = 5;
-  private static final int IMPLEMENTATION_USER_LEVEL = 1;
+  private static final int TEST_USER_POINTS = 5000;
+  private static final int IMPLEMENTATION_USER_POINTS = 1000;
 
   private String jsonString;
   private ChallengeRepository challengeRepository;
@@ -136,12 +132,12 @@ public class DataImporter {
     users.put("testuser", new User(
         UserType.TEST_USER.getId(),
         UserType.TEST_USER.getLogin(),
-        TEST_USER_LEVEL));
+        TEST_USER_POINTS));
 
     users.put("impluser", new User(
         UserType.IMPLEMENTATION_USER.getId(),
         UserType.IMPLEMENTATION_USER.getLogin(),
-        IMPLEMENTATION_USER_LEVEL));
+        IMPLEMENTATION_USER_POINTS));
   }
 
   public HashMap<String, User> getUsers() {

@@ -5,17 +5,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import pingis.controllers.UserController.LiveType;
 import pingis.entities.Challenge;
 import pingis.entities.TaskInstance;
-import pingis.entities.TmcUserDto;
 import pingis.entities.User;
 import pingis.services.ChallengeService;
 import pingis.services.GameplayService;
@@ -57,7 +54,7 @@ public class UserController {
 
     List<Challenge> availableChallenges = challengeService.findAll().stream()
         .filter(e -> !e.getIsOpen())
-        .filter(e -> e.getLevel() <= user.getLevel())
+        .filter(e -> e.getLevel() <= userService.levelOfCurrentUser())
         .filter(e -> !myTasksInChallenges.containsKey(e))
         .collect(Collectors.toList());
 
@@ -77,6 +74,7 @@ public class UserController {
     model.addAttribute("availableChallenges", availableChallenges);
     model.addAttribute("myTasksInChallenges", myTasksInChallenges);
     model.addAttribute("liveChallenge", liveChallenge);
+    model.addAttribute("userLevel", userService.levelOfCurrentUser());
     model.addAttribute("user", user);
 
     return "user";

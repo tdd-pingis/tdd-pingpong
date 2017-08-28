@@ -110,6 +110,7 @@ public class TaskInstanceService {
   @Transactional
   public TaskInstance markAsDone(TaskInstance taskInstance) {
     taskInstance.setStatus(CodeStatus.DONE);
+    taskInstance.getUser().addPoints(taskInstance.getTask().getPoints());
     return taskInstance;
   }
 
