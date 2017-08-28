@@ -59,11 +59,9 @@
   position: absolute;
   z-index: 10;
   color: white;
-  width: calc(100% - 30px);
-  line-height: calc(height / 2);
+  line-height: 300px;
   text-align: center;
-  vertical-align: middle;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0,0,0,0.3);
   overflow: hidden;
 }
 
