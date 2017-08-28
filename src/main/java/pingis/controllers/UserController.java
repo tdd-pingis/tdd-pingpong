@@ -1,6 +1,8 @@
 package pingis.controllers;
 
 import java.security.Principal;
+import java.sql.Timestamp;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -26,7 +28,7 @@ public class UserController {
   public enum LiveType {
     CONTINUE, CREATE, JOIN
   }
-
+  
   @Autowired
   UserService userService;
 
@@ -52,19 +54,54 @@ public class UserController {
 
     User user = userService.handleUserAuthenticationByName(principal.getName());
 
+    MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = fetchAndSetStartedChallenges(user, 
+                                                                                             model);
+    fetchAndSetAvailableChallenges(myTasksInChallenges, model);
+    fetchAndSetHistory(user, model);
+    fetchAndSetLiveChallenge(user, model);
+    fetchAndSetUnfinishedTaskInstance(user, model);
+    
+    model.addAttribute("userLevel", userService.levelOfCurrentUser());
+    model.addAttribute("user", user);
+    
+    return "user";
+  }
+
+  private MultiValueMap<Challenge, TaskInstance> fetchAndSetStartedChallenges(User user, 
+                                                                              Model model) {
+                          
     MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
-
     user.getTaskInstances().stream()
-        .filter(e -> !e.getChallenge().getIsOpen())
-        .filter(e -> e.getStatus().equals(CodeStatus.DONE))
-        .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
+            .filter(e -> !e.getChallenge().getIsOpen())
+            .filter(e -> e.getStatus().equals(CodeStatus.DONE))
+            .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
+    model.addAttribute("myTasksInChallenges", myTasksInChallenges);
+    return myTasksInChallenges;
+  }
 
-    List<Challenge> availableChallenges = challengeService.findAll().stream()
-        .filter(e -> !e.getIsOpen())
-        .filter(e -> e.getLevel() <= userService.levelOfCurrentUser())
-        .filter(e -> !myTasksInChallenges.containsKey(e))
-        .collect(Collectors.toList());
+  private void fetchAndSetUnfinishedTaskInstance(User user, Model model) {
+    List<TaskInstance> unfinishedTaskInstances = user.getTaskInstances().stream()
+            .filter(e -> e.getStatus() == CodeStatus.IN_PROGRESS)
+            .collect(Collectors.toList());
+    
+    TaskInstance lastUnfinished = null;
+    if (!unfinishedTaskInstances.isEmpty()) {
+      logger.info("Found " + unfinishedTaskInstances.size() + " unfinished task-instances.");
+      // Get last taskInstance by timestamp
+      lastUnfinished = unfinishedTaskInstances.stream()
+              .max(new TaskInstanceTimestampComparator()).get();
+    }
+    
+    if (lastUnfinished != null) {
+      model.addAttribute("unfinishedTaskInstance", lastUnfinished);
+      logger.info("Found latest unfinished task Instance '"
+              + lastUnfinished.getTask().getName() + "'");
+    } else {
+      logger.info("No unfinished taskinstances found.");
+    }
+  }
 
+  private void fetchAndSetLiveChallenge(User user, Model model) {
     Challenge liveChallenge = gameplayService.getParticipatingLiveChallenge();
     Challenge randomLiveChallenge = challengeService.getRandomLiveChallenge(user);
 
@@ -80,22 +117,26 @@ public class UserController {
       logger.debug("Live challenge type = Continue");
       model.addAttribute("liveChallengeType", LiveType.CONTINUE);
     }
-
-    Optional<TaskInstance> unfinished = user.getTaskInstances().stream()
-        .filter(e -> e.getStatus() == CodeStatus.IN_PROGRESS)
-        .findFirst();
-    
-    if (unfinished.isPresent()) {
-      model.addAttribute("unfinishedTaskInstance", unfinished);
-    }
-
-    model.addAttribute("availableChallenges", availableChallenges);
-    model.addAttribute("myTasksInChallenges", myTasksInChallenges);
     model.addAttribute("liveChallenge", liveChallenge);
-    model.addAttribute("userLevel", userService.levelOfCurrentUser());
-    model.addAttribute("user", user);
+  }
 
-    return "user";
+  private void fetchAndSetHistory(User user, Model model) {
+    List<TaskInstance> history = user.getTaskInstances().stream()
+            .sorted(new TaskInstanceTimestampComparator())
+            .collect(Collectors.toList());
+    model.addAttribute("history", history);
+    logger.info("Found " + history.size() + " done task-instances.");
+  }
+
+  private void fetchAndSetAvailableChallenges(MultiValueMap<Challenge, TaskInstance> 
+                                              myTasksInChallenges, Model model) {
+    List<Challenge> availableChallenges = challengeService.findAll().stream()
+            .filter(e -> !e.getIsOpen())
+            .filter(e -> e.getLevel() <= userService.levelOfCurrentUser())
+            .filter(e -> !myTasksInChallenges.containsKey(e))
+            .collect(Collectors.toList());
+    
+    model.addAttribute("availableChallenges", availableChallenges);
   }
 
   @RequestMapping(value = "/admin", method = RequestMethod.GET)
@@ -104,4 +145,17 @@ public class UserController {
 
     return "admin";
   }
+
+  public class TaskInstanceTimestampComparator implements Comparator<TaskInstance> {
+    @Override
+    public int compare(TaskInstance t1, TaskInstance t2) {
+      if (t1.getCreationTime().after(t2.getCreationTime())) {
+        return -1;
+      } else {
+        return 1;
+      }
+    }
+  }
+
 }
+
