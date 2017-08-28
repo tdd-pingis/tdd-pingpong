@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -23,6 +25,7 @@ import pingis.repositories.TaskRepository;
 
 @Service
 public class TaskService {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
   private TaskRepository taskRepository;
@@ -181,23 +184,21 @@ public class TaskService {
   }
 
   public Task nextPracticeTask(Challenge challenge) {
-    int highestIndex = findAllByChallenge(challenge).size() / 2;
+    int numberOfTasks = findAllByChallenge(challenge).size();
+    logger.info("Number of tasks: " + numberOfTasks);
     User player = userService.getCurrentUser();
     List<TaskInstance> instances = taskInstanceService.getByUserAndChallenge(player, challenge);
-    if (instances.size() == highestIndex) {
+    logger.info("Task instances found: " + instances.size());
+    if (instances.size() == numberOfTasks) {
       return null;
     }
-    if (instances.size() == 0) {
-      return new Random().nextInt(1) == 0
-          ? findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, 1)
-          : findByChallengeAndTypeAndIndex(challenge, TaskType.IMPLEMENTATION, 1);
+    int currentIndex = instances.size() / 2 + 1;
+    logger.info("Current index: " + currentIndex);
+    if (instances.size() % 2 == 0) {
+      logger.info("Returning test task of index " + currentIndex);
+      return findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, currentIndex);
     }
-    Task testTask = findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, instances.size());
-    if (taskInstanceService.getByTaskAndUser(testTask, player) != null) {
-      return findByChallengeAndTypeAndIndex(challenge, TaskType.IMPLEMENTATION,
-          instances.size() + 1);
-    } else {
-      return findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, instances.size() + 1);
-    }
+    logger.info("Returning implementation task of index " + currentIndex);
+    return findByChallengeAndTypeAndIndex(challenge, TaskType.IMPLEMENTATION, currentIndex);
   }
 }
