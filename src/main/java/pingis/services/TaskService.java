@@ -188,7 +188,7 @@ public class TaskService {
       return null;
     }
     if (instances.size() == 0) {
-      return new Random().nextInt(2) == 0
+      return new Random().nextInt(1) == 0
           ? findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, 1)
           : findByChallengeAndTypeAndIndex(challenge, TaskType.IMPLEMENTATION, 1);
     }

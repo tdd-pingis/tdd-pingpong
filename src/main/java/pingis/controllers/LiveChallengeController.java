@@ -98,7 +98,8 @@ public class LiveChallengeController {
     logger.info("Challenge type: " + currentChallenge.getType());
     logger.info("Highest index: " + highestIndex);
     User player = userService.getCurrentUser();
-    User otherPlayer = currentChallenge.getAuthor().equals(player) ? currentChallenge.getSecondPlayer() : currentChallenge.getAuthor();
+    User otherPlayer = currentChallenge.getAuthor().equals(player)
+        ? currentChallenge.getSecondPlayer() : currentChallenge.getAuthor();
     String testStub = "";
     String implStub = "";
 
@@ -106,19 +107,22 @@ public class LiveChallengeController {
     if (currentChallenge.getType() == ChallengeType.MIXED
         || currentChallenge.getType() == ChallengeType.ARCADE
         || (currentChallenge.getType() == ChallengeType.PROJECT
-        && highestIndex == 0 )) {
+        && highestIndex == 0)) {
       logger.info("generating code stubs");
       implStub = new CodeStubBuilder(currentChallenge.getName()).build().code;
       testStub = new TestStubBuilder(implStub).withTestImports().build().code;
     } else {
-      // Challenge is a project with at least one existing task instance pair. Inheriting code from previous instance pair.
+      // Challenge is a project with at least one existing task instance pair.
+      // Inheriting code from previous instance pair.
       logger.info("inheriting code stubs from previous task pair");
       testStub = taskInstanceService.getByTaskAndUser(
           taskService.findByChallengeAndTypeAndIndex(currentChallenge, TaskType.TEST, highestIndex),
           otherPlayer)
           .getCode();
       implStub = taskInstanceService.getByTaskAndUser(
-          taskService.findByChallengeAndTypeAndIndex(currentChallenge, TaskType.IMPLEMENTATION, highestIndex),
+          taskService.findByChallengeAndTypeAndIndex(currentChallenge,
+              TaskType.IMPLEMENTATION,
+              highestIndex),
           player)
           .getCode();
     }
