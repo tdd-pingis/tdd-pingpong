@@ -10,7 +10,6 @@ import pingis.entities.Challenge;
 import pingis.entities.ChallengeType;
 import pingis.entities.Realm;
 import pingis.entities.Task;
-import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
@@ -22,7 +21,7 @@ public class GameplayService {
   private final ChallengeRepository challengeRepository;
 
   public enum TurnType {
-    TEST, IMPLEMENTATION, NONE;
+    TEST, IMPLEMENTATION, NONE
   }
 
   public static final int CHALLENGE_MIN_LENGTH = 2;
@@ -68,15 +67,9 @@ public class GameplayService {
 
   public boolean isParticipating(Challenge challenge) {
     User currentUser = userService.getCurrentUser();
-    if (currentUser.getId() == challenge.getAuthor().getId()) {
-      return true;
-    }
-
-    if (challenge.getSecondPlayer() == null) {
-      return false;
-    }
-
-    return (currentUser.getId() == challenge.getSecondPlayer().getId());
+    return currentUser.getId() == challenge.getAuthor().getId()
+        || challenge.getSecondPlayer() != null
+        && (currentUser.getId() == challenge.getSecondPlayer().getId());
   }
 
   public Task getTopmostImplementationTask(Challenge challenge) {
@@ -103,15 +96,11 @@ public class GameplayService {
 
   public Challenge getParticipatingLiveChallenge() {
     Optional<Challenge> findFirst = challengeService.findAll().stream()
-        .filter(e -> e.getIsOpen())
-        .filter(e -> isParticipating(e))
+        .filter(Challenge::getIsOpen)
+        .filter(this::isParticipating)
         .findFirst();
 
-    if (findFirst.isPresent()) {
-      return findFirst.get();
-    } else {
-      return null;
-    }
+    return findFirst.orElse(null);
   }
 
   public Task generateTaskPairAndTaskInstance(String testTaskName, String implementationTaskName,

@@ -5,7 +5,7 @@ package pingis.services;
  */
 public interface Io {
 
-  public boolean hasNext();
+  boolean hasNext();
 
-  public String nextLine();
+  String nextLine();
 }

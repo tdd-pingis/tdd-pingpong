@@ -2,8 +2,8 @@ package pingis.utils;
 
 public class EditorTabData {
 
-  public String title;
-  public String code;
+  public final String title;
+  public final String code;
 
   public EditorTabData(String title, String code) {
     this.title = title;

@@ -63,7 +63,7 @@ public class TestStubBuilder extends CodeStubBuilder {
     clazz.addSingleMemberAnnotation("Points", "\"03-03\"");
 
     firstClass.getMethods().stream()
-        .filter(NodeWithPublicModifier<MethodDeclaration>::isPublic)
+        .filter(NodeWithPublicModifier::isPublic)
         .forEach(method -> addTestMethod(clazz, method));
   }
 

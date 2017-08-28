@@ -24,12 +24,12 @@ public class SubmissionSenderService {
 
   private static final String SUBMISSION_FILENAME = "submission.tar";
 
-  private RestTemplate restTemplate;
+  private final RestTemplate restTemplate;
 
   private final SandboxSubmissionProperties sandboxSubmissionProperties;
 
   @Autowired
-  public SubmissionSenderService(RestTemplateBuilder restTemplateBuilder,
+  private SubmissionSenderService(RestTemplateBuilder restTemplateBuilder,
       SandboxSubmissionProperties sandboxSubmissionProperties) {
     this.sandboxSubmissionProperties = sandboxSubmissionProperties;
 

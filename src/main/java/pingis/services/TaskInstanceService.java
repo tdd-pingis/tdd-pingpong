@@ -52,11 +52,7 @@ public class TaskInstanceService {
 
   public TaskInstance findOne(long taskInstanceId) {
     Optional<TaskInstance> opt = taskInstanceRepository.findById(taskInstanceId);
-    if (opt.isPresent()) {
-      return opt.get();
-    } else {
-      return null;
-    }
+    return opt.orElse(null);
   }
 
   @Transactional
@@ -118,7 +114,7 @@ public class TaskInstanceService {
     return taskInstanceRepository.save(taskInstance);
   }
 
-  public List<TaskInstance> findAll() {
+  private List<TaskInstance> findAll() {
     return (List<TaskInstance>) taskInstanceRepository.findAll();
   }
 
@@ -151,10 +147,7 @@ public class TaskInstanceService {
   }
 
   public boolean canContinue(TaskInstance taskInstance, User user) {
-    if (taskInstance.getStatus() == CodeStatus.DONE || !taskInstance.getUser().equals(user)) {
-      return false;
-    }
-    return true;
+    return taskInstance.getStatus() != CodeStatus.DONE && taskInstance.getUser().equals(user);
   }
 
   public TaskInstance getRandomTaskInstance(Task task) {
@@ -170,10 +163,7 @@ public class TaskInstanceService {
         .filter(i -> i.getUser().equals(player))
         .filter(i -> i.getStatus() == CodeStatus.IN_PROGRESS)
         .findFirst();
-    if (unfinished.isPresent()) {
-      return unfinished.get();
-    }
-    return null;
+    return unfinished.orElse(null);
   }
 
   public boolean canPlayOrSkip(TaskInstance taskInstance) {

@@ -7,7 +7,7 @@ import java.util.Scanner;
  */
 public class DataloaderIo implements Io {
 
-  private Scanner reader;
+  private final Scanner reader;
 
   public DataloaderIo() {
     reader = new Scanner(

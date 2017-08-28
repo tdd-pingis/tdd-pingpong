@@ -27,7 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class FakeTmcController {
 
-  Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @RequestMapping(value = "/fake/authorize", method = RequestMethod.GET)
   public String login(
@@ -142,11 +142,11 @@ public class FakeTmcController {
     @JsonProperty("token_type")
     private String tokenType;
 
-    public String getAccessToken() {
+    String getAccessToken() {
       return accessToken;
     }
 
-    public void setAccessToken(String accessToken) {
+    void setAccessToken(String accessToken) {
       this.accessToken = accessToken;
     }
 
@@ -154,7 +154,7 @@ public class FakeTmcController {
       return tokenType;
     }
 
-    public void setTokenType(String tokenType) {
+    void setTokenType(String tokenType) {
       this.tokenType = tokenType;
     }
   }
@@ -165,11 +165,11 @@ public class FakeTmcController {
     private String username;
     private String email;
 
-    public String getId() {
+    String getId() {
       return id;
     }
 
-    public void setId(String id) {
+    void setId(String id) {
       this.id = id;
     }
 
@@ -177,7 +177,7 @@ public class FakeTmcController {
       return username;
     }
 
-    public void setUsername(String username) {
+    void setUsername(String username) {
       this.username = username;
     }
 
@@ -185,7 +185,7 @@ public class FakeTmcController {
       return email;
     }
 
-    public void setEmail(String email) {
+    void setEmail(String email) {
       this.email = email;
     }
   }

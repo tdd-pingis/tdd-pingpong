@@ -4,7 +4,7 @@ public class SyntaxError {
   public final int row;
   public final int column;
   public final String text;
-  public final String type;
+  private final String type;
 
   public SyntaxError(int row, int column, String text) {
     this.row = row;

@@ -4,7 +4,7 @@
 <body>
 <nav th:include="navbar :: navigation"></nav>
 <div class="container">
-  <div class="lead" th:text="'Challenge: '+${challenge.name}"/></h1>
+  <div class="lead" th:text="'Challenge: '+${challenge.name}"/>
   <div class="row">
     <div th:text="${challenge.description}"></div>
     <div th:text="'Difficulty level '+${challenge.level}"></div>

@@ -21,19 +21,19 @@ public class TmcUserDto implements OAuth2User {
 
   @NotNull
   @NotEmpty
-  public String id;
+  private String id;
 
   @NotNull
   @NotEmpty
-  public String username;
+  private String username;
 
   @NotNull
   @NotEmpty
-  public String email;
+  private String email;
 
   @NotNull
   @NotEmpty
-  public boolean administrator;
+  private boolean administrator;
     
   public TmcUserDto() {
   }

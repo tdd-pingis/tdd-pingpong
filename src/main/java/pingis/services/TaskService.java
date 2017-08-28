@@ -8,11 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Challenge;
-import pingis.entities.ChallengeType;
 import pingis.entities.CodeStatus;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
@@ -76,7 +72,7 @@ public class TaskService {
     }
   }
 
-  public List<Task> filterTasksByUser(List<Task> tasks, User user) {
+  private List<Task> filterTasksByUser(List<Task> tasks, User user) {
     tasks = tasks.stream().filter((t) -> {
       for (TaskInstance ti : user.getTaskInstances()) {
         Task doneTask = ti.getTask();
@@ -91,7 +87,7 @@ public class TaskService {
   }
 
   public List<Task> getAvailableTasksByType(Challenge challenge, TaskType taskType) {
-    List<Task> availableTestTasks = new ArrayList<Task>();
+    List<Task> availableTestTasks = new ArrayList<>();
     List<Task> testTasks = challenge.getTasks();
     for (Task task : testTasks) {
       if (task.getType() == taskType) {
@@ -102,8 +98,8 @@ public class TaskService {
   }
 
   //TODOL refactoring
-  public MultiValueMap<Task, TaskInstance> getAvailableTestTaskInstances(
-          Challenge challenge, User user) {
+  private MultiValueMap<Task, TaskInstance> getAvailableTestTaskInstances(
+      Challenge challenge, User user) {
     MultiValueMap<Task, TaskInstance> availableTestTaskInstances = new LinkedMultiValueMap<>();
     List<Task> implTasks = getAvailableTasksByType(challenge, TaskType.IMPLEMENTATION);
     for (Task task : implTasks) {
@@ -122,14 +118,14 @@ public class TaskService {
     return taskRepository.findAllByChallenge(challenge);
   }
 
-  public Task getRandomTestTask(Challenge currentChallenge, User currentUser) {
+  private Task getRandomTestTask(Challenge currentChallenge, User currentUser) {
     List<Task> testTasks = filterTasksByUser(
         getAvailableTasksByType(currentChallenge, TaskType.TEST),
         currentUser);
     return getRandomElementFromList(testTasks);
   }
 
-  public Task getRandomImplTask(Challenge currentChallenge, User currentUser) {
+  private Task getRandomImplTask(Challenge currentChallenge, User currentUser) {
     MultiValueMap<Task, TaskInstance> implementationTasks = getAvailableTestTaskInstances(
         currentChallenge,
         currentUser);
@@ -157,11 +153,11 @@ public class TaskService {
         && !hasNextTestTaskAvailable(currentChallenge, currentUser);
   }
 
-  public boolean hasNextTestTaskAvailable(Challenge currentChallenge, User currentUser) {
+  private boolean hasNextTestTaskAvailable(Challenge currentChallenge, User currentUser) {
     return getRandomTestTask(currentChallenge, currentUser) != null;
   }
 
-  public boolean hasNextImplTaskAvailable(Challenge currentChallenge, User currentUser) {
+  private boolean hasNextImplTaskAvailable(Challenge currentChallenge, User currentUser) {
     return getRandomImplTask(currentChallenge, currentUser) != null;
   }
 
@@ -176,7 +172,7 @@ public class TaskService {
     return taskRepository.findAllByChallengeAndIndex(challenge, index);
   }
 
-  public Task findByChallengeAndTypeAndIndex(Challenge challenge, TaskType type, int index) {
+  private Task findByChallengeAndTypeAndIndex(Challenge challenge, TaskType type, int index) {
     return taskRepository.findByChallengeAndTypeAndIndex(challenge, type, index);
   }
 

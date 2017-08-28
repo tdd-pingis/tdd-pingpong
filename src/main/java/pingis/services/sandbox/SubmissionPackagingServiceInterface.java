@@ -8,7 +8,7 @@ import org.apache.commons.compress.archivers.ArchiveException;
  *
  * @author juicyp
  */
-public interface SubmissionPackagingServiceInterface {
+interface SubmissionPackagingServiceInterface {
 
   /**
    * @param additionalFiles A map of filename -> content pairs to include in the package.

@@ -27,15 +27,18 @@ public class UserController {
   }
 
   @Autowired
+  private
   UserService userService;
 
   @Autowired
+  private
   ChallengeService challengeService;
 
   @Autowired
+  private
   GameplayService gameplayService;
 
-  Logger logger = Logger.getLogger(UserController.class);
+  private final Logger logger = Logger.getLogger(UserController.class);
 
 
   @RequestMapping(value = "/login", method = RequestMethod.GET)
