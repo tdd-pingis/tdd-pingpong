@@ -85,10 +85,37 @@ public class LiveChallengeController {
       String testCodeStub, String implementationCodeStub,
       long challengeId,
       RedirectAttributes redirectAttributes) {
-    
+    // TODO: check turns and stuff
+
     Challenge currentChallenge = challengeService.findOne(challengeId);
-    String implStub = new CodeStubBuilder(currentChallenge.getName()).build().code;
-    String testStub = new TestStubBuilder(implStub).withTestImports().build().code;
+    int highestIndex = taskService.findAllByChallenge(currentChallenge).size() / 2;
+    logger.info("Challenge type: " + currentChallenge.getType());
+    logger.info("Highest index: " + highestIndex);
+    User player = userService.getCurrentUser();
+    User otherPlayer = currentChallenge.getAuthor().equals(player) ? currentChallenge.getSecondPlayer() : currentChallenge.getAuthor();
+    String testStub = "";
+    String implStub = "";
+
+    // Autogenerate code stubs
+    if (currentChallenge.getType() == ChallengeType.MIXED
+        || currentChallenge.getType() == ChallengeType.ARCADE
+        || (currentChallenge.getType() == ChallengeType.PROJECT
+        && highestIndex == 0 )) {
+      logger.info("generating code stubs");
+      implStub = new CodeStubBuilder(currentChallenge.getName()).build().code;
+      testStub = new TestStubBuilder(implStub).withTestImports().build().code;
+    } else {
+      // Challenge is a project with at least one existing task instance pair. Inheriting code from previous instance pair.
+      logger.info("inheriting code stubs from previous task pair");
+      testStub = taskInstanceService.getByTaskAndUser(
+          taskService.findByChallengeAndTypeAndIndex(currentChallenge, TaskType.TEST, highestIndex),
+          otherPlayer)
+          .getCode();
+      implStub = taskInstanceService.getByTaskAndUser(
+          taskService.findByChallengeAndTypeAndIndex(currentChallenge, TaskType.IMPLEMENTATION, highestIndex),
+          player)
+          .getCode();
+    }
 
     gameplayService.generateTaskPairAndTaskInstance(testTaskName,
         implementationTaskName,
@@ -289,7 +316,7 @@ public class LiveChallengeController {
 
     Task nextTask = taskService.nextPracticeTask(challenge);
     if (nextTask == null) {
-      // all tasks done. wohoo.
+      // User has completed the practice challenge. TODO: Award points?
       return new RedirectView("/challengeFinished/" + challenge.getId());
     }
     if (nextTask.getType() == TaskType.TEST) {
