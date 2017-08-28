@@ -22,7 +22,7 @@ public class Task {
   public static final int NAME_MIN_LENGTH = 3;
   public static final int NAME_MAX_LENGTH = 50;
   public static final int LEVEL_MIN_VALUE = 1;
-  public static final int LEVEL_MAX_VALUE = 200;
+  public static final int LEVEL_MAX_VALUE = 100;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)

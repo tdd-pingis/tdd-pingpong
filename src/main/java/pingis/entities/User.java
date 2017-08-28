@@ -1,8 +1,5 @@
 package pingis.entities;
 
-import static pingis.entities.Task.LEVEL_MAX_VALUE;
-import static pingis.entities.Task.LEVEL_MIN_VALUE;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -10,13 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+
 @Entity
 public class User {
+
+  public static final int POINTS_MIN_VALUE = 1;
 
   @Id
   @NotNull
@@ -28,6 +26,7 @@ public class User {
   public boolean administrator;
 
   @NotNull
+  @Min(POINTS_MIN_VALUE)
   private int points;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
@@ -42,17 +41,13 @@ public class User {
   @OneToMany(mappedBy = "secondPlayer")
   private List<Challenge> participatingLiveChallenges;
 
-
-  @OneToOne
-  private TaskInstance mostRecentArcadeInstance;
-
   public User() {
   }
 
   public User(String name) {
     // This constructor is only for 'dev'-profile, thus the pseudo-random id generation
     // -> real user-id's are fetched under 'oauth'-profile from TMC-server
-    this(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE, name, LEVEL_MIN_VALUE);
+    this(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE, name, POINTS_MIN_VALUE);
   }
 
   public User(long id, String name, int points) {
@@ -186,14 +181,6 @@ public class User {
   
   public void addParticipatingLiveChallenge(Challenge challenge) {
     this.participatingLiveChallenges.add(challenge);
-  }
-
-  public TaskInstance getMostRecentArcadeInstance() {
-    return mostRecentArcadeInstance;
-  }
-
-  public void setMostRecentArcadeInstance(TaskInstance mostRecentArcadeInstance) {
-    this.mostRecentArcadeInstance = mostRecentArcadeInstance;
   }
 
 }

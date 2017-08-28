@@ -139,11 +139,7 @@ public class GameplayService {
     implTask.setChallenge(currentChallenge);
     taskService.save(testTask);
     taskService.save(implTask);
-    TaskInstance newTestTaskInstance = taskInstanceService.createEmpty(currentUser, testTask);
-    if (currentChallenge.getType() == ChallengeType.ARCADE) {
-      currentUser.setMostRecentArcadeInstance(newTestTaskInstance);
-      userService.save(currentUser);
-    }
+    taskInstanceService.createEmpty(currentUser, testTask);
     return testTask;
   }
 

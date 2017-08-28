@@ -51,9 +51,6 @@ public class TaskInstance {
   @OneToMany
   private List<TaskInstance> implementationTaskInstances;
 
-  @OneToOne(mappedBy = "mostRecentArcadeInstance")
-  private User mostRecent;
-
   protected TaskInstance() {
   }
 
@@ -141,6 +138,10 @@ public class TaskInstance {
   
   public Challenge getChallenge() {
     return this.task.getChallenge();
+  }
+  
+  public Realm getRealm() {
+    return getChallenge().getRealm();
   }
 
 }

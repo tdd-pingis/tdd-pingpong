@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import pingis.entities.Task;
 import pingis.entities.TmcUserDto;
 import pingis.entities.User;
 import pingis.repositories.UserRepository;
@@ -278,12 +279,12 @@ public class UserServiceTest {
     assertThat(newUser.getId()).isExactlyInstanceOf(Long.class);
   }
 
-  @Test
-  public void testGetLevel() {
+  public void testLevels() {
+    assertEquals(0, userService.getLevel(500));
     assertEquals(1, userService.getLevel(1000));
-    assertEquals(2, userService.getLevel(1100));
-    assertEquals(3, userService.getLevel(1210));
-    assertEquals(100, userService.getLevel(Integer.MAX_VALUE));
+    assertEquals(1, userService.getLevel(1400));
+    assertEquals(2, userService.getLevel(2100));
+    assertEquals(20, userService.getLevel(20010));
+    assertEquals(Task.LEVEL_MAX_VALUE, userService.getLevel(Integer.MAX_VALUE));
   }
-
 }
