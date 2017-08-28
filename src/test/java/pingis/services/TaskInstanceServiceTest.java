@@ -166,7 +166,7 @@ public class TaskInstanceServiceTest {
     int oldPoints = testUser.getPoints();
     TaskInstance result = taskInstanceService.markAsDone(testTaskInstance);
     assertEquals(CodeStatus.DONE, result.getStatus());
-    assertTrue(oldPoints < testUser.getPoints());
+    assertEquals(oldPoints  + testTaskInstance.getTask().getPoints(), testUser.getPoints());
   }
 
   @Test
