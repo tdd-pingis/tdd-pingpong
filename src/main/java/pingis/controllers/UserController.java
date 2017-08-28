@@ -2,6 +2,7 @@ package pingis.controllers;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pingis.controllers.UserController.LiveType;
 import pingis.entities.Challenge;
+import pingis.entities.CodeStatus;
 import pingis.entities.TaskInstance;
 import pingis.entities.TmcUserDto;
 import pingis.entities.User;
@@ -72,6 +74,14 @@ public class UserController {
       model.addAttribute("liveChallengeType", LiveType.JOIN);
     } else {
       model.addAttribute("liveChallengeType", LiveType.CONTINUE);
+    }
+
+    Optional<TaskInstance> unfinished = user.getTaskInstances().stream()
+        .filter(e -> e.getStatus() == CodeStatus.IN_PROGRESS)
+        .findFirst();
+    
+    if (unfinished.isPresent()) {
+      model.addAttribute("unfinishedTaskInstance", unfinished);
     }
 
     model.addAttribute("availableChallenges", availableChallenges);

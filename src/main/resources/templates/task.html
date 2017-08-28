@@ -1,81 +1,85 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head th:include="base :: header"></head>
-    <body onload="connect()" id='next-task-page'> 
-        <nav th:include="navbar :: navigation"></nav>
-
-        <div class="container">
-            <p class="lead" th:inline="text">Challenge: [[${challenge.name}]]</p>
-            <p th:text="${challenge.desc}"></p>
-            <div class="row">
-                <div class="col-md-4">
-                    <p th:inline="text">Task: [[${task.name}]]</p>
-                    <p th:inline="text">Level: [[${task.level}]]</p>
-                </div>
-                <div class="col-md-6">
-                    <p th:text="${task.desc}"></p><br/><br/>
-                </div>
+   <head th:include="base :: header"></head>
+   <body onload="connect()">
+      <nav th:include="navbar :: navigation"></nav>
+      <div class="divider task-topmost-div" >
+         <div class="row task-topbar-challenge-info"> <!-- top bar -->
+            <h1>Challenge: </h1><h2 th:inline="text"> [[${challenge.name}]]</h2>
+            <p th:inline="text" class="lead dashboard-user-name"><strong>Task number: 5/12</strong></p>
+            <p class="lead dashboard-user-name"><strong>Rank: </strong></p>  <!-- TODO: support for different ranks -->
+         </div>
+      </div>
+      <div class="container task-container">
+         <div class="row">
+            <div class="col-md-4">
+               <p th:inline="text">Task: [[${task.name}]]</p>
+               <p th:inline="text">Level: [[${task.level}]]</p>
             </div>
-            <ul class="nav nav-tabs">
-                <li class="active">
-                    <a data-toggle="tab" th:text="${submissionTabFileName}" href="#implementation">Placeholder editors</a>
-                </li>
-                <li>
-                    <a data-toggle="tab" th:text="${staticTabFileName}" href="#test">Placeholder editors</a>
-                </li>
-                <li>
-                    <a data-toggle="tooltip" data-placement="right" th:title="${'To complete this ' + #strings.toLowerCase(task.type)
-                    + ' task, follow the assignment and write the code in the FIRST tab.'
-                    + ' Please refer to the uneditable code in the second tab.'}">
-                        <span class="glyphicon glyphicon-question-sign"/></a>
-                </li>
-            </ul>
+            <div class="col-md-6">
+               <p th:text="${task.desc}"></p><br/><br/>
+            </div>
+         </div>
+         <ul class="nav nav-tabs">
+            <li class="active">
+               <a data-toggle="tab" th:text="${submissionTabFileName}" href="#implementation">Placeholder editors</a>
+            </li>
+            <li>
+               <a data-toggle="tab" th:text="${staticTabFileName}" href="#test">Placeholder editors</a>
+            </li>
+            <li>
+               <a data-toggle="tooltip" data-placement="right" th:title="${'To complete this ' + #strings.toLowerCase(task.type)
+                  + ' task, follow the assignment and write the code in the FIRST tab.'
+                  + ' Please refer to the uneditable code in the second tab.'}">
+                  <span class="glyphicon glyphicon-question-sign"/></a>
+            </li>
+         </ul>
 
-            <form method="post" th:action="@{/task}">
-                <div class="tab-content" th:inline="text">
-                    <input type="hidden" name="taskInstanceId" th:value="${taskInstanceId}" />
-                    <div id="implementation" class="panel panel-default tab-pane fade in active">
-                        <div class="panel-heading">
-                            <h3 class="panel-title" th:text="${submissionTabFileName}"></h3>
-                        </div>
-                        <div class="panel-body">
-                            <div id="submission-editor"class="editortab" th:text="${submissionCodeStub}"></div>
-                            <textarea class="submissioncode" name="submissionCode" id="submission-code"
-                                      th:text="${submissionCodeStub}"></textarea>
-                        </div>
-                    </div>
-                    <div id="test" class="panel panel-default tab-pane fade">
-                        <div class="panel-heading">
-                            <h3 class="panel-title" th:text="${staticTabFileName}"></h3>
-                        </div>
-                        <div class="panel-body">
-                            <div id="static-editor" class="editortab" th:text="${staticCode}"></div>
-                        </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-1">
-                        <button id="submit-button" type="submit" class="btn btn-primary" onclick="clicked(event)">Submit</button>
-                      </div>
-                      <div class="col-md-1" th:if="${(challenge.type == T(pingis.entities.ChallengeType).ARCADE && task.type == T(pingis.entities.TaskType).IMPLEMENTATION)
+         <form method="post" th:action="@{/task}">
+            <div class="tab-content" th:inline="text">
+               <input type="hidden" name="taskInstanceId" th:value="${taskInstanceId}" />
+               <div id="implementation" class="panel panel-default tab-pane fade in active">
+                  <div class="panel-heading">
+                     <h3 class="panel-title" th:text="${submissionTabFileName}"></h3>
+                  </div>
+                  <div class="panel-body">
+                     <div id="submission-editor"class="editortab" th:text="${submissionCodeStub}"></div>
+                     <textarea class="submissioncode" name="submissionCode" id="submission-code"
+                               th:text="${submissionCodeStub}"></textarea>
+                  </div>
+               </div>
+               <div id="test" class="panel panel-default tab-pane fade">
+                  <div class="panel-heading">
+                     <h3 class="panel-title" th:text="${staticTabFileName}"></h3>
+                  </div>
+                  <div class="panel-body">
+                     <div id="static-editor" class="editortab" th:text="${staticCode}"></div>
+                  </div>
+               </div>
+               <div class="row">
+                  <div class="col-md-1">
+                     <button id="submit-button" type="submit" class="btn btn-primary" onclick="clicked(event)">Submit</button>
+                  </div>
+                  <div class="col-md-1" th:if="${(challenge.type == T(pingis.entities.ChallengeType).ARCADE && task.type == T(pingis.entities.TaskType).IMPLEMENTATION)
                        || (challenge.type != T(pingis.entities.ChallengeType).ARCADE && !challenge.isOpen)}">
-                         <a class="btn btn-primary" th:href="'/skip/'+${taskInstanceId}">Skip task</a>
-                      </div>
-                    </div>
-                </div>
-            </form>
-        </div>
+                     <a class="btn btn-primary" th:href="'/skip/'+${taskInstanceId}">Skip task</a>
+                  </div>
+               </div>
+            </div>
+         </form>
+      </div>
 
-        <script th:src="@{/webjars/ace-builds/src-min-noconflict/ace.js}" type="text/javascript"  charset="utf-8"></script>
-        <script th:src="@{/js/aceEditorSettings.js}" type="text/javascript"  charset="utf-8"></script>
-        <script th:src="@{/js/hints.js}" type="text/javascript"  charset="utf-8"></script>
-        <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
-        <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
-        <script th:src="@{/js/taskStomp.js}" type="text/javascript"  charset="utf-8"></script>
-        <script th:inline="javascript">
-        /*<![CDATA[*/
-            //Makes the model attribute usable in external javascript files
-            var taskInstanceId = /*[[${taskInstanceId}]]*/;
-        /*]]>*/
-        </script>
-    </body>
+      <script th:src="@{/webjars/ace-builds/src-min-noconflict/ace.js}" type="text/javascript"  charset="utf-8"></script>
+      <script th:src="@{/js/aceEditorSettings.js}" type="text/javascript"  charset="utf-8"></script>
+      <script th:src="@{/js/hints.js}" type="text/javascript"  charset="utf-8"></script>
+      <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+      <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
+      <script th:src="@{/js/taskStomp.js}" type="text/javascript"  charset="utf-8"></script>
+      <script th:inline="javascript">
+         /*<![CDATA[*/
+         //Makes the model attribute usable in external javascript files
+         var taskInstanceId = /*[[${taskInstanceId}]]*/;
+         /*]]>*/
+      </script>
+   </body>
 </html>
