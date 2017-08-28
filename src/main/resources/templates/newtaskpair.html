@@ -5,34 +5,39 @@
 <nav th:include="navbar :: navigation"></nav>
 <div class="container">
     <div class="row">
-        <div th:if="${errors != null}" class="row" th:text="'Your code has syntax errors:'+${errors}"></div>
         <h1>New task pair</h1>
-        <form th:action="@{/createTaskPair}" method="post">
-            <input type="hidden" name="challengeId" th:value="${challengeId}"/>
+        <form action="#" th:action="@{/createTaskPair}" th:object="${taskPair}" method="post">
+            <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
+              <p>Please fill the form correctly:</p>
+              <ul>
+                <li th:each="error : ${#fields.allDetailedErrors()}">
+                 <span th:text="${error}"></span>
+                </li>
+              </ul>
+            </div>
+            <input type="hidden" name="challengeId" th:value="${challenge.id}"/>
             <div class="row">
             <div class="col-md-6">
                 <label id="test-task-label">Test task name:</label><br/>
-                <input id="test-task-name-input" type="text" name="testTaskName" size="80" placeholder="Eg. 'Test multiplication'"/><br/>
+                <input id="test-task-name-input" type="text" name="testTaskName" th:field="*{testTaskName}" size="61" placeholder="Eg. 'Test multiplication'"/><br/>
+
                 <label id="test-task-desc-label">Test task description:</label><br/>
-                <textarea id="test-task-desc-input" name="testTaskDesc" rows="10" cols="80" placeholder="Eg. 'Write a JUnit test case that tests the multiplication method for two integers.&#10;Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
-                <label>Code stub:</label><br/>
-                <textarea id="test-task-code-stub" name="testCodeStub" rows="10" cols="80"></textarea><br/>
+                <textarea id="test-task-desc-input" name="testTaskDesc" th:field="*{testTaskDesc}" rows="10" cols="60" placeholder="Eg. 'Write a JUnit test case that tests the multiplication method for two integers.&#10;Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
             </div>
             <div class="col-md-6">
                 <label>Implementation task name:</label><br/>
-                <input type="text" id="impl-task-name-input" name="implementationTaskName" size="80" placeholder="Eg. 'Make multiplication test pass'"/><br/>
+                <input type="text" id="impl-task-name-input" name="implementationTaskName" th:field="*{implementationTaskName}" size="61" placeholder="Eg. 'Make multiplication test pass'"/><br/>
+
                 <label>Implementation task description:</label><br/>
-                <textarea id="impl-task-desc-input" name="implementationTaskDesc" rows="10" cols="80" placeholder="Eg. 'Write code that makes the given test pass.&#10;Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
-                <label>Code stub:</label><br/>
-                <textarea id="impl-task-code-stub" name="implementationCodeStub" rows="10" cols="80"></textarea><br/>
+                <textarea id="impl-task-desc-input" name="implementationTaskDesc" rows="10" cols="60" th:field="*{implementationTaskDesc}" placeholder="Eg. 'Write code that makes the given test pass.&#10;Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
             </div>
             </div>
             <div class="row">
                 <button type="submit" id="submit-button" class="btn btn-primary">Create task pair</button>
             </div>
         </form>
-        <div th:if="${#lists.size(challenge.tasks) >= minLength}">
-          <a th:href="'/closeChallenge/'+${challengeId}"  class="btn btn-primary">Close challenge</a>
+        <div th:if="${(#lists.size(challenge.tasks) >= minLength) && (challenge.type != T(pingis.entities.ChallengeType).ARCADE)}">
+            <a th:href="'/closeChallenge/'+${challenge.id}"  class="btn btn-primary">Close challenge</a>
         </div>
     </div>
 </div>
