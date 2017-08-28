@@ -33,20 +33,15 @@ public class LiveChallengeController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
-  private
-  ChallengeService challengeService;
+  private ChallengeService challengeService;
   @Autowired
-  private
-  TaskService taskService;
+  private TaskService taskService;
   @Autowired
-  private
-  TaskInstanceService taskInstanceService;
+  private TaskInstanceService taskInstanceService;
   @Autowired
-  private
-  UserService userService;
+  private UserService userService;
   @Autowired
-  private
-  GameplayService gameplayService;
+  private GameplayService gameplayService;
 
   @RequestMapping(value = "/newchallenge")
   public String newChallenge(Model model) {

@@ -16,11 +16,9 @@ import pingis.utils.TestStubBuilder;
 public class EditorService {
 
   @Autowired
-  private
-  TaskInstanceService taskInstanceService;
+  private TaskInstanceService taskInstanceService;
   @Autowired
-  private
-  TaskService taskService;
+  private TaskService taskService;
 
   public EditorService() {
   }

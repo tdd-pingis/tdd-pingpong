@@ -39,18 +39,15 @@ public class TaskController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
-  ChallengeService challengeService;
+  private ChallengeService challengeService;
   @Autowired
-  private
-  TaskService taskService;
+  private TaskService taskService;
   @Autowired
-  private
-  EditorService editorService;
+  private EditorService editorService;
   @Autowired
-  private
-  TaskInstanceService taskInstanceService;
+  private TaskInstanceService taskInstanceService;
   @Autowired
-  UserService userService;
+  private UserService userService;
 
   @Autowired
   private SandboxService sandboxService;

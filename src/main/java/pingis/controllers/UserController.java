@@ -27,16 +27,13 @@ public class UserController {
   }
 
   @Autowired
-  private
-  UserService userService;
+  private UserService userService;
 
   @Autowired
-  private
-  ChallengeService challengeService;
+  private ChallengeService challengeService;
 
   @Autowired
-  private
-  GameplayService gameplayService;
+  private GameplayService gameplayService;
 
   private final Logger logger = Logger.getLogger(UserController.class);
 
