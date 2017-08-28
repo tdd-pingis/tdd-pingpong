@@ -22,7 +22,7 @@
             <textarea rows="10" cols="80" name="challengeDesc" id="challenge_desc" th:field="*{description}"  placeholder="The description for the challenge, eg. 'Test and implement a simple command line based calculator.'"></textarea><br />
 
             <label>Type:</label>
-            <select name="challengeType" id="challenge_type_select">
+            <select name="challengeType" id="challenge_type_select" th:field="*{type}">
                 <option value="MIXED">Mixed</option>
                 <option value="PROJECT">Project</option>
             </select>
