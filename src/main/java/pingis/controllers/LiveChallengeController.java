@@ -97,9 +97,6 @@ public class LiveChallengeController {
     int highestIndex = taskService.findAllByChallenge(currentChallenge).size() / 2;
     logger.info("Challenge type: " + currentChallenge.getType());
     logger.info("Highest index: " + highestIndex);
-    User player = userService.getCurrentUser();
-    User otherPlayer = currentChallenge.getAuthor().equals(player)
-        ? currentChallenge.getSecondPlayer() : currentChallenge.getAuthor();
     String testStub = "";
     String implStub = "";
 
@@ -112,6 +109,9 @@ public class LiveChallengeController {
       implStub = new CodeStubBuilder(currentChallenge.getName()).build().code;
       testStub = new TestStubBuilder(implStub).withTestImports().build().code;
     } else {
+      User player = userService.getCurrentUser();
+      User otherPlayer = currentChallenge.getAuthor().equals(player)
+          ? currentChallenge.getSecondPlayer() : currentChallenge.getAuthor();
       // Challenge is a project with at least one existing task instance pair.
       // Inheriting code from previous instance pair.
       logger.info("inheriting code stubs from previous task pair");
