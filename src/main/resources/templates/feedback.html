@@ -18,9 +18,8 @@
             <div class="row">
                 <div class="col-md-6">
                     <a th:href="'task/'+${taskInstance.id}" class="btn btn-primary">Back</a>
-                    <a th:href="'playChallenge/'+${challenge.id}" id="next-task-button" class="btn btn-success">Next task</a>
+                    <a th:href="'playChallenge/'+${challenge.id}" id="next-task-button" class="nexttask btn btn-success">Next task</a>
                     <a href="/user" id="selectFromList" class="nexttask btn btn-success">Back to dashboard</a>
-                    <a th:href="'randomTask/'+${challenge.id}" id="selectByRandom" class="nexttask btn btn-success">Next task by random</a>
                 </div>
             </div>
 
