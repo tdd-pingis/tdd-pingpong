@@ -96,7 +96,6 @@ public class LiveChallengeController {
   public String createTaskPair(Long challengeId, @Valid @ModelAttribute TaskPair taskpair,
       BindingResult bindingResult, Model model) {
 
-    logger.debug("Creating new task pair");
 
     Challenge currentChallenge = challengeService.findOne(challengeId);
 
@@ -107,9 +106,11 @@ public class LiveChallengeController {
       return "newtaskpair";
     }
 
+    logger.debug("Creating new task pair");
     logger.debug("Generating new task pair and instance");
     
     int highestIndex = taskService.findAllByChallenge(currentChallenge).size() / 2;
+    logger.info("Challenge ID: " + currentChallenge.getId());
     logger.info("Challenge type: " + currentChallenge.getType());
     logger.info("Highest index: " + highestIndex);
     String testStub = "";
