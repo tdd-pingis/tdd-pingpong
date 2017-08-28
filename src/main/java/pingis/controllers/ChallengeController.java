@@ -31,7 +31,7 @@ import pingis.utils.CodeStubBuilder;
 import pingis.utils.TestStubBuilder;
 
 @Controller
-public class LiveChallengeController {
+public class ChallengeController {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -85,11 +85,8 @@ public class LiveChallengeController {
   }
 
   @RequestMapping(value = "/createTaskPair", method = RequestMethod.POST)
-  public RedirectView createTaskPair(String testTaskName, String implementationTaskName,
-      String testTaskDesc, String implementationTaskDesc,
-      String testCodeStub, String implementationCodeStub,
-      long challengeId,
-      RedirectAttributes redirectAttributes) {
+  public RedirectView createTaskPair(String taskName, String taskDesc, String className,
+                                long challengeId, RedirectAttributes redirectAttributes) {
     // TODO: check turns and stuff
     logger.debug("Creating new task pair");
 
@@ -106,7 +103,7 @@ public class LiveChallengeController {
         || (currentChallenge.getType() == ChallengeType.PROJECT
         && highestIndex == 0)) {
       logger.info("generating code stubs");
-      implStub = new CodeStubBuilder(currentChallenge.getName()).build().code;
+      implStub = new CodeStubBuilder(className).build().code;
       testStub = new TestStubBuilder(implStub).withTestImports().build().code;
     } else {
       User player = userService.getCurrentUser();
@@ -128,10 +125,8 @@ public class LiveChallengeController {
     }
 
     logger.debug("Generating new task pair and instance");
-    gameplayService.generateTaskPairAndTaskInstance(testTaskName,
-        implementationTaskName,
-        testTaskDesc,
-        implementationTaskDesc,
+    gameplayService.generateTaskPairAndTaskInstance(taskName, taskName,
+        taskDesc, taskDesc,
         testStub,
         implStub,
         currentChallenge);
