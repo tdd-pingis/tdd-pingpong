@@ -39,8 +39,6 @@ import pingis.services.GameplayService.TurnType;
 import pingis.services.TaskInstanceService;
 import pingis.services.TaskService;
 import pingis.services.UserService;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
 /**
  *

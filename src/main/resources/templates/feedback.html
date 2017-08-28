@@ -25,7 +25,7 @@
             </div>
 
             <form>
-              <div class="feedback-container" id="userFeedBack">
+              <div class="feedback-container" id="userFeedBack" th:unless="${user.id == taskInstance.task.author.id}">
                 <div class="row">
                     <h3>Your feedback of the task</h3>
                 </div>

@@ -110,6 +110,7 @@ public class TaskController {
     redirectAttributes.addFlashAttribute("submissionId", submission.getId().toString());
     redirectAttributes.addFlashAttribute("taskInstance", taskInstance);
     redirectAttributes.addFlashAttribute("challenge", currentChallenge);
+    redirectAttributes.addFlashAttribute("user", userService.getCurrentUser());
 
     // Save user's answer from left editor
     taskInstanceService.updateTaskInstanceCode(taskInstanceId, submissionCode);
