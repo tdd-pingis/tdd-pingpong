@@ -67,6 +67,7 @@ function showButtonsAndUserFeedback() {
     $("#selectByRandom").show();
     $("#selectFromList").show();
     $("#userFeedBack").show();
+    $("#next-task-button").show();
 }
 
 function showSuccess() {
