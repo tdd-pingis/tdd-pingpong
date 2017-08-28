@@ -61,6 +61,7 @@ public class TaskController {
   @RequestMapping(value = "/task/{taskInstanceId}", method = RequestMethod.GET)
   public String task(Model model,
       @PathVariable Long taskInstanceId) {
+    logger.debug("Get /task/{}", taskInstanceId);
 
     TaskInstance taskInstance =
         taskInstanceService.findOne(taskInstanceId);
@@ -70,6 +71,7 @@ public class TaskController {
     }
 
     if (!taskInstanceService.canPlayOrSkip(taskInstance)) {
+      logger.debug("Can't play or skip");
       return "redirect:/error";
     }
 
@@ -79,18 +81,18 @@ public class TaskController {
     model.addAttribute("taskInstanceId", taskInstanceId);
 
     Map<String, EditorTabData> editorContents = editorService.generateEditorContents(taskInstance);
-    EditorTabData tab1 = editorContents.get("editor1");
-    EditorTabData tab2 = editorContents.get("editor2");
-
-    model.addAttribute("submissionCodeStub", tab1.code);
-    model.addAttribute("staticCode", tab2.code);
 
     boolean isTest = taskInstance.getTask().getType() == TaskType.TEST;
+    EditorTabData submissionTab = editorContents.get(isTest ? "editor1" : "editor2");
+    EditorTabData staticTab = editorContents.get(isTest ? "editor2" : "editor1");
 
-    model.addAttribute("submissionTabFileName", isTest ? tab1.title : tab2.title);
-    model.addAttribute("staticTabFileName", isTest ? tab2.title : tab1.title);
+    model.addAttribute("submissionCodeStub", submissionTab.code);
+    model.addAttribute("submissionTabFileName", submissionTab.title);
 
-    logger.info("entering editor view");
+    model.addAttribute("staticCode", staticTab.code);
+    model.addAttribute("staticTabFileName", staticTab.title);
+
+    logger.debug("entering editor view");
     return "task";
   }
 
@@ -98,13 +100,13 @@ public class TaskController {
   public RedirectView task(String submissionCode,
       long taskInstanceId,
       RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
-    logger.info("submitting");
+    logger.debug("Submitting task");
 
     TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
 
     Submission submission = submitToTmc(taskInstance, currentChallenge, submissionCode);
-    
+
     redirectAttributes.addFlashAttribute("submissionId", submission.getId().toString());
     redirectAttributes.addFlashAttribute("taskInstance", taskInstance);
     redirectAttributes.addFlashAttribute("challenge", currentChallenge);
@@ -117,59 +119,23 @@ public class TaskController {
 
   @RequestMapping("/feedback")
   public String feedback() {
+    logger.debug("Request to /feedback");
     return "feedback";
   }
 
   @MessageMapping("/rate/{taskInstanceId}")
   public String rateTask(@DestinationVariable Long taskInstanceId, Integer rating) {
+    logger.debug("Rating task");
+
     boolean rated = taskInstanceService.rate(rating, taskInstanceId);
 
     if (!rated) {
+      logger.debug("Rating failed!");
       return "FAILED";
     }
 
+    logger.debug("Rating ok!");
     return "OK";
-  }
-
-  @RequestMapping("/randomTask")
-  public RedirectView randomTask(RedirectAttributes redirectAttributes) {
-    Challenge randomChallenge = challengeService.getRandomChallenge();
-    redirectAttributes.addAttribute("challengeId", randomChallenge.getId());
-    return new RedirectView("/randomTask/{challengeId}");
-  }
-
-  @RequestMapping("/randomTask/{challengeId}")
-  public RedirectView randomTaskInChallenge(@PathVariable long challengeId,
-      RedirectAttributes redirectAttributes) {
-
-    Challenge currentChallenge = challengeService.findOne(challengeId);
-    User currentUser = userService.getCurrentUser();
-
-    if (taskService.noNextTaskAvailable(currentChallenge, currentUser)) {
-      return new RedirectView("/user");
-    }
-
-    Long nextTaskInstanceId;
-    Task nextTask;
-
-    // If the next tasktype is test AND there are test-tasks available
-    // OR
-    // (the next random tasktype is impl, but) there are no impl-tasks left
-    if ((taskService.getRandomTaskType().equals(TaskType.TEST)
-        && taskService.hasNextTestTaskAvailable(currentChallenge, currentUser))
-        || !taskService.hasNextImplTaskAvailable(currentChallenge, currentUser)) {
-      nextTask = taskService.getRandomTestTask(currentChallenge, currentUser);
-      nextTaskInstanceId = 0L;
-    } else {
-      nextTask = taskService.getRandomImplTask(currentChallenge, currentUser);
-      nextTaskInstanceId = taskService.getRandomTaskInstance(currentChallenge,
-          currentUser, nextTask).getId();
-    }
-
-    redirectAttributes.addAttribute("taskId", nextTask.getId());
-    redirectAttributes.addAttribute("testTaskInstanceId", nextTaskInstanceId);
-
-    return new RedirectView("/newTaskInstance");
   }
 
   private Submission submitToTmc(TaskInstance taskInstance, Challenge challenge,
@@ -194,16 +160,24 @@ public class TaskController {
   @RequestMapping("/skip/{taskInstanceId}")
   public RedirectView skip(RedirectAttributes redirectAttributes,
       @PathVariable long taskInstanceId) {
+    logger.debug("Request to /skip/{}", taskInstanceId);
+
     TaskInstance skippedTaskInstance = taskInstanceService.findOne(taskInstanceId);
     if (!taskInstanceService.canPlayOrSkip(skippedTaskInstance)) {
+      logger.debug("Can't play or skip");
       return new RedirectView("/error");
     }
+
     Challenge currentChallenge = skippedTaskInstance.getChallenge();
     if (currentChallenge.getType() == ChallengeType.ARCADE || !currentChallenge.getIsOpen()) {
+      logger.debug("Dropping arcade challenge");
+
       skippedTaskInstance.setStatus(CodeStatus.DROPPED);
       taskInstanceService.save(skippedTaskInstance);
       return new RedirectView("/playChallenge/" + currentChallenge.getId());
     }
+
+    logger.debug("Redirecting to error");
     return new RedirectView("/error");
   }
 
