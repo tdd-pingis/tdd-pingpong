@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pingis.entities.Challenge;
@@ -17,6 +19,7 @@ import pingis.repositories.ChallengeRepository;
 
 @Service
 public class GameplayService {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 
   private final ChallengeRepository challengeRepository;
@@ -57,6 +60,7 @@ public class GameplayService {
     int highestIndex = numberOfTasks / 2;
     int numberOfDoneInstances =
         taskInstanceService.getNumberOfDoneTaskInstancesInChallenge(challenge);
+    logger.info("Number of done instances: " + numberOfDoneInstances);
     if (numberOfDoneInstances % 2 == 1 && highestIndex % 2 == side) {
       return TurnType.IMPLEMENTATION;
     }
