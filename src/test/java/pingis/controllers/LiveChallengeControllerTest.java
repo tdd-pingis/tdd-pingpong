@@ -45,7 +45,7 @@ import pingis.services.UserService;
  * @author authority
  */
 @RunWith(SpringRunner.class)
-@WebMvcTest(LiveChallengeController.class)
+@WebMvcTest(ChallengeController.class)
 public class LiveChallengeControllerTest {
 
   @Autowired
@@ -129,7 +129,8 @@ public class LiveChallengeControllerTest {
 
     when(taskInstanceService.getUnfinishedInstance(any(), any())).thenReturn(taskInstance);
 
-    TaskPair taskPairFromForm = new TaskPair("validName", "validName", "validDesc",
+    TaskPair taskPairFromForm = new TaskPair("validClassName",
+        "validName", "validName", "validDesc",
         "validDesc");
     mvc.perform(post("/createTaskPair")
         .with(csrf())

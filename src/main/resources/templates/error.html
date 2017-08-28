@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="base :: header"></head>
+<head th:include="base :: header">
+    <title id="pageTitle">#CodePong: Error</title>
+</head>
 <body>
     <nav th:include="navbar :: navigation"></nav>
 <center><h1 th:text="${message}">Error</h1></center>

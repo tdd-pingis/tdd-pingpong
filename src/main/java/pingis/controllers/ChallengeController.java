@@ -33,7 +33,7 @@ import pingis.utils.CodeStubBuilder;
 import pingis.utils.TestStubBuilder;
 
 @Controller
-public class LiveChallengeController {
+public class ChallengeController {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -122,7 +122,7 @@ public class LiveChallengeController {
         || (currentChallenge.getType() == ChallengeType.PROJECT
         && highestIndex == 0)) {
       logger.info("generating code stubs");
-      implStub = new CodeStubBuilder(currentChallenge.getName()).build().code;
+      implStub = new CodeStubBuilder(taskpair.getClassName()).build().code;
       testStub = new TestStubBuilder(implStub).withTestImports().build().code;
     } else {
       User player = userService.getCurrentUser();
@@ -143,14 +143,16 @@ public class LiveChallengeController {
           .getCode();
     }
 
-
     taskpair.setImplementationCodeStub(implStub);
     taskpair.setTestCodeStub(testStub);
 
+    logger.debug("Generating new task pair and instance");
+
+    // NotLikeThis
     gameplayService.generateTaskPairAndTaskInstance(taskpair.getTestTaskName(),
-        taskpair.getImplementationTaskName(),
+        taskpair.getTestTaskName(),
         taskpair.getTestTaskDesc(),
-        taskpair.getImplementationTaskDesc(),
+        taskpair.getTestTaskDesc(),
         taskpair.getTestCodeStub(),
         taskpair.getImplementationCodeStub(),
         currentChallenge);

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="base :: header"></head>
+<head th:include="base :: header">
+  <title id="pageTitle" th:inline="text">#CodePong: New task pair - [[${challenge.name}]]</title>
+</head>
 <body>
 <nav th:include="navbar :: navigation"></nav>
 <div class="container">
@@ -16,25 +18,19 @@
               </ul>
             </div>
             <input type="hidden" name="challengeId" th:value="${challenge.id}"/>
-            <div class="row">
-            <div class="col-md-6">
-                <label id="test-task-label">Test task name:</label><br/>
-                <input id="test-task-name-input" type="text" name="testTaskName" th:field="*{testTaskName}" size="61" placeholder="Eg. 'Test multiplication'"/><br/>
-
-                <label id="test-task-desc-label">Test task description:</label><br/>
-                <textarea id="test-task-desc-input" name="testTaskDesc" th:field="*{testTaskDesc}" rows="10" cols="60" placeholder="Eg. 'Write a JUnit test case that tests the multiplication method for two integers.&#10;Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
-            </div>
-            <div class="col-md-6">
-                <label>Implementation task name:</label><br/>
-                <input type="text" id="impl-task-name-input" name="implementationTaskName" th:field="*{implementationTaskName}" size="61" placeholder="Eg. 'Make multiplication test pass'"/><br/>
-
-                <label>Implementation task description:</label><br/>
-                <textarea id="impl-task-desc-input" name="implementationTaskDesc" rows="10" cols="60" th:field="*{implementationTaskDesc}" placeholder="Eg. 'Write code that makes the given test pass.&#10;Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
-            </div>
-            </div>
-            <div class="row">
-                <button type="submit" id="submit-button" class="btn btn-primary">Create task pair</button>
-            </div>
+           <div class="row">
+              <div class="col-md-6">
+                 <label id="test-task-label">Test task name:</label><br/>
+                 <input id="test-task-name-input" class="input-text" type="text" name="taskName" th:field="*{testTaskName}" size="80" placeholder="Eg. Input a descriptive name for this task pair/game-round. Eg. 'Multiplication'"/><br/>
+                 <label id="class-label" >Class name:</label><br/>
+                 <input id="class-name-input" type="text" class="input-text" name="className" th:field="*{className}" size="80" placeholder="Input the class name here without .java suffix, eg. 'Calculator'"/><br/>
+                 <label id="test-task-desc-label">Description:</label><br/>
+                 <textarea id="test-task-desc-input" name="taskDesc" th:field="*{testTaskDesc}" rows="4" cols="80" placeholder="Eg. 'Write an informative description of the wanted functionality. Eg. A method which adds two integers together. Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
+              </div>
+           </div>
+           <div class="row">
+              <button type="submit" id="submit-button" class="btn btn-primary">Create task pair</button>
+           </div>
         </form>
         <div th:if="${(#lists.size(challenge.tasks) >= minLength) && (challenge.type != T(pingis.entities.ChallengeType).ARCADE)}">
             <a th:href="'/closeChallenge/'+${challenge.id}"  class="btn btn-primary">Close challenge</a>

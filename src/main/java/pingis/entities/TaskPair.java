@@ -16,19 +16,18 @@ public class TaskPair {
   private long id;
 
   @NotNull
-  @Size(min = 3, max = 50)
-  private String testTaskName;
+  @Size(min = 3, max = 30)
+  private String className;
 
   @NotNull
   @Size(min = 3, max = 50)
-  private String implementationTaskName;
+  private String testTaskName;
 
   @NotNull
   @Size(min = 5, max = 200)
   private String testTaskDesc;
 
-  @NotNull
-  @Size(min = 5, max = 200)
+  private String implementationTaskName;
   private String implementationTaskDesc;
 
   private String testCodeStub;
@@ -36,8 +35,10 @@ public class TaskPair {
 
   protected TaskPair() {}
 
-  public TaskPair(String testTaskName, String implementationTaskName,
+  public TaskPair(String className, String testTaskName, String implementationTaskName,
       String testTaskDesc, String implementationTaskDesc) {
+    this.className = className;
+
     this.testTaskName = testTaskName;
     this.implementationTaskName = implementationTaskName;
     this.testTaskDesc = testTaskDesc;
@@ -98,5 +99,13 @@ public class TaskPair {
 
   public void setImplementationCodeStub(String implementationCodeStub) {
     this.implementationCodeStub = implementationCodeStub;
+  }
+
+  public String getClassName() {
+    return className;
+  }
+
+  public void setClassName(String className) {
+    this.className = className;
   }
 }

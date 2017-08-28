@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head th:include="base :: header"></head>
+    <head th:include="base :: header">
+        <title id="pageTitle">#CodePong: Feedback</title>
+    </head>
     <body onload="connect()">
         <nav th:include="navbar :: navigation"></nav>
 
@@ -16,18 +18,14 @@
             <div class="row">
                 <div class="col-md-6">
                     <a th:href="'task/'+${taskInstance.id}" class="btn btn-primary">Back</a>
-                    <div th:unless="${challenge.isOpen}">
-                        <a th:href="'playChallenge/'+${challenge.id}" id="next-task-button" class="btn btn-success">Next task</a>
-                    </div>
-                    <div th:if="${challenge.isOpen}">
-                        <a th:href="'playChallenge/'+${challenge.id}" id="next-task-button" class="btn btn-success">Next task</a>
-                    </div>
-                    <a th:href="'nextTask/'+${challenge.id}" id="selectFromList" class="nexttask btn btn-success">Next task from a list</a>
+                    <a th:href="'playChallenge/'+${challenge.id}" id="next-task-button" class="btn btn-success">Next task</a>
+                    <a href="/user" id="selectFromList" class="nexttask btn btn-success">Back to dashboard</a>
+                    <a th:href="'randomTask/'+${challenge.id}" id="selectByRandom" class="nexttask btn btn-success">Next task by random</a>
                 </div>
             </div>
 
             <form>
-              <div class="feedback-container" id="userFeedBack">
+              <div class="feedback-container" id="userFeedBack" th:unless="${user.id == taskInstance.task.author.id}">
                 <div class="row">
                     <h3>Your feedback of the task</h3>
                 </div>

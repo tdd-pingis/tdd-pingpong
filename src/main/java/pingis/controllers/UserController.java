@@ -2,6 +2,7 @@ package pingis.controllers;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,14 @@ public class UserController {
     } else {
       logger.debug("Live challenge type = Continue");
       model.addAttribute("liveChallengeType", LiveType.CONTINUE);
+    }
+
+    Optional<TaskInstance> unfinished = user.getTaskInstances().stream()
+        .filter(e -> e.getStatus() == CodeStatus.IN_PROGRESS)
+        .findFirst();
+    
+    if (unfinished.isPresent()) {
+      model.addAttribute("unfinishedTaskInstance", unfinished);
     }
 
     model.addAttribute("availableChallenges", availableChallenges);
