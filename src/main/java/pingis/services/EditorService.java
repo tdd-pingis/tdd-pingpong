@@ -30,7 +30,8 @@ public class EditorService {
     CodeStub implStub = stubBuilder.build();
     CodeStub testStub = new TestStubBuilder(stubBuilder).build();
 
-    String implCode, testCode;
+    String implCode;
+    String testCode;
 
     if (taskInstance.getTask().getType() == TaskType.IMPLEMENTATION) {
       TaskInstance testTaskInstance = taskInstance.getTestTaskinstance();
