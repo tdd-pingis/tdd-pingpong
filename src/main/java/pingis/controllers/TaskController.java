@@ -83,8 +83,8 @@ public class TaskController {
     Map<String, EditorTabData> editorContents = editorService.generateEditorContents(taskInstance);
 
     boolean isTest = taskInstance.getTask().getType() == TaskType.TEST;
-    EditorTabData submissionTab = editorContents.get(isTest ? "editor1" : "editor2");
-    EditorTabData staticTab = editorContents.get(isTest ? "editor2" : "editor1");
+    EditorTabData submissionTab = editorContents.get(isTest ? "test" : "impl");
+    EditorTabData staticTab = editorContents.get(isTest ? "impl" : "test");
 
     model.addAttribute("submissionCodeStub", submissionTab.code);
     model.addAttribute("submissionTabFileName", submissionTab.title);

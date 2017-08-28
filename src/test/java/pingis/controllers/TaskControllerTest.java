@@ -161,8 +161,8 @@ public class TaskControllerTest {
         implTaskInstance.getTask().getCodeStub());
     EditorTabData tab2 = new EditorTabData("Test to fulfill",
         testTaskInstance.getTask().getCodeStub());
-    tabData.put("editor1", tab1);
-    tabData.put("editor2", tab2);
+    tabData.put("impl", tab1);
+    tabData.put("test", tab2);
     return tabData;
   }
 
