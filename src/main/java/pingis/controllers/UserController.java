@@ -42,11 +42,15 @@ public class UserController {
 
   @RequestMapping(value = "/login", method = RequestMethod.GET)
   public String login(Model model) {
+    logger.debug("Get /login");
+
     return "redirect:/oauth2/authorization/code/tmc";
   }
 
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   public String user(Model model, Principal principal) {
+    logger.debug("Get /user");
+
     User user = userService.handleUserAuthenticationByName(principal.getName());
 
     MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
@@ -66,11 +70,14 @@ public class UserController {
 
     LiveType liveType = null;
     if (liveChallenge == null && randomLiveChallenge == null) {
+      logger.debug("Live challenge type = Create");
       model.addAttribute("liveChallengeType", LiveType.CREATE);
     } else if (liveChallenge == null) {
+      logger.debug("Live challenge type = Join");
       liveChallenge = randomLiveChallenge;
       model.addAttribute("liveChallengeType", LiveType.JOIN);
     } else {
+      logger.debug("Live challenge type = Continue");
       model.addAttribute("liveChallengeType", LiveType.CONTINUE);
     }
 
@@ -84,6 +91,8 @@ public class UserController {
 
   @RequestMapping(value = "/admin", method = RequestMethod.GET)
   public String admin(Model model) {
+    logger.debug("Get /admin");
+
     return "admin";
   }
 }

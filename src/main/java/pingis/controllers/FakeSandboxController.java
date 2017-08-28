@@ -21,15 +21,18 @@ import pingis.services.sandbox.SubmissionResponse;
 public class FakeSandboxController {
 
   private Logger logger = LoggerFactory.getLogger(this.getClass());
-  
+
   @Autowired
   private FakeSandboxRestService fakeSandboxRestService;
-  
+
   @RequestMapping("/tasks.json")
   public ResponseEntity<SubmissionResponse> tasks(
         @RequestParam("token") String token,
         @RequestParam("notify") String notify) {
-    
+
+    logger.debug("TOKEN::::::{}", token);
+    logger.debug("NOTIFY:::::{}", notify);
+
     //NOTE: Making STOMP messages persist makes this obsolete
     try {
       Thread.sleep(2000);
@@ -37,13 +40,12 @@ public class FakeSandboxController {
       logger.error("Sandbox thread stopped unexpectedly");
     }
 
-    logger.debug("TOKEN::::::" + token);
-    logger.debug("NOTIFY:::::" + notify);
-    
     fakeSandboxRestService.postSubmissionResults(token, notify);
-    
+
     SubmissionResponse sr = new SubmissionResponse();
     sr.setStatus("ok");
+
+    logger.debug("Returning response");
     return ResponseEntity.status(HttpStatus.OK).body(sr);
   }
 }

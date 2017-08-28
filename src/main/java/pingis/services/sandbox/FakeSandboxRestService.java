@@ -32,11 +32,11 @@ import pingis.repositories.sandbox.SubmissionRepository;
 public class FakeSandboxRestService {
 
   private Logger logger = LoggerFactory.getLogger(this.getClass());
-  
+
   private RestTemplate restTemplate;
 
   private SubmissionRepository submissionRepository;
-  
+
   @Autowired
   public FakeSandboxRestService(RestTemplateBuilder restTemplateBuilder,
       SubmissionRepository submissionRepository) {
@@ -50,10 +50,12 @@ public class FakeSandboxRestService {
     HttpEntity<MultiValueMap<String, String>> request = buildResponseEntity(
         generateSubmission(token), headers);
 
+    logger.debug("Posting fake results");
     restTemplate.postForLocation(notify, request, String.class);
   }
 
   private Submission generateSubmission(String token) {
+    logger.debug("Generating submission");
     Submission submission = submissionRepository.findById(UUID.fromString(token)).get();
 
     submission.setId(UUID.fromString(token));
@@ -86,6 +88,7 @@ public class FakeSandboxRestService {
 
   private HttpEntity<MultiValueMap<String, String>> buildResponseEntity(
       Submission submission, HttpHeaders headers) {
+    logger.debug("Building response entity");
     MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
 
     try {

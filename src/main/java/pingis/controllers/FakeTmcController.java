@@ -60,14 +60,17 @@ public class FakeTmcController {
     creds.put("impluser", "password");
 
     if (!creds.containsKey(username) || !creds.get(username).equals(password)) {
+      logger.debug("Access denied");
       redirectAttributes.addAttribute("error", "access_denied");
     } else {
+      logger.debug("Access granted");
       redirectAttributes.addAttribute("code", username);
     }
 
     redirectAttributes.addAttribute("state", state);
     String redirectPath = redirectUri.replace("http://localhots:8080", "");
 
+    logger.debug("Redirecting to {}", redirectPath);
     return "redirect:" + redirectPath;
   }
 
@@ -77,7 +80,7 @@ public class FakeTmcController {
           HttpServletRequest request,
           HttpServletResponse response) {
 
-    logger.debug("Fake TMC controller received an access token request with code " + code);
+    logger.debug("Fake TMC controller received an access token request with code {}", code);
 
     HttpHeaders responseHeaders = new HttpHeaders();
     responseHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
@@ -85,7 +88,7 @@ public class FakeTmcController {
     fakeToken.setAccessToken(code);
     fakeToken.setTokenType("bearer");
 
-    logger.debug("Sent token " + fakeToken.getAccessToken());
+    logger.debug("Sent token {}", fakeToken.getAccessToken());
 
     return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(fakeToken);
   }
@@ -93,6 +96,7 @@ public class FakeTmcController {
   @RequestMapping(value = "/fake/userinfo", method = RequestMethod.GET)
   public ResponseEntity<FakeUser> user(
           HttpServletRequest request) {
+    logger.debug("Received userinfo request");
 
     Map<String, String> ids = new HashMap<>();
     ids.put("admin", "0");
@@ -100,21 +104,21 @@ public class FakeTmcController {
     ids.put("impluser", "2");
 
     String authorization = request.getHeader("Authorization");
-    
+
     if (authorization == null) {
       logger.debug("Invalid headers");
-      
+
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
-    
+
     String token = authorization.replace("Bearer ", "");
 
     logger.debug(
-            "Fake TMC controller received a userinfo request with authorization " + authorization);
+            "Fake TMC controller received a userinfo request with authorization {}", authorization);
 
     if (!ids.containsKey(token)) {
       logger.debug("Invalid token");
-      
+
       return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
     }
 
@@ -126,7 +130,7 @@ public class FakeTmcController {
     user.setUsername(token);
     user.setEmail("email");
 
-    logger.debug("Set the user id as " + user.getId());
+    logger.debug("Set the user id as {}", user.getId());
 
     return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(user);
   }

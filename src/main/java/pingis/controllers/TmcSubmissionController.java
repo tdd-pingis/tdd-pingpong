@@ -41,9 +41,11 @@ public class TmcSubmissionController {
         stderr, validations, vmLog, status, exitCodeValue);
 
     if (!updated) {
+      logger.debug("Not found");
       return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
+    logger.debug("OK");
     return new ResponseEntity<>(HttpStatus.OK);
   }
 }

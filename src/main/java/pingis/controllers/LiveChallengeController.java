@@ -32,6 +32,7 @@ import pingis.utils.TestStubBuilder;
 
 @Controller
 public class LiveChallengeController {
+
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
@@ -47,12 +48,15 @@ public class LiveChallengeController {
 
   @RequestMapping(value = "/newchallenge")
   public String newChallenge(Model model) {
+    logger.debug("Request to /newchallenge");
 
     return "newchallenge";
   }
 
   @RequestMapping("/startChallenge/{challengeId}")
   public String startChallenge(Model model, @PathVariable long challengeId) {
+    logger.debug("Starting challenge");
+
     Challenge challenge = challengeService.findOne(challengeId);
     model.addAttribute("challenge", challenge);
     return "startchallenge";
@@ -61,6 +65,7 @@ public class LiveChallengeController {
   @RequestMapping(value = "/createChallenge", method = RequestMethod.POST)
   public RedirectView createChallenge(String challengeName, String challengeDesc,
       String challengeType, String realm, RedirectAttributes redirectAttributes) {
+    logger.debug("Creating challenge");
 
     Challenge newChallenge = new Challenge(challengeName,
         userService.getCurrentUser(),
@@ -68,14 +73,14 @@ public class LiveChallengeController {
     newChallenge.setLevel(1);
     newChallenge.setOpen(true);
     newChallenge = challengeService.save(newChallenge);
-    logger.info("Created new challenge: " + newChallenge.toString());
+    logger.debug("Created new challenge: {}", newChallenge.toString());
     return new RedirectView("/playChallenge/" + newChallenge.getId());
   }
 
   @RequestMapping(value = "/newtaskpair")
   public String newTaskPair(Model model) {
     // TODO: add checks
-    logger.info("Displaying new task pair -form.");
+    logger.debug("Displaying new task pair -form.");
     return "newtaskpair";
   }
 
@@ -85,11 +90,13 @@ public class LiveChallengeController {
       String testCodeStub, String implementationCodeStub,
       long challengeId,
       RedirectAttributes redirectAttributes) {
-    
+    logger.debug("Creating new task pair");
+
     Challenge currentChallenge = challengeService.findOne(challengeId);
     String implStub = new CodeStubBuilder(currentChallenge.getName()).build().code;
     String testStub = new TestStubBuilder(implStub).withTestImports().build().code;
 
+    logger.debug("Generating new task pair and instance");
     gameplayService.generateTaskPairAndTaskInstance(testTaskName,
         implementationTaskName,
         testTaskDesc,
@@ -103,6 +110,8 @@ public class LiveChallengeController {
   @RequestMapping("/playChallenge/{challengeId}")
   public RedirectView playChallenge(RedirectAttributes redirectAttributes,
       @PathVariable long challengeId) {
+    logger.debug("Playing challenge");
+
     Challenge currentChallenge = challengeService.findOne(challengeId);
     if (currentChallenge == null) {
       redirectAttributes.addFlashAttribute("message", "challenge not found");
@@ -111,7 +120,7 @@ public class LiveChallengeController {
     User player = userService.getCurrentUser();
     TaskInstance unfinished =  taskInstanceService.getUnfinishedInstance(currentChallenge, player);
     if (unfinished != null) {
-      logger.info("Found unfinished instance. Redirecting to /task.");
+      logger.debug("Found unfinished instance. Redirecting to /task.");
       return new RedirectView("/task/" + unfinished.getId());
     }
 
@@ -127,9 +136,11 @@ public class LiveChallengeController {
   @RequestMapping("/closeChallenge/{challengeId}")
   public RedirectView closeChallenge(@PathVariable Long challengeId,
       RedirectAttributes redirectAttributes) {
+    logger.debug("Closing challenge");
+
     Challenge currentChallenge = challengeService.findOne(challengeId);
     if (!gameplayService.isParticipating(currentChallenge)) {
-      logger.info("User trying to close somebody else's challenge. Redirecting to /error.");
+      logger.debug("User trying to close somebody else's challenge. Redirecting to /error.");
       redirectAttributes.addFlashAttribute("message", "user not in challenge");
       return new RedirectView("/error");
     }
@@ -137,12 +148,13 @@ public class LiveChallengeController {
     currentChallenge.setOpen(false);
     challengeService.save(currentChallenge);
     redirectAttributes.addFlashAttribute("message", "Challenge closed.");
-    logger.info("Closing challenge: " + currentChallenge.getId());
+    logger.debug("Closed challenge {}", currentChallenge.getId());
     return new RedirectView("/user");
   }
 
   @RequestMapping("/newArcadeChallenge")
   public String newArcadeChallenge(Model model) {
+    logger.debug("Request to /newArcadeChallenge");
     return "newarcadechallenge";
   }
 
@@ -152,37 +164,39 @@ public class LiveChallengeController {
       String challengeDesc,
       String realm,
       int level) {
+    logger.debug("Creating arcade challenge");
 
     Challenge arcadeChallenge = new Challenge(
         challengeName,
         userService.getCurrentUser(),
         challengeDesc,
         ChallengeType.ARCADE);
-    logger.info("Created new arcade challenge: " + arcadeChallenge.toString());
 
     try {
       arcadeChallenge.setRealm(Realm.valueOf(realm.toUpperCase()));
     } catch (Exception e) {
-      logger.info("Realm {} does not exist. Redirecting to /error.", realm);
+      logger.debug("Realm {} does not exist. Redirecting to /error.", realm);
       return new RedirectView("/error");
     }
     arcadeChallenge.setOpen(true);
     arcadeChallenge.setLevel(level);
     challengeService.save(arcadeChallenge);
+    logger.debug("Created new arcade challenge {}", arcadeChallenge.toString());
     return new RedirectView("/user");
   }
 
   @RequestMapping("/newArcadeSession")
   public RedirectView newArcadeSession(RedirectAttributes redirectAttributes,
       @RequestParam String realm) {
-    logger.info("playArcade method entered");
+    logger.debug("Request to /newArcadeSession");
+
     User player = userService.getCurrentUser();
     Realm currentRealm = null;
     try {
-      logger.info("Trying to get realm: {}", realm);
+      logger.debug("Trying to get realm: {}", realm);
       currentRealm = Realm.valueOf(realm.toUpperCase());
     } catch (Exception e) {
-      logger.info("Realm {} does not exist. Redirecting to /error.", realm);
+      logger.debug("Realm {} does not exist. Redirecting to /error.", realm);
       return new RedirectView("/error");
     }
     Challenge challenge = gameplayService.getArcadeChallenge(currentRealm);
@@ -191,30 +205,31 @@ public class LiveChallengeController {
 
   public RedirectView playLive(Challenge currentChallenge,
       RedirectAttributes redirectAttributes) {
+    logger.debug("Playing live");
 
     int index = gameplayService.getNumberOfTasks(currentChallenge) / 2;
-    logger.info("Highest index of tasks in current challenge: " + index);
-    
+    logger.debug("Highest index of tasks in current challenge {}", index);
+
     if (!gameplayService.isParticipating(currentChallenge)) {
-      logger.info("Not participating.");
-      
+      logger.debug("Not participating.");
+
       if (currentChallenge.getSecondPlayer() == null) {
         currentChallenge.setSecondPlayer(userService.getCurrentUser());
         challengeService.save(currentChallenge);
-        logger.info("Current user saved as a participant"
+        logger.debug("Current user saved as a participant"
             + " (second player) to current challenge.");
       } else {
-        logger.info("Current user not a player in this challenge. Redirecting to /error.");
+        logger.debug("Current user not a player in this challenge. Redirecting to /error.");
         redirectAttributes.addFlashAttribute("message",
             "this is not your challenge");
         return new RedirectView("/error");
       }
     }
-    
+
     TaskInstance unfinished = challengeService.getUnfinishedTaskInstance(currentChallenge);
     if (unfinished != null
         && !unfinished.getUser().equals(userService.getCurrentUser())) {
-      logger.info("Unfinished taskinstance found, but not owned by the"
+      logger.debug("Unfinished taskinstance found, but not owned by the"
           + " current user. Not user's turn yet, redirecting to \"/user\"");
       return new RedirectView("/user");
     }
@@ -226,20 +241,22 @@ public class LiveChallengeController {
     } else if (turn == TurnType.TEST) {
       return playTestTurn(redirectAttributes, currentChallenge);
     } else {
-      logger.info("Not user's turn, redirecting to \"/user\"");
+      logger.debug("Not user's turn, redirecting to \"/user\"");
       return new RedirectView("/user");
     }
   }
 
   private RedirectView playImplementationTurn(RedirectAttributes redirectAttributes,
       Challenge currentChallenge) {
+    logger.debug("Playing implementation turn");
+
     Task implTask = gameplayService.getTopmostImplementationTask(currentChallenge);
-    logger.info("implementation task: " + implTask.toString());
+    logger.debug("implementation task: " + implTask.toString());
     Task testTask = gameplayService.getTopmostTestTask(currentChallenge);
-    logger.info("test task: " + testTask.toString());
+    logger.debug("test task: " + testTask.toString());
     TaskInstance testTaskInstance =
         taskInstanceService.getByTaskAndUser(testTask, testTask.getAuthor());
-    logger.info("Found uneven number of completed taskinstances, "
+    logger.debug("Found uneven number of completed taskinstances, "
         + "current user has turn, "
             + "creating new task instance, redirecting to /task.");
     return newTaskInstance(implTask, testTaskInstance, redirectAttributes);
@@ -247,24 +264,25 @@ public class LiveChallengeController {
 
   private RedirectView playTestTurn(RedirectAttributes redirectAttributes,
       Challenge currentChallenge) {
+    logger.debug("Playing test turn");
+
     redirectAttributes.addFlashAttribute("challengeId", currentChallenge.getId());
     redirectAttributes.addFlashAttribute("challenge", currentChallenge);
     redirectAttributes.addFlashAttribute("minLength", GameplayService.CHALLENGE_MIN_LENGTH);
-    logger.info("Found even number of completed taskinstances, "
+    logger.debug("Found even number of completed taskinstances, "
         + "current user has turn, redirecting to \"/newtaskpair\"");
 
     return new RedirectView("/newtaskpair");
   }
 
   private RedirectView playArcade(RedirectAttributes redirectAttributes, Challenge challenge) {
-    logger.info("playArcade method entered");
-    User player = userService.getCurrentUser();
+    logger.debug("Playing arcade");
 
     if (taskInstanceService.getNumberOfDoneTaskInstancesInChallenge(challenge) % 2 == 0) {
       redirectAttributes.addFlashAttribute("challengeId", challenge.getId());
       redirectAttributes.addFlashAttribute("challenge", challenge);
       redirectAttributes.addFlashAttribute("minLength", Integer.MAX_VALUE);
-      logger.info("User has test turn. Redirecting to /newtaskpair.");
+      logger.debug("User has test turn. Redirecting to /newtaskpair.");
       return new RedirectView("/newtaskpair");
 
     } else {
@@ -272,31 +290,34 @@ public class LiveChallengeController {
       Task testTask = taskService.getCorrespondingTask(implTask);
       TaskInstance testTaskInstance =
           taskInstanceService.getByTaskAndUser(testTask, testTask.getAuthor());
-      logger.info("User has implementation turn.");
+      logger.debug("User has implementation turn.");
       return newTaskInstance(implTask, testTaskInstance, redirectAttributes);
     }
   }
 
   private RedirectView playPractice(RedirectAttributes redirectAttributes, Challenge challenge) {
+    logger.debug("Playing practice");
+
     // check for unfinished instances
     User player = userService.getCurrentUser();
-    logger.info("User: " + player.getName());
+    logger.debug("User: {}", player.getName());
 
     if (challengeService.isOwnChallenge(challenge, player)) {
+      logger.debug("User trying to redo their own challenge");
       redirectAttributes.addFlashAttribute("message", "Cannot re-do your own live challenge");
       return new RedirectView("/error");
     }
 
     Task nextTask = taskService.nextPracticeTask(challenge);
     if (nextTask == null) {
-      // all tasks done. wohoo.
+      logger.debug("All tasks done");
       return new RedirectView("/challengeFinished/" + challenge.getId());
     }
     if (nextTask.getType() == TaskType.TEST) {
-      logger.info("playing test task");
+      logger.debug("Playing test task");
       return newTaskInstance(nextTask, null, redirectAttributes);
     }
-    logger.info("playing implementation task");
+    logger.debug("Playing implementation task");
     TaskInstance testTaskInstance =
         taskInstanceService.getRandomTaskInstance(taskService.getCorrespondingTask(nextTask));
     return newTaskInstance(nextTask, testTaskInstance, redirectAttributes);
@@ -305,9 +326,12 @@ public class LiveChallengeController {
   public RedirectView newTaskInstance(Task task,
       TaskInstance testTaskInstance,
       RedirectAttributes redirectAttributes) {
+    logger.debug("Creating new task instance");
+
     User user = userService.getCurrentUser();
     TaskInstance newTaskInstance = taskInstanceService.createEmpty(user, task);
     if (task.getType() == TaskType.IMPLEMENTATION) {
+      logger.debug("Task type is implementation");
       newTaskInstance.setTestTaskInstance(testTaskInstance);
       testTaskInstance.addImplementationTaskInstance(newTaskInstance);
       taskInstanceService.save(newTaskInstance);
@@ -318,6 +342,8 @@ public class LiveChallengeController {
 
   @RequestMapping("/challengeFinished/{challengeId}")
   public String challengeFinished(Model model, @PathVariable long challengeId) {
+    logger.debug("Challenge finished");
+
     Challenge challenge = challengeService.findOne(challengeId);
     model.addAttribute("challenge", challenge);
     return "challengefinished";
