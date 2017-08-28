@@ -38,7 +38,7 @@
          <form method="post" th:action="@{/task}">
             <div class="tab-content" th:inline="text">
                <input type="hidden" name="taskInstanceId" th:value="${taskInstanceId}" />
-               <div id="implementation" class="panel panel-default tab-pane fade in active">
+               <div id="implementation" class="tab-pane fade in active">
                   <div class="panel-heading">
                      <h3 class="panel-title" th:text="${submissionTabFileName}"></h3>
                   </div>
@@ -48,7 +48,7 @@
                                th:text="${submissionCodeStub}"></textarea>
                   </div>
                </div>
-               <div id="test" class="panel panel-default tab-pane fade">
+               <div id="test" class="tab-pane fade">
                   <div class="panel-heading">
                      <h3 class="panel-title" th:text="${staticTabFileName}"></h3>
                   </div>

@@ -256,8 +256,16 @@ h2 {
   width: 350px;
 }
 
-#stars { color: #ee8b2d;}
-
 .dropdown-toggle:hover {
   color: black;
 }
+
+.tab-pane {
+  padding-bottom: 15px;
+}
+
+.container {
+  padding-top: 15px;
+}
+
+#stars { color: #ee8b2d;}
