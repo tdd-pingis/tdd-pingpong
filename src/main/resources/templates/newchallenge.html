@@ -8,7 +8,7 @@
     <div class="row">
         <form th:action="@{/createChallenge}" method="post">
             <label>Challenge name:</label><br />
-            <input type="text" name="challengeName" size="50" id="challenge_name" placeholder="The name of the challenge eg. Calculator"/><br />
+            <input type="text" name="challengeName" class="input-text" size="50" id="challenge_name" placeholder="The name of the challenge eg. Calculator"/><br />
             <label>Challenge description</label><br />
             <textarea rows="10" cols="80" name="challengeDesc" id="challenge_desc" placeholder="The description for the challenge, eg. 'Test and implement a simple command line based calculator.'"></textarea><br />
             <label>Challenge type:</label>
@@ -20,7 +20,7 @@
                 <span class="glyphicon glyphicon-question-sign"/></a>
             <br />
             <label>Realm:</label>
-            <select name="realm">
+            <select name="realm" class="realm-select">
                 <option value="BEGINNER">Beginner</option>
                 <option value="DATASTRUCTURES">Data structures</option>
                 <option value="ALGORITHMS">Algorithms</option>
