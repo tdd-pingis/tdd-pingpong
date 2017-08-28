@@ -22,21 +22,21 @@
                <div class="col-md-3">
                   <h4 th:inline="text" class="header dashboardtopbar-stats">Level: [[${user.level}]]</h4>
                </div>
-               <div th:each="error : ${errors}" class="alert alert-warning"> 
+               <div th:each="error : ${errors}" class="alert alert-warning">
                   <div class="row"><p class="error-message">[[${error}]]></p></div> <!-- Show error messages -->
                </div>
             </div>
          </div>
       </div>
-      
-      
+
+
       <div class="container dashboard-bottom-div">
          <ul class="nav nav-tabs"> <!--  tab -->
             <li class="active"><a data-toggle="tab" href="#home">Arcade</a></li>
             <li><a data-toggle="tab" href="#menu1">Practice</a></li>
             <li><a data-toggle="tab" href="#menu2">History</a></li>
          </ul>
-         
+
          <!-- Arcade tab -->
          <div class="container challenge-container">
             <div th:if="${message != null}" th:text="${message}"></div> <!-- still needed? there is new error box which supports multiple error-messages -->
@@ -46,7 +46,7 @@
                   <div class="well challenge-col-well">You have one Task still in progress. Continue where you left off.</div>
                   <div th:if="${unfinishedTaskinstance == null}" >You have no Tasks in progress. Pick a new challenge.</div>
                   <div th:unless="${unfinishedTaskinstance == null}" class="row challengeitem">
-                     <a th:href="'/nextTask/' + ${unfinishedTaskinstance.task.challenge.id}" th:inline="text"><h3 class="header challengeitem-header">[[${unfinishedTaskinstance.task.challenge.id}]]</h3></a> 
+                     <a th:href="'/nextTask/' + ${unfinishedTaskinstance.task.challenge.id}" th:inline="text"><h3 class="header challengeitem-header">[[${unfinishedTaskinstance.task.challenge.id}]]</h3></a>
                      <p class="lead challenge-progress-number" th:inline="text">[[${#lists.size(unfinishedTaskinstance.task.challenge.tasks)}]] / [[${#lists.size(unfinishedTaskinstance.task.challenge.tasks)} / 2]]</p>
                      <p class="challenge-progress-done">done</p>
                   </div>
@@ -71,7 +71,7 @@
                </div>
             </div>
          </div>
-         
+
          <!-- Practice challenges tab -->
          <a th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CREATE}" href="/newchallenge" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Create New Live Challenge</a>
          <a th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).JOIN}" th:href="'/playChallenge/' + ${liveChallenge.id}" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Join Live Challenge</a>
@@ -79,7 +79,7 @@
          <a href="/randomTask" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a random Task from a random Challenge">Give me a random task</a>
          <a href="/newArcadeChallenge" class="btn btn-primary">Create new arcade challenge</a>
          <a href="/playArcade?realm=BEGINNER" class="btn btn-primary">Play arcade challenge</a>
-      </div>  
+      </div>
 
       <script th:src="@{/js/progressCircle.js}" type="text/javascript" charset="utf-8"></script>
       <script th:src="@{/js/hints.js}" type="text/javascript" charset="utf-8"></script>

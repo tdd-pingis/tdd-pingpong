@@ -1,8 +1,5 @@
 package pingis.entities;
 
-import static pingis.entities.Task.LEVEL_MAX_VALUE;
-import static pingis.entities.Task.LEVEL_MIN_VALUE;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -10,13 +7,14 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+
 @Entity
 public class User {
+
+  public static final int POINTS_MIN_VALUE = 1;
 
   @Id
   @NotNull
@@ -28,9 +26,8 @@ public class User {
   public boolean administrator;
 
   @NotNull
-  @Min(LEVEL_MIN_VALUE)
-  @Max(LEVEL_MAX_VALUE)
-  private int level;
+  @Min(POINTS_MIN_VALUE)
+  private int points;
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
   private List<TaskInstance> taskInstances;
@@ -44,27 +41,23 @@ public class User {
   @OneToMany(mappedBy = "secondPlayer")
   private List<Challenge> participatingLiveChallenges;
 
-
-  @OneToOne
-  private TaskInstance mostRecentArcadeInstance;
-
   public User() {
   }
 
   public User(String name) {
     // This constructor is only for 'dev'-profile, thus the pseudo-random id generation
     // -> real user-id's are fetched under 'oauth'-profile from TMC-server
-    this(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE, name, LEVEL_MIN_VALUE);
+    this(UUID.randomUUID().getMostSignificantBits() & Long.MAX_VALUE, name, POINTS_MIN_VALUE);
   }
 
-  public User(long id, String name, int level) {
-    this(id, name, level, false);
+  public User(long id, String name, int points) {
+    this(id, name, points, false);
   }
 
-  public User(long id, String name, int level, boolean isAdministrator) {
+  public User(long id, String name, int points, boolean isAdministrator) {
     this.id = id;
     this.name = name;
-    this.level = level;
+    this.points = points;
     this.administrator = isAdministrator;
     this.taskInstances = new ArrayList<>();
     this.authoredChallenges = new ArrayList<>();
@@ -84,8 +77,8 @@ public class User {
     this.id = id;
   }
 
-  public int getLevel() {
-    return level;
+  public int getPoints() {
+    return points;
   }
 
   public void setName(String name) {
@@ -104,8 +97,12 @@ public class User {
     this.administrator = administrator;
   }
 
-  public void setLevel(int level) {
-    this.level = level;
+  public void setPoints(int points) {
+    this.points = points;
+  }
+
+  public void addPoints(int points) {
+    this.points += points;
   }
 
   public void setTaskInstances(List<TaskInstance> taskInstances) {
@@ -171,7 +168,7 @@ public class User {
         + "\n\tname: " + getName()
         + "\n\tid: " + getId()
         + "\n\tadmin: " + isAdministrator()
-        + "\n\tlevel: " + getLevel();
+        + "\n\tpoints: " + getPoints();
   }
 
   public List<Challenge> getParticipatingLiveChallenges() {
@@ -184,14 +181,6 @@ public class User {
   
   public void addParticipatingLiveChallenge(Challenge challenge) {
     this.participatingLiveChallenges.add(challenge);
-  }
-
-  public TaskInstance getMostRecentArcadeInstance() {
-    return mostRecentArcadeInstance;
-  }
-
-  public void setMostRecentArcadeInstance(TaskInstance mostRecentArcadeInstance) {
-    this.mostRecentArcadeInstance = mostRecentArcadeInstance;
   }
 
 }

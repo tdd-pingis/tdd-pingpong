@@ -163,8 +163,10 @@ public class TaskInstanceServiceTest {
 
   @Test
   public void testMarkAsDone() {
+    int oldPoints = testUser.getPoints();
     TaskInstance result = taskInstanceService.markAsDone(testTaskInstance);
     assertEquals(CodeStatus.DONE, result.getStatus());
+    assertEquals(oldPoints  + testTaskInstance.getTask().getPoints(), testUser.getPoints());
   }
 
   @Test

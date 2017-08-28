@@ -110,6 +110,7 @@ public class TaskInstanceService {
   @Transactional
   public TaskInstance markAsDone(TaskInstance taskInstance) {
     taskInstance.setStatus(CodeStatus.DONE);
+    taskInstance.getUser().addPoints(taskInstance.getTask().getPoints());
     return taskInstance;
   }
 
@@ -157,10 +158,8 @@ public class TaskInstanceService {
   }
 
   public TaskInstance getRandomTaskInstance(Task task) {
-    User user = userService.getCurrentUser();
-    List<TaskInstance> instances = taskInstanceRepository.findByTask(task);
-    List<TaskInstance> viableInstances = instances.stream()
-        .filter(i -> !i.getUser().equals(user))
+    List<TaskInstance> viableInstances = taskInstanceRepository.findByTask(task).stream()
+        .filter(i -> !i.getUser().equals(userService.getCurrentUser()))
         .filter(i -> i.getStatus() == CodeStatus.DONE)
         .collect(Collectors.toList());
     return viableInstances.get(new Random().nextInt(viableInstances.size()));
@@ -178,10 +177,7 @@ public class TaskInstanceService {
   }
 
   public boolean canPlayOrSkip(TaskInstance taskInstance) {
-    if (!taskInstance.getUser().equals(userService.getCurrentUser())
-        || taskInstance.getStatus() != CodeStatus.IN_PROGRESS) {
-      return false;
-    }
-    return true;
+    return taskInstance.getUser().equals(userService.getCurrentUser())
+        && taskInstance.getStatus() == CodeStatus.IN_PROGRESS;
   }
 }

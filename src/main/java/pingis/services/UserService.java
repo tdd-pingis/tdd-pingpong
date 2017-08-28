@@ -1,5 +1,7 @@
 package pingis.services;
 
+import static pingis.entities.Task.LEVEL_MAX_VALUE;
+
 import java.util.List;
 import java.util.Optional;
 import org.apache.log4j.Logger;
@@ -100,5 +102,13 @@ public class UserService {
 
   public User getCurrentUser() {
     return findByName(SecurityContextHolder.getContext().getAuthentication().getName());
+  }
+
+  public int getLevel(int score) {
+    return Math.min(score / 1000, LEVEL_MAX_VALUE);
+  }
+
+  public int levelOfCurrentUser() {
+    return getLevel(getCurrentUser().getPoints());
   }
 }

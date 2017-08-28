@@ -9,5 +9,5 @@ Feature: Content check for multiple editor tabs
     Examples:
 
       |user   |tab_name                 |content                               |  
-      |User   |test/CalculatorTest.java |public void testMultiplication        |
+      |User   |test/CalculatorTest.java |testMultiplication                    |
       |User   |test/CalculatorTest.java |CalculatorTest                        |
