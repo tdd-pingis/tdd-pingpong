@@ -27,7 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class FakeTmcController {
 
-  Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @RequestMapping(value = "/fake/authorize", method = RequestMethod.GET)
   public String login(
@@ -85,10 +85,10 @@ public class FakeTmcController {
     HttpHeaders responseHeaders = new HttpHeaders();
     responseHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
     FakeToken fakeToken = new FakeToken();
-    fakeToken.setAccessToken(code);
-    fakeToken.setTokenType("bearer");
+    fakeToken.accessToken = code;
+    fakeToken.tokenType = "bearer";
 
-    logger.debug("Sent token {}", fakeToken.getAccessToken());
+    logger.debug("Sent token {}", fakeToken.accessToken);
 
     return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(fakeToken);
   }
@@ -126,11 +126,11 @@ public class FakeTmcController {
     responseHeaders.setContentType(MediaType.APPLICATION_JSON_UTF8);
 
     FakeUser user = new FakeUser();
-    user.setId(ids.get(token));
-    user.setUsername(token);
-    user.setEmail("email");
+    user.id = ids.get(token);
+    user.username = token;
+    user.email = "email";
 
-    logger.debug("Set the user id as {}", user.getId());
+    logger.debug("Set the user id as {}", user.id);
 
     return ResponseEntity.status(HttpStatus.OK).headers(responseHeaders).body(user);
   }
@@ -138,55 +138,15 @@ public class FakeTmcController {
   class FakeToken {
 
     @JsonProperty("access_token")
-    private String accessToken;
+    public String accessToken;
     @JsonProperty("token_type")
-    private String tokenType;
-
-    public String getAccessToken() {
-      return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
-      this.accessToken = accessToken;
-    }
-
-    public String getTokenType() {
-      return tokenType;
-    }
-
-    public void setTokenType(String tokenType) {
-      this.tokenType = tokenType;
-    }
+    public String tokenType;
   }
 
   class FakeUser {
 
-    private String id;
-    private String username;
-    private String email;
-
-    public String getId() {
-      return id;
-    }
-
-    public void setId(String id) {
-      this.id = id;
-    }
-
-    public String getUsername() {
-      return username;
-    }
-
-    public void setUsername(String username) {
-      this.username = username;
-    }
-
-    public String getEmail() {
-      return email;
-    }
-
-    public void setEmail(String email) {
-      this.email = email;
-    }
+    public String id;
+    public String username;
+    public String email;
   }
 }

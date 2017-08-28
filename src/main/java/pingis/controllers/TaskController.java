@@ -2,7 +2,6 @@ package pingis.controllers;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.slf4j.Logger;
@@ -12,20 +11,16 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Challenge;
 import pingis.entities.ChallengeType;
 import pingis.entities.CodeStatus;
-import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
-import pingis.entities.User;
 import pingis.entities.sandbox.Submission;
 import pingis.services.ChallengeService;
 import pingis.services.EditorService;
@@ -36,7 +31,6 @@ import pingis.services.sandbox.SandboxService;
 import pingis.utils.CodeStub;
 import pingis.utils.CodeStubBuilder;
 import pingis.utils.EditorTabData;
-import pingis.utils.JavaSyntaxChecker;
 import pingis.utils.TestStubBuilder;
 
 @Controller
@@ -45,15 +39,15 @@ public class TaskController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
-  ChallengeService challengeService;
+  private ChallengeService challengeService;
   @Autowired
-  TaskService taskService;
+  private TaskService taskService;
   @Autowired
-  EditorService editorService;
+  private EditorService editorService;
   @Autowired
-  TaskInstanceService taskInstanceService;
+  private TaskInstanceService taskInstanceService;
   @Autowired
-  UserService userService;
+  private UserService userService;
 
   @Autowired
   private SandboxService sandboxService;

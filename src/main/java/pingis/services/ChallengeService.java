@@ -1,16 +1,13 @@
 package pingis.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pingis.entities.Challenge;
 import pingis.entities.CodeStatus;
-import pingis.entities.Task;
 import pingis.entities.TaskInstance;
-import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
 
@@ -81,7 +78,7 @@ public class ChallengeService {
 
   public Challenge getRandomLiveChallenge(User user) {
     List<Challenge> liveChallenges = findAll().stream()
-        .filter(e -> e.getIsOpen())
+        .filter(Challenge::getIsOpen)
         .filter(e -> e.getSecondPlayer() == null)
         .filter(e -> e.getAuthor() != user)
         .collect(Collectors.toList());

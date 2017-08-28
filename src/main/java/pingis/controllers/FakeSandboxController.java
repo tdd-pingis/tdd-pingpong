@@ -20,7 +20,7 @@ import pingis.services.sandbox.SubmissionResponse;
 @Profile("dev")
 public class FakeSandboxController {
 
-  private Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
   private FakeSandboxRestService fakeSandboxRestService;

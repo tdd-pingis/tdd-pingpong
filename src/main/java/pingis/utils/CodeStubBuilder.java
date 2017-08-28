@@ -5,10 +5,10 @@ import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
 import com.github.javaparser.ast.comments.LineComment;
 
 public class CodeStubBuilder {
-  protected final CompilationUnit compilationUnit;
-  protected final ClassOrInterfaceDeclaration clazz;
-  protected String className;
-  protected String filename;
+  final CompilationUnit compilationUnit;
+  final ClassOrInterfaceDeclaration clazz;
+  String className;
+  String filename;
 
   public CodeStubBuilder(String className) {
     compilationUnit = new CompilationUnit();

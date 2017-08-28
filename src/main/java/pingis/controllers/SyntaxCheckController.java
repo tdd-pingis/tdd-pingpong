@@ -15,7 +15,7 @@ import pingis.utils.SyntaxError;
  * @author authority
  */
 @Controller
-public class SyntaxCheckController {
+class SyntaxCheckController {
 
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 

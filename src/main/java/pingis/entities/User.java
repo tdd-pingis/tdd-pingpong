@@ -14,16 +14,16 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class User {
 
-  public static final int POINTS_MIN_VALUE = 1;
+  private static final int POINTS_MIN_VALUE = 1;
 
   @Id
   @NotNull
   private long id;
 
   @NotNull
-  public String name;
-  public String email;
-  public boolean administrator;
+  private String name;
+  private String email;
+  private boolean administrator;
 
   @NotNull
   @Min(POINTS_MIN_VALUE)
@@ -137,9 +137,7 @@ public class User {
   public int hashCode() {
     final int[] hashMultipliers = {3, 79};
     final int hashBits = 32;
-    final int hash =
-        hashMultipliers[0] * hashMultipliers[1] + (int) (this.id ^ (this.id >>> hashBits));
-    return hash;
+    return hashMultipliers[0] * hashMultipliers[1] + (int) (this.id ^ (this.id >>> hashBits));
   }
 
   @Override
@@ -151,10 +149,7 @@ public class User {
       return false;
     }
     final User other = (User) obj;
-    if (this.id != other.id) {
-      return false;
-    }
-    return true;
+    return this.id == other.id;
   }
 
   public void addAuthoredChallenge(Challenge c) {

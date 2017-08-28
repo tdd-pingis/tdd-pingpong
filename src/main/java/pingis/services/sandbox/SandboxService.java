@@ -20,6 +20,7 @@ import pingis.entities.sandbox.ResultStatus;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
 import pingis.entities.sandbox.TestOutput;
+import pingis.entities.sandbox.TestResult;
 import pingis.repositories.sandbox.SubmissionRepository;
 import pingis.services.TaskInstanceService;
 
@@ -112,7 +113,7 @@ public class SandboxService {
       message.setSuccess(type == TaskType.IMPLEMENTATION);
       message.setTests(
           top.getTestResults().stream()
-              .filter(r -> r.isPassed()).collect(Collectors.toList()));
+              .filter(TestResult::isPassed).collect(Collectors.toList()));
 
     } else if (status == ResultStatus.TESTS_FAILED) {
       message.setSuccess(type == TaskType.TEST);

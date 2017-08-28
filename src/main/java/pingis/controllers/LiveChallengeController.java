@@ -1,7 +1,5 @@
 package pingis.controllers;
 
-import java.util.List;
-import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +13,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.view.RedirectView;
 import pingis.entities.Challenge;
 import pingis.entities.ChallengeType;
-import pingis.entities.CodeStatus;
 import pingis.entities.Realm;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
@@ -36,15 +33,15 @@ public class LiveChallengeController {
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
-  ChallengeService challengeService;
+  private ChallengeService challengeService;
   @Autowired
-  TaskService taskService;
+  private TaskService taskService;
   @Autowired
-  TaskInstanceService taskInstanceService;
+  private TaskInstanceService taskInstanceService;
   @Autowired
-  UserService userService;
+  private UserService userService;
   @Autowired
-  GameplayService gameplayService;
+  private GameplayService gameplayService;
 
   @RequestMapping(value = "/newchallenge")
   public String newChallenge(Model model) {
@@ -108,7 +105,7 @@ public class LiveChallengeController {
   }
 
   @RequestMapping("/playChallenge/{challengeId}")
-  public RedirectView playChallenge(RedirectAttributes redirectAttributes,
+  private RedirectView playChallenge(RedirectAttributes redirectAttributes,
       @PathVariable long challengeId) {
     logger.debug("Playing challenge");
 
@@ -191,7 +188,7 @@ public class LiveChallengeController {
     logger.debug("Request to /newArcadeSession");
 
     User player = userService.getCurrentUser();
-    Realm currentRealm = null;
+    Realm currentRealm;
     try {
       logger.debug("Trying to get realm: {}", realm);
       currentRealm = Realm.valueOf(realm.toUpperCase());
@@ -203,7 +200,7 @@ public class LiveChallengeController {
     return playArcade(redirectAttributes, challenge);
   }
 
-  public RedirectView playLive(Challenge currentChallenge,
+  private RedirectView playLive(Challenge currentChallenge,
       RedirectAttributes redirectAttributes) {
     logger.debug("Playing live");
 
@@ -323,7 +320,7 @@ public class LiveChallengeController {
     return newTaskInstance(nextTask, testTaskInstance, redirectAttributes);
   }
 
-  public RedirectView newTaskInstance(Task task,
+  private RedirectView newTaskInstance(Task task,
       TaskInstance testTaskInstance,
       RedirectAttributes redirectAttributes) {
     logger.debug("Creating new task instance");

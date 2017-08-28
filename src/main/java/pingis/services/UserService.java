@@ -19,18 +19,15 @@ public class UserService {
   private final Logger logger = Logger.getLogger(UserService.class);
 
   @Autowired
-  public UserService(UserRepository userRepository) {
+  private UserService(UserRepository userRepository) {
     this.userRepository = userRepository;
   }
 
 
-  public User findOne(Long userId) {
+  private User findOne(Long userId) {
     // Implement validation here
     Optional<User> opt = userRepository.findById(userId);
-    if (opt.isPresent()) {
-      return opt.get();
-    }
-    return null;
+    return opt.orElse(null);
   }
 
   public User save(User user) {

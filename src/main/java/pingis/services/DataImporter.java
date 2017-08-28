@@ -35,10 +35,10 @@ public class DataImporter {
   private UserRepository userRepository;
   private SubmissionRepository submissionRepository;
   private TaskInstanceRepository taskInstanceRepository;
-  private HashMap<String, User> users = new LinkedHashMap<>();
-  private HashMap<String, Challenge> challenges = new HashMap<>();
-  private ArrayList<Task> tasks = new ArrayList<>();
-  private ArrayList<TaskInstance> taskInstances = new ArrayList<>();
+  private final HashMap<String, User> users = new LinkedHashMap<>();
+  private final HashMap<String, Challenge> challenges = new HashMap<>();
+  private final ArrayList<Task> tasks = new ArrayList<>();
+  private final ArrayList<TaskInstance> taskInstances = new ArrayList<>();
 
   public enum UserType {
     TMC_MODEL_USER("admin", 0, true),
@@ -49,13 +49,13 @@ public class DataImporter {
     private final long id;
     private final boolean admin;
 
-    private UserType(String login, long id, boolean admin) {
+    UserType(String login, long id, boolean admin) {
       this.login = login;
       this.id = id;
       this.admin = admin;
     }
 
-    public long getId() {
+    long getId() {
       return id;
     }
 
@@ -63,7 +63,7 @@ public class DataImporter {
       return login;
     }
 
-    public boolean isAdmin() {
+    boolean isAdmin() {
       return admin;
     }
   }
@@ -73,8 +73,7 @@ public class DataImporter {
                       TaskRepository taskRepository,
                       UserRepository userRepository,
                       TaskInstanceRepository taskInstanceRepository,
-                      SubmissionRepository submissionRepository1)
-                      throws Exception {
+                      SubmissionRepository submissionRepository1) {
 
     this.challengeRepository = challengeRepository;
     this.taskRepository = taskRepository;
@@ -87,7 +86,7 @@ public class DataImporter {
   protected DataImporter() {
   }
 
-  public void initializeDatabase() throws Exception {
+  public void initializeDatabase() {
     Io io = new DataloaderIo();
     readData(io);
     generateUsers();
@@ -200,7 +199,7 @@ public class DataImporter {
     } else {
       task = createTask(TaskType.IMPLEMENTATION, author, taskObject, codeStub, challenge);
     }
-    String modelImp = "";
+    String modelImp;
     JSONArray modelImpArray = taskObject.getJSONArray("modelimplementation");
     modelImp = assembleString(modelImpArray);
     TaskInstance taskInstance = createTaskInstance(author, modelImp, task);
@@ -258,7 +257,7 @@ public class DataImporter {
     return concatenated;
   }
 
-  public void populateDatabase() {
+  private void populateDatabase() {
     for (User user : this.users.values()) {
       userRepository.save(user);
     }
