@@ -59,16 +59,26 @@
                   <h3 class="header challenge-col-header">Started challenges</h3>
                   <div class="well challenge-col-well">Basic Well</div>
                   <div th:if="${#maps.isEmpty(myTasksInChallenges)}" >No ongoing solo challenges</div>
-                  <div th:each="challenge : ${myTasksInChallenges}" class="row challengeitem">
-                     <a th:href="'/playChallenge/' + ${challenge.key.id}" th:inline="text"><h3 class="header challengeitem-header">[[${challenge.key.name}]]</h3></a> <p class="lead challenge-progress-done" th:inline="text">[[${#lists.size(challenge.value)}]] / [[${#lists.size(challenge.key.tasks) / 2}]] &nbsp;<strong>done</strong></p>
+                  <div th:each="challenge : ${myTasksInChallenges}">
+                    <a th:href="'/playChallenge/' + ${challenge.key.id}" th:inline="text">
+                      <div class="row challengeitem">
+                        <h3 class="header challengeitem-header">[[${challenge.key.name}]]</h3>
+                        <p class="lead challenge-progress-done" th:inline="text">[[${#lists.size(challenge.value)}]] / [[${#lists.size(challenge.key.tasks) / 2}]] &nbsp;<strong>done</strong></p>
+                      </div>
+                    </a>
                   </div>
                </div>
                <div class="col-md-6">
-                  <div class="header challenge-col-header">Available challenges</div>
+                  <h3 class="header challenge-col-header">Available challenges</h3>
                   <div class="well challenge-col-well">New challenges are available.</div>
                   <div th:if="${availableChallenges.empty}">No open challenges</div>
-                  <div th:each="challenge : ${availableChallenges}" class="row challengeitem">
-                     <a th:href="'/startChallenge/' + ${challenge.id}" th:id="'open-challenge-'+${challenge.name}" ><h3 class="header challengeitem-header" th:inline="text">[[${challenge.name}]]</h3></a> <p th:inline="text" class="lead challenge-progress-done">Not started </p>
+                  <div th:each="challenge : ${availableChallenges}">
+                    <a th:href="'/startChallenge/' + ${challenge.id}" th:id="'open-challenge-'+${challenge.name}" >
+                      <div class="row challengeitem">
+                       <h3 class="header challengeitem-header" th:inline="text">[[${challenge.name}]]</h3>
+                       <p th:inline="text" class="lead challenge-progress-done">Not started </p>
+                      </div>
+                    </a>
                   </div>
                </div>
             </div>
