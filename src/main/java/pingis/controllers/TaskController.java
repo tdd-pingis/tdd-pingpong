@@ -138,53 +138,6 @@ public class TaskController {
     return "OK";
   }
 
-  @RequestMapping("/randomTask")
-  public RedirectView randomTask(RedirectAttributes redirectAttributes) {
-    logger.debug("Request to /randomTask");
-
-    Challenge randomChallenge = challengeService.getRandomChallenge();
-    redirectAttributes.addAttribute("challengeId", randomChallenge.getId());
-    return new RedirectView("/randomTask/{challengeId}");
-  }
-
-  @RequestMapping("/randomTask/{challengeId}")
-  public RedirectView randomTaskInChallenge(@PathVariable long challengeId,
-      RedirectAttributes redirectAttributes) {
-    logger.debug("Request to /randomTask/{}", challengeId);
-
-    Challenge currentChallenge = challengeService.findOne(challengeId);
-    User currentUser = userService.getCurrentUser();
-
-    if (taskService.noNextTaskAvailable(currentChallenge, currentUser)) {
-      logger.debug("No next task available, redirecting to /user");
-      return new RedirectView("/user");
-    }
-
-    Long nextTaskInstanceId;
-    Task nextTask;
-
-    // If the next tasktype is test AND there are test-tasks available
-    // OR
-    // (the next random tasktype is impl, but) there are no impl-tasks left
-    if ((taskService.getRandomTaskType().equals(TaskType.TEST)
-        && taskService.hasNextTestTaskAvailable(currentChallenge, currentUser))
-        || !taskService.hasNextImplTaskAvailable(currentChallenge, currentUser)) {
-      logger.debug("Selecting random test task");
-      nextTask = taskService.getRandomTestTask(currentChallenge, currentUser);
-      nextTaskInstanceId = 0L;
-    } else {
-      logger.debug("Selecting random implementation task");
-      nextTask = taskService.getRandomImplTask(currentChallenge, currentUser);
-      nextTaskInstanceId = taskService.getRandomTaskInstance(currentChallenge,
-          currentUser, nextTask).getId();
-    }
-
-    redirectAttributes.addAttribute("taskId", nextTask.getId());
-    redirectAttributes.addAttribute("testTaskInstanceId", nextTaskInstanceId);
-
-    return new RedirectView("/newTaskInstance");
-  }
-
   private Submission submitToTmc(TaskInstance taskInstance, Challenge challenge,
       String submissionCode)
       throws IOException, ArchiveException {
