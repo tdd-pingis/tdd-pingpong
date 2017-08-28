@@ -12,6 +12,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pingis.entities.Challenge;
+import pingis.entities.CodeStatus;
 import pingis.entities.TaskInstance;
 import pingis.entities.User;
 import pingis.services.ChallengeService;
@@ -54,6 +55,7 @@ public class UserController {
 
     user.getTaskInstances().stream()
         .filter(e -> !e.getChallenge().getIsOpen())
+        .filter(e -> e.getStatus().equals(CodeStatus.DONE))
         .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
 
     List<Challenge> availableChallenges = challengeService.findAll().stream()
