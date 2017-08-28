@@ -6,12 +6,6 @@ Feature: Live Challenge
     When User inputs and submits test code
     Then the feedback page is shown
 
-  Scenario: User cannot submit an empty task
-    Given User is logged in
-    And User has successfully submitted new challenge with first task pair
-    When User inputs nothing and submits the task pair
-    Then the implement next task page is shown
-
   Scenario: User can successfully create the first pair of tests for live challenge
     Given User is logged in
     And User creates a new Live challenge

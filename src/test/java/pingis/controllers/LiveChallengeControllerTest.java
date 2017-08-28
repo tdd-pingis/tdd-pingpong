@@ -121,13 +121,15 @@ public class LiveChallengeControllerTest {
     Long taskInstanceId = 123L;
     Challenge challenge = Mockito.mock(Challenge.class);
     when(challenge.getName()).thenReturn("haaste");
-    User user = Mockito.mock(User.class);
+    when(challenge.getType()).thenReturn(ChallengeType.ARCADE);
     TaskInstance taskInstance = Mockito.mock(TaskInstance.class);
     when(taskInstance.getId()).thenReturn(taskInstanceId);
     when(challengeService.findOne(any()))
         .thenReturn(challenge);
     when(userService.getCurrentUser()).thenReturn(user);
+    
     Task task = Mockito.mock(Task.class);
+    
     when(taskInstanceService.getUnfinishedInstance(any(), any())).thenReturn(taskInstance);
 
     TaskPair taskPairFromForm = new TaskPair("validName", "validName", "validDesc",

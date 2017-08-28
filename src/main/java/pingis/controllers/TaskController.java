@@ -81,16 +81,16 @@ public class TaskController {
     model.addAttribute("taskInstanceId", taskInstanceId);
 
     Map<String, EditorTabData> editorContents = editorService.generateEditorContents(taskInstance);
-    EditorTabData tab1 = editorContents.get("editor1");
-    EditorTabData tab2 = editorContents.get("editor2");
-
-    model.addAttribute("submissionCodeStub", tab1.code);
-    model.addAttribute("staticCode", tab2.code);
 
     boolean isTest = taskInstance.getTask().getType() == TaskType.TEST;
+    EditorTabData submissionTab = editorContents.get(isTest ? "test" : "impl");
+    EditorTabData staticTab = editorContents.get(isTest ? "impl" : "test");
 
-    model.addAttribute("submissionTabFileName", isTest ? tab1.title : tab2.title);
-    model.addAttribute("staticTabFileName", isTest ? tab2.title : tab1.title);
+    model.addAttribute("submissionCodeStub", submissionTab.code);
+    model.addAttribute("submissionTabFileName", submissionTab.title);
+
+    model.addAttribute("staticCode", staticTab.code);
+    model.addAttribute("staticTabFileName", staticTab.title);
 
     logger.debug("entering editor view");
     return "task";
@@ -136,53 +136,6 @@ public class TaskController {
 
     logger.debug("Rating ok!");
     return "OK";
-  }
-
-  @RequestMapping("/randomTask")
-  public RedirectView randomTask(RedirectAttributes redirectAttributes) {
-    logger.debug("Request to /randomTask");
-
-    Challenge randomChallenge = challengeService.getRandomChallenge();
-    redirectAttributes.addAttribute("challengeId", randomChallenge.getId());
-    return new RedirectView("/randomTask/{challengeId}");
-  }
-
-  @RequestMapping("/randomTask/{challengeId}")
-  public RedirectView randomTaskInChallenge(@PathVariable long challengeId,
-      RedirectAttributes redirectAttributes) {
-    logger.debug("Request to /randomTask/{}", challengeId);
-
-    Challenge currentChallenge = challengeService.findOne(challengeId);
-    User currentUser = userService.getCurrentUser();
-
-    if (taskService.noNextTaskAvailable(currentChallenge, currentUser)) {
-      logger.debug("No next task available, redirecting to /user");
-      return new RedirectView("/user");
-    }
-
-    Long nextTaskInstanceId;
-    Task nextTask;
-
-    // If the next tasktype is test AND there are test-tasks available
-    // OR
-    // (the next random tasktype is impl, but) there are no impl-tasks left
-    if ((taskService.getRandomTaskType().equals(TaskType.TEST)
-        && taskService.hasNextTestTaskAvailable(currentChallenge, currentUser))
-        || !taskService.hasNextImplTaskAvailable(currentChallenge, currentUser)) {
-      logger.debug("Selecting random test task");
-      nextTask = taskService.getRandomTestTask(currentChallenge, currentUser);
-      nextTaskInstanceId = 0L;
-    } else {
-      logger.debug("Selecting random implementation task");
-      nextTask = taskService.getRandomImplTask(currentChallenge, currentUser);
-      nextTaskInstanceId = taskService.getRandomTaskInstance(currentChallenge,
-          currentUser, nextTask).getId();
-    }
-
-    redirectAttributes.addAttribute("taskId", nextTask.getId());
-    redirectAttributes.addAttribute("testTaskInstanceId", nextTaskInstanceId);
-
-    return new RedirectView("/newTaskInstance");
   }
 
   private Submission submitToTmc(TaskInstance taskInstance, Challenge challenge,

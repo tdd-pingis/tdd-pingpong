@@ -84,6 +84,7 @@ public class SandboxService {
     ResultMessage message = createMessage(submission);
 
     if (message.isSuccess()) {
+      logger.info("Marking taskinstance as done.");
       taskInstanceService.markAsDone(submission.getTaskInstance());
     }
 

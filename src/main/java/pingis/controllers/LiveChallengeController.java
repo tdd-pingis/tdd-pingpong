@@ -108,9 +108,40 @@ public class LiveChallengeController {
     }
 
     logger.debug("Generating new task pair and instance");
+    
+    int highestIndex = taskService.findAllByChallenge(currentChallenge).size() / 2;
+    logger.info("Challenge type: " + currentChallenge.getType());
+    logger.info("Highest index: " + highestIndex);
+    String testStub = "";
+    String implStub = "";
 
-    String implStub = new CodeStubBuilder(currentChallenge.getName()).build().code;
-    String testStub = new TestStubBuilder(implStub).withTestImports().build().code;
+    // Autogenerate code stubs
+    if (currentChallenge.getType() == ChallengeType.MIXED
+        || currentChallenge.getType() == ChallengeType.ARCADE
+        || (currentChallenge.getType() == ChallengeType.PROJECT
+        && highestIndex == 0)) {
+      logger.info("generating code stubs");
+      implStub = new CodeStubBuilder(currentChallenge.getName()).build().code;
+      testStub = new TestStubBuilder(implStub).withTestImports().build().code;
+    } else {
+      User player = userService.getCurrentUser();
+      User otherPlayer = currentChallenge.getAuthor().equals(player)
+          ? currentChallenge.getSecondPlayer() : currentChallenge.getAuthor();
+      // Challenge is a project with at least one existing task instance pair.
+      // Inheriting code from previous instance pair.
+      logger.info("inheriting code stubs from previous task pair");
+      testStub = taskInstanceService.getByTaskAndUser(
+          taskService.findByChallengeAndTypeAndIndex(currentChallenge, TaskType.TEST, highestIndex),
+          otherPlayer)
+          .getCode();
+      implStub = taskInstanceService.getByTaskAndUser(
+          taskService.findByChallengeAndTypeAndIndex(currentChallenge,
+              TaskType.IMPLEMENTATION,
+              highestIndex),
+          player)
+          .getCode();
+    }
+
 
     taskpair.setImplementationCodeStub(implStub);
     taskpair.setTestCodeStub(testStub);
@@ -290,6 +321,7 @@ public class LiveChallengeController {
 
     Task nextTask = taskService.nextPracticeTask(challenge);
     if (nextTask == null) {
+      // User has completed the practice challenge. TODO: Award points?
       logger.debug("All tasks done");
       return new RedirectView("/challengeFinished/" + challenge.getId());
     }
