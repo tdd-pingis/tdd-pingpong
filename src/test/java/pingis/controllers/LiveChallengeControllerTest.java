@@ -126,10 +126,7 @@ public class LiveChallengeControllerTest {
     when(taskInstance.getId()).thenReturn(taskInstanceId);
     when(challengeService.findOne(any()))
         .thenReturn(challenge);
-    when(userService.getCurrentUser()).thenReturn(user);
-    
-    Task task = Mockito.mock(Task.class);
-    
+
     when(taskInstanceService.getUnfinishedInstance(any(), any())).thenReturn(taskInstance);
 
     TaskPair taskPairFromForm = new TaskPair("validName", "validName", "validDesc",
