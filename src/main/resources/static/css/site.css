@@ -55,4 +55,8 @@
   width: 350px;
 }
 
+textarea {
+  resize: none;
+}
+
 #stars { color: #ee8b2d;}
