@@ -83,7 +83,8 @@ public class LiveChallengeController {
   }
 
   @RequestMapping(value = "/newtaskpair/{challengeId}", method = RequestMethod.GET)
-  public String newTaskPair(@PathVariable Long challengeId, @ModelAttribute TaskPair taskpair, Model model) {
+  public String newTaskPair(@PathVariable Long challengeId, @ModelAttribute TaskPair taskpair,
+      Model model) {
     logger.debug("Displaying new task pair -form.");
     logger.debug("Currentchallenge ID: {}",  challengeId);
     model.addAttribute("challenge", challengeService.findOne(challengeId));

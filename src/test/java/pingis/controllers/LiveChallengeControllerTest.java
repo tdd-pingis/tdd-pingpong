@@ -334,7 +334,7 @@ public class LiveChallengeControllerTest {
     mvc.perform(get("/playChallenge/" + challengeId)
         .with(csrf()))
         .andExpect(status().is3xxRedirection())
-        .andExpect(redirectedUrl("/newtaskpair/"+challengeId));
+        .andExpect(redirectedUrl("/newtaskpair/" + challengeId));
   }
 
   @Test
