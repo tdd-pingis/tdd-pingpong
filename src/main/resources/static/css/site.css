@@ -92,6 +92,18 @@ textarea {
 
 .challenge-col-well {
   opacity: 0.6;
+  width: 35vw; 
+  border-radius: 2px;
+  font-size: 16px;
+  color: #FFFFFF;
+  border-color: #5E6055;
+  background-color: #5E6055;
+  box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.44);
+}
+
+.history-col-well {
+  opacity: 0.6;
+  width: 70vw; 
   border-radius: 2px;
   font-size: 16px;
   color: #FFFFFF;

@@ -139,8 +139,8 @@
 
          <div id="history-tab" class="tab-pane fade">
             
-            <div th:if="${history.empty}" class="well challenge-col-well">None yet. Go on and <strong>play a little!</strong></div>
-            <div th:unless="${history.empty}" class="well challenge-col-well">Your tasks, from the most recent to the oldest.</div>
+            <div th:if="${history.empty}" class="well history-col-well">None yet. Go on and <strong>play a little!</strong></div>
+            <div th:unless="${history.empty}" class="well history-col-well">Your tasks, from the most recent to the oldest.</div>
             <div th:each="taskInst : ${history}" class="div task-history-item">
                <p th:inline="text" class="history-header"><strong>Task:</strong> [[${taskInst.task.name}]]</p>
                <p th:inline="text" class="task-history-infotext"><strong>in challenge:</strong> [[${taskInst.task.challenge.name}]]</p>
