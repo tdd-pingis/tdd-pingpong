@@ -1,8 +1,8 @@
 var editorContainerSizeDifference = $(".tab-content").width() - $(".ace_editor").width();
 function resizeOverlay() {
-	$(".overlay").width($(".tab-content").width() - editorContainerSizeDifference)
+	$(".overlay").width($(".tab-content").width() - editorContainerSizeDifference);
 }
 
-$(document).ready(function() { resizeOverlay(); });
-$(window).resize(function() { resizeOverlay(); });
+$(document).ready(resizeOverlay);
+$(window).resize(resizeOverlay);
 
