@@ -1,16 +1,15 @@
 package pingis.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import pingis.entities.Challenge;
 import pingis.entities.CodeStatus;
-import pingis.entities.Task;
 import pingis.entities.TaskInstance;
-import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
 
@@ -96,5 +95,26 @@ public class ChallengeService {
     return challenge.getAuthor().equals(player)
             || (challenge.getSecondPlayer() != null
             && challenge.getSecondPlayer().equals(player));
+  }
+  
+  public List<Challenge> getAvailableChallenges(MultiValueMap<Challenge, TaskInstance> 
+                                              myTasksInChallenges) {
+    List<Challenge> availableChallenges = findAll().stream()
+            .filter(e -> !e.getIsOpen())
+            .filter(e -> e.getLevel() <= userService.levelOfCurrentUser())
+            .filter(e -> !myTasksInChallenges.containsKey(e))
+            .collect(Collectors.toList());
+    
+    return availableChallenges;
+  }
+  
+  public MultiValueMap<Challenge, TaskInstance> getCompletedTaskInstancesByChallenge() {
+    MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
+    userService.getCurrentUser().getTaskInstances().stream()
+            .filter(e -> !e.getChallenge().getIsOpen())
+            .filter(e -> e.getStatus().equals(CodeStatus.DONE))
+            .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
+
+    return myTasksInChallenges;
   }
 }

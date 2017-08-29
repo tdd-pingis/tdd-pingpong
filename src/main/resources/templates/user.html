@@ -31,7 +31,6 @@
          </div>
       </div>
 
-
       <div class="container dashboard-bottom-div">
          <ul class="nav nav-tabs"> <!--  tab -->
             <li class="active"><a data-toggle="tab" href="#arcade-tab">Arcade</a></li>
@@ -46,75 +45,116 @@
             <div th:if="${message != null}" th:text="${message}"></div> <!-- still needed? there is new error box which supports multiple error-messages -->
             <div class="challenge_list row">
                <div class="col-md-6">
-                  <h3 class="header challenge-col-header">Continue</h3>
-                  <div class="well challenge-col-well">You have one Task still in progress. Continue where you left off.</div>
-                  <div th:if="${unfinishedTaskinstance == null}" >You have no Tasks in progress. Pick a new challenge.</div>
-                  <div th:unless="${unfinishedTaskinstance == null}" class="row challengeitem">
-                     <a th:href="'/nextTask/' + ${unfinishedTaskinstance.task.challenge.id}" th:inline="text"><h3 class="header challengeitem-header">[[${unfinishedTaskinstance.task.challenge.id}]]</h3></a>
-                     <p class="lead challenge-progress-number" th:inline="text">[[${#lists.size(unfinishedTaskinstance.task.challenge.tasks)}]] / [[${#lists.size(unfinishedTaskinstance.task.challenge.tasks)} / 2]]</p>
-                     <p class="challenge-progress-done">done</p>
+                  <div th:unless="${unfinishedTaskinstance == null}" class="divider">
+                     <h3 class="header challenge-col-header">Continue</h3>
+                     <div class="well challenge-col-well">You have one Task still in progress. Continue where you left off.</div>
+                     <div th:unless="${unfinishedTaskinstance == null}" class="row challengeitem">
+                        <a th:href="'/nextTask/' + ${unfinishedTaskinstance.task.challenge.id}" th:inline="text"><h3 class="header challengeitem-header">[[${unfinishedTaskinstance.task.challenge.id}]]</h3></a>
+                        <p class="lead challenge-progress-number" th:inline="text">[[${#lists.size(unfinishedTaskinstance.task.challenge.tasks)}]] / [[${#lists.size(unfinishedTaskinstance.task.challenge.tasks)} / 2]]</p>
+                        <p class="challenge-progress-done">done</p>
+                     </div>
                   </div>
-
-                  <p>Here you can select a challenge and practice by doing tasks at your own pace.</p>
-                  <hr>
-
-                  <h3 class="header challenge-col-header">Started challenges</h3>
-                  <div class="well challenge-col-well">Basic Well</div>
-                  <div th:if="${#maps.isEmpty(myTasksInChallenges)}" >No ongoing solo challenges</div>
-                  <div th:each="challenge : ${myTasksInChallenges}">
-                    <a th:href="'/playChallenge/' + ${challenge.key.id}" th:inline="text">
-                      <div class="row challengeitem">
-                        <h3 class="header challengeitem-header">[[${challenge.key.name}]]</h3>
-                        <p class="lead challenge-progress-done" th:inline="text">[[${#lists.size(challenge.value)}]] / [[${#lists.size(challenge.key.tasks) / 2}]] &nbsp;<strong>done</strong></p>
-                      </div>
-                    </a>
-                  </div>
+                  
+                  <h3 class="header challenge-col-header" >Play Live Challenge</h3>
+                  <div class="well challenge-col-well">You get to build a whole new challenge new task pair at a time. Consequent tasks/assignment can build upon one another and you and your opponent will be both locked in until the challenge is closed.</div>
+                  
+                  <a href="/newchallenge">
+                     <div th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CREATE}" class="row challengeitem challengeitem-live" data-toggle="tooltip" data-placement="right" title="Start a new turn-based game against a real opponent. Minimum length of live challenge is 2 tasks. Limit: you can have only one open live challenge at a time.">
+                        <h3 class="header challengeitem-header" th:inline="text">Live Challenge</h3><p th:inline="text" class="lead challenge-progress-done">Start New</p>
+                     </div>
+                  </a>
+                  
+                  <a th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).JOIN}" th:href="'/playChallenge/' + ${liveChallenge.id}">
+                     <div  data-toggle="tooltip" data-placement="right" title="Join a turn-based game against a real opponent." class="row challengeitem challengeitem-live">
+                        <h3 class="header challengeitem-header" th:inline="text">Live Challenge</h3><p th:inline="text" class="lead challenge-progress-done">Join</p>
+                     </div>
+                  </a> 
+                  
+                  <a th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CONTINUE}" th:href="'/playChallenge/' + ${liveChallenge.id}">
+                     <div data-toggle="tooltip" data-placement="right" title="Continue turn-based game against a real opponent" class="row challengeitem challengeitem-live">
+                        <h3 class="header challengeitem-header" th:inline="text">Live Challenge</h3><p th:inline="text" class="lead challenge-progress-done">Continue</p>
+                     </div>
+                  </a>
                </div>
+               
                <div class="col-md-6">
-                  <h3 class="header challenge-col-header">Available challenges</h3>
-                  <div class="well challenge-col-well">New challenges are available.</div>
-                  <div th:if="${availableChallenges.empty}">No open challenges</div>
-                  <div th:each="challenge : ${availableChallenges}">
-                    <a th:href="'/startChallenge/' + ${challenge.id}" th:id="'open-challenge-'+${challenge.name}" >
-                      <div class="row challengeitem">
-                       <h3 class="header challengeitem-header" th:inline="text">[[${challenge.name}]]</h3>
-                       <p th:inline="text" class="lead challenge-progress-done">Not started </p>
-                      </div>
-                    </a>
+                  <h3 class="header challenge-col-header" >Play Arcade</h3>
+                  <div class="well challenge-col-well" data-toggle="tooltip" data-placement="left" title="'In Arcade you will get to play tasks against other live players. '
+                     'Here tasks and opponents are picked randomly from the live arcade pool. It is highly likely that on each task/assignment you will get a different opponent. '
+                     'The flow is simple: '
+                     '1. Write a new assignment '
+                     '2. Test the assignment '
+                     '3. Implement someone else's test '
+                     '4. Repeat! '
+                     'You can choose from three different realms according to your preference: Beginner, Object oriented or Data Structures'">
+                     <p>Take part in <strong>Live Arcade</strong> game.</p>  
                   </div>
+                  <a href="/playArcade?realm=BEGINNER">
+                     <div class="row challengeitem challengeitem-arcade-realm1">
+                        <h3 class="header challengeitem-header" th:inline="text">Arcade: Beginner</h3> <p th:inline="text" class="lead challenge-progress-done">Play</p>
+                     </div>
+                  </a>
+                  <a href="/playArcade?realm=OBJECTORIENTED">
+                     <div class="row challengeitem challengeitem-arcade-realm2">
+                        <h3 class="header challengeitem-header" th:inline="text">Arcade: Object Oriented</h3> <p th:inline="text" class="lead challenge-progress-done">Play</p>
+                     </div>
+                  </a>
+                  <a href="/playArcade?realm=DATASTRUCTURES">
+                     <div class="row challengeitem challengeitem-arcade-realm3">
+                        <h3 class="header challengeitem-header" th:inline="text">Arcade: Data Structures</h3> <p th:inline="text" class="lead challenge-progress-done">Play</p>
+                     </div>
+                  </a> 
                </div>
             </div>
          </div>
 
          <!-- Practice challenges tab -->
          <div id="practice-tab" class="tab-pane fade">
+         
           <div class="challenge_list row">
             <div class="col-md-6">
+               <h3 class="header challenge-col-header">Started challenges</h3>
+               <div th:if="${#maps.isEmpty(myTasksInChallenges)}" class="well challenge-col-well">No ongoing challenges</div>
+               <div th:each="challenge : ${myTasksInChallenges}">
+                  <a th:href="'/playChallenge/' + ${challenge.key.id}" th:inline="text">
+                     <div class="row challengeitem">
+                        <h3 class="header challengeitem-header">[[${challenge.key.name}]]</h3>
+                        <p class="lead challenge-progress-done" th:inline="text">[[${#lists.size(challenge.value)}]] / [[${#lists.size(challenge.key.tasks) / 2}]] &nbsp;<strong>done</strong></p>
+                     </div>
+                  </a>
+               </div>
+            </div>
+            <div class="col-md-6">
+               <p>Here you can select a challenge and practice by doing tasks at your own pace.</p>
+               <hr>
                <div class="header challenge-col-header">Available challenges</div>
-               <div class="well challenge-col-well">New challenges are available.</div>
+               <div class="well challenge-col-well">New practice challenges are available.</div>
                <div th:if="${availableChallenges.empty}">No open challenges</div>
                <div th:each="challenge : ${availableChallenges}" class="row challengeitem">
                   <a th:href="'/startChallenge/' + ${challenge.id}" th:id="'open-challenge-'+${challenge.name}" ><h3 class="header challengeitem-header" th:inline="text">[[${challenge.name}]]</h3></a> <p th:inline="text" class="lead challenge-progress-done">Not started </p>
                </div>
             </div>
-            <div class="col-md-6">
-              <a th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CREATE}" href="/newchallenge" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Create New Live Challenge</a>
-              <a th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).JOIN}" th:href="'/playChallenge/' + ${liveChallenge.id}" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a turn-based game against a real opponent">Join Live Challenge</a>
-              <a th:if="${liveChallengeType == T(pingis.controllers.UserController.LiveType).CONTINUE}" th:href="'/playChallenge/' + ${liveChallenge.id}" class="btn btn-info" data-toggle="tooltip" data-placement="right" title="Continue your turn-based game against a real opponent">Continue Live Challenge</a>
-              <a href="/randomTask" class="btn btn-success" data-toggle="tooltip" data-placement="right" title="Play a random Task from a random Challenge">Give me a random task</a>
-              <a href="/newArcadeChallenge" class="btn btn-primary">Create new arcade challenge</a>
-              <a href="/playArcade?realm=BEGINNER" class="btn btn-primary">Play arcade challenge</a>
-            </div>
           </div>
          </div>
 
          <div id="history-tab" class="tab-pane fade">
-           <!-- TODO: add history -->
+            
+            <div th:if="${history.empty}" class="well history-col-well">None yet. Go on and <strong>play a little!</strong></div>
+            <div th:unless="${history.empty}" class="well history-col-well">Your tasks, from the most recent to the oldest.</div>
+            <div th:each="taskInst : ${history}" class="div task-history-item">
+               <p th:inline="text" class="history-header"><strong>Task:</strong> [[${taskInst.task.name}]]</p>
+               <p th:inline="text" class="task-history-infotext"><strong>in challenge:</strong> [[${taskInst.task.challenge.name}]]</p>
+               <p th:if="${taskInst.status == T(pingis.entities.CodeStatus).IN_PROGRESS}" th:inline="text" class="task-history-infotext"><strong>Status: </strong> In progress </p>
+               <p th:if="${taskInst.status == T(pingis.entities.CodeStatus).DONE}" th:inline="text" class="task-history-infotext"><strong>Status: </strong>Done</p>
+               <p th:if="${taskInst.status == T(pingis.entities.CodeStatus).DROPPED}" th:inline="text" class="task-history-infotext"><strong>Status: </strong>Dropped</p>
+               <!--<p th:text="${#temporals.formatISO(task.creationTime)"></p> TODO get formatting of timestamp to work--> 
+            </div>       
          </div>
         </div>
       </div>
 
       <script th:src="@{/js/progressCircle.js}" type="text/javascript" charset="utf-8"></script>
       <script th:src="@{/js/hints.js}" type="text/javascript" charset="utf-8"></script>
+      <script th:src="@{/js/hints.js}" type="text/javascript"  charset="utf-8"></script>
    </body>
 </html>
