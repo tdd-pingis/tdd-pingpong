@@ -141,10 +141,6 @@ public class Stepdefs {
             .sendKeys(inputs.get(howMany + " implementation task description"));
     findElementByName("implementation task name")
             .sendKeys(inputs.get(howMany + " implementation task name"));
-    findElementByName("test task codestub")
-            .sendKeys(inputs.get(howMany + " test task codestub"));
-    findElementByName("implementation task codestub")
-            .sendKeys(inputs.get(howMany + " implementation task codestub"));
 
     clicks_the_button("submit");
   }

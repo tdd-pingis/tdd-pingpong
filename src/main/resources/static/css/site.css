@@ -26,6 +26,7 @@ textarea {
   border-radius: 5px;
   padding: 3px;
   padding-left: 6px;
+  resize: none;
 }
 
 .btn-primary {

@@ -7,26 +7,33 @@
 <nav th:include="navbar :: navigation"></nav>
 <div class="container">
     <div class="row">
-        <div th:if="${errors != null}" class="row" th:text="'Your code has syntax errors:'+${errors}"></div>
         <h1>New task pair</h1>
-        <form th:action="@{/createTaskPair}" method="post">
-           <input type="hidden" name="challengeId" th:value="${challengeId}"/>
+        <form action="#" th:action="@{/createTaskPair}" th:object="${taskPair}" method="post">
+            <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
+              <p>Please fill the form correctly:</p>
+              <ul>
+                <li th:each="error : ${#fields.allDetailedErrors()}">
+                 <span th:text="${error}"></span>
+                </li>
+              </ul>
+            </div>
+            <input type="hidden" name="challengeId" th:value="${challenge.id}"/>
            <div class="row">
               <div class="col-md-6">
                  <label id="test-task-label">Test task name:</label><br/>
-                 <input id="test-task-name-input" class="input-text" type="text" name="taskName" size="80" placeholder="Eg. Input a descriptive name for this task pair/game-round. Eg. 'Multiplication'"/><br/>
+                 <input id="test-task-name-input" class="input-text" type="text" name="taskName" th:field="*{testTaskName}" size="80" placeholder="Eg. Input a descriptive name for this task pair/game-round. Eg. 'Multiplication'"/><br/>
                  <label id="class-label" >Class name:</label><br/>
-                 <input id="class-name-input" type="text" class="input-text" name="className" size="80" placeholder="Input the class name here without .java suffix, eg. 'Calculator'"/><br/>
+                 <input id="class-name-input" type="text" class="input-text" name="className" th:field="*{className}" size="80" placeholder="Input the class name here without .java suffix, eg. 'Calculator'"/><br/>
                  <label id="test-task-desc-label">Description:</label><br/>
-                 <textarea id="test-task-desc-input" name="taskDesc" rows="4" cols="80" placeholder="Eg. 'Write an informative description of the wanted functionality. Eg. A method which adds two integers together. Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
+                 <textarea id="test-task-desc-input" name="taskDesc" th:field="*{testTaskDesc}" rows="4" cols="80" placeholder="Eg. 'Write an informative description of the wanted functionality. Eg. A method which adds two integers together. Method should take two integers as arguments and return the product of those as an integer'"></textarea><br/>
               </div>
            </div>
            <div class="row">
               <button type="submit" id="submit-button" class="btn btn-primary">Create task pair</button>
            </div>
         </form>
-        <div th:if="${#lists.size(challenge.tasks) >= minLength}">
-          <a th:href="'/closeChallenge/'+${challengeId}"  class="btn btn-primary">Close challenge</a>
+        <div th:if="${(#lists.size(challenge.tasks) >= minLength) && (challenge.type != T(pingis.entities.ChallengeType).ARCADE)}">
+            <a th:href="'/closeChallenge/'+${challenge.id}"  class="btn btn-primary">Close challenge</a>
         </div>
     </div>
 </div>
