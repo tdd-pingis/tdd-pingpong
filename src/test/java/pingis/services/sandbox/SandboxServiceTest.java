@@ -157,7 +157,7 @@ public class SandboxServiceTest {
   }
 
   @Test
-  public void updateResultWithCompileFailure() throws Exception {
+  public void updateResultWithTestCompileFailure() throws Exception {
     when(submissionRepository.findById(submissionId)).thenReturn(Optional.of(submission));
 
     boolean result = updateSubmission(submissionId, ResultStatus.COMPILE_FAILED);
@@ -168,6 +168,7 @@ public class SandboxServiceTest {
     checkSubmission(submissionId, submissionArgumentCaptor.getValue());
 
     verify(submissionRepository).findById(submissionId);
+    verify(taskInstanceService).markAsDone(any());
     verifyNoMoreInteractions(submissionRepository, taskInstanceService);
   }
 

@@ -4,14 +4,19 @@ function showResults(response) {
 
     makeResultsPanel();
 
-    if (status === 'COMPILE_FAILED') {
-        showCompilationError(resultMessage);
-    } else if (status === 'PASSED' || status === 'TESTS_FAILED') {
-        showTestResults(resultMessage);
+    if (resultMessage.success) {
+        showSuccess();
+        showButtonsAndUserFeedback();
     } else {
-        $("#results-panel")
-                .addClass("alert alert-warning")
-                .text("Something happened: " + status);
+        if (status === 'PASSED' || status === 'TESTS_FAILED') {
+            showFailure(resultMessage);
+        } else if (status === 'COMPILE_FAILED') {
+            showCompilationError(resultMessage);
+        } else {
+            $("#results-panel")
+                    .addClass("alert alert-warning")
+                    .text("Something happened: " + status);
+        }
     }
 }
 
@@ -51,15 +56,6 @@ function showCompilationError(resultMessage) {
         panelBody.append(
                 $("<div>")
                 .text(line));
-    }
-}
-
-function showTestResults(resultMessage) {
-    if (resultMessage.success) {
-        showSuccess();
-        showButtonsAndUserFeedback();
-    } else {
-        showFailure(resultMessage);
     }
 }
 
@@ -108,14 +104,14 @@ function showIndividualTestResult(resultMessage, i) {
     var testId = "test" + i;
     var traceId = "backtrace" + i;
 
-    var test = $("#panel-body").append(
-            $("<div>")
-            .attr("id", testId));
+    var test = $("<div>")
+                .attr("id", testId)
+                .appendTo($("#panel-body"));
 
     test.append($("<div>")
             .text(testName + " (" + className + ")"));
 
-    passedDiv = test.append($("<div>"));
+    passedDiv = $("<div>").appendTo(test);
     if (res.passed) {
         passedDiv.text("Passed");
     } else {

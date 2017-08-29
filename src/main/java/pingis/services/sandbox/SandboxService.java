@@ -108,6 +108,7 @@ public class SandboxService {
     message.setStatus(status);
 
     if (status == ResultStatus.COMPILE_FAILED) {
+      message.setSuccess(type == TaskType.TEST);
       message.setStdout(logs.getStdoutString());
     } else if (status == ResultStatus.PASSED) {
       message.setSuccess(type == TaskType.IMPLEMENTATION);
