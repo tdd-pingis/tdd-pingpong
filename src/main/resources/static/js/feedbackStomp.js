@@ -25,5 +25,8 @@ function sendRating(event) {
     const rating = document.getElementById("givenRating").value | 0; // cast to number
     stompClient.send(`/rate/${taskInstanceId}`, {}, rating);
 
+    $("#userFeedBack")
+      .replaceWith($("<h3>").text("Your rating has been saved."));
+
     event.preventDefault();
 }

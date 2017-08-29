@@ -93,6 +93,18 @@ textarea {
 
 .challenge-col-well {
   opacity: 0.6;
+  width: 35vw; 
+  border-radius: 2px;
+  font-size: 16px;
+  color: #FFFFFF;
+  border-color: #5E6055;
+  background-color: #5E6055;
+  box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.44);
+}
+
+.history-col-well {
+  opacity: 0.6;
+  width: 70vw; 
   border-radius: 2px;
   font-size: 16px;
   color: #FFFFFF;
@@ -111,6 +123,26 @@ textarea {
   background-color: #a5e01a;
   box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.64);
   opacity: 0.95;
+}
+
+.challengeitem-practice {
+  background-color: #a5e01a;
+}
+
+.challengeitem-arcade-realm1 {
+  background-color: #f4b70e;
+}
+
+.challengeitem-arcade-realm2 {
+  background-color: #00aa66;
+}
+
+.challengeitem-arcade-realm3 {
+  background-color: #005EAE;
+}
+
+.challengeitem-live {
+  background-color: #c12811;
 }
 
 .dashboard-user-name {
@@ -162,22 +194,42 @@ textarea {
 
 .frontpage-info {
   align-items: baseline;
+  text-align: center;
   font-style: normal;
+  margin-top: 7vw;
   font-size: 22px;
+  padding-right: 20px;
   font-weight: 200;
   opacity: 0.8;
 }
 
+.frontpage-logo-div {
+  width: fit-content;
+  height: fit-content;
+  padding-right: 15px;
+  margin: auto;
+}
+
 .frontpage-logo {
-  height: 350px;
-  position: fixed;
-  align-self: center;
+  height: auto; 
+  width: 350px;
+  margin-top: 10vw;
 }
 
 .frontpage-topbar {
   background: linear-gradient(-30deg, #2AC3EB, #005EAE);
   height: 33vw;
-  position: relative;
+  box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.34);
+}
+
+.history-header {
+  align-items: baseline;
+  padding-bottom: 0px;
+  margin: 0px;
+  font-style: normal;
+  font-size: 22px;
+  font-weight: 200;
+  opacity: 0.9;
 }
 
 .input-text {
@@ -185,6 +237,12 @@ textarea {
   padding-left: 6px;
   color: #161615;
   border-radius: 5px;
+}
+
+.join-in {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
 }
 
 .logo {
@@ -234,6 +292,7 @@ textarea {
 .feedback-container {
   display: none;
   margin-top: 3em;
+  margin-left: 15px;
 }
 
 .nexttask {
@@ -250,11 +309,29 @@ textarea {
 
 .startchallenge-topbar {
   background: linear-gradient(-30deg, #2AC3EB, #005EAE);
-  height: 20vw;
+  height: fit-content;
 }
 
 .task-container {
   width: 65vw;
+}
+
+.task-history-item {
+  background: linear-gradient(270deg, #cdeb8e, #a5c956);
+  border-radius: 3px;
+  padding-top: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  color: whitesmoke;
+  width: 60vw;
+  box-shadow: 0px 3px 7px 1px rgba(0,0,0,0.24);
+}
+
+.task-history-infotext {
+  margin: 0px;
 }
 
 .task-topmost-div {
@@ -273,6 +350,10 @@ textarea {
 
 .realm-select {
   color: #161615;
+}
+
+#results-panel {
+  color: black; 
 }
 
 .dropdown-toggle:hover {
