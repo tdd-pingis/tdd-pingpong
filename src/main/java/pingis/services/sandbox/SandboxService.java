@@ -108,15 +108,18 @@ public class SandboxService {
     message.setStatus(status);
 
     if (status == ResultStatus.COMPILE_FAILED) {
+      logger.debug("Compile failed");
       message.setSuccess(type == TaskType.TEST);
       message.setStdout(logs.getStdoutString());
     } else if (status == ResultStatus.PASSED) {
+      logger.debug("Tests passed");
       message.setSuccess(type == TaskType.IMPLEMENTATION);
       message.setTests(
           top.getTestResults().stream()
               .filter(r -> r.isPassed()).collect(Collectors.toList()));
 
     } else if (status == ResultStatus.TESTS_FAILED) {
+      logger.debug("Tests failed");
       message.setSuccess(type == TaskType.TEST);
       message.setTests(
           top.getTestResults().stream()
