@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import pingis.entities.Challenge;
+import pingis.entities.ChallengeType;
 import pingis.entities.CodeStatus;
 import pingis.entities.TaskInstance;
 import pingis.entities.User;
@@ -102,6 +103,7 @@ public class ChallengeService {
     List<Challenge> availableChallenges = findAll().stream()
             .filter(e -> !e.getIsOpen())
             .filter(e -> e.getLevel() <= userService.levelOfCurrentUser())
+            .filter(e -> e.getType() != ChallengeType.ARCADE)
             .filter(e -> !myTasksInChallenges.containsKey(e))
             .collect(Collectors.toList());
     
