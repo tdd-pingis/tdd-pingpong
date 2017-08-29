@@ -49,6 +49,7 @@
                             <h3 class="panel-title" th:text="${staticTabFileName}"></h3>
                         </div>
                         <div class="panel-body">
+                            <div class="overlay">For reference only</div>
                             <div id="static-editor" class="editortab" th:text="${staticCode}"></div>
                         </div>
                     </div>
@@ -71,6 +72,7 @@
         <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
         <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
         <script th:src="@{/js/taskStomp.js}" type="text/javascript"  charset="utf-8"></script>
+        <script th:src="@{/js/overlay.js}"></script>
         <script th:inline="javascript">
         /*<![CDATA[*/
             //Makes the model attribute usable in external javascript files

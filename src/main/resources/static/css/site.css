@@ -1,4 +1,4 @@
-.editortab {
+.editortab, .overlay {
   height: 300px
 }
 
@@ -53,6 +53,16 @@
 
 .tooltip {
   width: 350px;
+}
+
+.overlay {
+  position: absolute;
+  z-index: 10;
+  color: white;
+  line-height: 300px;
+  text-align: center;
+  background: rgba(0,0,0,0.2);
+  overflow: hidden;
 }
 
 #stars { color: #ee8b2d;}
