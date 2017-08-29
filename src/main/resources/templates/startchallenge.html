@@ -9,7 +9,7 @@
          <div class="container startchallenge-container"> 
             <h1>Challenge: </h1><h2 th:inline="text"> [[${challenge.name}]]</h2>
             <div th:text="'Difficulty level:  '+${challenge.level}"></div>
-            <div th:text="'Points available:  '+${challenge.level}"></div>
+<!--            <div th:text="'Points available:  '+${challenge.level}"></div>  TODO: implement aggregated task points -->
             <div class="well challenge-col-well" th:inline="text">[[${challenge.description}]]</div>
          </div>
       </div>
@@ -17,10 +17,10 @@
          <div class="col-sm-2">
             <a th:href="'/playChallenge/' + ${challenge.id}" id="start-challenge-button" class="btn btn-primary">Begin</a>
          </div>
-         <div class="col-md-8">
+<!--         <div class="col-md-8">
             Next task: 
             <p th:inline="text"> TODO: Implement fetching of next task</p>
-         </div>
+         </div> TODO: implement next task information-->
       </div>
    </body>
 </html>

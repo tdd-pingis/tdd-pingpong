@@ -291,6 +291,7 @@ textarea {
 .feedback-container {
   display: none;
   margin-top: 3em;
+  margin-left: 15px;
 }
 
 .nexttask {
@@ -307,7 +308,7 @@ textarea {
 
 .startchallenge-topbar {
   background: linear-gradient(-30deg, #2AC3EB, #005EAE);
-  height: 20vw;
+  height: fit-content;
 }
 
 .task-container {
@@ -348,6 +349,10 @@ textarea {
 
 .realm-select {
   color: #161615;
+}
+
+#results-panel {
+  color: black; 
 }
 
 .dropdown-toggle:hover {

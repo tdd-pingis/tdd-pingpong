@@ -144,7 +144,8 @@ public class ChallengeController {
       return new RedirectView("/error");
     }
     User player = userService.getCurrentUser();
-    TaskInstance unfinished =  taskInstanceService.getUnfinishedInstance(currentChallenge, player);
+    TaskInstance unfinished =  taskInstanceService.getUnfinishedInstanceInChallenge(
+                                            currentChallenge, player);
     if (unfinished != null) {
       logger.debug("Found unfinished instance. Redirecting to /task.");
       return new RedirectView("/task/" + unfinished.getId());

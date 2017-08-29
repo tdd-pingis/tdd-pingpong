@@ -119,7 +119,8 @@ public class ChallengeControllerTest {
     when(taskInstance.getId()).thenReturn(taskInstanceId);
     when(challengeService.findOne(any()))
             .thenReturn(challenge);
-    when(taskInstanceService.getUnfinishedInstance(any(), any())).thenReturn(taskInstance);
+    when(taskInstanceService.getUnfinishedInstanceInChallenge(any(), any())).thenReturn(
+                                                                             taskInstance);
     mvc.perform(post("/createTaskPair")
             .with(csrf())
             .param("taskName", "aaa")
@@ -177,7 +178,8 @@ public class ChallengeControllerTest {
     Challenge challenge = Mockito.mock(Challenge.class);
     when(challengeService.findOne(challengeId)).thenReturn(challenge);
     when(userService.getCurrentUser()).thenReturn(user);
-    when(taskInstanceService.getUnfinishedInstance(challenge, user)).thenReturn(taskInstance);
+    when(taskInstanceService.getUnfinishedInstanceInChallenge(challenge, user)).thenReturn(
+                                                                                taskInstance);
 
     mvc.perform(get("/playChallenge/" + challengeId)
             .with(csrf()))
