@@ -6,6 +6,8 @@ import java.util.UUID;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -40,6 +42,10 @@ public class User {
 
   @OneToMany(mappedBy = "secondPlayer")
   private List<Challenge> participatingLiveChallenges;
+  
+  @ManyToMany
+  @JoinTable
+  private List<Challenge> completedChallenges;
 
   public User() {
   }
@@ -62,6 +68,7 @@ public class User {
     this.taskInstances = new ArrayList<>();
     this.authoredChallenges = new ArrayList<>();
     this.authoredTasks = new ArrayList<>();
+    this.completedChallenges = new ArrayList<>();
     this.participatingLiveChallenges = new ArrayList<>();
   }
 
@@ -181,6 +188,20 @@ public class User {
 
   public void addParticipatingLiveChallenge(Challenge challenge) {
     this.participatingLiveChallenges.add(challenge);
+  }
+  
+  public void addCompletedChallenge(Challenge challenge) {
+    if (!this.completedChallenges.contains(challenge)) {
+      this.completedChallenges.add(challenge);
+    }
+  }
+  
+  public List<Challenge> getCompletedChallenges() {
+    return completedChallenges;
+  }
+
+  public void setCompletedChallenges(List<Challenge> completedChallenges) {
+    this.completedChallenges = completedChallenges;
   }
 
 }

@@ -19,7 +19,7 @@
                   </div>
                </div>
                <div class="col-md-5">
-                  <h4 th:inline="text" class="header dashboardtopbar-stats">Challenges completed: [[${userLevel}]]</h4>
+                  <h4 th:inline="text" class="header dashboardtopbar-stats">Challenges completed: [[${#lists.size(user.completedChallenges)}]]</h4>
                </div>
                <div class="col-md-3">
                   <h4 th:inline="text" class="header dashboardtopbar-stats">Level: [[${userLevel}]]</h4>
@@ -45,13 +45,12 @@
             <div th:if="${message != null}" th:text="${message}"></div> <!-- still needed? there is new error box which supports multiple error-messages -->
             <div class="challenge_list row">
                <div class="col-md-6">
-                  <div th:unless="${unfinishedTaskinstance == null}" class="divider">
+                  <div th:unless="${unfinishedTaskInstance == null}" class="divider">
                      <h3 class="header challenge-col-header">Continue</h3>
                      <div class="well challenge-col-well">You have one Task still in progress. Continue where you left off.</div>
-                     <div th:unless="${unfinishedTaskinstance == null}" class="row challengeitem">
-                        <a th:href="'/nextTask/' + ${unfinishedTaskinstance.task.challenge.id}" th:inline="text"><h3 class="header challengeitem-header">[[${unfinishedTaskinstance.task.challenge.id}]]</h3></a>
-                        <p class="lead challenge-progress-number" th:inline="text">[[${#lists.size(unfinishedTaskinstance.task.challenge.tasks)}]] / [[${#lists.size(unfinishedTaskinstance.task.challenge.tasks)} / 2]]</p>
-                        <p class="challenge-progress-done">done</p>
+                     <div class="row challengeitem">
+                        <a th:href="'/playChallenge/' + ${unfinishedTaskInstance.task.challenge.id}" th:inline="text"><h3 class="header challengeitem-header">[[${unfinishedTaskInstance.task.challenge.name}]]</h3></a>
+                        <p class="lead challenge-progress-done" th:inline="text"><strong>Task:&nbsp;</strong> [[${unfinishedTaskInstance.task.name}]]</p>
                      </div>
                   </div>
 
@@ -115,11 +114,12 @@
             <div class="col-md-6">
                <h3 class="header challenge-col-header">Started challenges</h3>
                <div th:if="${#maps.isEmpty(myTasksInChallenges)}" class="well challenge-col-well">No ongoing challenges</div>
+               <div th:unless="${#maps.isEmpty(myTasksInChallenges)}" class="well challenge-col-well">You have not completed all of your challenges yet.</div>
                <div th:each="challenge : ${myTasksInChallenges}">
                   <a th:href="'/playChallenge/' + ${challenge.key.id}" th:inline="text">
                      <div class="row challengeitem">
                         <h3 class="header challengeitem-header">[[${challenge.key.name}]]</h3>
-                        <p class="lead challenge-progress-done" th:inline="text">[[${#lists.size(challenge.value)}]] / [[${#lists.size(challenge.key.tasks) / 2}]] &nbsp;<strong>done</strong></p>
+                        <p class="lead challenge-progress-done" th:inline="text">[[${#lists.size(challenge.value)}]] / [[${#lists.size(challenge.key.tasks)}]] &nbsp;<strong>done</strong></p>
                      </div>
                   </a>
                </div>
@@ -128,18 +128,17 @@
                <p>Here you can select a challenge and practice by doing tasks at your own pace.</p>
                <hr>
                <div class="header challenge-col-header">Available challenges</div>
-               <div class="well challenge-col-well">New practice challenges are available.</div>
-               <div th:if="${availableChallenges.empty}">No open challenges</div>
+               <div th:unless="${availableChallenges.empty}" class="well challenge-col-well">New practice challenges are available.</div>
+               <div th:if="${availableChallenges.empty}" class="well challenge-col-well">No open challenges</div>
                <div th:each="challenge : ${availableChallenges}" class="row challengeitem">
-                  <a th:href="'/startChallenge/' + ${challenge.id}" th:id="'open-challenge-'+${challenge.name}" ><h3 class="header challengeitem-header" th:inline="text">[[${challenge.name}]]</h3></a> <p th:inline="text" class="lead challenge-progress-done">Not started </p>
+                  <a th:href="'/startChallenge/' + ${challenge.id}" th:id="'open-challenge-'+${challenge.name}" ><h3 class="header challengeitem-header" th:inline="text">[[${challenge.name}]]</h3></a> <p th:inline="text" class="lead challenge-progress-done">Not started</p>
                </div>
             </div>
           </div>
          </div>
 
          <div id="history-tab" class="tab-pane fade">
-
-            <div th:if="${history.empty}" class="well history-col-well">None yet. Go on and <strong>play a little!</strong></div>
+            <div th:if="${history.empty}" class="well history-col-well">Your history is empty.</div>
             <div th:unless="${history.empty}" class="well history-col-well">Your tasks, from the most recent to the oldest.</div>
             <div th:each="taskInst : ${history}" class="div task-history-item">
                <p th:inline="text" class="history-header"><strong>Task:</strong> [[${taskInst.task.name}]]</p>

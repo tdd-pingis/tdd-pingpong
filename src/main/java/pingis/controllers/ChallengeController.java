@@ -325,7 +325,12 @@ public class ChallengeController {
 
     Task nextTask = taskService.nextPracticeTask(challenge);
     if (nextTask == null) {
-      // User has completed the practice challenge. TODO: Award points?
+      // User has completed the practice challenge.
+      challenge.addNewCompletedPlayer(player);
+      player.addCompletedChallenge(challenge);
+      challengeService.save(challenge);
+      userService.save(player);
+      
       logger.debug("All tasks done");
       return new RedirectView("/challengeFinished/" + challenge.getId());
     }

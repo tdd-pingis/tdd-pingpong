@@ -7,11 +7,10 @@
       <nav th:include="navbar :: navigation"></nav>
       <div class="divider task-topmost-div" >
          <div class="row task-topbar-challenge-info" th:unless="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}"> <!-- top bar -->
-            <h1>Challenge: </h1><h2 id="challenge-name" th:inline="text"> [[${challenge.name}]]</h2>
-            <p th:inline="text" class="lead dashboard-user-name"><strong>Task number: 5/12</strong></p>
-            <p class="lead dashboard-user-name"><strong>Rank: </strong></p>  <!-- TODO: support for different ranks -->
+            <h2 class="taskview-challenge-heading">Challenge: </h2><h1 th:inline="text">&nbsp; [[${challenge.name}]]</h1>
+            <br><p th:inline="text" class="lead dashboard-user-name taskview-challenge-heading"><strong>Task number:</strong> &nbsp;&nbsp;&nbsp;[[${task.index}]] / [[${#lists.size(task.challenge.tasks)}]]</p>
          </div>
-         <div class="row task-topbar-challenge-info" th:if="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}">
+         <div class="row task-topbar-challenge-info" th:if="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}">  
             <h1>Arcade challenge </h1><h2 th:inline="text">[[${challenge.realm}]]</h2>
             <p class="lead dashboard-user-name"><strong>Rank: </strong>Super Guru!</p>
          </div>
@@ -20,8 +19,11 @@
       <div class="container task-container">
          <div class="row">
             <div class="col-md-4">
-               <p id="task-name" th:inline="text">Task: [[${task.name}]]</p>
-               <p th:inline="text">Level: [[${task.level}]]</p>
+               <p th:inline="text">Task: &nbsp;<strong>[[${task.name}]]</strong></p>
+               <p th:if="${task.type == T(pingis.entities.TaskType).TEST}">Task type: &nbsp;<strong> Test</strong></p>
+               <p th:if="${task.type == T(pingis.entities.TaskType).IMPLEMENTATION}">Task type: &nbsp;<strong>Implementation</strong></p>
+               <p th:inline="text">Points available: &nbsp;<strong>[[${task.points}]]</strong></p>
+               <p th:inline="text">Level: &nbsp;<strong>[[${task.level}]]</strong></p>
             </div>
             <div class="col-md-6">
                <p id="task-desc" th:text="${task.desc}"></p><br/><br/>

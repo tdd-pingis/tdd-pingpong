@@ -317,7 +317,7 @@ textarea {
 }
 
 .task-container {
-  width: 65vw;
+  width: 61vw;
 }
 
 .task-history-item {
@@ -339,13 +339,22 @@ textarea {
 }
 
 .task-topmost-div {
+  padding-bottom: 2vw;
   background: linear-gradient(-30deg, #2AC3EB, #005EAE);
 }
 
 .task-topbar-challenge-info {
   height: fit-content;
   margin-left: 20%;
+  padding-top: 3vw;
   margin-right: 20%;
+}
+
+.taskview-challenge-heading {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  display: inline;
 }
 
 .tooltip {

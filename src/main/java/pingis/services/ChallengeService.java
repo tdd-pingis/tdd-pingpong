@@ -104,13 +104,17 @@ public class ChallengeService {
 
     return availableChallenges;
   }
-
-  public MultiValueMap<Challenge, TaskInstance> getCompletedTaskInstancesByChallenge() {
+  
+  public MultiValueMap<Challenge, TaskInstance> getCompletedTaskInstancesInUnfinishedChallenges() {
     MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
     userService.getCurrentUser().getTaskInstances().stream()
             .filter(e -> !e.getChallenge().getIsOpen())
             .filter(e -> e.getStatus().equals(CodeStatus.DONE))
             .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
+    
+    myTasksInChallenges.keySet().stream()
+            .filter(e -> userService.getCurrentUser().getCompletedChallenges().contains(e))
+            .forEach(e -> myTasksInChallenges.remove(e));
 
     return myTasksInChallenges;
   }
