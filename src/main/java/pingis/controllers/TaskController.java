@@ -97,7 +97,7 @@ public class TaskController {
   }
 
   @RequestMapping(value = "/task", method = RequestMethod.POST)
-  public RedirectView task(String submissionCode,
+  public RedirectView task(String submissionCode, String testCode,
       long taskInstanceId,
       RedirectAttributes redirectAttributes) throws IOException, ArchiveException {
     logger.debug("Submitting task");
@@ -105,7 +105,7 @@ public class TaskController {
     TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
 
-    Submission submission = submitToTmc(taskInstance, currentChallenge, submissionCode);
+    Submission submission = submitToTmc(taskInstance, currentChallenge, submissionCode, testCode);
 
     redirectAttributes.addFlashAttribute("submissionId", submission.getId().toString());
     redirectAttributes.addFlashAttribute("taskInstance", taskInstance);
@@ -140,12 +140,15 @@ public class TaskController {
   }
 
   private Submission submitToTmc(TaskInstance taskInstance, Challenge challenge,
-      String submissionCode)
+      String submissionCode, String testCode)
       throws IOException, ArchiveException {
     logger.debug("Submitting to TMC");
     Map<String, byte[]> files = new HashMap<>();
 
-    String staticCode = taskService.getCorrespondingTask(taskInstance.getTask()).getCodeStub();
+
+    String staticCode = testCode;//taskService.getCorrespondingTask(taskInstance.getTask()).getCodeStub();
+    logger.debug(submissionCode);
+    logger.debug(staticCode);
 
     CodeStubBuilder stubBuilder = new CodeStubBuilder(challenge.getName());
     CodeStub implStub = stubBuilder.build();
@@ -154,6 +157,8 @@ public class TaskController {
     boolean isTest = taskInstance.getTask().getType() == TaskType.TEST;
     files.put(isTest ? testStub.filename : implStub.filename, submissionCode.getBytes());
     files.put(isTest ? implStub.filename : testStub.filename, staticCode.getBytes());
+    logger.debug(testStub.filename);
+    logger.debug(implStub.filename);
 
     return sandboxService.submit(files, taskInstance);
   }
