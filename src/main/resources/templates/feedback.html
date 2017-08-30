@@ -11,8 +11,8 @@
                 <div class="col-md-12">
                     <h1>Feedback</h1>
                     <p>Your solution has been successfully received.</p>
-                    <div id="results">Waiting for results...<br>
-                          <center><img src="img/loading.gif" alt="CodePong loading icon" class="loading-icon"></img></center>
+                    <div id="results">Waiting for results...<br/>
+                        <center><img src="img/loading.gif" alt="CodePong loading icon" class="loading-icon"></img></center>
                     </div>
                 </div>
             </div>
@@ -25,22 +25,22 @@
                 </div>
             </div>
 
-           <form>
-              <div class="row">
-                 <div class="col-md-12">
-                    <div class="feedback-container" id="userFeedBack" th:unless="${user.id == taskInstance.task.author.id}">
-                       <div class="row">
-                          <h3>How would you rate this task?</h3>
-                       </div>
-                       <div class="row lead">
-                          <div id="stars" class="starrr"></div>
-                          <button type="submit" class="btn btn-success" onclick="sendRating(event)">Rate</button>
-                       </div>
+            <form>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="feedback-container" id="userFeedBack" th:unless="${user.id == taskInstance.task.author.id}">
+                            <div class="row">
+                                <h3>How would you rate this task?</h3>
+                            </div>
+                            <div class="row lead">
+                                <div id="stars" class="starrr"></div>
+                                <button type="submit" class="btn btn-success" onclick="sendRating(event)">Rate</button>
+                            </div>
+                        </div>
                     </div>
-                 </div>
-              </div> 
-              <input class="givenrating" type="number" id="givenRating"/>
-           </form>
+                </div>
+                <input class="givenrating" type="number" id="givenRating"/>
+            </form>
 
             <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
             <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
@@ -48,11 +48,11 @@
             <script th:src="@{/js/feedbackStomp.js}"></script>
             <script th:src="@{/js/starrr.js}"></script>
             <script th:inline="javascript">
-            /*<![CDATA[*/
+                /*<![CDATA[*/
                 //Makes the model attribute usable in external javascript files
                 var submissionId = /*[[${submissionId}]]*/;
                 var taskInstanceId = /*[[${taskInstance.id}]]*/;
-            /*]]>*/
+                /*]]>*/
             </script>
         </div>
     </body>
