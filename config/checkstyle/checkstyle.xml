@@ -193,6 +193,25 @@
         <module name="EmptyCatchBlock">
             <property name="exceptionVariableName" value="expected"/>
         </module>
+        
+        <!-- Custom tree walkers-->
+        <module name="Regexp">
+          <property name="format" value="[ \t]+$"/>
+          <property name="illegalPattern" value="true"/>
+          <property name="message" value="Trailing whitespace"/>
+        </module>
+        <module name="Regexp">
+          <!-- . matches any character, so we need to escape it and use \. to match dots. -->
+          <property name="format" value="System\.out\.println"/>
+          <property name="illegalPattern" value="true"/>
+          <property name="message" value="Use loggers"/>
+        </module>
+        <module name="RedundantImport"/>
+        <module name="UnusedImports"/>
+        
     </module>
-
+    
+    <!-- Custom -->
+    <module name="NewlineAtEndOfFile"/>
+    
 </module>

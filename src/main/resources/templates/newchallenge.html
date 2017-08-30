@@ -1,18 +1,31 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="base :: header"></head>
+<head th:include="base :: header">
+    <title id="pageTitle" th:inline="text">#CodePong: New challenge</title>
+</head>
 <body>
 <nav th:include="navbar :: navigation"></nav>
 <div class="container">
     <h1>New challenge</h1>
+
     <div class="row">
-        <form th:action="@{/createChallenge}" method="post">
+        <form action="#" th:action="@{/createChallenge}" th:object="${challenge}" method="post">
+          <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
+            <p>Please fill the form correctly:</p>
+           <ul>
+            <li th:each="error : ${#fields.allDetailedErrors()}">
+              <span th:text="${error}"></span>
+            </li>
+           </ul>
+          </div>
             <label>Challenge name:</label><br />
-            <input type="text" name="challengeName" size="50" id="challenge_name" placeholder="The name of the challenge eg. Calculator"/><br />
+            <input type="text" name="challengeName" class="input-text" size="50" id="challenge_name" th:field="*{name}" placeholder="The name of the challenge eg. Calculator"/><br />
+
             <label>Challenge description</label><br />
-            <textarea rows="10" cols="80" name="challengeDesc" id="challenge_desc" placeholder="The description for the challenge, eg. 'Test and implement a simple command line based calculator.'"></textarea><br />
-            <label>Challenge type:</label>
-            <select name="challengeType" id="challenge_type_select">
+            <textarea rows="10" cols="80" name="challengeDesc" id="challenge_desc" th:field="*{description}"  placeholder="The description for the challenge, eg. 'Test and implement a simple command line based calculator.'"></textarea><br />
+
+            <label>Type:</label>
+            <select name="challengeType" id="challenge_type_select" th:field="*{type}">
                 <option value="MIXED">Mixed</option>
                 <option value="PROJECT">Project</option>
             </select>
@@ -20,7 +33,7 @@
                 <span class="glyphicon glyphicon-question-sign"/></a>
             <br />
             <label>Realm:</label>
-            <select name="realm">
+            <select name="realm" class="realm-select">
                 <option value="BEGINNER">Beginner</option>
                 <option value="DATASTRUCTURES">Data structures</option>
                 <option value="ALGORITHMS">Algorithms</option>

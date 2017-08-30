@@ -63,12 +63,14 @@ function showButtonsAndUserFeedback() {
     $("#selectByRandom").show();
     $("#selectFromList").show();
     $("#userFeedBack").show();
+    $("#next-task-button").show();
 }
 
 function showSuccess() {
     $("#results-panel").addClass("panel panel-success");
     $("#panel-heading").text("Task cleared!");
     $("#panel-body").text("Well done! Head onto the next task!");
+    $("#back-button").remove();
 }
 
 function showFailure(resultMessage) {

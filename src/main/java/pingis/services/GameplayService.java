@@ -12,7 +12,6 @@ import pingis.entities.Challenge;
 import pingis.entities.ChallengeType;
 import pingis.entities.Realm;
 import pingis.entities.Task;
-import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;

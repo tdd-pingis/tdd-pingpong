@@ -2,21 +2,19 @@ package pingis.controllers;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pingis.entities.Challenge;
-import pingis.entities.CodeStatus;
 import pingis.entities.TaskInstance;
 import pingis.entities.User;
 import pingis.services.ChallengeService;
 import pingis.services.GameplayService;
+import pingis.services.TaskInstanceService;
 import pingis.services.UserService;
 
 @Controller
@@ -28,6 +26,9 @@ public class UserController {
 
   @Autowired
   UserService userService;
+
+  @Autowired
+  TaskInstanceService taskInstanceService;
 
   @Autowired
   ChallengeService challengeService;
@@ -50,20 +51,31 @@ public class UserController {
     logger.debug("Get /user");
 
     User user = userService.handleUserAuthenticationByName(principal.getName());
+    model.addAttribute("userLevel", userService.levelOfCurrentUser());
+    model.addAttribute("user", user);
 
-    MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
+    MultiValueMap<Challenge, TaskInstance> myTasksInChallenges
+            = challengeService.getCompletedTaskInstancesInUnfinishedChallenges();
+    TaskInstance lastUnfinished = taskInstanceService.getLastUnfinishedInstance();
+    List<TaskInstance> history = taskInstanceService.getHistory();
+    List<Challenge> availableChallenges = challengeService.getAvailableChallenges(
+            myTasksInChallenges);
 
-    user.getTaskInstances().stream()
-        .filter(e -> !e.getChallenge().getIsOpen())
-        .filter(e -> e.getStatus().equals(CodeStatus.DONE))
-        .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
+    model.addAttribute("myTasksInChallenges", myTasksInChallenges);
+    model.addAttribute("unfinishedTaskInstance", lastUnfinished);
+    model.addAttribute("history", history);
+    model.addAttribute("availableChallenges", availableChallenges);
 
-    List<Challenge> availableChallenges = challengeService.findAll().stream()
-        .filter(e -> !e.getIsOpen())
-        .filter(e -> e.getLevel() <= userService.levelOfCurrentUser())
-        .filter(e -> !myTasksInChallenges.containsKey(e))
-        .collect(Collectors.toList());
+    logger.info("Found " + history.size() + " completed task-instances.");
+    logger.info("Found " + user.getCompletedChallenges().size() + " completed challenges.");
+    if (lastUnfinished != null) {
+      logger.info("Found latest unfinished taskinstance of task "
+                            + lastUnfinished.getTask().getName());
+    } else {
+      logger.info("No unfinished taskinstances");
+    }
 
+    // Fetch and set live challenge
     Challenge liveChallenge = gameplayService.getParticipatingLiveChallenge();
     Challenge randomLiveChallenge = challengeService.getRandomLiveChallenge(user);
 
@@ -79,12 +91,7 @@ public class UserController {
       logger.debug("Live challenge type = Continue");
       model.addAttribute("liveChallengeType", LiveType.CONTINUE);
     }
-
-    model.addAttribute("availableChallenges", availableChallenges);
-    model.addAttribute("myTasksInChallenges", myTasksInChallenges);
     model.addAttribute("liveChallenge", liveChallenge);
-    model.addAttribute("userLevel", userService.levelOfCurrentUser());
-    model.addAttribute("user", user);
 
     return "user";
   }
@@ -95,4 +102,8 @@ public class UserController {
 
     return "admin";
   }
+
+
+
 }
+

@@ -1,16 +1,16 @@
 package pingis.services;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import pingis.entities.Challenge;
+import pingis.entities.ChallengeType;
 import pingis.entities.CodeStatus;
-import pingis.entities.Task;
 import pingis.entities.TaskInstance;
-import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
 
@@ -54,11 +54,6 @@ public class ChallengeService {
     return c;
   }
 
-  public Challenge getRandomChallenge() {
-    List<Challenge> challenges = findAll();
-    return challenges.get(new Random().nextInt(challenges.size()));
-  }
-
   public boolean contains(Long challengeId) {
     return challengeRepository.existsById(challengeId);
   }
@@ -96,5 +91,31 @@ public class ChallengeService {
     return challenge.getAuthor().equals(player)
             || (challenge.getSecondPlayer() != null
             && challenge.getSecondPlayer().equals(player));
+  }
+
+  public List<Challenge> getAvailableChallenges(MultiValueMap<Challenge, TaskInstance>
+                                              myTasksInChallenges) {
+    List<Challenge> availableChallenges = findAll().stream()
+            .filter(e -> !e.getIsOpen())
+            .filter(e -> e.getLevel() <= userService.levelOfCurrentUser())
+            .filter(e -> e.getType() != ChallengeType.ARCADE)
+            .filter(e -> !myTasksInChallenges.containsKey(e))
+            .collect(Collectors.toList());
+
+    return availableChallenges;
+  }
+
+  public MultiValueMap<Challenge, TaskInstance> getCompletedTaskInstancesInUnfinishedChallenges() {
+    MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
+    userService.getCurrentUser().getTaskInstances().stream()
+            .filter(e -> !e.getChallenge().getIsOpen())
+            .filter(e -> e.getStatus().equals(CodeStatus.DONE))
+            .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
+
+    myTasksInChallenges.keySet().stream()
+            .filter(e -> userService.getCurrentUser().getCompletedChallenges().contains(e))
+            .forEach(e -> myTasksInChallenges.remove(e));
+
+    return myTasksInChallenges;
   }
 }

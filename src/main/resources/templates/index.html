@@ -1,16 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="base :: header"></head>
+<head th:include="base :: header">
+      <title id="pageTitle">#CodePong: Frontpage</title>
+</head>
 <body>
-    <nav th:include="navbar :: navigation"></nav>
-    <div class="container">
-        <div class="row">
-            <div class="jumbotron">
-                <h1>TDD-pingpong</h1>
-                <p>Write tests, write implementations, get points.</p>
-                <p>Sign in with your TestMyCode account to begin.</p>
+      <nav th:include="navbar :: navigation"></nav>
+      <div class="divider frontpage-topbar" id="frontpage-topbar">
+            <div class="frontpage-logo-div">
+               <img src="img/logo.svg" class="frontpage-logo" alt="CodePong frontpage logo"></img>
             </div>
-        </div>
-    </div>
+            <div class="row task-topbar-challenge-info"> <!-- top bar -->
+                  <div class="row">
+                     <h2 class="frontpage-info" id="frontpage-info">> Test-Driven development <strong>with a <i>twist</i></strong></h2>
+                     <p class="join-in">Login with your TMC account and <i><strong>join in!</strong></i></p>
+                  </div>
+            </div>
+      </div>
+      <div class="divider frontpage-bottom" id="frontpage-bottom">
+      </div>
 </body>
 </html>

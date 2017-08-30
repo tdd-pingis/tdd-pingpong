@@ -1,5 +1,7 @@
 package pingis.entities;
 
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Entity;
@@ -45,6 +47,8 @@ public class TaskInstance {
   @ManyToOne(fetch = FetchType.EAGER)
   private User user;
 
+  private Timestamp creationTime;
+
   @ManyToOne
   private TaskInstance testTaskInstance;
 
@@ -61,6 +65,7 @@ public class TaskInstance {
     this.status = CodeStatus.IN_PROGRESS;
     this.isExample = false; // by default
     this.rating = 0;
+    this.creationTime = new Timestamp(System.currentTimeMillis());
     this.implementationTaskInstances = new ArrayList<>();
   }
 
@@ -135,13 +140,21 @@ public class TaskInstance {
   public List<TaskInstance> getImplementationTaskInstances() {
     return this.implementationTaskInstances;
   }
-  
+
   public Challenge getChallenge() {
     return this.task.getChallenge();
   }
-  
+
   public Realm getRealm() {
     return getChallenge().getRealm();
+  }
+
+  public Timestamp getCreationTime() {
+    return creationTime;
+  }
+
+  public void setCreationTime(Timestamp creationTime) {
+    this.creationTime = creationTime;
   }
 
 }

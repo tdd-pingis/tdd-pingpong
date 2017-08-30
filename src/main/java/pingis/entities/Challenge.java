@@ -1,5 +1,7 @@
 package pingis.entities;
 
+import static pingis.entities.Task.DESC_MAX_LENGTH;
+import static pingis.entities.Task.DESC_MIN_LENGTH;
 import static pingis.entities.Task.LEVEL_MAX_VALUE;
 import static pingis.entities.Task.LEVEL_MIN_VALUE;
 import static pingis.entities.Task.NAME_MAX_LENGTH;
@@ -12,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Max;
@@ -26,11 +29,12 @@ public class Challenge {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
-  @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH)
   @NotNull
+  @Size(min = NAME_MIN_LENGTH, max = NAME_MAX_LENGTH)
   private String name;
 
   @NotNull
+  @Size(min = DESC_MIN_LENGTH, max = DESC_MAX_LENGTH)
   private String description;
 
   @NotNull
@@ -46,9 +50,11 @@ public class Challenge {
   @OneToMany(fetch = FetchType.EAGER, mappedBy = "challenge")
   private List<Task> tasks;
 
-  @NotNull
   @ManyToOne(fetch = FetchType.EAGER)
   private User author;
+
+  @ManyToMany(mappedBy = "completedChallenges")
+  private List<User> completedByPlayers;
 
   public User getSecondPlayer() {
     return secondPlayer;
@@ -74,13 +80,19 @@ public class Challenge {
   protected Challenge() {
   }
 
-  public Challenge(String name, User author, String description, ChallengeType type) {
+  public Challenge(String name, String description, ChallengeType type) {
     this.name = name;
-    this.author = author;
-    this.type = type;
     this.description = description;
+    this.type = type;
     this.tasks = new ArrayList<>();
+    this.completedByPlayers = new ArrayList<>();
     this.isOpen = false;
+    this.level = 0;
+  }
+
+  public Challenge(String name, User author, String description, ChallengeType type) {
+    this(name, description, type);
+    this.author = author;
   }
 
   public Challenge(String name, User author, String description) {
@@ -113,7 +125,7 @@ public class Challenge {
     out += "\ntype: " + this.type.name();
     out += "\nlevel: " + this.level;
     out += "\nauthor: " + this.author.getName();
-    
+
     return out;
   }
 
@@ -179,6 +191,12 @@ public class Challenge {
 
   public void setRealm(Realm realm) {
     this.realm = realm;
+  }
+
+  public void addNewCompletedPlayer(User user) {
+    if (!this.completedByPlayers.contains(user)) {
+      this.completedByPlayers.add(user);
+    }
   }
 
 }

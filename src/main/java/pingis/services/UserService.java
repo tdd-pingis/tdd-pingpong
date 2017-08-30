@@ -78,13 +78,6 @@ public class UserService {
     userRepository.delete(user);
   }
 
-  public User deleteById(Long userId) {
-    //Implement validation here
-    User c = findOne(userId);
-    userRepository.deleteById(userId);
-    return c;
-  }
-
   public void deleteMultiple(List<User> users) {
     //Implement validation here
     for (User user : users) {

@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head th:include="base :: header"></head>
+    <head th:include="base :: header">
+        <title id="pageTitle">#CodePong: Feedback</title>
+    </head>
     <body onload="connect()">
         <nav th:include="navbar :: navigation"></nav>
 
@@ -9,35 +11,36 @@
                 <div class="col-md-12">
                     <h1>Feedback</h1>
                     <p>Your solution has been successfully received.</p>
-                    <div id="results">Waiting for results...</div>
+                    <div id="results">Waiting for results...<br>
+                          <center><img src="img/loading.gif" alt="CodePong loading icon" class="loading-icon"></img></center>
+                    </div>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-md-6">
-                    <a th:href="'task/'+${taskInstance.id}" class="btn btn-primary">Back</a>
-                    <div th:unless="${challenge.isOpen}">
-                        <a th:href="'playChallenge/'+${challenge.id}" id="next-task-button" class="btn btn-success">Next task</a>
-                    </div>
-                    <div th:if="${challenge.isOpen}">
-                        <a th:href="'playChallenge/'+${challenge.id}" id="next-task-button" class="btn btn-success">Next task</a>
-                    </div>
-                    <a th:href="'nextTask/'+${challenge.id}" id="selectFromList" class="nexttask btn btn-success">Next task from a list</a>
+                    <a id="back-button" th:href="'task/'+${taskInstance.id}" class="btn btn-primary">Back</a>
+                    <a th:href="'playChallenge/'+${challenge.id}" id="next-task-button" class="nexttask btn btn-success">Next task</a>
+                    <a href="/user" id="selectFromList" class="nexttask btn btn-success">Back to dashboard</a>
                 </div>
             </div>
 
-            <form>
-              <div class="feedback-container" id="userFeedBack">
-                <div class="row">
-                    <h3>Your feedback of the task</h3>
-                </div>
-                <div class="row lead">
-                    <div id="stars" class="starrr"></div>
-                    <button type="submit" class="btn btn-success" onclick="sendRating(event)">Give feedback</button>
-                </div>
-              </div>
-                <input class="givenrating" type="number" id="givenRating"/>
-            </form>
+           <form>
+              <div class="row">
+                 <div class="col-md-12">
+                    <div class="feedback-container" id="userFeedBack" th:unless="${user.id == taskInstance.task.author.id}">
+                       <div class="row">
+                          <h3>How would you rate this task?</h3>
+                       </div>
+                       <div class="row lead">
+                          <div id="stars" class="starrr"></div>
+                          <button type="submit" class="btn btn-success" onclick="sendRating(event)">Rate</button>
+                       </div>
+                    </div>
+                 </div>
+              </div> 
+              <input class="givenrating" type="number" id="givenRating"/>
+           </form>
 
             <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
             <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>

@@ -21,8 +21,10 @@ public class Task {
   // Constraint values
   public static final int NAME_MIN_LENGTH = 3;
   public static final int NAME_MAX_LENGTH = 50;
-  public static final int LEVEL_MIN_VALUE = 1;
+  public static final int LEVEL_MIN_VALUE = 0;
   public static final int LEVEL_MAX_VALUE = 100;
+  public static final int DESC_MIN_LENGTH = 3;
+  public static final int DESC_MAX_LENGTH = 500;
 
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
@@ -36,6 +38,7 @@ public class Task {
   private String name;
 
   @NotNull
+  @Size(min = DESC_MIN_LENGTH, max = DESC_MAX_LENGTH)
   private String desc;
 
   @NotNull

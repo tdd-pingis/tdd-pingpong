@@ -1,8 +1,184 @@
+body {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 14px;
+  color: white;
+  background-color: #2d2d29;
+}
+
+h1 {
+  display: inline;
+}
+
+h2 {
+  font-size: 34px;
+  color: #FFFFF2;
+  font-weight: bolder;
+  font-style: italic;
+  margin-top: 20px;
+  margin-bottom: 13px;
+  text-shadow: 0px 3px 7px -1px rgba(0,0,0,0.84);
+  opacity: 0.7;
+}
+
+textarea {
+  color: #161615;
+  border-radius: 5px;
+  padding: 3px;
+  padding-left: 6px;
+  resize: none;
+}
+
+.btn-primary {
+  color: #fff;
+  border-radius: 2px;
+  border-color: #98998b;
+  padding-left: 17px;
+  margin: 5px;
+  padding-right: 17px;
+  background-color: #2d2d29;
+  opacity: 0.9;
+}
+
+.btn-logout {
+  color: #fff;
+  border-radius: 7px;
+  border-color: #FFFFF2;
+  padding-left: 17px;
+  margin-left: 15px;
+  padding-right: 17px;
+  background-color: #2d2d29;
+  opacity: 0.9;
+}
+
+.challenge-container {
+  height: auto;
+  width: fit-content;
+}
+
+.challengeitem-header {
+  font-size: 25px;
+  color: #00001F;
+  font-weight: 300;
+  font-style: normal;
+  margin-top: 35px;
+  text-align: center;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+.challenge-col-header {
+  font-size: 24px;
+  color: #FFFFF2;
+  font-weight: bolder;
+  font-style: italic;
+  margin-top: 10px;
+  margin-bottom: 13px;
+  text-shadow: 0px 3px 7px -1px rgba(0,0,0,0.84);
+  opacity: 0.8;
+}
+
+.challenge-progress-done {
+  font-size: 23px;
+  text-align: center;
+  color: #FFFFF2;
+  opacity: 0.7;
+}
+
+.challenge-progress-number {
+  font-size: 55px;
+  color: #0000AF;
+  opacity: 0.8;
+}
+
+.challenge-col-well {
+  opacity: 0.6;
+  border-radius: 2px;
+  font-size: 16px;
+  color: #FFFFFF;
+  border-color: #5E6055;
+  background-color: #5E6055;
+  box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.44);
+}
+
+.history-col-well {
+  opacity: 0.6;
+  width: 70vw;
+  border-radius: 2px;
+  font-size: 16px;
+  color: #FFFFFF;
+  border-color: #5E6055;
+  background-color: #5E6055;
+  box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.44);
+}
+
+.challengeitem {
+  border-radius: 3px;
+  height: 140px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  background-color: #a5e01a;
+  box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.64);
+  opacity: 0.95;
+}
+
+.challengeitem-practice {
+  background-color: #a5e01a;
+}
+
+#challenge_type_select {
+  color: #161615;
+}
+
+.challengeitem-arcade-realm1 {
+  background-color: #f4b70e;
+}
+
+.challengeitem-arcade-realm2 {
+  background-color: #00aa66;
+}
+
+.challengeitem-arcade-realm3 {
+  background-color: #005EAE;
+}
+
+.challengeitem-live {
+  background-color: #c12811;
+}
+
+.dashboard-user-name {
+  font-size: 20px;
+  color: #FFFFF2;
+  opacity: 0.6;
+}
+
+.error-message {
+  color: white;
+  font-size: 16px;
+}
+
 .editortab, .overlay {
-  height: 300px
+  height: 300px;
+}
+
+.editortab {
+  background-color: #424439;
+  color: #424439;
 }
 
 .dashboardtopbar {
+  width: fit-content;
+  min-width: 800px;
+}
+
+.dashboardtopbar-stats {
+  color: #FFFFF2;
+  margin-top: 30px;
+  opacity: 0.8;
+  font-size: 20px;
+  text-align: right;
+  align-items: flex-end;
 }
 
 .dashboardsidebar {
@@ -11,23 +187,106 @@
   padding: 4px;
 }
 
-.challengeitem {
-  border-style: groove;
-  border-radius: 8px;
-  padding: 4px;
-
+.dashboard-bottom-div {
+  box-shadow: 0px -1px 15px 5px rgba(0,0,0,0.14);
+  background-color: #424439;
 }
 
-.contentcontainer {
-  padding: 30px;
+.dashboard-topmost-div {
+  background: linear-gradient(-30deg, #2AC3EB, #005EAE);
 }
 
-.navbarpadding {
-  padding: 30px;
+.frontpage-info {
+  align-items: baseline;
+  text-align: center;
+  font-style: normal;
+  margin-top: 7vw;
+  font-size: 22px;
+  padding-right: 20px;
+  font-weight: 200;
+  opacity: 0.8;
 }
 
-.empty-progress-bar {
-  width: 0%;
+.frontpage-logo-div {
+  width: fit-content;
+  height: fit-content;
+  padding-right: 15px;
+  margin: auto;
+}
+
+.frontpage-logo {
+  height: auto;
+  width: 350px;
+  margin-top: 10vw;
+}
+
+.frontpage-topbar {
+  background: linear-gradient(-30deg, #2AC3EB, #005EAE);
+  height: 33vw;
+  box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.34);
+}
+
+.history-header {
+  align-items: baseline;
+  padding-bottom: 0px;
+  margin: 0px;
+  font-style: normal;
+  font-size: 22px;
+  font-weight: 200;
+  opacity: 0.9;
+}
+
+.input-text {
+  padding: 3px;
+  padding-left: 6px;
+  color: #161615;
+  border-radius: 5px;
+}
+
+.join-in {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.logo {
+  padding-bottom: 12px;
+  height: 50px;
+}
+
+.nav-tabs {
+  background-color: #424439;
+  color: #424439;
+}
+
+.nav-tabs-active-link-hover-bg {
+  background-color: #424439;
+  color: #424439;
+}
+
+.navbar-fullwidth-container {
+  background-color: #2d2d29;
+}
+
+.navbar-collapse {
+  padding-top: 14px;
+  padding-right: 20%;
+  padding-left: 19%;
+}
+
+.navbar-inverse {
+  background-color: #2d2d29;
+  border-bottom-style: hidden;
+  color: #2d2d29;
+  margin: 0px;
+  padding: 5px;
+  box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.34);
+}
+
+.startchallenge-container {
+  width: 50vw;
+  margin-left: 25%;
+  margin-right: 25%;
 }
 
 .submissioncode {
@@ -37,6 +296,7 @@
 .feedback-container {
   display: none;
   margin-top: 3em;
+  margin-left: 15px;
 }
 
 .nexttask {
@@ -51,8 +311,74 @@
   margin-bottom: 1em;
 }
 
+.startchallenge-topbar {
+  background: linear-gradient(-30deg, #2AC3EB, #005EAE);
+  height: fit-content;
+}
+
+.task-container {
+  width: 61vw;
+}
+
+.task-history-item {
+  background: linear-gradient(270deg, #cdeb8e, #a5c956);
+  border-radius: 3px;
+  padding-top: 5px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  color: whitesmoke;
+  width: 60vw;
+  box-shadow: 0px 3px 7px 1px rgba(0,0,0,0.24);
+}
+
+.task-history-infotext {
+  margin: 0px;
+}
+
+.task-topmost-div {
+  padding-bottom: 2vw;
+  background: linear-gradient(-30deg, #2AC3EB, #005EAE);
+}
+
+.task-topbar-challenge-info {
+  height: fit-content;
+  margin-left: 20%;
+  padding-top: 3vw;
+  margin-right: 20%;
+}
+
+.taskview-challenge-heading {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  display: inline;
+}
+
 .tooltip {
   width: 350px;
+}
+
+.realm-select {
+  color: #161615;
+}
+
+#results-panel {
+  color: black;
+}
+
+.dropdown-toggle:hover {
+  color: black;
+}
+
+.tab-pane {
+  padding-bottom: 15px;
+}
+
+.container {
+  padding-top: 15px;
 }
 
 .overlay {

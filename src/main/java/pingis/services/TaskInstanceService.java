@@ -1,6 +1,7 @@
 package pingis.services;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -150,13 +151,6 @@ public class TaskInstanceService {
     return taskInstanceRepository.findByTaskAndUser(task, user);
   }
 
-  public boolean canContinue(TaskInstance taskInstance, User user) {
-    if (taskInstance.getStatus() == CodeStatus.DONE || !taskInstance.getUser().equals(user)) {
-      return false;
-    }
-    return true;
-  }
-
   public TaskInstance getRandomTaskInstance(Task task) {
     List<TaskInstance> viableInstances = taskInstanceRepository.findByTask(task).stream()
         .filter(i -> !i.getUser().equals(userService.getCurrentUser()))
@@ -165,7 +159,7 @@ public class TaskInstanceService {
     return viableInstances.get(new Random().nextInt(viableInstances.size()));
   }
 
-  public TaskInstance getUnfinishedInstance(Challenge challenge, User player) {
+  public TaskInstance getUnfinishedInstanceInChallenge(Challenge challenge, User player) {
     Optional<TaskInstance> unfinished = getAllByChallenge(challenge).stream()
         .filter(i -> i.getUser().equals(player))
         .filter(i -> i.getStatus() == CodeStatus.IN_PROGRESS)
@@ -176,8 +170,37 @@ public class TaskInstanceService {
     return null;
   }
 
+  public List<TaskInstance> getHistory() {
+    return userService.getCurrentUser().getTaskInstances().stream()
+            .sorted(new TaskInstanceTimestampComparator())
+            .collect(Collectors.toList());
+  }
+
+  public TaskInstance getLastUnfinishedInstance() {
+    Optional<TaskInstance> unfinished = getHistory().stream()
+            .filter(e -> e.getStatus() == CodeStatus.IN_PROGRESS)
+            .findFirst();
+
+    if (unfinished.isPresent()) {
+      return unfinished.get();
+    } else {
+      return null;
+    }
+  }
+
   public boolean canPlayOrSkip(TaskInstance taskInstance) {
     return taskInstance.getUser().equals(userService.getCurrentUser())
         && taskInstance.getStatus() == CodeStatus.IN_PROGRESS;
+  }
+
+  public class TaskInstanceTimestampComparator implements Comparator<TaskInstance> {
+    @Override
+    public int compare(TaskInstance t1, TaskInstance t2) {
+      if (t1.getCreationTime().after(t2.getCreationTime())) {
+        return -1;
+      } else {
+        return 1;
+      }
+    }
   }
 }
