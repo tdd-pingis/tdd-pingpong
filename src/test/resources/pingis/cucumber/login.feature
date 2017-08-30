@@ -1,9 +1,7 @@
 Feature: Logging in and out
 
 Scenario Outline: <user> can log in with valid username and password
-    When <user> clicks the Login button
-    And inputs their username <username> and password <password>
-    And clicks the Log in button
+    When <user> logs in with username <username> and password <password>
     Then <user> is successfully authenticated
     And is redirected to the user page
 
@@ -13,9 +11,7 @@ Scenario Outline: <user> can log in with valid username and password
         |Admin  |admin      |password   |
 
 Scenario Outline: <user> cannot login with an invalid username or password
-    When <user> clicks the Login button
-    And inputs their username <username> and password <password>
-    And clicks the Log in button
+    When <user> logs in with incorrect username <username> and password <password>
     Then <user> is not authenticated
     And is redirected to the login page
 
@@ -25,7 +21,6 @@ Scenario Outline: <user> cannot login with an invalid username or password
         |Admin  |amin       |password   |
 
 Scenario: User can log out
-    Given user is logged in
-    And clicks the My Account button
-    And clicks the Logout button
-    Then user is successfully signed out
+    Given User is logged in with username user and password password
+    When User logs out
+    Then User is no longer authenticated

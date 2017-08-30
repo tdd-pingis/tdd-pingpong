@@ -7,7 +7,7 @@
       <nav th:include="navbar :: navigation"></nav>
       <div class="divider task-topmost-div" >
          <div class="row task-topbar-challenge-info" th:unless="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}"> <!-- top bar -->
-            <h1>Challenge: </h1><h2 th:inline="text"> [[${challenge.name}]]</h2>
+            <h1>Challenge: </h1><h2 id="challenge-name" th:inline="text"> [[${challenge.name}]]</h2>
             <p th:inline="text" class="lead dashboard-user-name"><strong>Task number: 5/12</strong></p>
             <p class="lead dashboard-user-name"><strong>Rank: </strong></p>  <!-- TODO: support for different ranks -->
          </div>
@@ -20,19 +20,19 @@
       <div class="container task-container">
          <div class="row">
             <div class="col-md-4">
-               <p th:inline="text">Task: [[${task.name}]]</p>
+               <p id="task-name" th:inline="text">Task: [[${task.name}]]</p>
                <p th:inline="text">Level: [[${task.level}]]</p>
             </div>
             <div class="col-md-6">
-               <p th:text="${task.desc}"></p><br/><br/>
+               <p id="task-desc" th:text="${task.desc}"></p><br/><br/>
             </div>
          </div>
          <ul class="nav nav-tabs">
             <li class="active">
-               <a data-toggle="tab" th:text="${submissionTabFileName}" href="#implementation">Placeholder editors</a>
+               <a id="first-tab" data-toggle="tab" th:text="${submissionTabFileName}" href="#implementation">Placeholder editors</a>
             </li>
             <li>
-               <a data-toggle="tab" th:text="${staticTabFileName}" href="#test">Placeholder editors</a>
+               <a id="second-tab" data-toggle="tab" th:text="${staticTabFileName}" href="#test">Placeholder editors</a>
             </li>
             <li>
                <a data-toggle="tooltip" data-placement="right" th:title="${'To complete this ' + #strings.toLowerCase(task.type)
@@ -45,7 +45,7 @@
          <form method="post" th:action="@{/task}">
             <div class="tab-content" th:inline="text">
                <input type="hidden" name="taskInstanceId" th:value="${taskInstanceId}" />
-               <div id="implementation" class="tab-pane fade in active">
+               <div id="implementation" class="tab-pane fade active in">
                   <div class="panel-heading">
                      <h3 class="panel-title" th:text="${submissionTabFileName}"></h3>
                   </div>
