@@ -3,10 +3,13 @@ function createEditor(editorId, textareaId) {
   let textarea = document.getElementById(textareaId);
 
   editor.setTheme("ace/theme/monokai");
-  editor.getSession().setMode("ace/mode/java");
-  editor.getSession().on("change", () => {
-    textarea.value = editor.getSession().getValue();
-  });
+  editor.getSession()
+    .setMode("ace/mode/java");
+  editor.getSession()
+    .on("change", () => {
+      textarea.value = editor.getSession()
+        .getValue();
+    });
   return editor;
 }
 
