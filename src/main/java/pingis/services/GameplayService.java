@@ -18,8 +18,8 @@ import pingis.repositories.ChallengeRepository;
 
 @Service
 public class GameplayService {
-  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private final ChallengeRepository challengeRepository;
 

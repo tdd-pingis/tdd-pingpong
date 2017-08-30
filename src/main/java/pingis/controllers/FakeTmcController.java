@@ -27,7 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class FakeTmcController {
 
-  Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @RequestMapping(value = "/fake/authorize", method = RequestMethod.GET)
   public String login(

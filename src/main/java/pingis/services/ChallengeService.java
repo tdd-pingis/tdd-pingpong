@@ -20,11 +20,7 @@ public class ChallengeService {
   private final ChallengeRepository challengeRepository;
 
   @Autowired
-  private TaskService taskService;
-
-  @Autowired
   private UserService userService;
-
   @Autowired
   private TaskInstanceService taskInstanceService;
 

@@ -26,13 +26,10 @@ public class UserController {
 
   @Autowired
   UserService userService;
-
   @Autowired
   TaskInstanceService taskInstanceService;
-
   @Autowired
   ChallengeService challengeService;
-
   @Autowired
   GameplayService gameplayService;
 

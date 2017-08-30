@@ -31,7 +31,7 @@ import pingis.repositories.sandbox.SubmissionRepository;
 @Profile("dev")
 public class FakeSandboxRestService {
 
-  private Logger logger = LoggerFactory.getLogger(this.getClass());
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private RestTemplate restTemplate;
 
