@@ -5,17 +5,18 @@
 </head>
 <body>
       <nav th:include="navbar :: navigation"></nav>
-      <div class="divider frontpage-topbar" id="frontpage-topbar">
-            <div class="frontpage-logo-div">
+      <div class="container-fluid frontpage-topbar" id="frontpage-topbar">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
                <img src="img/logo.svg" class="frontpage-logo" alt="CodePong frontpage logo"></img>
             </div>
-            <div class="row task-topbar-challenge-info"> <!-- top bar -->
-                  <div class="row">
+        </div>
+            <div class="row "> <!-- top bar -->
+                  <div class="col-md-4 col-md-offset-4">
                      <h2 class="frontpage-info" id="frontpage-info">> Test-Driven development <strong>with a <i>twist</i></strong></h2>
-                     <p class="join-in">Login with your TMC account and <i><strong>join in!</strong></i></p>
+                     <p class="join-in">Log in with your TMC account and <i><strong>join in!</strong></i></p>
                   </div>
             </div>
-      </div>
       <div class="divider frontpage-bottom" id="frontpage-bottom">
       </div>
 </body>
