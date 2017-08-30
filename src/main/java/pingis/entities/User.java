@@ -37,7 +37,7 @@ public class User {
 
   @OneToMany(fetch = FetchType.LAZY, mappedBy = "author")
   private List<Task> authoredTasks;
-  
+
   @OneToMany(mappedBy = "secondPlayer")
   private List<Challenge> participatingLiveChallenges;
 
@@ -178,7 +178,7 @@ public class User {
   public void setParticipatingLiveChallenges(List<Challenge> participatingLiveChallenges) {
     this.participatingLiveChallenges = participatingLiveChallenges;
   }
-  
+
   public void addParticipatingLiveChallenge(Challenge challenge) {
     this.participatingLiveChallenges.add(challenge);
   }

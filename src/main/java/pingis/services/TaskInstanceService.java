@@ -177,30 +177,30 @@ public class TaskInstanceService {
     }
     return null;
   }
-  
+
   public List<TaskInstance> getHistory() {
     return userService.getCurrentUser().getTaskInstances().stream()
             .sorted(new TaskInstanceTimestampComparator())
             .collect(Collectors.toList());
   }
-  
+
   public TaskInstance getLastUnfinishedInstance() {
     Optional<TaskInstance> unfinished = getHistory().stream()
             .filter(e -> e.getStatus() == CodeStatus.IN_PROGRESS)
             .findFirst();
-    
+
     if (unfinished.isPresent()) {
       return unfinished.get();
     } else {
       return null;
     }
   }
-  
+
   public boolean canPlayOrSkip(TaskInstance taskInstance) {
     return taskInstance.getUser().equals(userService.getCurrentUser())
         && taskInstance.getStatus() == CodeStatus.IN_PROGRESS;
   }
-  
+
   public class TaskInstanceTimestampComparator implements Comparator<TaskInstance> {
     @Override
     public int compare(TaskInstance t1, TaskInstance t2) {

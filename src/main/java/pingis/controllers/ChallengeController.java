@@ -108,7 +108,7 @@ public class ChallengeController {
 
     logger.debug("Creating new task pair");
     logger.debug("Generating new task pair and instance");
-    
+
     int highestIndex = taskService.findAllByChallenge(currentChallenge).size() / 2;
     logger.info("Challenge ID: " + currentChallenge.getId());
     logger.info("Challenge type: " + currentChallenge.getType());

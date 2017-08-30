@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Random;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import pingis.entities.Challenge;
@@ -25,6 +27,8 @@ import pingis.repositories.sandbox.SubmissionRepository;
 
 @Component
 public class DataImporter {
+
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private static final int TEST_USER_POINTS = 5000;
   private static final int IMPLEMENTATION_USER_POINTS = 1000;
@@ -279,32 +283,32 @@ public class DataImporter {
 
   private void printDatabase() {
     // For debugging-purposes
-    System.out.println("users:");
+    logger.debug("users:");
     for (String key : this.users.keySet()) {
-      System.out.println("key: " + key + ", value: " + this.users.get(key).toString() + "\n");
+      logger.debug("key: " + key + ", value: " + this.users.get(key).toString() + "\n");
     }
     printChallenges();
     printTaskInstances();
   }
 
   private void printChallenges() {
-    System.out.println("---");
-    System.out.println("challenges:");
+    logger.debug("---");
+    logger.debug("challenges:");
     for (String s : this.challenges.keySet()) {
       Challenge c = this.challenges.get(s);
-      System.out.println("challenge: " + c.toString() + "\n");
+      logger.debug("challenge: " + c.toString() + "\n");
       for (Task t : c.getTasks()) {
-        System.out.println("  task: " + t.toString());
+        logger.debug("  task: " + t.toString());
       }
     }
   }
 
   private void printTaskInstances() {
-    System.out.println("---");
-    System.out.println("taskinstances:");
+    logger.debug("---");
+    logger.debug("taskinstances:");
     for (TaskInstance i : this.taskInstances) {
-      System.out.println("ti: " + i.toString());
-      System.out.println("-");
+      logger.debug("ti: " + i.toString());
+      logger.debug("-");
     }
   }
 

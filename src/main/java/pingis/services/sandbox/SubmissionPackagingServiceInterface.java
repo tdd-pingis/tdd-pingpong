@@ -16,5 +16,5 @@ public interface SubmissionPackagingServiceInterface {
    */
   byte[] packageSubmission(Map<String, byte[]> additionalFiles)
         throws IOException, ArchiveException;
-  
+
 }

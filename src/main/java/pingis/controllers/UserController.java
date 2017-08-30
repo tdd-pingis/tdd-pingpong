@@ -29,7 +29,7 @@ public class UserController {
   public enum LiveType {
     CONTINUE, CREATE, JOIN
   }
-  
+
   @Autowired
   UserService userService;
 
@@ -55,31 +55,31 @@ public class UserController {
   @RequestMapping(value = "/user", method = RequestMethod.GET)
   public String user(Model model, Principal principal) {
     logger.debug("Get /user");
-    
+
     User user = userService.handleUserAuthenticationByName(principal.getName());
     model.addAttribute("userLevel", userService.levelOfCurrentUser());
     model.addAttribute("user", user);
-    
-    MultiValueMap<Challenge, TaskInstance> myTasksInChallenges 
+
+    MultiValueMap<Challenge, TaskInstance> myTasksInChallenges
                                           = challengeService.getCompletedTaskInstancesByChallenge();
     TaskInstance       lastUnfinished     = taskInstanceService.getLastUnfinishedInstance();
     List<TaskInstance> history            = taskInstanceService.getHistory();
     List<Challenge>   availableChallenges = challengeService.getAvailableChallenges(
                                                                  myTasksInChallenges);
-    
+
     model.addAttribute("myTasksInChallenges", myTasksInChallenges);
     model.addAttribute("unfinishedTaskInstance", lastUnfinished);
     model.addAttribute("history", history);
     model.addAttribute("availableChallenges", availableChallenges);
-    
+
     logger.info("Found " + history.size() + " done task-instances.");
     if (lastUnfinished != null) {
-      logger.info("Found latest unfinished taskinstance of task " 
+      logger.info("Found latest unfinished taskinstance of task "
                             + lastUnfinished.getTask().getName());
     } else {
       logger.info("No unfinished taskinstances");
     }
-    
+
     // Fetch and set live challenge
     Challenge liveChallenge = gameplayService.getParticipatingLiveChallenge();
     Challenge randomLiveChallenge = challengeService.getRandomLiveChallenge(user);
@@ -97,7 +97,7 @@ public class UserController {
       model.addAttribute("liveChallengeType", LiveType.CONTINUE);
     }
     model.addAttribute("liveChallenge", liveChallenge);
-    
+
     return "user";
   }
 
@@ -108,7 +108,7 @@ public class UserController {
     return "admin";
   }
 
-  
+
 
 }
 
