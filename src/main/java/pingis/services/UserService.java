@@ -15,8 +15,9 @@ import pingis.repositories.UserRepository;
 @Service
 public class UserService {
 
-  private final UserRepository userRepository;
   private final Logger logger = Logger.getLogger(UserService.class);
+
+  private final UserRepository userRepository;
 
   @Autowired
   public UserService(UserRepository userRepository) {

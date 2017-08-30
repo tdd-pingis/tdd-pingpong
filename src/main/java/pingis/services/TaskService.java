@@ -16,6 +16,7 @@ import pingis.repositories.TaskRepository;
 
 @Service
 public class TaskService {
+
   private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
