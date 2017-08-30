@@ -19,5 +19,5 @@ public class SubmissionPackagingServiceStub implements SubmissionPackagingServic
         throws IOException, ArchiveException {
     return new byte[0];
   }
-  
+
 }

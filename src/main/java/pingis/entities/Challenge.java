@@ -120,7 +120,7 @@ public class Challenge {
     out += "\ntype: " + this.type.name();
     out += "\nlevel: " + this.level;
     out += "\nauthor: " + this.author.getName();
-    
+
     return out;
   }
 

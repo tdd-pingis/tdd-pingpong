@@ -46,7 +46,7 @@ public class TaskInstance {
   @NotNull
   @ManyToOne(fetch = FetchType.EAGER)
   private User user;
-  
+
   private Timestamp creationTime;
 
   @ManyToOne
@@ -140,11 +140,11 @@ public class TaskInstance {
   public List<TaskInstance> getImplementationTaskInstances() {
     return this.implementationTaskInstances;
   }
-  
+
   public Challenge getChallenge() {
     return this.task.getChallenge();
   }
-  
+
   public Realm getRealm() {
     return getChallenge().getRealm();
   }

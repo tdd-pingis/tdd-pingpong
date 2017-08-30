@@ -97,8 +97,8 @@ public class ChallengeService {
             || (challenge.getSecondPlayer() != null
             && challenge.getSecondPlayer().equals(player));
   }
-  
-  public List<Challenge> getAvailableChallenges(MultiValueMap<Challenge, TaskInstance> 
+
+  public List<Challenge> getAvailableChallenges(MultiValueMap<Challenge, TaskInstance>
                                               myTasksInChallenges) {
     List<Challenge> availableChallenges = findAll().stream()
             .filter(e -> !e.getIsOpen())
@@ -106,10 +106,10 @@ public class ChallengeService {
             .filter(e -> e.getType() != ChallengeType.ARCADE)
             .filter(e -> !myTasksInChallenges.containsKey(e))
             .collect(Collectors.toList());
-    
+
     return availableChallenges;
   }
-  
+
   public MultiValueMap<Challenge, TaskInstance> getCompletedTaskInstancesByChallenge() {
     MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
     userService.getCurrentUser().getTaskInstances().stream()

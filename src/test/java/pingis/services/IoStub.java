@@ -1,6 +1,11 @@
 package pingis.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class IoStub implements Io {
+
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   private String[] data = {
       "{",
@@ -39,7 +44,9 @@ public class IoStub implements Io {
   private int currentLine = 0;
 
   public IoStub() {
-    System.out.println(data);
+    for (String row : data) {
+      logger.debug(row);
+    }
   }
 
   public boolean hasNext() {
