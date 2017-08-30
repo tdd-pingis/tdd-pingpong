@@ -218,6 +218,9 @@ textarea {
   height: auto;
   width: 350px;
   margin-top: 10vw;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .frontpage-topbar {
