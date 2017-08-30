@@ -55,18 +55,19 @@ public class UserController {
     model.addAttribute("user", user);
 
     MultiValueMap<Challenge, TaskInstance> myTasksInChallenges
-                                          = challengeService.getCompletedTaskInstancesByChallenge();
-    TaskInstance       lastUnfinished     = taskInstanceService.getLastUnfinishedInstance();
-    List<TaskInstance> history            = taskInstanceService.getHistory();
-    List<Challenge>   availableChallenges = challengeService.getAvailableChallenges(
-                                                                 myTasksInChallenges);
+            = challengeService.getCompletedTaskInstancesInUnfinishedChallenges();
+    TaskInstance lastUnfinished = taskInstanceService.getLastUnfinishedInstance();
+    List<TaskInstance> history = taskInstanceService.getHistory();
+    List<Challenge> availableChallenges = challengeService.getAvailableChallenges(
+            myTasksInChallenges);
 
     model.addAttribute("myTasksInChallenges", myTasksInChallenges);
     model.addAttribute("unfinishedTaskInstance", lastUnfinished);
     model.addAttribute("history", history);
     model.addAttribute("availableChallenges", availableChallenges);
 
-    logger.info("Found " + history.size() + " done task-instances.");
+    logger.info("Found " + history.size() + " completed task-instances.");
+    logger.info("Found " + user.getCompletedChallenges().size() + " completed challenges.");
     if (lastUnfinished != null) {
       logger.info("Found latest unfinished taskinstance of task "
                             + lastUnfinished.getTask().getName());

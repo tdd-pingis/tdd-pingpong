@@ -14,6 +14,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Max;
@@ -52,6 +53,9 @@ public class Challenge {
   @ManyToOne(fetch = FetchType.EAGER)
   private User author;
 
+  @ManyToMany(mappedBy = "completedChallenges")
+  private List<User> completedByPlayers;
+
   public User getSecondPlayer() {
     return secondPlayer;
   }
@@ -81,6 +85,7 @@ public class Challenge {
     this.description = description;
     this.type = type;
     this.tasks = new ArrayList<>();
+    this.completedByPlayers = new ArrayList<>();
     this.isOpen = false;
     this.level = 0;
   }
@@ -186,6 +191,12 @@ public class Challenge {
 
   public void setRealm(Realm realm) {
     this.realm = realm;
+  }
+
+  public void addNewCompletedPlayer(User user) {
+    if (!this.completedByPlayers.contains(user)) {
+      this.completedByPlayers.add(user);
+    }
   }
 
 }
