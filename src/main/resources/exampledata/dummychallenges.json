@@ -393,7 +393,179 @@
             ]
         },
         {
-            "name": "Arcade2",
+            "name": "Arcade 1",
+            "author": "modeluser",
+            "level": 2,
+            "desc": "Easy programming tasks for beginners.",
+            "type": "ARCADE",
+            "realm": "Beginner",
+            "tasks": [
+                {
+                    "author": "modeluser",
+                    "index": 1,
+                    "name": "Test Hello World",
+                    "type": "test",
+                    "desc": "Write a JUnit test case for a method that takes no arguments and returns \"Hello, world!\" as a string.",
+                    "codeStub": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class Beginner1Test {\n\n",
+                        "    @Test\n",
+                        "    public void helloTest() {\n",
+                        "       //TODO: implement this\n",
+                        "    }\n",
+                        "}\n"
+                    ],
+                    "modelimplementation": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class Beginner1Test {\n\n",
+                        "    @Test\n",
+                        "    public void helloTest() {\n",
+                        "        Beginner1 b = new Beginner1();\n",
+                        "        assertTrue(b.hello().equals(\"Hello, world!\"));\n",
+                        "    }\n",
+                        "}\n"
+                    ]
+                },
+                {
+                    "author": "modeluser",
+                    "index": 1,
+                    "name": "Implement Hello World",
+                    "type": "implementation",
+                    "desc": "Write a method that makes the given test pass",
+                    "codeStub": [
+                        "public class Beginner1 {\n\n",
+                        "    public String hello() {\n",
+                        "       //TODO: make this work\n",
+                        "       return \"broken\";\n",
+                        "    }\n",
+                        "}\n"],
+                    "modelimplementation": [
+                        "public class Beginner1 {\n\n",
+                        "    public String hello() {\n",
+                        "       return \"Hello, world!\";\n",
+                        "    }\n",
+                        "}\n"]
+                },
+                {
+                    "author": "modeluser",
+                    "index": 2,
+                    "name": "Test even numbers checker",
+                    "type": "test",
+                    "desc": "Write a test for a method that checks if the argument is an even integer\n",
+                    "codeStub": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class Beginner1Test {\n\n",
+                        "    @Test\n",
+                        "    public void evenTest() {\n",
+                        "        // TODO: implement this\n",
+                        "    }\n",
+                        "}\n"
+                    ],
+                    "modelimplementation": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class Beginner1Test {\n\n",
+                        "    @Test\n",
+                        "    public void evenTest() {\n",
+                        "        Beginner1 even = new Beginner1()",
+                        "        assertTrue(even.isEven(2));\n",
+                        "        assertFalse(even.isEven(3));\n",
+                        "    }\n",
+                        "}\n"]
+                },
+                {
+                    "author": "modeluser",
+                    "index": 2,
+                    "name": "Implement even numbers checker",
+                    "type": "implementation",
+                    "desc": "Implement a method that checks if the argument is an even integer.",
+                    "codeStub": [
+                        "public class Beginner1 {\n\n",
+                        "    public boolean isEven(int number) {\n",
+                        "        // TODO: make this work\n",
+                        "        return false;\n",
+                        "    }\n",
+                        "}\n"
+                    ],
+                    "modelimplementation": [
+                        "public class Beginner1 {\n\n",
+                        "    public boolean isEven(int number) {\n",
+                        "        return number % 2 == 0 ? true : false;\n",
+                        "    }\n",
+                        "}\n"
+                    ]
+                },
+                {
+                    "author": "modeluser",
+                    "index" : 3,
+                    "name": "Moomins test",
+                    "type": "test",
+                    "desc": "Write a test for a method that returns true if the string argument contains the word \"muumi\".",
+                    "codeStub": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+                        "public class Beginner1Test {\n\n",
+                        "    @Test\n",
+                        "    public void muumiTest() {\n",
+                        "        // TODO: make this work\n",
+                        "    }\n",
+                        "}\n"
+                    ],
+                    "modelimplementation": [
+                        "import org.junit.Test;\n",
+                        "import static org.junit.Assert.*;\n",
+                        "import fi.helsinki.cs.tmc.edutestutils.Points;\n\n",
+                        "@Points(\"03-03\")\n",
+
+                        "public class Beginner1Test {\n\n",
+                        "    @Test\n",
+                        "    public void muumiTest() {\n",
+                        "        Beginner1 m = new Beginner1();\n",
+                        "        assertTrue(m.containsMuumi(\"Käy muumilaaksoon\"));\n",
+                        "        assertFalse(m.containsMuumi(\"Gotta catch em all\"));\n",
+                        "    }\n",
+                        "}\n"
+                    ]
+                },
+                {
+                    "author": "modeluser",
+                    "index": 3,
+                    "name": "Moomins",
+                    "type": "implementation",
+                    "desc": "Write a method that returns true if the argument contains the word \"muumi\".",
+                    "codeStub": [
+                        "public class Beginner1 {\n\n",
+                        "    public boolean containsMuumi(String text) {\n",
+                        "        // TODO: implement this\n",
+                        "        return false;\n",
+                        "    }\n",
+                        "}\n"
+                    ],
+                    "modelimplementation": [
+                        "public class Beginner1 {\n\n",
+                        "    public boolean containsMuumi(String text) {\n",
+                        "        return text.toLowerCase().contains(\"muumi\");\n",
+                        "    }\n",
+                        "}\n"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Arcade 2",
             "author": "modeluser",
             "level": 2,
             "desc": "Easy programming tasks for beginners.",
@@ -565,7 +737,7 @@
             ]
         },
         {
-            "name": "Arcade3",
+            "name": "Arcade 3",
             "author": "modeluser",
             "level": 2,
             "desc": "Easy programming tasks for beginners.",
