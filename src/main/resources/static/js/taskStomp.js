@@ -22,14 +22,17 @@ function connectStomp(csrf) {
 }
 
 var timer;
-window.submissionEditor.getSession().on("change", () => {
-  clearTimeout(timer);
-  timer = setTimeout(sendCode, 850);
-});
+window.submissionEditor.getSession()
+  .on("change", () => {
+    clearTimeout(timer);
+    timer = setTimeout(sendCode, 850);
+  });
 
 function sendCode() {
-  $("#submit-button").attr("disabled", false);
-  const code = $("#submission-code").val();
+  $("#submit-button")
+    .attr("disabled", false);
+  const code = $("#submission-code")
+    .val();
   stompClient.send(`/javaparser/${taskInstanceId}`, {}, code);
 }
 
@@ -40,6 +43,8 @@ function showErrors(message) {
 
   const errors = JSON.parse(message.body);
 
-  $("#submit-button").attr("disabled", (errors.length > 0));
-  window.submissionEditor.getSession().setAnnotations(errors);
+  $("#submit-button")
+    .attr("disabled", (errors.length > 0));
+  window.submissionEditor.getSession()
+    .setAnnotations(errors);
 }
