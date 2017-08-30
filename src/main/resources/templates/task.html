@@ -7,7 +7,7 @@
       <nav th:include="navbar :: navigation"></nav>
       <div class="divider task-topmost-div" >
          <div class="row task-topbar-challenge-info" th:unless="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}"> <!-- top bar -->
-            <h2 class="taskview-challenge-heading">Challenge: </h2><h1 th:inline="text">&nbsp; [[${challenge.name}]]</h1>
+             <h2 class="taskview-challenge-heading">Challenge: </h2><h1 id="challenge-name" th:inline="text">&nbsp; [[${challenge.name}]]</h1>
             <br><p th:inline="text" class="lead dashboard-user-name taskview-challenge-heading"><strong>Task number:</strong> &nbsp;&nbsp;&nbsp;[[${task.index}]] / [[${#lists.size(task.challenge.tasks)}]]</p>
          </div>
          <div class="row task-topbar-challenge-info" th:if="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}">  
@@ -19,7 +19,7 @@
       <div class="container task-container">
          <div class="row">
             <div class="col-md-4">
-               <p th:inline="text">Task: &nbsp;<strong>[[${task.name}]]</strong></p>
+               <p id="task-name" th:inline="text">Task: &nbsp;<strong>[[${task.name}]]</strong></p>
                <p th:if="${task.type == T(pingis.entities.TaskType).TEST}">Task type: &nbsp;<strong> Test</strong></p>
                <p th:if="${task.type == T(pingis.entities.TaskType).IMPLEMENTATION}">Task type: &nbsp;<strong>Implementation</strong></p>
                <p th:inline="text">Points available: &nbsp;<strong>[[${task.points}]]</strong></p>
