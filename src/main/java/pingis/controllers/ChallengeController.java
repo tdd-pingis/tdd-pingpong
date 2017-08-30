@@ -330,7 +330,7 @@ public class ChallengeController {
       player.addCompletedChallenge(challenge);
       challengeService.save(challenge);
       userService.save(player);
-      
+
       logger.debug("All tasks done");
       return new RedirectView("/challengeFinished/" + challenge.getId());
     }

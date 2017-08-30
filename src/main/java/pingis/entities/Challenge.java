@@ -55,7 +55,7 @@ public class Challenge {
 
   @ManyToMany(mappedBy = "completedChallenges")
   private List<User> completedByPlayers;
-  
+
   public User getSecondPlayer() {
     return secondPlayer;
   }
@@ -192,7 +192,7 @@ public class Challenge {
   public void setRealm(Realm realm) {
     this.realm = realm;
   }
-  
+
   public void addNewCompletedPlayer(User user) {
     if (!this.completedByPlayers.contains(user)) {
       this.completedByPlayers.add(user);

@@ -42,7 +42,7 @@ public class User {
 
   @OneToMany(mappedBy = "secondPlayer")
   private List<Challenge> participatingLiveChallenges;
-  
+
   @ManyToMany
   @JoinTable
   private List<Challenge> completedChallenges;
@@ -189,13 +189,13 @@ public class User {
   public void addParticipatingLiveChallenge(Challenge challenge) {
     this.participatingLiveChallenges.add(challenge);
   }
-  
+
   public void addCompletedChallenge(Challenge challenge) {
     if (!this.completedChallenges.contains(challenge)) {
       this.completedChallenges.add(challenge);
     }
   }
-  
+
   public List<Challenge> getCompletedChallenges() {
     return completedChallenges;
   }
