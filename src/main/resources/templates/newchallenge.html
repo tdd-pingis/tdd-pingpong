@@ -1,52 +1,52 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="base :: header">
-    <title id="pageTitle" th:inline="text">#CodePong: New challenge</title>
-</head>
-<body>
-<nav th:include="navbar :: navigation"></nav>
-<div class="container">
-    <h1>New challenge</h1>
+    <head th:include="base :: header">
+        <title id="pageTitle" th:inline="text">#CodePong: New challenge</title>
+    </head>
+    <body>
+        <nav th:include="navbar :: navigation"></nav>
+        <div class="container">
+            <h1>New challenge</h1>
 
-    <div class="row">
-        <form action="#" th:action="@{/createChallenge}" th:object="${challenge}" method="post">
-          <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
-            <p>Please fill the form correctly:</p>
-           <ul>
-            <li th:each="error : ${#fields.allDetailedErrors()}">
-              <span th:text="${error}"></span>
-            </li>
-           </ul>
-          </div>
-            <label>Challenge name:</label><br />
-            <input type="text" name="challengeName" class="input-text" size="50" id="challenge_name" th:field="*{name}" placeholder="The name of the challenge eg. Calculator"/><br />
+            <div class="row">
+                <form action="#" th:action="@{/createChallenge}" th:object="${challenge}" method="post">
+                    <div th:if="${#fields.hasAnyErrors()}" class="alert alert-danger">
+                        <p>Please fill the form correctly:</p>
+                        <ul>
+                            <li th:each="error : ${#fields.allDetailedErrors()}">
+                                <span th:text="${error}"></span>
+                            </li>
+                        </ul>
+                    </div>
+                    <label>Challenge name:</label><br />
+                    <input type="text" name="challengeName" class="input-text" size="50" id="challenge_name" th:field="*{name}" placeholder="The name of the challenge eg. Calculator"/><br />
 
-            <label>Challenge description</label><br />
-            <textarea rows="10" cols="80" name="challengeDesc" id="challenge_desc" th:field="*{description}"  placeholder="The description for the challenge, eg. 'Test and implement a simple command line based calculator.'"></textarea><br />
+                    <label>Challenge description</label><br />
+                    <textarea rows="10" cols="80" name="challengeDesc" id="challenge_desc" th:field="*{description}"  placeholder="The description for the challenge, eg. 'Test and implement a simple command line based calculator.'"></textarea><br />
 
-            <label>Type:</label>
-            <select name="challengeType" id="challenge_type_select" th:field="*{type}">
-                <option value="MIXED">Mixed</option>
-                <option value="PROJECT">Project</option>
-            </select>
-            <a data-toggle="tooltip" data-placement="right" title="In project challenges, the tasks are related to each other, while mixed challenges may contain unrelated tasks">
-                <span class="glyphicon glyphicon-question-sign"/></a>
-            <br />
-            <label>Realm:</label>
-            <select name="realm" class="realm-select">
-                <option value="BEGINNER">Beginner</option>
-                <option value="DATASTRUCTURES">Data structures</option>
-                <option value="ALGORITHMS">Algorithms</option>
-                <option value="RECURSION">Recursion</option>
-                <option value="AI">Artificial intelligence</option>
-            </select>
-            <a data-toggle="tooltip" data-placement="right" title="The realm of a challenge defines the challenge's theme">
-                <span class="glyphicon glyphicon-question-sign"/></a>
-            <br />
-            <button type="submit" class="btn btn-primary" id="submit-button">Create challenge</button>
-        </form>
-    </div>
-    <script type="text/javascript" th:src="@{/js/hints.js}" charset="utf-8"></script>
-</div>
-</body>
+                    <label>Type:</label>
+                    <select name="challengeType" id="challenge_type_select" th:field="*{type}">
+                        <option value="MIXED">Mixed</option>
+                        <option value="PROJECT">Project</option>
+                    </select>
+                    <a data-toggle="tooltip" data-placement="right" title="In project challenges, the tasks are related to each other, while mixed challenges may contain unrelated tasks">
+                        <span class="glyphicon glyphicon-question-sign"/></a>
+                    <br />
+                    <label>Realm:</label>
+                    <select name="realm" class="realm-select">
+                        <option value="BEGINNER">Beginner</option>
+                        <option value="DATASTRUCTURES">Data structures</option>
+                        <option value="ALGORITHMS">Algorithms</option>
+                        <option value="RECURSION">Recursion</option>
+                        <option value="AI">Artificial intelligence</option>
+                    </select>
+                    <a data-toggle="tooltip" data-placement="right" title="The realm of a challenge defines the challenge's theme">
+                        <span class="glyphicon glyphicon-question-sign"/></a>
+                    <br />
+                    <button type="submit" class="btn btn-primary" id="submit-button">Create challenge</button>
+                </form>
+            </div>
+            <script type="text/javascript" th:src="@{/js/hints.js}" charset="utf-8"></script>
+        </div>
+    </body>
 </html>

@@ -1,31 +1,31 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="base :: header"></head>
-<body>
-<nav th:include="navbar :: navigation"></nav>
-<div class="container">
-    <p class="lead" th:text="'Challenge: '+${challenge.name}"/>
-    <div class="container">
-        <h4>Test tasks:</h4>
-        <ul>
-            <li th:each="testtask, iteration : ${testTasks}">
-                <a th:href="'/newTaskInstance?taskId='+${testtask.id}+'&amp;testTaskInstanceId=0'" th:id="'test-task-'+${iteration.count}"><span th:text="${testtask.name}"/></a>
-            </li>
-        </ul>
-        <h4>Implementation tasks:</h4>
-        <ul>
-            <div th:each="imptask: ${implementationTaskInstances}">
-                <li th:each="imptaskinstance : ${imptask.value}">
-                    <a th:href="'/newTaskInstance?taskId='
-                   +${imptask.key.id}
-                   +'&amp;testTaskInstanceId='+${imptaskinstance.id}">
-                        <span th:text="'task: '+${imptask.key.name}+', test made by '+${imptaskinstance.user.name}"/>
-                    </a>
-                </li>
-            </div>
-        </ul>
+    <head th:include="base :: header"></head>
+    <body>
+        <nav th:include="navbar :: navigation"></nav>
+        <div class="container">
+            <p class="lead" th:text="'Challenge: '+${challenge.name}"/>
+            <div class="container">
+                <h4>Test tasks:</h4>
+                <ul>
+                    <li th:each="testtask, iteration : ${testTasks}">
+                        <a th:href="'/newTaskInstance?taskId='+${testtask.id}+'&amp;testTaskInstanceId=0'" th:id="'test-task-'+${iteration.count}"><span th:text="${testtask.name}"/></a>
+                    </li>
+                </ul>
+                <h4>Implementation tasks:</h4>
+                <ul>
+                    <div th:each="imptask: ${implementationTaskInstances}">
+                        <li th:each="imptaskinstance : ${imptask.value}">
+                            <a th:href="'/newTaskInstance?taskId='
+                               +${imptask.key.id}
+                               +'&amp;testTaskInstanceId='+${imptaskinstance.id}">
+                                <span th:text="'task: '+${imptask.key.name}+', test made by '+${imptaskinstance.user.name}"/>
+                            </a>
+                        </li>
+                    </div>
+                </ul>
 
-    </div>
-</div>
-</body>
+            </div>
+        </div>
+    </body>
 </html>

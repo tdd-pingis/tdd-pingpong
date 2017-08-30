@@ -1,92 +1,92 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-   <head th:include="base :: header">
-      <title id="pageTitle" th:inline="text">#CodePong: Editor - [[${task.name}]]</title>
-   </head>
-   <body onload="connect()">
-      <nav th:include="navbar :: navigation"></nav>
-      <div class="divider task-topmost-div" >
-         <div class="row task-topbar-challenge-info" th:unless="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}"> <!-- top bar -->
-             <h2 class="taskview-challenge-heading">Challenge: </h2><h1 id="challenge-name" th:inline="text">&nbsp; [[${challenge.name}]]</h1>
-            <br><p th:inline="text" class="lead dashboard-user-name taskview-challenge-heading"><strong>Task number:</strong> &nbsp;&nbsp;&nbsp;[[${task.index}]] / [[${#lists.size(task.challenge.tasks)}]]</p>
-         </div>
-         <div class="row task-topbar-challenge-info" th:if="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}">
-            <h1>Arcade challenge </h1><h2 th:inline="text">[[${challenge.realm}]]</h2>
-            <p class="lead dashboard-user-name"><strong>Rank: </strong>Super Guru!</p>
-         </div>
-      </div>
-
-      <div class="container task-container">
-         <div class="row">
-            <div class="col-md-4">
-               <p id="task-name" th:inline="text">Task: &nbsp;<strong>[[${task.name}]]</strong></p>
-               <p th:if="${task.type == T(pingis.entities.TaskType).TEST}">Task type: &nbsp;<strong> Test</strong></p>
-               <p th:if="${task.type == T(pingis.entities.TaskType).IMPLEMENTATION}">Task type: &nbsp;<strong>Implementation</strong></p>
-               <p th:inline="text">Points available: &nbsp;<strong>[[${task.points}]]</strong></p>
-               <p th:inline="text">Level: &nbsp;<strong>[[${task.level}]]</strong></p>
+    <head th:include="base :: header">
+        <title id="pageTitle" th:inline="text">#CodePong: Editor - [[${task.name}]]</title>
+    </head>
+    <body onload="connect()">
+        <nav th:include="navbar :: navigation"></nav>
+        <div class="divider task-topmost-div" >
+            <div class="row task-topbar-challenge-info" th:unless="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}"> <!-- top bar -->
+                <h2 class="taskview-challenge-heading">Challenge: </h2><h1 id="challenge-name" th:inline="text">&nbsp; [[${challenge.name}]]</h1>
+                <br><p th:inline="text" class="lead dashboard-user-name taskview-challenge-heading"><strong>Task number:</strong> &nbsp;&nbsp;&nbsp;[[${task.index}]] / [[${#lists.size(task.challenge.tasks)}]]</p>
             </div>
-            <div class="col-md-6">
-               <p id="task-desc" th:text="${task.desc}"></p><br/><br/>
+            <div class="row task-topbar-challenge-info" th:if="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}">
+                <h1>Arcade challenge </h1><h2 th:inline="text">[[${challenge.realm}]]</h2>
+                <p class="lead dashboard-user-name"><strong>Rank: </strong>Super Guru!</p>
             </div>
-         </div>
-         <ul class="nav nav-tabs">
-            <li class="active">
-               <a id="first-tab" data-toggle="tab" th:text="${submissionTabFileName}" href="#implementation">Placeholder editors</a>
-            </li>
-            <li>
-               <a id="second-tab" data-toggle="tab" th:text="${staticTabFileName}" href="#test">Placeholder editors</a>
-            </li>
-            <li>
-               <a data-toggle="tooltip" data-placement="right" th:title="${'To complete this ' + #strings.toLowerCase(task.type)
-                  + ' task, follow the assignment and write the code in the FIRST tab.'
-                  + ' Please refer to the uneditable code in the second tab.'}">
-                  <span class="glyphicon glyphicon-question-sign"/></a>
-            </li>
-         </ul>
+        </div>
 
-         <form method="post" th:action="@{/task}">
-            <div class="tab-content" th:inline="text">
-               <input type="hidden" name="taskInstanceId" th:value="${taskInstanceId}" />
-               <div id="implementation" class="tab-pane fade active in">
-                  <div class="panel-heading">
-                     <h3 class="panel-title" th:text="${submissionTabFileName}"></h3>
-                  </div>
-                  <div class="panel-body">
-                     <div id="submission-editor"class="editortab" th:text="${submissionCodeStub}"></div>
-                     <textarea class="submissioncode" name="submissionCode" id="submission-code"
-                               th:text="${submissionCodeStub}"></textarea>
-                  </div>
-               </div>
-               <div id="test" class="tab-pane fade">
-                  <div class="panel-heading">
-                     <h3 class="panel-title" th:text="${staticTabFileName}"></h3>
-                  </div>
-                  <div class="panel-body">
-                     <div class="overlay">For reference only</div>
-                     <div id="static-editor" class="editortab" th:text="${staticCode}"></div>
-                  </div>
-               </div>
-               <div class="row">
-                  <button id="submit-button" type="submit" class="btn btn-primary" onclick="clicked(event)">Submit</button>
-                  <a th:if="${(challenge.type == T(pingis.entities.ChallengeType).ARCADE && task.type == T(pingis.entities.TaskType).IMPLEMENTATION)
-                     || (challenge.type != T(pingis.entities.ChallengeType).ARCADE && !challenge.isOpen)}" class="btn btn-primary" th:href="'/skip/'+${taskInstanceId}">Skip task</a>
-               </div>
+        <div class="container task-container">
+            <div class="row">
+                <div class="col-md-4">
+                    <p id="task-name" th:inline="text">Task: &nbsp;<strong>[[${task.name}]]</strong></p>
+                    <p th:if="${task.type == T(pingis.entities.TaskType).TEST}">Task type: &nbsp;<strong> Test</strong></p>
+                    <p th:if="${task.type == T(pingis.entities.TaskType).IMPLEMENTATION}">Task type: &nbsp;<strong>Implementation</strong></p>
+                    <p th:inline="text">Points available: &nbsp;<strong>[[${task.points}]]</strong></p>
+                    <p th:inline="text">Level: &nbsp;<strong>[[${task.level}]]</strong></p>
+                </div>
+                <div class="col-md-6">
+                    <p id="task-desc" th:text="${task.desc}"></p><br/><br/>
+                </div>
             </div>
-         </form>
-      </div>
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a id="first-tab" data-toggle="tab" th:text="${submissionTabFileName}" href="#implementation">Placeholder editors</a>
+                </li>
+                <li>
+                    <a id="second-tab" data-toggle="tab" th:text="${staticTabFileName}" href="#test">Placeholder editors</a>
+                </li>
+                <li>
+                    <a data-toggle="tooltip" data-placement="right" th:title="${'To complete this ' + #strings.toLowerCase(task.type)
+                       + ' task, follow the assignment and write the code in the FIRST tab.'
+                       + ' Please refer to the uneditable code in the second tab.'}">
+                        <span class="glyphicon glyphicon-question-sign"/></a>
+                </li>
+            </ul>
 
-      <script th:src="@{/webjars/ace-builds/src-min-noconflict/ace.js}" type="text/javascript"  charset="utf-8"></script>
-      <script th:src="@{/js/aceEditorSettings.js}" type="text/javascript"  charset="utf-8"></script>
-      <script th:src="@{/js/hints.js}" type="text/javascript"  charset="utf-8"></script>
-      <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
-      <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
-      <script th:src="@{/js/taskStomp.js}" type="text/javascript"  charset="utf-8"></script>
-      <script th:src="@{/js/overlay.js}"></script>
-      <script th:inline="javascript">
-         /*<![CDATA[*/
-         //Makes the model attribute usable in external javascript files
-         var taskInstanceId = /*[[${taskInstanceId}]]*/;
-         /*]]>*/
-      </script>
-   </body>
+            <form method="post" th:action="@{/task}">
+                <div class="tab-content" th:inline="text">
+                    <input type="hidden" name="taskInstanceId" th:value="${taskInstanceId}" />
+                    <div id="implementation" class="tab-pane fade active in">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" th:text="${submissionTabFileName}"></h3>
+                        </div>
+                        <div class="panel-body">
+                            <div id="submission-editor"class="editortab" th:text="${submissionCodeStub}"></div>
+                            <textarea class="submissioncode" name="submissionCode" id="submission-code"
+                                      th:text="${submissionCodeStub}"></textarea>
+                        </div>
+                    </div>
+                    <div id="test" class="tab-pane fade">
+                        <div class="panel-heading">
+                            <h3 class="panel-title" th:text="${staticTabFileName}"></h3>
+                        </div>
+                        <div class="panel-body">
+                            <div class="overlay">For reference only</div>
+                            <div id="static-editor" class="editortab" th:text="${staticCode}"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button id="submit-button" type="submit" class="btn btn-primary" onclick="clicked(event)">Submit</button>
+                        <a th:if="${(challenge.type == T(pingis.entities.ChallengeType).ARCADE && task.type == T(pingis.entities.TaskType).IMPLEMENTATION)
+                           || (challenge.type != T(pingis.entities.ChallengeType).ARCADE && !challenge.isOpen)}" class="btn btn-primary" th:href="'/skip/'+${taskInstanceId}">Skip task</a>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <script th:src="@{/webjars/ace-builds/src-min-noconflict/ace.js}" type="text/javascript"  charset="utf-8"></script>
+        <script th:src="@{/js/aceEditorSettings.js}" type="text/javascript"  charset="utf-8"></script>
+        <script th:src="@{/js/hints.js}" type="text/javascript"  charset="utf-8"></script>
+        <script th:src="@{/webjars/sockjs-client/sockjs.min.js}"></script>
+        <script th:src="@{/webjars/stomp-websocket/stomp.min.js}"></script>
+        <script th:src="@{/js/taskStomp.js}" type="text/javascript"  charset="utf-8"></script>
+        <script th:src="@{/js/overlay.js}"></script>
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            //Makes the model attribute usable in external javascript files
+            var taskInstanceId = /*[[${taskInstanceId}]]*/;
+            /*]]>*/
+        </script>
+    </body>
 </html>

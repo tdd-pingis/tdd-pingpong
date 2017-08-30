@@ -1,27 +1,27 @@
 <div class="container" th:fragment="navigation">
-      <nav class="navbar navbar-inverse bg-faded">
-         <!-- Navbar content -->
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-               <a href="/" ><img alt="CodePong" class="logo" th:src="@{/img/logo.svg}"/></a>
-               <ul class="nav navbar-right">
-                  <li sec:authorize="isAuthenticated()" class="Account">
-                     <a id="account-button" href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" role="button"
-                        aria-haspopup="true" aria-expanded="false">My Account<span class="caret"></span></a>
-                     <ul class="dropdown-menu">
+    <nav class="navbar navbar-inverse bg-faded">
+        <!-- Navbar content -->
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <a href="/" ><img alt="CodePong" class="logo" th:src="@{/img/logo.svg}"/></a>
+            <ul class="nav navbar-right">
+                <li sec:authorize="isAuthenticated()" class="Account">
+                    <a id="account-button" href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="false">My Account<span class="caret"></span></a>
+                    <ul class="dropdown-menu">
                         <li><a id="dashboard-button" th:href="@{/user}">Dashboard</a></li>
                         <li role="separator" class="divider"></li>
                         <li>
-                           <form action="#" th:action="@{/logout}" method="post">
-                              <input id="logout-button" value="Logout" type="submit" class="btn btn-logout"/>
-                           </form>
+                            <form action="#" th:action="@{/logout}" method="post">
+                                <input id="logout-button" value="Logout" type="submit" class="btn btn-logout"/>
+                            </form>
                         </li>
-                     </ul>
-                  </li>
-                  <li sec:authorize="isAnonymous()" class="Account">
-                     <a id="login-button" th:href="@{/login}" class="btn btn-primary">Login</a>
-                  </li>
-               </ul>
-            </div><!-- /.navbar-collapse -->
-      </nav>
+                    </ul>
+                </li>
+                <li sec:authorize="isAnonymous()" class="Account">
+                    <a id="login-button" th:href="@{/login}" class="btn btn-primary">Login</a>
+                </li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </nav>
 </div>
