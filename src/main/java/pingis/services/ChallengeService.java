@@ -54,11 +54,6 @@ public class ChallengeService {
     return c;
   }
 
-  public Challenge getRandomChallenge() {
-    List<Challenge> challenges = findAll();
-    return challenges.get(new Random().nextInt(challenges.size()));
-  }
-
   public boolean contains(Long challengeId) {
     return challengeRepository.existsById(challengeId);
   }
