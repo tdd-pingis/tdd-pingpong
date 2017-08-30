@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pingis.controllers.UserController;
 import pingis.entities.Challenge;
 import pingis.entities.CodeStatus;
 import pingis.entities.Task;

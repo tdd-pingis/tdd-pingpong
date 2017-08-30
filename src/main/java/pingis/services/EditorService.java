@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import pingis.entities.Challenge;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.utils.CodeStub;

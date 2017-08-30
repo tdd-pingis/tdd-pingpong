@@ -206,6 +206,8 @@
           <property name="illegalPattern" value="true"/>
           <property name="message" value="Use loggers"/>
         </module>
+        <module name="RedundantImport"/>
+        <module name="UnusedImports"/>
         
     </module>
     
