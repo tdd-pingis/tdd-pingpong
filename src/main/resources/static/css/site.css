@@ -158,8 +158,11 @@ textarea {
   font-size: 16px;
 }
 
-.editortab {
+.editortab, .overlay {
   height: 300px;
+}
+
+.editortab {
   background-color: #424439;
   color: #424439;
 }
@@ -379,7 +382,6 @@ textarea {
 }
 
 .overlay {
-  height: 300px;
   position: absolute;
   z-index: 10;
   color: white;
