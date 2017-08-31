@@ -166,7 +166,7 @@ public class TaskServiceTest {
     List<Task> tasks = taskService.getAvailableTasksByType(testChallenge, TaskType.TEST);
     assertEquals(testTasks, tasks);
   }
-  
+
   private Task getRandomTask(List<Task> list) {
     return list.get(random.nextInt(list.size()));
   }
