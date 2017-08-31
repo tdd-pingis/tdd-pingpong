@@ -105,4 +105,6 @@ public class UserService {
   public int levelOfCurrentUser() {
     return getLevel(getCurrentUser().getPoints());
   }
+
+
 }

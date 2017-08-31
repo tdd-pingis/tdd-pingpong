@@ -41,6 +41,9 @@ public class ChallengeServiceTest {
   @MockBean
   private TaskInstanceService taskInstanceService;
 
+  @MockBean
+  private GameplayService gameplayServiceMock;
+
   private User testUser;
   private Challenge testChallenge;
   private ArgumentCaptor<Challenge> challengeCaptor;

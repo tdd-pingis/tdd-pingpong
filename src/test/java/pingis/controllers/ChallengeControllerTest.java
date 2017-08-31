@@ -78,23 +78,18 @@ public class ChallengeControllerTest {
 
     User user = Mockito.mock(User.class);
     when(user.getId()).thenReturn(10L);
-    when(userService.getCurrentUser()).thenReturn(user);
 
     Challenge challenge = Mockito.mock(Challenge.class);
-    when(challengeService.save(any())).thenReturn(challenge);
-    when(challenge.toString()).thenReturn("");
     when(challenge.getId()).thenReturn(challengeId);
 
     Challenge challengeFromForm = new Challenge("validName", user, "validDesc");
+    when(challengeService.createChallenge(challengeFromForm)).thenReturn(challenge);
 
     mvc.perform(post("/createChallenge")
         .with(csrf())
         .flashAttr("challenge", challengeFromForm))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl("/playChallenge/" + challengeId));
-
-    verify(challengeService, times(1))
-        .save(any());
   }
 
   @Test
@@ -284,6 +279,7 @@ public class ChallengeControllerTest {
     when(taskInstanceService.getByTaskAndUser(testTask, user)).thenReturn(taskInstance);
     when(userService.getCurrentUser()).thenReturn(user);
     when(taskInstanceService.createEmpty(user, implTask)).thenReturn(newTaskInstance);
+    when(challengeService.newTaskInstance(implTask, taskInstance)).thenReturn(newTaskInstance);
     when(newTaskInstance.getChallenge()).thenReturn(challenge);
 
     mvc.perform(get("/playChallenge/0")
@@ -356,9 +352,6 @@ public class ChallengeControllerTest {
         .with(csrf()))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl("/user"));
-
-    verify(challengeService, times(1))
-        .save(challenge);
   }
 
 }

@@ -71,12 +71,7 @@ public class ChallengeController {
       return "newchallenge";
     }
 
-    newChallenge.setAuthor(userService.getCurrentUser());
-    newChallenge.setLevel(1);
-    newChallenge.setOpen(true);
-    newChallenge.setTasks(new ArrayList<>());
-    newChallenge = challengeService.save(newChallenge);
-
+    newChallenge = challengeService.createChallenge(newChallenge);
     logger.debug("Created new challenge with an ID: {}", newChallenge.getId());
     redirectAttributes.addFlashAttribute("challengeId", newChallenge.getId());
     return "redirect:/playChallenge/" + newChallenge.getId();
@@ -96,7 +91,6 @@ public class ChallengeController {
   public String createTaskPair(Long challengeId, @Valid @ModelAttribute TaskPair taskpair,
       BindingResult bindingResult, Model model) {
 
-
     Challenge currentChallenge = challengeService.findOne(challengeId);
 
     if (bindingResult.hasErrors()) {
@@ -105,57 +99,8 @@ public class ChallengeController {
       model.addAttribute("minLength", GameplayService.CHALLENGE_MIN_LENGTH);
       return "newtaskpair";
     }
-
-    logger.debug("Creating new task pair");
-    logger.debug("Generating new task pair and instance");
-
-    int highestIndex = taskService.findAllByChallenge(currentChallenge).size() / 2;
-    logger.info("Challenge ID: " + currentChallenge.getId());
-    logger.info("Challenge type: " + currentChallenge.getType());
-    logger.info("Highest index: " + highestIndex);
-    String testStub = "";
-    String implStub = "";
-
-    // Autogenerate code stubs
-    if (currentChallenge.getType() == ChallengeType.MIXED
-        || currentChallenge.getType() == ChallengeType.ARCADE
-        || (currentChallenge.getType() == ChallengeType.PROJECT
-        && highestIndex == 0)) {
-      logger.info("generating code stubs");
-      implStub = new CodeStubBuilder(taskpair.getClassName()).build().code;
-      testStub = new TestStubBuilder(implStub).withTestImports().build().code;
-    } else {
-      User player = userService.getCurrentUser();
-      User otherPlayer = currentChallenge.getAuthor().equals(player)
-          ? currentChallenge.getSecondPlayer() : currentChallenge.getAuthor();
-      // Challenge is a project with at least one existing task instance pair.
-      // Inheriting code from previous instance pair.
-      logger.info("inheriting code stubs from previous task pair");
-      testStub = taskInstanceService.getByTaskAndUser(
-          taskService.findByChallengeAndTypeAndIndex(currentChallenge, TaskType.TEST, highestIndex),
-          otherPlayer)
-          .getCode();
-      implStub = taskInstanceService.getByTaskAndUser(
-          taskService.findByChallengeAndTypeAndIndex(currentChallenge,
-              TaskType.IMPLEMENTATION,
-              highestIndex),
-          player)
-          .getCode();
-    }
-
-    taskpair.setImplementationCodeStub(implStub);
-    taskpair.setTestCodeStub(testStub);
-
-    logger.debug("Generating new task pair and instance");
-
-    // NotLikeThis
-    gameplayService.generateTaskPairAndTaskInstance(taskpair.getTestTaskName(),
-        taskpair.getTestTaskName(),
-        taskpair.getTestTaskDesc(),
-        taskpair.getTestTaskDesc(),
-        taskpair.getTestCodeStub(),
-        taskpair.getImplementationCodeStub(),
-        currentChallenge);
+    
+    challengeService.createTaskPair(currentChallenge, taskpair);
 
     return "redirect:/playChallenge/" + currentChallenge.getId();
   }
@@ -199,10 +144,9 @@ public class ChallengeController {
       return new RedirectView("/error");
     }
 
-    currentChallenge.setOpen(false);
-    challengeService.save(currentChallenge);
+    challengeService.closeChallenge(currentChallenge);
     redirectAttributes.addFlashAttribute("message", "Challenge closed.");
-    logger.debug("Closed challenge {}", currentChallenge.getId());
+
     return new RedirectView("/user");
   }
 
@@ -348,16 +292,7 @@ public class ChallengeController {
       TaskInstance testTaskInstance,
       RedirectAttributes redirectAttributes) {
     logger.debug("Creating new task instance");
-
-    User user = userService.getCurrentUser();
-    TaskInstance newTaskInstance = taskInstanceService.createEmpty(user, task);
-    if (task.getType() == TaskType.IMPLEMENTATION) {
-      logger.debug("Task type is implementation");
-      newTaskInstance.setTestTaskInstance(testTaskInstance);
-      testTaskInstance.addImplementationTaskInstance(newTaskInstance);
-      taskInstanceService.save(newTaskInstance);
-      taskInstanceService.save(testTaskInstance);
-    }
+    TaskInstance newTaskInstance = challengeService.newTaskInstance(task, testTaskInstance);
     return new RedirectView("/task/" + newTaskInstance.getId());
   }
 

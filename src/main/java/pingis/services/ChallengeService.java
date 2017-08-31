@@ -1,21 +1,32 @@
 package pingis.services;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pingis.entities.Challenge;
 import pingis.entities.ChallengeType;
 import pingis.entities.CodeStatus;
+import pingis.entities.Task;
 import pingis.entities.TaskInstance;
+import pingis.entities.TaskPair;
+import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
+import pingis.utils.CodeStubBuilder;
+import pingis.utils.TestStubBuilder;
 
 @Service
 public class ChallengeService {
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
+
 
   private final ChallengeRepository challengeRepository;
 
@@ -23,6 +34,11 @@ public class ChallengeService {
   private UserService userService;
   @Autowired
   private TaskInstanceService taskInstanceService;
+
+  @Autowired
+  private GameplayService gameplayService;
+
+
 
   @Autowired
   public ChallengeService(ChallengeRepository challengeRepo) {
@@ -113,5 +129,85 @@ public class ChallengeService {
             .forEach(e -> myTasksInChallenges.remove(e));
 
     return myTasksInChallenges;
+  }
+
+  public void createTaskPair(Challenge currentChallenge, TaskPair taskPair) {
+    logger.debug("Creating new task pair");
+    logger.debug("Generating new task pair and instance");
+
+    int highestIndex = taskService.findAllByChallenge(currentChallenge).size() / 2;
+    logger.info("Challenge ID: " + currentChallenge.getId());
+    logger.info("Challenge type: " + currentChallenge.getType());
+    logger.info("Highest index: " + highestIndex);
+    String testStub = "";
+    String implStub = "";
+
+    // Autogenerate code stubs
+    if (currentChallenge.getType() == ChallengeType.MIXED
+        || currentChallenge.getType() == ChallengeType.ARCADE
+        || (currentChallenge.getType() == ChallengeType.PROJECT
+        && highestIndex == 0)) {
+      logger.info("generating code stubs");
+      implStub = new CodeStubBuilder(taskPair.getClassName()).build().code;
+      testStub = new TestStubBuilder(implStub).withTestImports().build().code;
+    } else {
+      User player = userService.getCurrentUser();
+      User otherPlayer = currentChallenge.getAuthor().equals(player)
+          ? currentChallenge.getSecondPlayer() : currentChallenge.getAuthor();
+      // Challenge is a project with at least one existing task instance pair.
+      // Inheriting code from previous instance pair.
+      logger.info("inheriting code stubs from previous task pair");
+      testStub = taskInstanceService.getByTaskAndUser(
+          taskService.findByChallengeAndTypeAndIndex(currentChallenge, TaskType.TEST, highestIndex),
+          otherPlayer)
+          .getCode();
+      implStub = taskInstanceService.getByTaskAndUser(
+          taskService.findByChallengeAndTypeAndIndex(currentChallenge,
+              TaskType.IMPLEMENTATION,
+              highestIndex),
+          player)
+          .getCode();
+    }
+
+    taskPair.setImplementationCodeStub(implStub);
+    taskPair.setTestCodeStub(testStub);
+
+    logger.debug("Generating new task pair and instance");
+
+    // NotLikeThis
+    gameplayService.generateTaskPairAndTaskInstance(taskPair.getTestTaskName(),
+        taskPair.getTestTaskName(),
+        taskPair.getTestTaskDesc(),
+        taskPair.getTestTaskDesc(),
+        taskPair.getTestCodeStub(),
+        taskPair.getImplementationCodeStub(),
+        currentChallenge);
+  }
+
+  public void closeChallenge(Challenge currentChallenge) {
+    currentChallenge.setOpen(false);
+    save(currentChallenge);
+    logger.debug("Closed challenge {}", currentChallenge.getId());
+  }
+
+  public Challenge createChallenge(Challenge newChallenge) {
+    newChallenge.setAuthor(userService.getCurrentUser());
+    newChallenge.setLevel(1);
+    newChallenge.setOpen(true);
+    newChallenge.setTasks(new ArrayList<>());
+    return save(newChallenge);
+  }
+
+  public TaskInstance newTaskInstance(Task task, TaskInstance testTaskInstance) {
+    User user = userService.getCurrentUser();
+    TaskInstance newTaskInstance = taskInstanceService.createEmpty(user, task);
+    if (task.getType() == TaskType.IMPLEMENTATION) {
+      logger.debug("Task type is implementation");
+      newTaskInstance.setTestTaskInstance(testTaskInstance);
+      testTaskInstance.addImplementationTaskInstance(newTaskInstance);
+      taskInstanceService.save(newTaskInstance);
+      taskInstanceService.save(testTaskInstance);
+    }
+    return newTaskInstance;
   }
 }
