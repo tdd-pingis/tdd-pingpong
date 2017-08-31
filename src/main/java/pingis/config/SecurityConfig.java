@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 "/fake/authorize", "/fake/token", "/fake/userinfo")
         .and()
         .authorizeRequests().antMatchers(
-                "/css/**", "/webjars/**", "/", "/login", "/logout", "/img/**",
+                "/css/**", "/webjars/**", "/", "/login", "/logout", "/font/**", "/img/**",
                 "/fake/authorize", "/fake/token", "/fake/userinfo")
         .permitAll()
         .anyRequest().authenticated()

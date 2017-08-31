@@ -1,3 +1,9 @@
+@font-face {
+  font-family: elgethy;
+  src: url("/font/elgethy_upper.ttf");
+  font-weight: normal;
+}
+
 body {
   font-family: 'Exo 2', sans-serif;
   font-size: 14px;
@@ -66,6 +72,10 @@ textarea {
   opacity: 0.8;
 }
 
+.with-number {
+  margin-top: 0.7em;
+}
+
 .challenge-col-header {
   font-size: 24px;
   color: #FFFFF2;
@@ -77,32 +87,40 @@ textarea {
   opacity: 0.8;
 }
 
-.challenge-progress-done {
+.challengeitem-stats {
+  margin-top: -1.5em;
+  padding-top: 0px;
+  text-align: center;
+  padding-bottom: 5px;
+}
+
+.challengeitem-progress-done {
   font-size: 23px;
   text-align: center;
   color: #FFFFF2;
   opacity: 0.7;
 }
 
-.challenge-progress-number {
-  font-size: 55px;
-  color: #0000AF;
+.challengeitem-progress-append-done {
+  font-size: 43px;
+  font-weight: normal;
+  letter-spacing: -2px;
+  color: #FFFFFF;
+  opacity: 0.9;
+}
+
+.challengeitem-progress-number {
+  font-family: elgethy;
+  padding-top: 0px;
+  font-size: 65px;
+  color: #FFFFF2;
+  letter-spacing: -0.15em;
+  padding-right: 0.2em;
   opacity: 0.8;
 }
 
 .challenge-col-well {
   opacity: 0.6;
-  border-radius: 2px;
-  font-size: 16px;
-  color: #FFFFFF;
-  border-color: #5E6055;
-  background-color: #5E6055;
-  box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.44);
-}
-
-.history-col-well {
-  opacity: 0.6;
-  width: 70vw;
   border-radius: 2px;
   font-size: 16px;
   color: #FFFFFF;
@@ -120,7 +138,7 @@ textarea {
   margin-right: auto;
   background-color: #a5e01a;
   box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.64);
-  opacity: 0.95;
+  opacity: 0.96;
 }
 
 .challengeitem-practice {
@@ -144,7 +162,7 @@ textarea {
 }
 
 .challengeitem-live {
-  background-color: #c12811;
+  background-color: #F3653F;
 }
 
 .dashboard-user-name {
@@ -237,6 +255,17 @@ textarea {
   font-size: 22px;
   font-weight: 200;
   opacity: 0.9;
+}
+
+.history-col-well {
+  opacity: 0.6;
+  width: 70vw;
+  border-radius: 2px;
+  font-size: 16px;
+  color: #FFFFFF;
+  border-color: #5E6055;
+  background-color: #5E6055;
+  box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.44);
 }
 
 .input-text {
