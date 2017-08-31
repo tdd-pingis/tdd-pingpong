@@ -7,27 +7,32 @@
         <nav th:include="navbar :: navigation"></nav>
         <div class="divider dashboard-topmost-div" id="dashboard-topmost-div">
 
-            <div class="container">
+            <div class="container dashboard-topmost-container">
                 <div class="row dashboardtopbar"  id="dashboardtopbar" > <!-- top bar -->
-                    <div class="col-md-3">
-                        <div class="row">
+                    <div class="column dashboard-topbar-col">
+                        <h2>Dashboard</h2>
+                        <span th:inline="text" class="lead dashboard-user-name"><strong>Name: </strong>&nbsp;[[${user.name}]]</span><br>
+                        <span class="lead dashboard-user-name"><strong>Rank: </strong>Tomato</span>  <!-- TODO: support for different ranks -->
+                    </div>
+                    <div class="column dashboard-topbar-col">
+                        <div class="row topbar-stats-row">    
+                            <div class="col-md-8">
+                                <h4 th:inline="text" class="header dashboardtopbar-stats">Challenges completed: [[${#lists.size(user.completedChallenges)}]]</h4>
+                                <h4 th:inline="text" class="header dashboardtopbar-stats">Level: [[${userLevel}]]</h4>
+                            </div>
                             <div class="col-md-4">
-                                <h2>Dashboard</h2>
-                                <p th:inline="text" class="lead dashboard-user-name"><strong>Name: </strong>&nbsp;[[${user.name}]]</p>
-                                <p class="lead dashboard-user-name"><strong>Rank: </strong>Tomato</p>  <!-- TODO: support for different ranks -->
+                                <div id="dashboard-points-well">
+                                    <span class="frontpage-info" id="user-points-header">Points: </span><span id="user-points" th:inline="text">[[${user.points}]]</span> 
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-3">
-                        <h4 th:inline="text" class="header dashboardtopbar-stats">Challenges completed: [[${#lists.size(user.completedChallenges)}]]</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <h4 th:inline="text" class="header dashboardtopbar-stats">Level: [[${userLevel}]]</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <h4 th:inline="text" class="header dashboardtopbar-stats">Points: [[${user.points}]]</h4>
-                    </div>
-                    <div class="row">
+                    <div class="topbar-stats-row">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-success" role="progressbar" aria-valuenow="0"
+                                 aria-valuemin="0" aria-valuemax="100" style="width:50%">
+                            </div>
+                        </div>
                         <div th:each="error : ${errors}" class="alert alert-warning">
                             <div class="row"><p class="error-message">[[${error}]]></p></div> <!-- Show error messages -->
                         </div>
@@ -91,7 +96,7 @@
                                  '3. Implement someone else's test '
                                  '4. Repeat! '
                                  'You can choose from three different realms according to your preference: Beginner, Object oriented or Data Structures'">
-                                <p>Take part in <strong>Live Arcade</strong> game.</p>
+                                <span>Take part in <strong>Live Arcade</strong> game.</span>
                             </div>
                             <a href="/newArcadeSession?realm=BEGINNER">
                                 <div id="beginner-arcade-button" class="row challengeitem challengeitem-arcade-realm1">
