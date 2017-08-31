@@ -2,7 +2,7 @@ apply from: 'gradle/helpers/test-printing.gradle'
 
 tasks.withType(Test).all {
     systemProperty "spring.profiles.active", "dev"
-    testLogging.showStandardStreams = true
+    testLogging.events = ['standard_out', 'standard_error']
 }
 
 task unit (type: Test) {
@@ -13,6 +13,7 @@ task unit (type: Test) {
 task cucumber (type: Test) {
     testLogging { afterSuite { desc, result -> printTestResults(desc,result,'CUKE') } }
     include '**/cucumber/**'
+    testLogging.events = ['standard_out']
 
     // Use for debugging specific Cucumber tests
     // Add the @debug tag above a feature or scenario you want to test
