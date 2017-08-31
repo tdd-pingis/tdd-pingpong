@@ -40,11 +40,12 @@ import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
 import pingis.entities.sandbox.Submission;
-import pingis.services.ChallengeService;
-import pingis.services.EditorService;
-import pingis.services.TaskInstanceService;
-import pingis.services.TaskService;
-import pingis.services.UserService;
+import pingis.services.entity.ChallengeService;
+import pingis.services.entity.TaskInstanceService;
+import pingis.services.entity.TaskService;
+import pingis.services.entity.UserService;
+import pingis.services.logic.EditorService;
+import pingis.services.logic.GameplayService;
 import pingis.services.sandbox.SandboxService;
 import pingis.utils.EditorTabData;
 
@@ -76,6 +77,9 @@ public class TaskControllerTest {
 
   @MockBean
   private UserService userServiceMock;
+
+  @MockBean
+  private GameplayService gameplayServiceMock;
 
   @Captor
   private ArgumentCaptor<Map<String, byte[]>> packagingArgCaptor;
@@ -120,14 +124,14 @@ public class TaskControllerTest {
   public void givenTaskWhenGetTestTask() throws Exception {
     when(taskInstanceServiceMock.findOne(testTaskInstance.getId()))
         .thenReturn(testTaskInstance);
-    when(taskInstanceServiceMock.canPlayOrSkip(any())).thenReturn(true);
+    when(gameplayServiceMock.canPlayOrSkip(any())).thenReturn(true);
     Map<String, EditorTabData> tabData = this
         .generateTabData(implTaskInstance, testTaskInstance);
     when(editorServiceMock.generateEditorContents(testTaskInstance)).thenReturn(tabData);
     String uri = "/task/" + testTaskInstance.getId();
     performSimpleGetRequestAndFindContent(uri, "task", testTask.getCodeStub());
     verify(taskInstanceServiceMock, times(1)).findOne(testTaskInstance.getId());
-    verify(taskInstanceServiceMock).canPlayOrSkip(any());
+    verify(gameplayServiceMock).canPlayOrSkip(any());
     verify(editorServiceMock, times(1))
         .generateEditorContents(testTaskInstance);
     verifyNoMoreInteractions(taskInstanceServiceMock);
@@ -140,14 +144,14 @@ public class TaskControllerTest {
 
     when(taskInstanceServiceMock.findOne(implTaskInstance.getId()))
         .thenReturn(implTaskInstance);
-    when(taskInstanceServiceMock.canPlayOrSkip(any())).thenReturn(true);
+    when(gameplayServiceMock.canPlayOrSkip(any())).thenReturn(true);
 
     Map<String, EditorTabData> tabData = generateTabData(implTaskInstance, testTaskInstance);
     when(editorServiceMock.generateEditorContents(implTaskInstance)).thenReturn(tabData);
     String uri = "/task/" + implTaskInstance.getId();
     performSimpleGetRequestAndFindContent(uri, "task", implementationTask.getCodeStub());
     verify(taskInstanceServiceMock, times(1)).findOne(implTaskInstance.getId());
-    verify(taskInstanceServiceMock).canPlayOrSkip(any());
+    verify(gameplayServiceMock).canPlayOrSkip(any());
     verify(editorServiceMock, times(1))
         .generateEditorContents(implTaskInstance);
     verifyNoMoreInteractions(taskInstanceServiceMock);
@@ -172,8 +176,6 @@ public class TaskControllerTest {
 
     when(taskInstanceServiceMock.findOne(testTaskInstance.getId())).thenReturn(testTaskInstance);
     when(challengeServiceMock.findOne(challenge.getId())).thenReturn(challenge);
-    when(taskServiceMock.findTaskInChallenge(challenge.getId(), implementationTask.getIndex()))
-        .thenReturn(implementationTask);
     when(taskServiceMock.getCorrespondingTask(testTask)).thenReturn(implementationTask);
     when(sandboxServiceMock.submit(Mockito.any(), Mockito.any())).thenReturn(submission);
     mvc.perform(post("/task")
@@ -197,8 +199,6 @@ public class TaskControllerTest {
 
     when(taskInstanceServiceMock.findOne(implTaskInstance.getId())).thenReturn(implTaskInstance);
     when(challengeServiceMock.findOne(challenge.getId())).thenReturn(challenge);
-    when(taskServiceMock.findTaskInChallenge(challenge.getId(), testTask.getIndex()))
-        .thenReturn(testTask);
     when(taskServiceMock.getCorrespondingTask(implementationTask)).thenReturn(testTask);
     when(sandboxServiceMock.submit(Mockito.any(), Mockito.any())).thenReturn(submission);
     mvc.perform(post("/task")

@@ -1,13 +1,19 @@
-package pingis.services;
+package pingis.services.entity;
 
 import static pingis.entities.Task.LEVEL_MAX_VALUE;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import pingis.entities.Challenge;
+import pingis.entities.CodeStatus;
+import pingis.entities.TaskInstance;
 import pingis.entities.TmcUserDto;
 import pingis.entities.User;
 import pingis.repositories.UserRepository;
@@ -107,4 +113,36 @@ public class UserService {
   }
 
 
+  public List<TaskInstance> getHistory(TaskInstanceService taskInstanceService) {
+    return getCurrentUser().getTaskInstances().stream()
+            .sorted(taskInstanceService.new TaskInstanceTimestampComparator())
+            .collect(Collectors.toList());
+  }
+
+  public TaskInstance getLastUnfinishedInstance(TaskInstanceService taskInstanceService) {
+    Optional<TaskInstance> unfinished = getHistory(taskInstanceService).stream()
+            .filter(e -> e.getStatus() == CodeStatus.IN_PROGRESS)
+            .findFirst();
+
+    if (unfinished.isPresent()) {
+      return unfinished.get();
+    } else {
+      return null;
+    }
+  }
+
+  public MultiValueMap<Challenge, TaskInstance> getCompletedTaskInstancesInUnfinishedChallenges() {
+    User user = getCurrentUser();
+    MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
+    user.getTaskInstances().stream()
+        .filter(e -> !e.getChallenge().getIsOpen())
+        .filter(e -> e.getStatus().equals(CodeStatus.DONE))
+        .forEach(e -> myTasksInChallenges.add(e.getChallenge(), e));
+
+    myTasksInChallenges.keySet().stream()
+        .filter(e -> user.getCompletedChallenges().contains(e))
+        .forEach(e -> myTasksInChallenges.remove(e));
+
+    return myTasksInChallenges;
+  }
 }

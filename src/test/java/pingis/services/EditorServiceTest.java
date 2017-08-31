@@ -18,6 +18,11 @@ import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
+import pingis.services.entity.TaskInstanceService;
+import pingis.services.entity.TaskService;
+import pingis.services.logic.EditorService;
+import pingis.services.logic.GameplayService;
+import pingis.services.logic.PracticeChallengeService;
 import pingis.utils.EditorTabData;
 
 @RunWith(SpringRunner.class)
@@ -31,6 +36,12 @@ public class EditorServiceTest {
 
   @MockBean
   private TaskService taskServiceMock;
+
+  @MockBean
+  private PracticeChallengeService practiceChallengeService;
+
+  @MockBean
+  private GameplayService gameplayServiceMock;
 
   private User testUser;
   private Task testTask;

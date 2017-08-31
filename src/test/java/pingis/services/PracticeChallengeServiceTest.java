@@ -5,7 +5,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,37 +14,30 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import pingis.entities.Challenge;
 import pingis.entities.ChallengeType;
-import pingis.entities.CodeStatus;
 import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
-import pingis.repositories.TaskInstanceRepository;
-import pingis.repositories.TaskRepository;
-import pingis.repositories.UserRepository;
 import pingis.services.entity.TaskInstanceService;
+import pingis.services.entity.TaskService;
 import pingis.services.entity.UserService;
-import pingis.services.logic.GameplayService;
 import pingis.services.logic.PracticeChallengeService;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {TaskInstanceService.class})
-public class TaskInstanceServiceTest {
+@ContextConfiguration(classes = {PracticeChallengeService.class})
+public class PracticeChallengeServiceTest {
+
 
   @Autowired
-  private TaskInstanceService taskInstanceService;
-  @MockBean
-  private TaskInstanceRepository taskInstanceRepositoryMock;
-  @MockBean
-  private UserRepository userRepositoryMock;
-  @MockBean
-  private TaskRepository taskRepositoryMock;
-  @MockBean
-  private GameplayService gameplayService;
-  @MockBean
   private PracticeChallengeService practiceChallengeService;
+
   @MockBean
-  private UserService userServiceMock;
+  UserService userServiceMock;
+
+  @MockBean
+  TaskService taskServiceMock;
+  @MockBean
+  TaskInstanceService taskInstanceServiceMock;
 
   private User testUser;
   private Task testTask;
@@ -53,6 +45,8 @@ public class TaskInstanceServiceTest {
   private TaskInstance testTaskInstance;
   private TaskInstance implementationTaskInstance;
   private Challenge testChallenge;
+
+
 
   @Before
   public void setUp() {
@@ -78,44 +72,30 @@ public class TaskInstanceServiceTest {
   }
 
   @Test
-  public void testFindOne() {
-    when(taskInstanceRepositoryMock.findById(testTaskInstance.getId()))
-        .thenReturn(Optional.of(testTaskInstance));
+  public void getCorrespondingTestTaskInstanceTest() {
+    when(userServiceMock.findOne(0L)).thenReturn(testUser);
+    when(taskServiceMock.findByChallengeAndTypeAndIndex(testChallenge,
+        TaskType.TEST,
+        implementationTask.getIndex()))
+        .thenReturn(testTask);
+    when(taskInstanceServiceMock.findByTaskAndUser(testTask, testUser))
+        .thenReturn(testTaskInstance);
 
-    TaskInstance result = taskInstanceService.findOne(testTaskInstance.getId());
-
-    verify(taskInstanceRepositoryMock).findById(testTaskInstance.getId());
-    verifyNoMoreInteractions(taskInstanceRepositoryMock);
+    TaskInstance result = practiceChallengeService
+        .getCorrespondingTestTaskInstance(implementationTaskInstance);
 
     assertEquals(result, testTaskInstance);
+
+    verify(userServiceMock).findOne(0L);
+    verify(taskServiceMock)
+        .findByChallengeAndTypeAndIndex(
+            testChallenge,
+            TaskType.TEST, implementationTask
+                .getIndex());
+    verify(taskInstanceServiceMock).findByTaskAndUser(testTask, testUser);
+
+    verifyNoMoreInteractions(taskServiceMock);
+    verifyNoMoreInteractions(userServiceMock);
+    verifyNoMoreInteractions(taskInstanceServiceMock);
   }
-
-
-  @Test
-  public void testUpdateTaskInstanceCode() {
-    assertEquals("thisShouldBeEmpty", testTaskInstance.getCode());
-
-    when(taskInstanceRepositoryMock.findById(testTaskInstance.getId()))
-        .thenReturn(Optional.of(testTaskInstance));
-
-    String testCode = "Return 1+1;";
-
-    TaskInstance result = taskInstanceService
-        .updateTaskInstanceCode(testTaskInstance.getId(), testCode);
-
-    verify(taskInstanceRepositoryMock).findById(testTaskInstance.getId());
-    verifyNoMoreInteractions(taskInstanceRepositoryMock);
-
-    assertEquals(testCode, result.getCode());
-  }
-
-  @Test
-  public void testMarkAsDone() {
-    int oldPoints = testUser.getPoints();
-    TaskInstance result = taskInstanceService.markAsDone(testTaskInstance);
-    assertEquals(CodeStatus.DONE, result.getStatus());
-    assertEquals(oldPoints  + testTaskInstance.getTask().getPoints(), testUser.getPoints());
-  }
-
-
 }

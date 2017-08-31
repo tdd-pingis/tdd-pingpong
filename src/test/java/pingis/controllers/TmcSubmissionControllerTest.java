@@ -40,7 +40,7 @@ import pingis.entities.sandbox.ResultStatus;
 import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
 import pingis.entities.sandbox.TestOutput;
-import pingis.services.TaskInstanceService;
+import pingis.services.entity.TaskInstanceService;
 import pingis.services.sandbox.SandboxService;
 
 /**

@@ -26,6 +26,9 @@ import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
 import pingis.repositories.TaskInstanceRepository;
 import pingis.repositories.TaskRepository;
+import pingis.services.entity.TaskInstanceService;
+import pingis.services.entity.TaskService;
+import pingis.services.entity.UserService;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {TaskService.class})
@@ -55,6 +58,8 @@ public class TaskServiceTest {
   private List<Task> implTasks;
   private ArgumentCaptor<Task> taskCaptor;
   private Random random;
+  private Task firstTestTask;
+  private Task firstImplTask;
 
   @Before
   public void setUp() {
@@ -67,6 +72,20 @@ public class TaskServiceTest {
         UUID.randomUUID().toString());
     generateTestTasks(testTasks, TaskType.TEST);
     generateTestTasks(implTasks, TaskType.IMPLEMENTATION);
+    firstTestTask = new Task(1,
+        TaskType.TEST,
+        testUser,
+        "testitesti",
+        "testaa jotai",
+        "public void test1",
+        1, 1);
+    firstImplTask = new Task(1,
+        TaskType.IMPLEMENTATION,
+        testUser,
+        "testitoteutus",
+        "toteuta jotai",
+        "public void toteutus1",
+        1, 1);
     taskCaptor = ArgumentCaptor.forClass(Task.class);
   }
 
@@ -147,18 +166,7 @@ public class TaskServiceTest {
     List<Task> tasks = taskService.getAvailableTasksByType(testChallenge, TaskType.TEST);
     assertEquals(testTasks, tasks);
   }
-
-  @Test
-  public void findTaskInChallenge() {
-    when(challengeRepositoryMock.findById(testChallenge.getId()))
-        .thenReturn(Optional.of(testChallenge));
-
-    Task task = taskService.findTaskInChallenge(testChallenge.getId(), 3);
-    assertEquals(testTasks.get(3), task);
-  }
-
-  //TODO: Make more tests for this service.
-
+  
   private Task getRandomTask(List<Task> list) {
     return list.get(random.nextInt(list.size()));
   }
@@ -180,4 +188,14 @@ public class TaskServiceTest {
     }
   }
 
+  @Test
+  public void testGetNumberOfTasks() {
+    testChallenge.addTask(firstTestTask);
+    testChallenge.addTask(firstImplTask);
+    List<Task> tasks = new ArrayList<>();
+    tasks.add(firstTestTask);
+    tasks.add(firstImplTask);
+    when(taskRepositoryMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
+    assertEquals(2, taskService.getNumberOfTasks(testChallenge));
+  }
 }

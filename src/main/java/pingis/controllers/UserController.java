@@ -12,10 +12,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import pingis.entities.Challenge;
 import pingis.entities.TaskInstance;
 import pingis.entities.User;
-import pingis.services.ChallengeService;
-import pingis.services.GameplayService;
-import pingis.services.TaskInstanceService;
-import pingis.services.UserService;
+import pingis.services.entity.ChallengeService;
+import pingis.services.entity.TaskInstanceService;
+import pingis.services.entity.UserService;
+import pingis.services.logic.DashboardService;
+import pingis.services.logic.GameplayService;
+
 
 @Controller
 public class UserController {
@@ -24,6 +26,8 @@ public class UserController {
     CONTINUE, CREATE, JOIN
   }
 
+  @Autowired
+  DashboardService dashboardService;
   @Autowired
   UserService userService;
   @Autowired
@@ -52,10 +56,12 @@ public class UserController {
     model.addAttribute("user", user);
 
     MultiValueMap<Challenge, TaskInstance> myTasksInChallenges
-            = challengeService.getCompletedTaskInstancesInUnfinishedChallenges();
-    TaskInstance lastUnfinished = taskInstanceService.getLastUnfinishedInstance();
-    List<TaskInstance> history = taskInstanceService.getHistory();
-    List<Challenge> availableChallenges = challengeService.getAvailableChallenges(
+            = userService
+        .getCompletedTaskInstancesInUnfinishedChallenges();
+    TaskInstance lastUnfinished = userService
+        .getLastUnfinishedInstance(taskInstanceService);
+    List<TaskInstance> history = userService.getHistory(taskInstanceService);
+    List<Challenge> availableChallenges = dashboardService.getAvailableChallenges(
             myTasksInChallenges);
 
     model.addAttribute("myTasksInChallenges", myTasksInChallenges);
@@ -73,7 +79,8 @@ public class UserController {
     }
 
     // Fetch and set live challenge
-    Challenge liveChallenge = gameplayService.getParticipatingLiveChallenge();
+    Challenge liveChallenge = dashboardService
+        .getParticipatingLiveChallenge();
     Challenge randomLiveChallenge = challengeService.getRandomLiveChallenge(user);
 
     LiveType liveType = null;

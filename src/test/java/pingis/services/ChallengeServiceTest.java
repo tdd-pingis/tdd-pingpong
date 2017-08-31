@@ -21,6 +21,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import pingis.entities.Challenge;
 import pingis.entities.User;
 import pingis.repositories.ChallengeRepository;
+import pingis.services.entity.ChallengeService;
+import pingis.services.entity.TaskInstanceService;
+import pingis.services.entity.TaskService;
+import pingis.services.entity.UserService;
+import pingis.services.logic.GameplayService;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {ChallengeService.class})

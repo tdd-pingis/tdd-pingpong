@@ -21,7 +21,7 @@ import pingis.entities.sandbox.Submission;
 import pingis.entities.sandbox.SubmissionStatus;
 import pingis.entities.sandbox.TestOutput;
 import pingis.repositories.sandbox.SubmissionRepository;
-import pingis.services.TaskInstanceService;
+import pingis.services.entity.TaskInstanceService;
 
 @Service
 public class SandboxService {

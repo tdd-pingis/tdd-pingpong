@@ -1,4 +1,4 @@
-package pingis.services;
+package pingis.services.logic;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
+import pingis.services.entity.TaskInstanceService;
+import pingis.services.entity.TaskService;
 import pingis.utils.CodeStub;
 import pingis.utils.CodeStubBuilder;
 import pingis.utils.EditorTabData;
@@ -18,6 +20,10 @@ public class EditorService {
   TaskInstanceService taskInstanceService;
   @Autowired
   TaskService taskService;
+  @Autowired
+  GameplayService gameplayService;
+  @Autowired
+  PracticeChallengeService practiceChallengeService;
 
   public EditorService() {
   }
@@ -38,7 +44,8 @@ public class EditorService {
       if (testTaskInstance == null) {
         // DataImporter does not set testTaskInstances. If null, use the old
         // method that gets the test by modeluser
-        testTaskInstance = taskInstanceService.getCorrespondingTestTaskInstance(
+        testTaskInstance = practiceChallengeService
+            .getCorrespondingTestTaskInstance(
             taskInstance);
       }
 
