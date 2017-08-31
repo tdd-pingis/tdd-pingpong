@@ -48,7 +48,7 @@ public class EditorServiceTest {
             testUser,
             "test",
             "testing",
-            "public void test",
+            "public class Test {}",
             1, 1);
     this.implementationTask = new Task(
             2,
@@ -56,16 +56,15 @@ public class EditorServiceTest {
             testUser,
             "implementing",
             "testing",
-            "public void implementation",
+            "public class Implementation {}",
             2, 2);
     testTask.setChallenge(challenge);
     implementationTask.setChallenge(challenge);
     this.passedTaskInstance = new TaskInstance(
-            testUser, "public void implementation", implementationTask);
-    this.returnedTaskInstance = new TaskInstance(testUser, "public void test", testTask);
+            testUser, "public class Implementation {}", implementationTask);
+    this.returnedTaskInstance = new TaskInstance(testUser, "public class Test {}", testTask);
     passedTaskInstance.setTestTaskInstance(returnedTaskInstance);
     returnedTaskInstance.addImplementationTaskInstance(passedTaskInstance);
-
   }
 
   @Test
@@ -73,7 +72,7 @@ public class EditorServiceTest {
     when(taskServiceMock.getCorrespondingTask(returnedTaskInstance.getTask()))
             .thenReturn(implementationTask);
     Map<String, EditorTabData> result = editorService.generateEditorContents(returnedTaskInstance);
-    assertEquals(result.get("test").code, "public void test");
+    assertEquals(result.get("test").code, "public class Test {}");
     verify(taskServiceMock).getCorrespondingTask(returnedTaskInstance.getTask());
     verifyNoMoreInteractions(taskServiceMock);
   }
@@ -82,8 +81,8 @@ public class EditorServiceTest {
   public void testEditorServiceWithImplementationTask() {
     Map<String, EditorTabData> result = this.editorService
             .generateEditorContents(passedTaskInstance);
-    assertEquals(result.get("test").code, "public void test");
-    assertEquals(result.get("impl").code, "public void implementation");
+    assertEquals(result.get("test").code, "public class Test {}");
+    assertEquals(result.get("impl").code, "public class Implementation {}");
   }
 
 }
