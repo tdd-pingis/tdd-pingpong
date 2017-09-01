@@ -131,8 +131,8 @@ public class UserService {
     }
   }
 
-  public MultiValueMap<Challenge, TaskInstance> getCompletedTaskInstancesInUnfinishedChallenges() {
-    User user = getCurrentUser();
+  public MultiValueMap<Challenge, TaskInstance> getCompletedTaskInstancesInUnfinishedChallenges(
+      User user) {
     MultiValueMap<Challenge, TaskInstance> myTasksInChallenges = new LinkedMultiValueMap<>();
     user.getTaskInstances().stream()
         .filter(e -> !e.getChallenge().getIsOpen())

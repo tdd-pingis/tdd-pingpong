@@ -74,13 +74,13 @@ public class GameplayService {
     return testTask;
   }
 
-  public boolean canPlayOrSkip(TaskInstance taskInstance) {
-    return taskInstance.getUser().equals(userService.getCurrentUser())
+  public boolean canPlayOrSkip(TaskInstance taskInstance, User user) {
+    return taskInstance.getUser().equals(user)
         && taskInstance.getStatus() == CodeStatus.IN_PROGRESS;
   }
 
-  public TaskInstance newTaskInstance(Task task, TaskInstance testTaskInstance) {
-    User user = userService.getCurrentUser();
+  public TaskInstance newTaskInstance(Task task, TaskInstance testTaskInstance,
+      User user) {
     TaskInstance newTaskInstance = taskInstanceService.createEmpty(user, task);
     if (task.getType() == TaskType.IMPLEMENTATION) {
       logger.debug("Task type is implementation");

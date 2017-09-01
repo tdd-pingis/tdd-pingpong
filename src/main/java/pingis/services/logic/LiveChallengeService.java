@@ -35,8 +35,9 @@ public class LiveChallengeService {
   private ChallengeService challengeService;
 
 
-  public TurnType getTurnType(Challenge challenge) {
-    User user = userService.getCurrentUser();
+  public TurnType getTurnType(Challenge challenge, User user) {
+
+    // Author made the first task pair, so his "side" is 0.
     int side = user.getId() == challenge.getAuthor().getId() ? 0 : 1;
     int numberOfTasks = taskService.getNumberOfTasks(challenge);
     int highestIndex = numberOfTasks / 2;
@@ -52,16 +53,15 @@ public class LiveChallengeService {
     return TurnType.NONE;
   }
 
-  public Challenge createChallenge(Challenge newChallenge) {
-    newChallenge.setAuthor(userService.getCurrentUser());
+  public Challenge createChallenge(Challenge newChallenge, User user) {
+    newChallenge.setAuthor(user);
     newChallenge.setLevel(1);
     newChallenge.setOpen(true);
     newChallenge.setTasks(new ArrayList<>());
     return challengeService.save(newChallenge);
   }
 
-  public boolean checkParticipation(Challenge currentChallenge) {
-    User user = userService.getCurrentUser();
+  public boolean canParticipate(Challenge currentChallenge, User user) {
     if (!challengeService.isParticipating(currentChallenge, user)) {
       logger.debug("Not participating.");
 

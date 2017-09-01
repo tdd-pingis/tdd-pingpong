@@ -57,7 +57,7 @@ public class UserController {
 
     MultiValueMap<Challenge, TaskInstance> myTasksInChallenges
             = userService
-        .getCompletedTaskInstancesInUnfinishedChallenges();
+        .getCompletedTaskInstancesInUnfinishedChallenges(user);
     TaskInstance lastUnfinished = userService
         .getLastUnfinishedInstance(taskInstanceService);
     List<TaskInstance> history = userService.getHistory(taskInstanceService);

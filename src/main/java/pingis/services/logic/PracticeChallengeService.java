@@ -30,10 +30,9 @@ public class PracticeChallengeService {
   @Autowired
   private TaskInstanceService taskInstanceService;
 
-  public Task nextPracticeTask(Challenge challenge) {
+  public Task nextPracticeTask(Challenge challenge, User player) {
     int numberOfTasks = taskService.findAllByChallenge(challenge).size();
     logger.debug("Number of tasks: " + numberOfTasks);
-    User player = userService.getCurrentUser();
     List<TaskInstance> instances = taskInstanceService.getByUserAndChallenge(player, challenge);
     logger.debug("Task instances found: " + instances.size());
     if (instances.size() == numberOfTasks) {
@@ -51,7 +50,7 @@ public class PracticeChallengeService {
         currentIndex);
   }
 
-  // Hope Jussi's DataImporter-fix renders this obsolete. This is fucking nasty.
+  // TODO: hope Jussi's DataImporter-fix renders this obsolete. This is fucking nasty.
   public TaskInstance getCorrespondingTestTaskInstance(
       TaskInstance implTaskInstance) {
     return taskInstanceService

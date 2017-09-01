@@ -79,7 +79,7 @@ public class ChallengeController {
     }
 
     newChallenge = liveChallengeService
-        .createChallenge(newChallenge);
+        .createChallenge(newChallenge, userService.getCurrentUser());
     logger.debug("Created new challenge with an ID: {}", newChallenge.getId());
     redirectAttributes.addFlashAttribute("challengeId", newChallenge.getId());
     return "redirect:/playChallenge/" + newChallenge.getId();
@@ -189,10 +189,7 @@ public class ChallengeController {
       RedirectAttributes redirectAttributes) {
     logger.debug("Playing live, challenge ID " + currentChallenge.getId());
 
-    int index = taskService.getNumberOfTasks(currentChallenge) / 2;
-    logger.debug("Highest index of tasks in current challenge {}", index);
-
-    if (!liveChallengeService.checkParticipation(currentChallenge)) {
+    if (!liveChallengeService.canParticipate(currentChallenge, userService.getCurrentUser())) {
       logger.debug("Current user not a player in this challenge. Redirecting to /error.");
       redirectAttributes.addFlashAttribute("message",
           "this is not your challenge");
@@ -209,7 +206,7 @@ public class ChallengeController {
     }
 
     TurnType turn = liveChallengeService
-        .getTurnType(currentChallenge);
+        .getTurnType(currentChallenge, userService.getCurrentUser());
 
     if (turn == TurnType.IMPLEMENTATION) {
       return playImplementationTurn(redirectAttributes, currentChallenge);
@@ -280,7 +277,7 @@ public class ChallengeController {
     }
 
     Task nextTask = practiceChallengeService
-        .nextPracticeTask(challenge);
+        .nextPracticeTask(challenge, userService.getCurrentUser());
     if (nextTask == null) {
       // User has completed the practice challenge.
       challenge.addNewCompletedPlayer(player);
@@ -307,7 +304,7 @@ public class ChallengeController {
       RedirectAttributes redirectAttributes) {
     logger.debug("Creating new task instance");
     TaskInstance newTaskInstance = gameplayService
-        .newTaskInstance(task, testTaskInstance);
+        .newTaskInstance(task, testTaskInstance, userService.getCurrentUser());
     return new RedirectView("/task/" + newTaskInstance.getId());
   }
 

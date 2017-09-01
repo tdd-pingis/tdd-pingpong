@@ -26,12 +26,12 @@ public class ChallengeService {
   }
 
   public Challenge findOne(Long challengeId) {
-    // Implement validation here
+    // TODO: Implement validation here
     return challengeRepository.findById(challengeId).get();
   }
 
   public Challenge save(Challenge newChallenge) {
-    // Implement validation here
+    // TODO: Implement validation here
     return challengeRepository.save(newChallenge);
   }
 
@@ -40,7 +40,7 @@ public class ChallengeService {
   }
 
   public Challenge delete(Long challengeId) {
-    //Implement validation here
+    // TODO: Implement validation here
     Challenge c = findOne(challengeId);
     challengeRepository.deleteById(challengeId);
     return c;
@@ -81,9 +81,7 @@ public class ChallengeService {
   public boolean isParticipating(Challenge challenge, User user) {
     if (user.getId() == challenge.getAuthor().getId()) {
       return true;
-    }
-
-    if (challenge.getSecondPlayer() == null) {
+    } else if (challenge.getSecondPlayer() == null) {
       return false;
     }
 

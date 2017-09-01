@@ -125,14 +125,14 @@ public class TaskControllerTest {
   public void givenTaskWhenGetTestTask() throws Exception {
     when(taskInstanceServiceMock.findOne(testTaskInstance.getId()))
         .thenReturn(testTaskInstance);
-    when(gameplayServiceMock.canPlayOrSkip(any())).thenReturn(true);
+    when(gameplayServiceMock.canPlayOrSkip(any(), any())).thenReturn(true);
     Map<String, EditorTabData> tabData = this
         .generateTabData(implTaskInstance, testTaskInstance);
     when(editorServiceMock.generateEditorContents(testTaskInstance)).thenReturn(tabData);
     String uri = "/task/" + testTaskInstance.getId();
     performSimpleGetRequestAndFindContent(uri, "task", testTask.getCodeStub());
     verify(taskInstanceServiceMock, times(1)).findOne(testTaskInstance.getId());
-    verify(gameplayServiceMock).canPlayOrSkip(any());
+    verify(gameplayServiceMock).canPlayOrSkip(any(), any());
     verify(editorServiceMock, times(1))
         .generateEditorContents(testTaskInstance);
     verifyNoMoreInteractions(taskInstanceServiceMock);
@@ -145,14 +145,14 @@ public class TaskControllerTest {
 
     when(taskInstanceServiceMock.findOne(implTaskInstance.getId()))
         .thenReturn(implTaskInstance);
-    when(gameplayServiceMock.canPlayOrSkip(any())).thenReturn(true);
+    when(gameplayServiceMock.canPlayOrSkip(any(), any())).thenReturn(true);
 
     Map<String, EditorTabData> tabData = generateTabData(implTaskInstance, testTaskInstance);
     when(editorServiceMock.generateEditorContents(implTaskInstance)).thenReturn(tabData);
     String uri = "/task/" + implTaskInstance.getId();
     performSimpleGetRequestAndFindContent(uri, "task", implementationTask.getCodeStub());
     verify(taskInstanceServiceMock, times(1)).findOne(implTaskInstance.getId());
-    verify(gameplayServiceMock).canPlayOrSkip(any());
+    verify(gameplayServiceMock).canPlayOrSkip(any(), any());
     verify(editorServiceMock, times(1))
         .generateEditorContents(implTaskInstance);
     verifyNoMoreInteractions(taskInstanceServiceMock);

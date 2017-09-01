@@ -67,7 +67,7 @@ public class TaskController {
       return "error";
     }
 
-    if (!gameplayService.canPlayOrSkip(taskInstance)) {
+    if (!gameplayService.canPlayOrSkip(taskInstance, userService.getCurrentUser())) {
       logger.debug("Can't play or skip");
       return "redirect:/error";
     }
@@ -168,7 +168,7 @@ public class TaskController {
     logger.debug("Request to /skip/{}", taskInstanceId);
 
     TaskInstance skippedTaskInstance = taskInstanceService.findOne(taskInstanceId);
-    if (!gameplayService.canPlayOrSkip(skippedTaskInstance)) {
+    if (!gameplayService.canPlayOrSkip(skippedTaskInstance, userService.getCurrentUser())) {
       logger.debug("Can't play or skip");
       return new RedirectView("/error");
     }

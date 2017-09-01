@@ -98,8 +98,7 @@ public class LiveChallengeServiceTest {
     when(taskInstanceServiceMock.getNumberOfDoneTaskInstancesInChallenge(testChallenge))
         .thenReturn(4);
     assertEquals(TurnType.TEST, liveChallengeService
-        .getTurnType(testChallenge));
-    verify(userServiceMock).getCurrentUser();
+        .getTurnType(testChallenge, testUser));
     verify(taskServiceMock).getNumberOfTasks(testChallenge);
     verify(taskInstanceServiceMock).getNumberOfDoneTaskInstancesInChallenge(testChallenge);
   }
@@ -111,8 +110,7 @@ public class LiveChallengeServiceTest {
     when(taskInstanceServiceMock.getNumberOfDoneTaskInstancesInChallenge(testChallenge))
         .thenReturn(3);
     assertEquals(TurnType.IMPLEMENTATION, liveChallengeService
-        .getTurnType(testChallenge));
-    verify(userServiceMock).getCurrentUser();
+        .getTurnType(testChallenge, testUser));
     verify(taskServiceMock).getNumberOfTasks(testChallenge);
     verify(taskInstanceServiceMock).getNumberOfDoneTaskInstancesInChallenge(testChallenge);
   }
@@ -125,8 +123,7 @@ public class LiveChallengeServiceTest {
         .thenReturn(3);
     when(taskServiceMock.getNumberOfTasks(testChallenge)).thenReturn(3);
     assertEquals(TurnType.NONE, liveChallengeService
-        .getTurnType(testChallenge));
-    verify(userServiceMock).getCurrentUser();
+        .getTurnType(testChallenge, testUser));
     verify(taskServiceMock).getNumberOfTasks(testChallenge);
     verify(taskInstanceServiceMock).getNumberOfDoneTaskInstancesInChallenge(testChallenge);
   }
