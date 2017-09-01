@@ -11,7 +11,7 @@
                 <br><p th:inline="text" class="lead dashboard-user-name taskview-challenge-heading"><strong>Task number:</strong> &nbsp;&nbsp;&nbsp;[[${task.index}]] / [[${#lists.size(task.challenge.tasks)}]]</p>
             </div>
             <div class="row task-topbar-challenge-info" th:if="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}">
-                <h1>Arcade challenge </h1><h2 th:inline="text">[[${challenge.realm}]]</h2>
+                <h1>Arcade challenge </h1><h2 th:inline="text">[[${challenge.realm.name}]]</h2>
                 <p class="lead dashboard-user-name"><strong>Rank: </strong>Super Guru!</p>
             </div>
         </div>
