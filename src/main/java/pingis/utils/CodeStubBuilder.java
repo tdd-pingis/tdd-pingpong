@@ -1,7 +1,10 @@
 package pingis.utils;
 
+import com.github.javaparser.JavaParser;
 import com.github.javaparser.ast.CompilationUnit;
+import com.github.javaparser.ast.Modifier;
 import com.github.javaparser.ast.body.ClassOrInterfaceDeclaration;
+import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.comments.LineComment;
 
 public class CodeStubBuilder {
@@ -38,5 +41,21 @@ public class CodeStubBuilder {
 
   public CodeStub build() {
     return new CodeStub(className, filename, compilationUnit.toString());
+  }
+
+  public static CodeStubBuilder fromCode(String code) {
+    CompilationUnit cu = JavaParser.parse(code);
+
+    for (TypeDeclaration<?> type : cu.getTypes()) {
+
+      if (type instanceof ClassOrInterfaceDeclaration
+              && type.getModifiers().contains(Modifier.PUBLIC)) {
+
+        String className = type.getNameAsString();
+        return new CodeStubBuilder(className);
+      }
+    }
+
+    throw new IllegalArgumentException("Task instance's code did not contain any public class");
   }
 }
