@@ -99,7 +99,7 @@ public class TaskController {
     TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
 
-    Submission submission = submitToTmc(taskInstance, currentChallenge, submissionCode);
+    Submission submission = submitToTmc(taskInstance, submissionCode);
 
     redirectAttributes.addFlashAttribute("submissionId", submission.getId().toString());
     redirectAttributes.addFlashAttribute("taskInstance", taskInstance);
@@ -133,8 +133,7 @@ public class TaskController {
     return "OK";
   }
 
-  private Submission submitToTmc(TaskInstance taskInstance, Challenge challenge,
-      String submissionCode)
+  private Submission submitToTmc(TaskInstance taskInstance, String submissionCode)
       throws IOException, ArchiveException {
     logger.debug("Submitting to TMC");
     Map<String, byte[]> files = new HashMap<>();
