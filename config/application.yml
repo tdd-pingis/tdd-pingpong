@@ -29,8 +29,3 @@ security:
 tmc:
   sandboxUrl: http://localhost:8080
   notifyUrl: http://localhost:8080/submission-result
-
-logging:
-  level:
-    ROOT: INFO
-    pingis: DEBUG

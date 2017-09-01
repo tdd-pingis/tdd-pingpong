@@ -2,6 +2,7 @@ apply from: 'gradle/helpers/test-printing.gradle'
 
 tasks.withType(Test).all {
     systemProperty "spring.profiles.active", "dev"
+    testLogging.events = ['standard_out', 'standard_error']
 }
 
 task unit (type: Test) {
@@ -12,13 +13,12 @@ task unit (type: Test) {
 task cucumber (type: Test) {
     testLogging { afterSuite { desc, result -> printTestResults(desc,result,'CUKE') } }
     include '**/cucumber/**'
+    testLogging.events = ['standard_out']
 
     // Use for debugging specific Cucumber tests
     // Add the @debug tag above a feature or scenario you want to test
     //systemProperty "cucumber.options", "--tags @debug"
 }
-
-test.testLogging.showStandardStreams = true
 
 // If not running in Travis, we want to use the unit task instead of test
 if (System.env.TRAVIS != 'true') {
@@ -29,12 +29,6 @@ if (System.env.TRAVIS != 'true') {
 // For running all tests during build
 if(System.env.TESTS == 'ALL') {
   test.dependsOn cucumber
-}
-
-// For running tests with stdout
-if(System.env.STDOUT == 'ON') {
-    unit.testLogging.showStandardStreams = true
-    cucumber.testLogging.showStandardStreams = true
 }
 
 cucumber.mustRunAfter unit

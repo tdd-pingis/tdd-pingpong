@@ -51,4 +51,18 @@ public class CodeStubBuilderTest {
     assertEquals("src/CommentClass.java", stub.filename);
     assertEquals("CommentClass", stub.className);
   }
+
+  @Test
+  public void fromCodeCreatesCorrectCodeStub() {
+    CodeStub stub = CodeStubBuilder
+            .fromCode("public class Calculator {}")
+            .build();
+
+    CodeStub example = new CodeStubBuilder("Calculator")
+            .build();
+
+    assertEquals(example.className, stub.className);
+    assertEquals(example.code, stub.code);
+    assertEquals(example.filename, stub.filename);
+  }
 }

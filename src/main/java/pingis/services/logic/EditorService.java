@@ -2,6 +2,8 @@ package pingis.services.logic;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pingis.entities.TaskInstance;
@@ -15,6 +17,8 @@ import pingis.utils.TestStubBuilder;
 
 @Service
 public class EditorService {
+
+  private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
   @Autowired
   TaskInstanceService taskInstanceService;
@@ -30,10 +34,6 @@ public class EditorService {
 
   public Map<String, EditorTabData> generateEditorContents(TaskInstance taskInstance) {
     Map<String, EditorTabData> tabData = new LinkedHashMap<>();
-
-    CodeStubBuilder stubBuilder = new CodeStubBuilder(taskInstance.getChallenge().getName());
-    CodeStub implStub = stubBuilder.build();
-    CodeStub testStub = new TestStubBuilder(stubBuilder).build();
 
     String implCode;
     String testCode;
@@ -55,6 +55,10 @@ public class EditorService {
       implCode = taskService.getCorrespondingTask(taskInstance.getTask()).getCodeStub();
       testCode = taskInstance.getCode();
     }
+
+    CodeStubBuilder stubBuilder = CodeStubBuilder.fromCode(implCode);
+    CodeStub implStub = stubBuilder.build();
+    CodeStub testStub = new TestStubBuilder(stubBuilder).build();
 
     tabData.put("test", new EditorTabData(testStub.filename, testCode));
     tabData.put("impl", new EditorTabData(implStub.filename, implCode));

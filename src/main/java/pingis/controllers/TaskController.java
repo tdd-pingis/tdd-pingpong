@@ -143,13 +143,19 @@ public class TaskController {
     logger.debug("Submitting to TMC");
     Map<String, byte[]> files = new HashMap<>();
 
-    String staticCode = taskService.getCorrespondingTask(taskInstance.getTask()).getCodeStub();
-
     CodeStubBuilder stubBuilder = new CodeStubBuilder(challenge.getName());
     CodeStub implStub = stubBuilder.build();
     CodeStub testStub = new TestStubBuilder(stubBuilder).build();
 
     boolean isTest = taskInstance.getTask().getType() == TaskType.TEST;
+    String staticCode;
+
+    if (isTest) {
+      staticCode = taskService.getCorrespondingTask(taskInstance.getTask()).getCodeStub();
+    } else {
+      staticCode = taskInstance.getTestTaskinstance().getCode();
+    }
+
     files.put(isTest ? testStub.filename : implStub.filename, submissionCode.getBytes());
     files.put(isTest ? implStub.filename : testStub.filename, staticCode.getBytes());
 
