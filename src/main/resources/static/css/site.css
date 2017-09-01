@@ -122,7 +122,7 @@ textarea {
   padding-top: 0px;
   font-size: 65px;
   color: #FFFFF2;
-  letter-spacing: -0.15em;
+  letter-spacing: -0.08em;
   padding-right: 0.2em;
   opacity: 0.8;
 }
@@ -212,7 +212,7 @@ textarea {
 }
 
 #dashboard-points-well {
-  opacity: 0.6;
+  opacity: 0.75;
   border-radius: 2px;
   font-size: 16px;
   color: #FFFFFF;
@@ -284,7 +284,6 @@ textarea {
   box-shadow: 0px 3px 7px -1px rgba(0,0,0,0.44);
 }
 
-
 .input-text {
   padding: 3px;
   padding-left: 6px;
@@ -299,8 +298,10 @@ textarea {
 }
 
 .logo {
-  padding-bottom: 12px;
+  padding-top: 5px;
   height: 50px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 
 .nav-tabs {
@@ -318,7 +319,6 @@ textarea {
 }
 
 .navbar-collapse {
-  padding-top: 14px;
   padding-right: 20%;
   padding-left: 19%;
 }
@@ -333,7 +333,6 @@ textarea {
 }
 
 .progress {
-  margin-top: 3vw;
   margin-left: auto;
   margin-right: auto;
   width: available;
@@ -386,7 +385,6 @@ textarea {
   margin-bottom: 15px;
   margin-top: 15px;
   color: whitesmoke;
-  
   box-shadow: 0px 3px 7px 1px rgba(0,0,0,0.24);
 }
 
@@ -456,6 +454,7 @@ textarea {
   color: black;
   font-family: elgethy;
   font-size: 5em;
+  opacity: 0.9;
 }
 
 #user-points-header {

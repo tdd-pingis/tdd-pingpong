@@ -12,18 +12,20 @@
             </div>
             <div class="row task-topbar-challenge-info" th:if="${task.challenge.type == T(pingis.entities.ChallengeType).ARCADE}">
                 <h1>Arcade challenge </h1><h2 th:inline="text">[[${challenge.realm.name}]]</h2>
-                <p class="lead dashboard-user-name"><strong>Rank: </strong>Super Guru!</p>
             </div>
         </div>
 
         <div class="container task-container">
             <div class="row">
                 <div class="col-md-4">
-                    <p id="task-name" th:inline="text">Task: &nbsp;<strong>[[${task.name}]]</strong></p>
-                    <p th:if="${task.type == T(pingis.entities.TaskType).TEST}">Task type: &nbsp;<strong> Test</strong></p>
-                    <p th:if="${task.type == T(pingis.entities.TaskType).IMPLEMENTATION}">Task type: &nbsp;<strong>Implementation</strong></p>
-                    <p th:inline="text">Points available: &nbsp;<strong>[[${task.points}]]</strong></p>
-                    <p th:inline="text">Level: &nbsp;<strong>[[${task.level}]]</strong></p>
+                    <span id="task-name" th:inline="text">Task: &nbsp;<strong>[[${task.name}]]</strong></span><br>
+                    <span th:if="${task.type == T(pingis.entities.TaskType).TEST}">Task type: &nbsp;<strong> Test</strong></span>
+                    <span th:if="${task.type == T(pingis.entities.TaskType).IMPLEMENTATION}">Task type: &nbsp;<strong>Implementation</strong></span>
+                    <br>
+                    <span th:inline="text">Points available: &nbsp;<strong>[[${task.points}]]</strong></span><br>
+                    <span th:inline="text">Level: &nbsp;<strong>[[${task.level}]]</strong></span>
+                    <br>
+                    <br>
                 </div>
                 <div class="col-md-6">
                     <p id="task-desc" th:text="${task.desc}"></p><br/><br/>
