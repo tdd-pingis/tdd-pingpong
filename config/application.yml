@@ -10,6 +10,10 @@ spring:
     driverClassName: org.h2.Driver
   profiles:
     default: dev
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
 
 security:
   oauth2:

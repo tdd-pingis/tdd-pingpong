@@ -3,7 +3,7 @@ FROM frolvlad/alpine-oraclejdk8:slim
 ARG tmcappid
 ARG tmcsecret
 
-# This fixed some issue related to the in-memory db that I forget
+# Mounts a directory on the host filesystem for the container
 VOLUME /tmp
 
 # Add the jar and the properties to the working directory of the container
@@ -15,6 +15,6 @@ COPY tmc-assets tmc-assets
 RUN sh -c 'touch /app.jar'
 
 # Options for running java. Sets the profile as 'production' and adds the TMC credentials as environment variables
-ENV JAVA_OPTS="-Dspring.profiles.active=prod -DTMC_APP_ID=${tmcappid} -DTMC_SECRET=${tmcsecret}"
+ENV JAVA_OPTS="-Dspring.profiles.active=dev -DTMC_APP_ID=${tmcappid} -DTMC_SECRET=${tmcsecret}"
 
 ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
