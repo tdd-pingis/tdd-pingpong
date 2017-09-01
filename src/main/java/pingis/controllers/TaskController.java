@@ -102,11 +102,11 @@ public class TaskController {
     TaskInstance taskInstance = taskInstanceService.findOne(taskInstanceId);
     Challenge currentChallenge = taskInstance.getTask().getChallenge();
 
-    Submission submission = submitToTmc(taskInstance, currentChallenge, submissionCode);
+    Submission submission = submitToTmc(taskInstance, submissionCode);
 
     redirectAttributes.addFlashAttribute("submissionId", submission.getId().toString());
     redirectAttributes.addFlashAttribute("taskInstance", taskInstance);
-    redirectAttributes.addFlashAttribute("challenge", currentChallenge);
+    redirectAttributes.addFlashAttribute("challengeId", currentChallenge.getId());
     redirectAttributes.addFlashAttribute("user", userService.getCurrentUser());
 
     // Save user's answer from left editor
@@ -137,13 +137,12 @@ public class TaskController {
     return "OK";
   }
 
-  private Submission submitToTmc(TaskInstance taskInstance, Challenge challenge,
-      String submissionCode)
+  private Submission submitToTmc(TaskInstance taskInstance, String submissionCode)
       throws IOException, ArchiveException {
     logger.debug("Submitting to TMC");
     Map<String, byte[]> files = new HashMap<>();
 
-    CodeStubBuilder stubBuilder = new CodeStubBuilder(challenge.getName());
+    CodeStubBuilder stubBuilder = CodeStubBuilder.fromCode(submissionCode);
     CodeStub implStub = stubBuilder.build();
     CodeStub testStub = new TestStubBuilder(stubBuilder).build();
 

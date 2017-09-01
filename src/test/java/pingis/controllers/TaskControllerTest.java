@@ -1,7 +1,10 @@
 package pingis.controllers;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -99,13 +102,13 @@ public class TaskControllerTest {
         "Simple calculator");
     testTask = new Task(1,
         TaskType.TEST, testUser, "CalculatorAddition",
-        "Implement addition", "return 1+1;", 1, 1);
+        "Implement addition", "public class Test {}", 1, 1);
     implementationTask = new Task(2,
         TaskType.IMPLEMENTATION, testUser, "implement addition",
-        "implement addition", "public test", 1, 1);
+        "implement addition", "public class Impl {}", 1, 1);
     testTaskInstance
-        = new TaskInstance(testUser, "", testTask);
-    implTaskInstance = new TaskInstance(testUser, "",
+        = new TaskInstance(testUser, "public class Test {}", testTask);
+    implTaskInstance = new TaskInstance(testUser, "public class Impl {}",
         implementationTask);
     implTaskInstance.setTestTaskInstance(testTaskInstance);
     testTask.setChallenge(challenge);
@@ -173,7 +176,7 @@ public class TaskControllerTest {
 
   @Test
   public void submitTestTask() throws Exception {
-    String submissionCode = "/* this is a test */";
+    String submissionCode = "public class Task {}";
 
     when(taskInstanceServiceMock.findOne(testTaskInstance.getId())).thenReturn(testTaskInstance);
     when(challengeServiceMock.findOne(challenge.getId())).thenReturn(challenge);
@@ -196,7 +199,7 @@ public class TaskControllerTest {
 
   @Test
   public void submitImplementationTask() throws Exception {
-    String submissionCode = "/* this is an implementation */";
+    String submissionCode = "public class Impl {}";
 
     when(taskInstanceServiceMock.findOne(implTaskInstance.getId())).thenReturn(implTaskInstance);
     when(challengeServiceMock.findOne(challenge.getId())).thenReturn(challenge);
@@ -226,6 +229,40 @@ public class TaskControllerTest {
     verify(taskInstanceServiceMock, times(1)).findOne(123);
     verifyNoMoreInteractions(taskInstanceServiceMock);
     verifyNoMoreInteractions(editorServiceMock);
+  }
+
+  @Test
+  public void correctFileNamesAreSubmitted() throws Exception {
+    String submissionCode = "public class Sample {}";
+
+    Challenge challenge = mock(Challenge.class);
+    when(challenge.getId()).thenReturn(1L);
+
+    Task task = mock(Task.class);
+    when(task.getChallenge()).thenReturn(challenge);
+    when(task.getType()).thenReturn(TaskType.TEST);
+    when(task.getCodeStub()).thenReturn(submissionCode);
+
+    TaskInstance taskInstance = mock(TaskInstance.class);
+    when(taskInstance.getTask()).thenReturn(task);
+
+    Submission submission = mock(Submission.class);
+    when(submission.getId()).thenReturn(UUID.randomUUID());
+
+    when(taskInstanceServiceMock.findOne(anyLong())).thenReturn(taskInstance);
+    when(taskServiceMock.getCorrespondingTask(any())).thenReturn(task);
+    when(sandboxServiceMock.submit(any(), any())).thenReturn(submission);
+
+    mvc.perform(post("/task")
+          .param("submissionCode", submissionCode)
+          .param("taskInstanceId", Long.toString(0)))
+          .andExpect(status().is3xxRedirection());
+
+    verify(sandboxServiceMock).submit(packagingArgCaptor.capture(), any());
+
+    Map<String, byte[]> map = packagingArgCaptor.getValue();
+    assertTrue(map.containsKey("src/Sample.java"));
+    assertTrue(map.containsKey("test/SampleTest.java"));
   }
 
   private void performSimpleGetRequestAndFindContent(String uri,
