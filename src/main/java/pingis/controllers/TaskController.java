@@ -103,7 +103,7 @@ public class TaskController {
 
     redirectAttributes.addFlashAttribute("submissionId", submission.getId().toString());
     redirectAttributes.addFlashAttribute("taskInstance", taskInstance);
-    redirectAttributes.addFlashAttribute("challenge", currentChallenge);
+    redirectAttributes.addFlashAttribute("challengeId", currentChallenge.getId());
     redirectAttributes.addFlashAttribute("user", userService.getCurrentUser());
 
     // Save user's answer from left editor
@@ -139,7 +139,7 @@ public class TaskController {
     logger.debug("Submitting to TMC");
     Map<String, byte[]> files = new HashMap<>();
 
-    CodeStubBuilder stubBuilder = new CodeStubBuilder(challenge.getName());
+    CodeStubBuilder stubBuilder = CodeStubBuilder.fromCode(submissionCode);
     CodeStub implStub = stubBuilder.build();
     CodeStub testStub = new TestStubBuilder(stubBuilder).build();
 

@@ -16,7 +16,7 @@ public class TaskPage extends NavbarPage {
   public void addCode(String code) {
     String existingCode =
             (String) driver.executeScript("return submissionEditor.getValue();");
-    driver.executeScript("submissionEditor.setValue(`" + existingCode + " " + code + "`);");
+    driver.executeScript("submissionEditor.setValue(`" + existingCode + " //" + code + "`);");
   }
 
   public boolean activeEditorContains(String content) {
