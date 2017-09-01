@@ -1,3 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:h2:file:/tmp/codepong;DB_CLOSE_ON_EXIT=FALSE
+  jpa:
+    hibernate:
+      ddl-auto: none
+
 tmc:
   sandboxUrl: http://172.17.0.1:3001
   notifyUrl: http://127.0.0.1:3000/submission-result

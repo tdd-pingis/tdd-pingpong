@@ -3,7 +3,7 @@ FROM frolvlad/alpine-oraclejdk8:slim
 ARG tmcappid
 ARG tmcsecret
 
-# This fixed some issue related to the in-memory db that I forget
+# Mounts a directory on the host filesystem for the container
 VOLUME /tmp
 
 # Add the jar and the properties to the working directory of the container
