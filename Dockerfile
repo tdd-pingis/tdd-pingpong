@@ -15,6 +15,6 @@ COPY tmc-assets tmc-assets
 RUN sh -c 'touch /app.jar'
 
 # Options for running java. Sets the profile as 'production' and adds the TMC credentials as environment variables
-ENV JAVA_OPTS="-Dspring.profiles.active=dev -DTMC_APP_ID=${tmcappid} -DTMC_SECRET=${tmcsecret}"
+ENV JAVA_OPTS="-Dspring.profiles.active=prod -DTMC_APP_ID=${tmcappid} -DTMC_SECRET=${tmcsecret}"
 
 ENTRYPOINT [ "sh", "-c", "java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar /app.jar" ]
