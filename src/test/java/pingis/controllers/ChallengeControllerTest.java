@@ -27,12 +27,16 @@ import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskPair;
 import pingis.entities.User;
-import pingis.services.ChallengeService;
-import pingis.services.GameplayService;
-import pingis.services.GameplayService.TurnType;
-import pingis.services.TaskInstanceService;
-import pingis.services.TaskService;
-import pingis.services.UserService;
+import pingis.services.entity.ChallengeService;
+import pingis.services.entity.TaskInstanceService;
+import pingis.services.entity.TaskService;
+import pingis.services.entity.UserService;
+import pingis.services.logic.ArcadeChallengeService;
+import pingis.services.logic.GameplayService;
+import pingis.services.logic.GameplayService.TurnType;
+import pingis.services.logic.LiveChallengeService;
+import pingis.services.logic.PracticeChallengeService;
+
 
 /**
  * @author authority
@@ -54,6 +58,12 @@ public class ChallengeControllerTest {
   UserService userService;
   @MockBean
   GameplayService gameplayService;
+  @MockBean
+  LiveChallengeService liveChallengeService;
+  @MockBean
+  ArcadeChallengeService arcadeChallengeService;
+  @MockBean
+  PracticeChallengeService practiceChallengeService;
 
   @Test
   @WithMockUser
@@ -78,23 +88,20 @@ public class ChallengeControllerTest {
 
     User user = Mockito.mock(User.class);
     when(user.getId()).thenReturn(10L);
-    when(userService.getCurrentUser()).thenReturn(user);
 
     Challenge challenge = Mockito.mock(Challenge.class);
-    when(challengeService.save(any())).thenReturn(challenge);
-    when(challenge.toString()).thenReturn("");
     when(challenge.getId()).thenReturn(challengeId);
 
+    when(userService.getCurrentUser()).thenReturn(user);
     Challenge challengeFromForm = new Challenge("validName", user, "validDesc");
+    when(liveChallengeService.createChallenge(challengeFromForm, user))
+        .thenReturn(challenge);
 
     mvc.perform(post("/createChallenge")
         .with(csrf())
         .flashAttr("challenge", challengeFromForm))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl("/playChallenge/" + challengeId));
-
-    verify(challengeService, times(1))
-        .save(any());
   }
 
   @Test
@@ -148,7 +155,7 @@ public class ChallengeControllerTest {
 
     when(challengeService.findOne(any())).thenReturn(challenge);
 
-    when(gameplayService.isParticipating(any())).thenReturn(false);
+    when(challengeService.isParticipating(any(), any())).thenReturn(false);
 
     mvc.perform(get("/playChallenge/0")
         .with(csrf()))
@@ -191,30 +198,28 @@ public class ChallengeControllerTest {
   public void playOpenChallengeWithUnfinishedTaskInstanceNotOwnedByCurrentUserRedirectsToUser()
       throws Exception {
     User user = Mockito.mock(User.class);
+    User user2 = Mockito.mock(User.class);
     when(user.getId()).thenReturn(10L);
+    when(user2.getId()).thenReturn(12L);
 
     TaskInstance taskInstance = Mockito.mock(TaskInstance.class);
-    when(taskInstance.getUser()).thenReturn(user);
+    when(taskInstance.getUser()).thenReturn(user2);
 
     Challenge challenge = Mockito.mock(Challenge.class);
     when(challenge.getIsOpen()).thenReturn(true);
     when(challenge.getSecondPlayer()).thenReturn(null);
 
     when(challengeService.findOne(any())).thenReturn(challenge);
-    when(gameplayService.isParticipating(any())).thenReturn(false);
-
-    when(challengeService.getUnfinishedTaskInstance(any())).thenReturn(taskInstance);
-    when(userService.getCurrentUser()).thenReturn(null);
+    when(liveChallengeService.canParticipate(challenge, user)).thenReturn(true);
+    when(taskInstanceService.getUnfinishedTaskInstance(any())).thenReturn(taskInstance);
+    when(userService.getCurrentUser()).thenReturn(user);
 
     mvc.perform(get("/playChallenge/0")
         .with(csrf()))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl("/user"));
-
-    verify(challengeService, times(1))
-        .save(challenge);
-    verify(gameplayService, never())
-        .getTurnType(any());
+    verify(liveChallengeService, never())
+        .getTurnType(any(), any());
   }
 
   @Test
@@ -231,18 +236,18 @@ public class ChallengeControllerTest {
     when(challenge.getSecondPlayer()).thenReturn(null);
 
     when(challengeService.findOne(any())).thenReturn(challenge);
-    when(gameplayService.isParticipating(any())).thenReturn(false);
-    when(challengeService.getUnfinishedTaskInstance(any())).thenReturn(null);
-
-    when(gameplayService.getTurnType(any())).thenReturn(TurnType.NONE);
+    when(userService.getCurrentUser()).thenReturn(user);
+    when(taskInstanceService.getUnfinishedTaskInstance(any())).thenReturn(null);
+    when(liveChallengeService.canParticipate(challenge, user)).thenReturn(true);
+    when(liveChallengeService.getTurnType(any(), any())).thenReturn(TurnType.NONE);
 
     mvc.perform(get("/playChallenge/0")
         .with(csrf()))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl("/user"));
 
-    verify(gameplayService, times(1))
-        .getTurnType(any());
+    verify(liveChallengeService, times(1))
+        .getTurnType(any(), any());
   }
 
   @Test
@@ -274,16 +279,18 @@ public class ChallengeControllerTest {
     when(implTask.getId()).thenReturn(implTaskId);
 
     when(challengeService.findOne(any())).thenReturn(challenge);
+    when(liveChallengeService.canParticipate(challenge, user)).thenReturn(true);
     when(challenge.getType()).thenReturn(ChallengeType.PROJECT);
-    when(gameplayService.getNumberOfTasks(challenge)).thenReturn(2);
-    when(gameplayService.isParticipating(challenge)).thenReturn(true);
-    when(challengeService.getUnfinishedTaskInstance(challenge)).thenReturn(null);
-    when(gameplayService.getTurnType(challenge)).thenReturn(TurnType.IMPLEMENTATION);
-    when(gameplayService.getTopmostImplementationTask(challenge)).thenReturn(implTask);
-    when(gameplayService.getTopmostTestTask(challenge)).thenReturn(testTask);
+    when(taskService.getNumberOfTasks(challenge)).thenReturn(2);
+    when(taskInstanceService.getUnfinishedTaskInstance(challenge)).thenReturn(null);
+    when(liveChallengeService.getTurnType(challenge, user)).thenReturn(TurnType.IMPLEMENTATION);
+    when(liveChallengeService
+        .getTopmostImplementationTask(challenge)).thenReturn(implTask);
+    when(liveChallengeService.getTopmostTestTask(challenge)).thenReturn(testTask);
     when(taskInstanceService.getByTaskAndUser(testTask, user)).thenReturn(taskInstance);
     when(userService.getCurrentUser()).thenReturn(user);
     when(taskInstanceService.createEmpty(user, implTask)).thenReturn(newTaskInstance);
+    when(gameplayService.newTaskInstance(implTask, taskInstance, user)).thenReturn(newTaskInstance);
     when(newTaskInstance.getChallenge()).thenReturn(challenge);
 
     mvc.perform(get("/playChallenge/0")
@@ -294,7 +301,7 @@ public class ChallengeControllerTest {
 
   @Test
   @WithMockUser
-  public void playTurnOnTestTurnRedirectsToNewTaskInstance() throws Exception {
+  public void playLiveOnTestTurnRedirectsToNewTaskPair() throws Exception {
     Long taskId = 0L;
     Long challengeId = 877L;
 
@@ -315,12 +322,13 @@ public class ChallengeControllerTest {
     when(task.getAuthor()).thenReturn(user);
 
     when(challengeService.findOne(any())).thenReturn(challenge);
-    when(gameplayService.isParticipating(any())).thenReturn(false);
-    when(challengeService.getUnfinishedTaskInstance(any())).thenReturn(null);
-    when(gameplayService.getTurnType(any())).thenReturn(TurnType.TEST);
+    when(liveChallengeService.canParticipate(challenge, user)).thenReturn(true);
+    when(taskInstanceService.getUnfinishedTaskInstance(any())).thenReturn(null);
+    when(liveChallengeService.getTurnType(any(), any())).thenReturn(TurnType.TEST);
+    when(userService.getCurrentUser()).thenReturn(user);
 
-    when(gameplayService.getTopmostImplementationTask(any())).thenReturn(task);
-    when(gameplayService.getTopmostTestTask(any())).thenReturn(task);
+    when(liveChallengeService.getTopmostImplementationTask(any())).thenReturn(task);
+    when(liveChallengeService.getTopmostTestTask(any())).thenReturn(task);
     when(taskInstanceService.getByTaskAndUser(any(), any())).thenReturn(taskInstance);
 
     mvc.perform(get("/playChallenge/" + challengeId)
@@ -332,7 +340,7 @@ public class ChallengeControllerTest {
   @Test
   @WithMockUser
   public void closingChallengeNotOwnedByCurrentUserRedirectsToError() throws Exception {
-    when(gameplayService.isParticipating(any())).thenReturn(false);
+    when(challengeService.isParticipating(any(), any())).thenReturn(false);
 
     mvc.perform(post("/closeChallenge/0")
         .with(csrf()))
@@ -350,15 +358,12 @@ public class ChallengeControllerTest {
     when(challenge.getId()).thenReturn(20L);
 
     when(challengeService.findOne(any())).thenReturn(challenge);
-    when(gameplayService.isParticipating(any())).thenReturn(true);
+    when(challengeService.isParticipating(any(), any())).thenReturn(true);
 
     mvc.perform(post("/closeChallenge/0")
         .with(csrf()))
         .andExpect(status().is3xxRedirection())
         .andExpect(redirectedUrl("/user"));
-
-    verify(challengeService, times(1))
-        .save(challenge);
   }
 
 }

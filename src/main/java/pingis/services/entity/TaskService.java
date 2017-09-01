@@ -1,4 +1,4 @@
-package pingis.services;
+package pingis.services.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pingis.entities.Challenge;
 import pingis.entities.Task;
-import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
-import pingis.entities.User;
-import pingis.repositories.ChallengeRepository;
 import pingis.repositories.TaskRepository;
 
 @Service
@@ -21,17 +18,6 @@ public class TaskService {
 
   @Autowired
   private TaskRepository taskRepository;
-  @Autowired
-  private ChallengeRepository challengeRepository;
-  @Autowired
-  private TaskInstanceService taskInstanceService;
-  @Autowired
-  private UserService userService;
-
-  public Task findTaskInChallenge(Long challengeId, int taskId) {
-    // Implement validation here
-    return challengeRepository.findById(challengeId).get().getTasks().get(taskId);
-  }
 
   public Task findOne(Long taskId) {
     // Implement validation here
@@ -90,22 +76,9 @@ public class TaskService {
     return taskRepository.findByChallengeAndTypeAndIndex(challenge, type, index);
   }
 
-  public Task nextPracticeTask(Challenge challenge) {
-    int numberOfTasks = findAllByChallenge(challenge).size();
-    logger.info("Number of tasks: " + numberOfTasks);
-    User player = userService.getCurrentUser();
-    List<TaskInstance> instances = taskInstanceService.getByUserAndChallenge(player, challenge);
-    logger.info("Task instances found: " + instances.size());
-    if (instances.size() == numberOfTasks) {
-      return null;
-    }
-    int currentIndex = instances.size() / 2 + 1;
-    logger.info("Current index: " + currentIndex);
-    if (instances.size() % 2 == 0) {
-      logger.info("Returning test task of index " + currentIndex);
-      return findByChallengeAndTypeAndIndex(challenge, TaskType.TEST, currentIndex);
-    }
-    logger.info("Returning implementation task of index " + currentIndex);
-    return findByChallengeAndTypeAndIndex(challenge, TaskType.IMPLEMENTATION, currentIndex);
+
+  public int getNumberOfTasks(Challenge challenge) {
+    List<Task> tasks = findAllByChallenge(challenge);
+    return tasks.size();
   }
 }

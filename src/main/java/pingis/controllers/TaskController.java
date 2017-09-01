@@ -22,11 +22,12 @@ import pingis.entities.CodeStatus;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.sandbox.Submission;
-import pingis.services.ChallengeService;
-import pingis.services.EditorService;
-import pingis.services.TaskInstanceService;
-import pingis.services.TaskService;
-import pingis.services.UserService;
+import pingis.services.entity.ChallengeService;
+import pingis.services.entity.TaskInstanceService;
+import pingis.services.entity.TaskService;
+import pingis.services.entity.UserService;
+import pingis.services.logic.EditorService;
+import pingis.services.logic.GameplayService;
 import pingis.services.sandbox.SandboxService;
 import pingis.utils.CodeStub;
 import pingis.utils.CodeStubBuilder;
@@ -48,6 +49,8 @@ public class TaskController {
   TaskInstanceService taskInstanceService;
   @Autowired
   UserService userService;
+  @Autowired
+  GameplayService gameplayService;
 
   @Autowired
   private SandboxService sandboxService;
@@ -64,7 +67,7 @@ public class TaskController {
       return "error";
     }
 
-    if (!taskInstanceService.canPlayOrSkip(taskInstance)) {
+    if (!gameplayService.canPlayOrSkip(taskInstance, userService.getCurrentUser())) {
       logger.debug("Can't play or skip");
       return "redirect:/error";
     }
@@ -122,7 +125,8 @@ public class TaskController {
   public String rateTask(@DestinationVariable Long taskInstanceId, Integer rating) {
     logger.debug("Rating task");
 
-    boolean rated = taskInstanceService.rate(rating, taskInstanceId);
+    boolean rated = gameplayService
+        .rate(rating, taskInstanceId);
 
     if (!rated) {
       logger.debug("Rating failed!");
@@ -164,7 +168,7 @@ public class TaskController {
     logger.debug("Request to /skip/{}", taskInstanceId);
 
     TaskInstance skippedTaskInstance = taskInstanceService.findOne(taskInstanceId);
-    if (!taskInstanceService.canPlayOrSkip(skippedTaskInstance)) {
+    if (!gameplayService.canPlayOrSkip(skippedTaskInstance, userService.getCurrentUser())) {
       logger.debug("Can't play or skip");
       return new RedirectView("/error");
     }

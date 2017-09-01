@@ -25,6 +25,7 @@ import pingis.entities.Task;
 import pingis.entities.TmcUserDto;
 import pingis.entities.User;
 import pingis.repositories.UserRepository;
+import pingis.services.entity.UserService;
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {UserService.class})

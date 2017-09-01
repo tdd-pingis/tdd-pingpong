@@ -1,14 +1,16 @@
 package pingis.services;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,8 +24,11 @@ import pingis.entities.Task;
 import pingis.entities.TaskInstance;
 import pingis.entities.TaskType;
 import pingis.entities.User;
-import pingis.repositories.ChallengeRepository;
-import pingis.services.GameplayService.TurnType;
+import pingis.services.entity.TaskInstanceService;
+import pingis.services.entity.TaskService;
+import pingis.services.entity.UserService;
+import pingis.services.logic.GameplayService;
+
 
 @RunWith(SpringRunner.class)
 @ContextConfiguration(classes = {GameplayService.class})
@@ -41,11 +46,7 @@ public class GameplayServiceTest {
   @MockBean
   private TaskInstanceService taskInstanceServiceMock;
 
-  @MockBean
-  private ChallengeService challengeServiceMock;
 
-  @MockBean
-  private ChallengeRepository challengeRepositoryMock;
 
   private User testUser;
   private Challenge testChallenge;
@@ -54,6 +55,8 @@ public class GameplayServiceTest {
   private Task secondTestTask;
   private Task secondImplTask;
   private ArgumentCaptor<Task> testTaskCaptor;
+  private TaskInstance testTaskInstance;
+
 
   @Before
   public void setUp() {
@@ -95,128 +98,14 @@ public class GameplayServiceTest {
         "toteuta jotai2",
         "public void toteutus2",
         1, 1);
+    testTaskInstance = new TaskInstance(testUser,
+        "thisShouldBeEmpty", firstTestTask);
   }
 
-  @Test
-  public void testGetNumberOfTasks() {
-    testChallenge.addTask(firstTestTask);
-    testChallenge.addTask(firstImplTask);
-    List<Task> tasks = new ArrayList<>();
-    tasks.add(firstTestTask);
-    tasks.add(firstImplTask);
-    when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
-    assertEquals(2, gameplayService.getNumberOfTasks(testChallenge));
-    verify(taskServiceMock).findAllByChallenge(testChallenge);
-    verifyNoMoreInteractions(taskServiceMock);
-  }
 
-  @Test
-  public void testGetTurnTypeWhenTesting() {
-    testChallenge.addTask(firstTestTask);
-    testChallenge.addTask(firstImplTask);
-    testChallenge.addTask(secondTestTask);
-    testChallenge.addTask(secondImplTask);
-    List<Task> tasks = new ArrayList<>();
-    tasks.add(firstTestTask);
-    tasks.add(firstImplTask);
-    tasks.add(secondTestTask);
-    tasks.add(secondImplTask);
-    when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
-    when(userServiceMock.getCurrentUser()).thenReturn(testUser);
-    when(taskInstanceServiceMock.getNumberOfDoneTaskInstancesInChallenge(testChallenge))
-        .thenReturn(4);
-    assertEquals(TurnType.TEST, gameplayService.getTurnType(testChallenge));
-    verify(taskServiceMock).findAllByChallenge(testChallenge);
-    verify(userServiceMock).getCurrentUser();
-    verify(taskInstanceServiceMock).getNumberOfDoneTaskInstancesInChallenge(testChallenge);
-    verifyNoMoreInteractions(taskServiceMock);
-    verifyNoMoreInteractions(userServiceMock);
-    verifyNoMoreInteractions(taskInstanceServiceMock);
-  }
 
-  @Test
-  public void testGetTurnTypeWhenImplementing() {
-    testChallenge.addTask(firstTestTask);
-    testChallenge.addTask(firstImplTask);
-    List<Task> tasks = new ArrayList<>();
-    tasks.add(firstTestTask);
-    tasks.add(firstImplTask);
-    tasks.add(secondTestTask);
-    tasks.add(secondImplTask);
-    when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
-    when(userServiceMock.getCurrentUser()).thenReturn(testUser);
-    when(taskInstanceServiceMock.getNumberOfDoneTaskInstancesInChallenge(testChallenge))
-        .thenReturn(3);
-    assertEquals(TurnType.IMPLEMENTATION, gameplayService.getTurnType(testChallenge));
-    verify(taskServiceMock).findAllByChallenge(testChallenge);
-    verify(userServiceMock).getCurrentUser();
-    verify(taskInstanceServiceMock).getNumberOfDoneTaskInstancesInChallenge(testChallenge);
-    verifyNoMoreInteractions(taskServiceMock);
-    verifyNoMoreInteractions(userServiceMock);
-    verifyNoMoreInteractions(taskInstanceServiceMock);
-  }
 
-  @Test
-  public void testGetTurnTypeWhenIsNotTurn() {
-    testChallenge.addTask(firstTestTask);
-    testChallenge.addTask(firstImplTask);
-    List<Task> tasks = new ArrayList<>();
-    tasks.add(firstTestTask);
-    tasks.add(firstImplTask);
-    when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
-    when(userServiceMock.getCurrentUser()).thenReturn(testUser);
-    when(taskInstanceServiceMock.getNumberOfDoneTaskInstancesInChallenge(testChallenge))
-        .thenReturn(3);
-    assertEquals(TurnType.NONE, gameplayService.getTurnType(testChallenge));
-    verify(taskServiceMock).findAllByChallenge(testChallenge);
-    verify(userServiceMock).getCurrentUser();
-    verify(taskInstanceServiceMock).getNumberOfDoneTaskInstancesInChallenge(testChallenge);
-    verifyNoMoreInteractions(taskServiceMock);
-    verifyNoMoreInteractions(userServiceMock);
-    verifyNoMoreInteractions(taskInstanceServiceMock);
-  }
 
-  @Test
-  public void testGetTopmostImplementationTask() {
-    List<Task> tasks = new ArrayList<>();
-    tasks.add(firstTestTask);
-    tasks.add(firstImplTask);
-    tasks.add(secondTestTask);
-    tasks.add(secondImplTask);
-    when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
-    assertEquals(secondImplTask.getDesc(),
-        gameplayService.getTopmostImplementationTask(testChallenge)
-            .getDesc());
-    verify(taskServiceMock).findAllByChallenge(testChallenge);
-    verifyNoMoreInteractions(taskServiceMock);
-  }
-
-  @Test
-  public void testGetTopmostTestTask() {
-    List<Task> tasks = new ArrayList<>();
-    tasks.add(firstTestTask);
-    tasks.add(firstImplTask);
-    tasks.add(secondTestTask);
-    tasks.add(secondImplTask);
-    when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
-    assertEquals(secondTestTask.getDesc(),
-        gameplayService.getTopmostTestTask(testChallenge).getDesc());
-    verify(taskServiceMock).findAllByChallenge(testChallenge);
-  }
-
-  @Test
-  public void testGetParticipatingLiveChallenge() {
-    List<Challenge> challenges = new ArrayList<>();
-    challenges.add(testChallenge);
-    when(challengeServiceMock.findAll()).thenReturn(challenges);
-    when(userServiceMock.getCurrentUser()).thenReturn(testUser);
-    assertEquals(testChallenge.getDesc(), gameplayService.getParticipatingLiveChallenge()
-        .getDesc());
-    verify(challengeServiceMock).findAll();
-    verify(userServiceMock).getCurrentUser();
-    verifyNoMoreInteractions(challengeServiceMock);
-    verifyNoMoreInteractions(userServiceMock);
-  }
 
   @Test
   public void testGenerateTasksAndInstance() {
@@ -225,7 +114,7 @@ public class GameplayServiceTest {
     tasks.add(firstImplTask);
     tasks.add(secondTestTask);
     tasks.add(secondImplTask);
-    when(taskServiceMock.findAllByChallenge(testChallenge)).thenReturn(tasks);
+    when(taskServiceMock.getNumberOfTasks(testChallenge)).thenReturn(4);
     when(userServiceMock.getCurrentUser()).thenReturn(testUser);
     TaskInstance testTaskInstance = new TaskInstance(testUser, "koodii", firstTestTask);
     when(taskInstanceServiceMock.createEmpty(any(), any())).thenReturn(testTaskInstance);
@@ -235,7 +124,35 @@ public class GameplayServiceTest {
         "toteutustynkä", testChallenge);
     verify(taskServiceMock, times(2)).save(testTaskCaptor.capture());
     assertEquals("testikuvaus", testTask.getDesc());
-    verify(taskServiceMock).findAllByChallenge(testChallenge);
     verify(userServiceMock).getCurrentUser();
+  }
+
+  @Test
+  public void testRating() {
+    when(userServiceMock.getCurrentUser()).thenReturn(testUser);
+    when(taskInstanceServiceMock.findById(testTaskInstance.getId()))
+        .thenReturn(Optional.of(testTaskInstance));
+
+    boolean rated = gameplayService
+        .rate(5, testTaskInstance.getId());
+
+    assertTrue(rated);
+    assertEquals(5.0f, testTaskInstance.getTask().getAverageRating(), Float.MIN_VALUE);
+  }
+
+  @Test
+  public void testDoubleRating() {
+    when(userServiceMock.getCurrentUser()).thenReturn(testUser);
+    when(taskInstanceServiceMock.findById(testTaskInstance.getId()))
+        .thenReturn(Optional.of(testTaskInstance));
+
+    boolean rated = gameplayService
+        .rate(3, testTaskInstance.getId());
+    boolean rated2 = gameplayService
+        .rate(5, testTaskInstance.getId());
+
+    assertTrue(rated);
+    assertFalse(rated2);
+    assertEquals(3.0f, testTaskInstance.getTask().getAverageRating(), Float.MIN_VALUE);
   }
 }
