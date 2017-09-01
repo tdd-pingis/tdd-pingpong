@@ -103,6 +103,7 @@ public class TaskControllerTest {
         = new TaskInstance(testUser, "", testTask);
     implTaskInstance = new TaskInstance(testUser, "",
         implementationTask);
+    implTaskInstance.setTestTaskInstance(testTaskInstance);
     testTask.setChallenge(challenge);
     challenge.addTask(implementationTask);
     implementationTask.setChallenge(challenge);
@@ -210,7 +211,6 @@ public class TaskControllerTest {
     verify(taskInstanceServiceMock, times(1)).findOne(implTaskInstance.getId());
     verify(taskInstanceServiceMock).updateTaskInstanceCode(implTaskInstance.getId(),
         submissionCode);
-    verify(taskServiceMock).getCorrespondingTask(implementationTask);
     verifyNoMoreInteractions(taskInstanceServiceMock);
     verifyNoMoreInteractions(challengeServiceMock);
     verifyNoMoreInteractions(taskServiceMock);
